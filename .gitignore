@@ -1,0 +1,16 @@
+node_modules/
+config/default.dev.json
+config/default.test.json
+config/default.production.json
+config/runtime.json
+frontend/components
+tmp/
+*.log
+.idea
+db.json
+frontend/**/*.css
+frontend/**/*.css.map
+modules/**/*.css
+modules/**/*.css.map
+gjslint.xml
+jshint.xml
