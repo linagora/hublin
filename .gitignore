@@ -10,7 +10,7 @@ tmp/
 db.json
 frontend/**/*.css
 frontend/**/*.css.map
-modules/**/*.css
-modules/**/*.css.map
 gjslint.xml
 jshint.xml
+npm-debug.log
+log/application.log

@@ -1,5 +1,8 @@
 {
-	"webserver": {
+  "app": {
+    "name": "Linagora Meetings"
+  },
+  "webserver": {
     "enabled": true,
     "debugPort": 8081,
 
@@ -16,7 +19,15 @@
     "virtualhosts": [],
     "startupBufferTimeout": 5000
   },
-	"log": {
+  "wsserver": {
+    "enabled": true,
+    "port": 8080
+  },
+  "webrtc": {
+    "enabled": true,
+    "level": "debug"
+  },
+  "log": {
     "file": {
       "enabled": true,
       "filename": "./log/application.log",
@@ -36,6 +47,6 @@
     }
   },
   "modules": [
-    
+    "linagora.io.meetings"
   ]
 }

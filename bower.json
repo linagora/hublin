@@ -1,14 +1,17 @@
 {
-  "name": "Meetings",
+  "name": "Linagora Meetings",
   "main": "index.js",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "authors": [
     "Linagora folks"
   ],
-  "description": "Webrtc conference app",
+  "description": "Social Webrtc Conference Application",
   "keywords": [
     "social",
     "webrtc",
+    "network",
+    "videoconference",
+    "meetings",
     "conference"
   ],
   "license": "AGPLv3",
