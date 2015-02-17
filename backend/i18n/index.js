@@ -13,4 +13,7 @@ i18n.configure(
   }
 );
 
+/**
+ * Return configured {@link https://github.com/mashpie/i18n-node} object.
+ */
 module.exports = i18n;

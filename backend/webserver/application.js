@@ -26,7 +26,6 @@ var lessMiddlewareConfig = {
 
 var express = require('express');
 var application = express();
-exports = module.exports = application;
 
 application.set('views', VIEW_PATH);
 application.set('view engine', 'jade');
@@ -64,6 +63,9 @@ application.use(i18n.init);
 var flash = require('connect-flash');
 application.use(flash());
 
+/**
+ * Make the appName of the configuration available to template
+ */
 application.locals.appName = config.app && config.app.name ? config.app.name : '';
 
 function views(req, res) {
@@ -72,3 +74,8 @@ function views(req, res) {
 }
 
 application.get('/views/*', views);
+
+/**
+ * The main express application
+ */
+exports = module.exports = application;

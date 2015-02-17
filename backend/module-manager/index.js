@@ -42,6 +42,15 @@ function setupServerEnvironment() {
   setupServer(module.exports);
 }
 
+/**
+ * See {@link setupManager}
+ */
 module.exports.setupManager = setupManager;
+/**
+ * @return {AwesomeModuleManager}
+ */
 module.exports.manager = manager;
+/**
+ * See {@link setupServerEnvironment}
+ */
 module.exports.setupServerEnvironment = setupServerEnvironment;

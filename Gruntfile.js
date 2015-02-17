@@ -2,6 +2,10 @@
 
 var config = require('./config/default.json');
 
+/**
+ *
+ * @param {object} grunt
+ */
 module.exports = function(grunt) {
   var CI = grunt.option('ci');
 

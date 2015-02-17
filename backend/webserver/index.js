@@ -153,8 +153,16 @@ function start(callback) {
   }
 }
 
+/**
+ * @type {function}
+ */
 webserver.start = start;
 
+/**
+ *
+ * @param {string} event
+ * @param {function} callback
+ */
 webserver.on = function(event, callback) {
   emitter.on(event, function(data, next) {
     var req = data[0], res = data[1], json = data[2];
@@ -162,6 +170,10 @@ webserver.on = function(event, callback) {
   });
 };
 
+/**
+ *
+ * @type {function(this:AsyncEventEmitter)}
+ */
 webserver.emit = emitter.emit.bind(emitter);
 
 var WebServer = new AwesomeModule('linagora.io.meetings.webserver', {
@@ -203,4 +215,8 @@ var WebServer = new AwesomeModule('linagora.io.meetings.webserver', {
   }
 });
 
+/**
+ * Wrap the webserver inside an AwesomeModule
+ * @type {AwesomeModule}
+ */
 module.exports.WebServer = WebServer;

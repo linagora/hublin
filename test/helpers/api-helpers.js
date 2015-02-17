@@ -13,6 +13,10 @@ function getApplication(router) {
   return application;
 }
 
+/**
+ *
+ * @type {{getRouter: getRouter, getApplication: getApplication}}
+ */
 module.exports = {
   getRouter: getRouter,
   getApplication: getApplication

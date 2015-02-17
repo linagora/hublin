@@ -3,6 +3,11 @@
 var express = require('express');
 var cors = require('cors');
 
+/**
+ * Fake router for testing purposes
+ * @param {function} dependencies
+ * @return {Router}
+ */
 module.exports = function(dependencies) {
 
   var controllers = require('../controllers/meetings')(dependencies);

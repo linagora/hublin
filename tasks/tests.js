@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * Register the multitask splitfiles to run test files into separate node process
+ * @param {object} grunt
+ */
 module.exports = function(grunt) {
 
   grunt.registerMultiTask('splitfiles', 'split the files and run separate targets', function() {

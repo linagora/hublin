@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * Register the task prepare-quick-lint which extract (then set for linters) only modified file using git
+ * @param {object} grunt
+ */
 module.exports = function(grunt) {
   grunt.registerTask('prepare-quick-lint', function(arg) {
     var done = this.async();

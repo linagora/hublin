@@ -30,4 +30,8 @@ var Meetings = new AwesomeModule('linagora.io.meetings', {
   }
 });
 
+/**
+ * This is the main AwesomeModule of the Meetings application
+ * @type {AwesomeModule}
+ */
 module.exports.Meetings = Meetings;
