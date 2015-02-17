@@ -8,4 +8,7 @@ if (!config || config === undefined || config === 'undefined' || config === null
   config = __dirname + '/../../../config';
 }
 
+/**
+ * Wrap the configuration using {@link https://github.com/pgte/konphyg}.
+ */
 exports = module.exports = require('konphyg')(config);

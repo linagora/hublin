@@ -10,8 +10,8 @@ var modules = config.modules;
 
 moduleManager.setupServerEnvironment();
 
-function fireESNState(state) {
-  return function fireESN(callback) {
+function fireAppState(state) {
+  return function fireApp(callback) {
     moduleManager.manager.fire(state, modules).then(function() {
       callback(null);
     }, function(err) {
@@ -20,7 +20,16 @@ function fireESNState(state) {
   };
 }
 
-async.series([fireESNState('lib'), fireESNState('start')], function(err) {
+function initCore(callback) {
+  core.init(function(err) {
+    if (!err) {
+      logger.info('Meetings Core bootstraped, configured in %s mode', process.env.NODE_ENV);
+    }
+    callback(err);
+  });
+}
+
+async.series([fireAppState('lib'), initCore, fireAppState('start')], function(err) {
   if (err) {
     logger.error('Fatal error:', err);
     if (err.stack) {
@@ -28,5 +37,5 @@ async.series([fireESNState('lib'), fireESNState('start')], function(err) {
     }
     process.exit(1);
   }
-  logger.info('Meetings is now started on node %s', process.version);
+  logger.info('Linagora Meetings is now started on node %s', process.version);
 });

@@ -2,8 +2,24 @@
 
 var config = require('./config/default.json');
 
+/**
+ *
+ * @param {object} grunt
+ */
 module.exports = function(grunt) {
   var CI = grunt.option('ci');
+
+  var testArgs = (function() {
+    var opts = ['test', 'chunk'];
+    var args = {};
+    opts.forEach(function(optName) {
+      var opt = grunt.option(optName);
+      if (opt) {
+        args[optName] = '' + opt;
+      }
+    });
+    return args;
+  })();
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -24,10 +40,9 @@ module.exports = function(grunt) {
           'Gruntfile.js',
           'Gruntfile-tests.js',
           'tasks/**/*.js',
-          'test/**/**/*.js',
+          'test/**/*.js',
           'backend/**/*.js',
-          'frontend/js/**/*.js',
-          'modules/**/*.js'
+          'frontend/js/**/*.js'
         ]
       },
       quick: {
@@ -40,7 +55,7 @@ module.exports = function(grunt) {
       options: {
         flags: [
           '--disable 0110',
-          '--nojsdoc',
+          '--jsdoc',
           '-e test/frontend/karma-include',
           '-x frontend/js/modules/modernizr.js'
         ],
@@ -91,6 +106,76 @@ module.exports = function(grunt) {
         }
       }
     },
+    run_grunt: {
+      all: {
+        options: {
+          log: true,
+          stdout: function(data) {
+            grunt.log.write(data);
+          },
+          stderr: function(data) {
+            grunt.log.error(data);
+          },
+          args: testArgs,
+          process: function(res) {
+            if (res.fail) {
+              grunt.config.set('esn.tests.success', false);
+              grunt.log.writeln('failed');
+            } else {
+              grunt.config.set('esn.tests.success', true);
+              grunt.log.writeln('succeeded');
+            }
+          }
+        },
+        src: ['Gruntfile-tests.js']
+      },
+      midway_backend: {
+        options: {
+          log: true,
+          stdout: function(data) {
+            grunt.log.write(data);
+          },
+          stderr: function(data) {
+            grunt.log.error(data);
+          },
+          args: testArgs,
+          process: function(res) {
+            if (res.fail) {
+              grunt.config.set('esn.tests.success', false);
+              grunt.log.writeln('failed');
+            } else {
+              grunt.config.set('esn.tests.success', true);
+              grunt.log.writeln('succeeded');
+            }
+          },
+          task: ['test-midway-backend']
+        },
+        src: ['Gruntfile-tests.js']
+      },
+      unit_backend: {
+        options: {
+          log: true,
+          args: testArgs,
+          stdout: function(data) {
+            grunt.log.write(data);
+          },
+          stderr: function(data) {
+            grunt.log.error(data);
+          },
+          process: function(res) {
+            if (res.fail) {
+              grunt.config.set('esn.tests.success', false);
+              grunt.log.writeln('failed');
+            } else {
+              grunt.config.set('esn.tests.success', true);
+              grunt.log.writeln('succeeded');
+            }
+          },
+          task: ['test-unit-backend']
+        },
+        src: ['Gruntfile-tests.js']
+      }
+    },
     watch: {
       files: ['<%= jshint.files %>'],
       tasks: ['jshint']
@@ -114,14 +199,17 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-gjslint');
   grunt.loadNpmTasks('grunt-nodemon');
+  grunt.loadNpmTasks('grunt-run-grunt');
   grunt.loadNpmTasks('grunt-node-inspector');
   grunt.loadNpmTasks('grunt-lint-pattern');
 
   grunt.loadTasks('tasks');
 
-
   grunt.registerTask('dev', ['nodemon:dev']);
   grunt.registerTask('debug', ['node-inspector:dev']);
+  grunt.registerTask('test-unit-backend', ['run_grunt:unit_backend']);
+  grunt.registerTask('test-midway-backend', ['run_grunt:midway_backend']);
+  grunt.registerTask('test', ['linters', 'run_grunt:unit_backend', 'run_grunt:midway_backend']);
   grunt.registerTask('linters', 'Check code for lint', ['jshint:all', 'gjslint:all', 'lint_pattern:all']);
 
   /**
@@ -132,10 +220,4 @@ module.exports = function(grunt) {
   grunt.registerTask('linters-dev', 'Check changed files for lint', ['prepare-quick-lint', 'jshint:quick', 'gjslint:quick', 'lint_pattern:quick']);
 
   grunt.registerTask('default', ['test']);
-  grunt.registerTask('fixtures', 'Launch the fixtures injection', function() {
-    var done = this.async();
-    require('./fixtures')(function(err) {
-      done(err ? false : true);
-    });
-  });
 };

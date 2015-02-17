@@ -10,7 +10,12 @@ var logger = new (Winston.Logger)({
 if (config.log.console.enabled) {
   logger.add(Winston.transports.Console, config.log.console);
 }
+
 if (config.log.file.enabled) {
   logger.add(Winston.transports.File, config.log.file);
 }
+
+/**
+ * @return {Winston.logger} using {@link https://github.com/winstonjs/winston}
+ */
 module.exports = logger;

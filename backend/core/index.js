@@ -1,9 +1,10 @@
 'use strict';
 
-if (!process.env.NODE_ENV) {
-  process.env.NODE_ENV = 'production';
-}
+require('./env');
 var fs = require('fs');
+/**
+ *
+ */
 exports = module.exports = {};
 
 fs.readdirSync(__dirname).forEach(function(filename) {
@@ -13,9 +14,11 @@ fs.readdirSync(__dirname).forEach(function(filename) {
   exports.__defineGetter__(filename, load);
 });
 
+/**
+ * Initialize core component
+ * @param {function} callback
+ */
 exports.init = function(callback) {
-  exports.db.mongo.init();
-  exports.pubsub.init();
   if (callback) {
     callback();
   }
