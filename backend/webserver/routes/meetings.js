@@ -11,7 +11,7 @@ var cors = require('cors');
 module.exports = function(dependencies) {
 
   var controllers = require('../controllers/meetings')(dependencies);
-  var middlewares = require('../middleware/passThrough')(dependencies);
+  var middlewares = require('../middlewares/passThrough')(dependencies);
 
   var router = express.Router();
 

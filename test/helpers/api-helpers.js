@@ -13,11 +13,27 @@ function getApplication(router) {
   return application;
 }
 
+function createConference(creator, attendees, done) {
+  var Conference = require('mongoose').model('Conference');
+  var json = {
+    creator: creator._id || creator,
+    attendees: attendees.map(function(attendee) {
+      return {
+        user: attendee._id || attendee,
+        status: 'online'
+      };
+    })
+  };
+  var conference = new Conference(json);
+  return conference.save(done);
+}
+
 /**
  *
  * @type {{getRouter: getRouter, getApplication: getApplication}}
  */
 module.exports = {
   getRouter: getRouter,
-  getApplication: getApplication
+  getApplication: getApplication,
+  createConference: createConference
 };
