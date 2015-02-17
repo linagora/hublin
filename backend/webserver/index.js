@@ -178,7 +178,8 @@ webserver.emit = emitter.emit.bind(emitter);
 
 var WebServer = new AwesomeModule('linagora.io.meetings.webserver', {
   dependencies: [
-    new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.core.config', 'conf')
+    new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.core.config', 'conf'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.core.logger', 'logger')
   ],
   states: {
     lib: function(dependencies, callback) {
@@ -212,7 +213,8 @@ var WebServer = new AwesomeModule('linagora.io.meetings.webserver', {
         callback.apply(this, arguments);
       });
     }
-  }
+  },
+  abilities: ['webserver']
 });
 
 /**

@@ -12,11 +12,18 @@ moduleManager.setupServerEnvironment();
 
 function fireAppState(state) {
   return function fireApp(callback) {
-    moduleManager.manager.fire(state, modules).then(function() {
-      callback(null);
-    }, function(err) {
-      callback(err);
-    });
+    moduleManager.manager.load(['linagora.io.meetings.webserver', 'linagora.om.wsserver']).then(
+      function() {
+        moduleManager.manager.fire(state, modules).then(function() {
+          callback(null);
+        }, function(err) {
+          callback(err);
+        })
+      },
+      function(err) {
+        callback(err);
+      }
+    );
   };
 }
 

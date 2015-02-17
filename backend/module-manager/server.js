@@ -12,4 +12,5 @@ module.exports = function setupServer(moduleManager) {
 
   moduleManager.manager.registerModule(require('../').Meetings, true);
   moduleManager.manager.registerModule(require('../webserver').WebServer, true);
+  moduleManager.manager.registerModule(require('om-ws-server').WsServer, true);
 };
