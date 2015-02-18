@@ -19,9 +19,6 @@ function mockCoreModule(name) {
     },
     abilities: [name]
   });
-
-  console.log('MOCK', mock);
-
   var loader = manager.loaders.code(mock, true);
   manager.appendLoader(loader);
 }

@@ -9,7 +9,7 @@ function registerModuleWrapper(moduleManager, module) {
 /**
  * Configure the AwesomeModuleManager by adding states and modules into the Meetings application.
  * @param {object} moduleManager
- * @return Object promise
+ * @return {object} promise
  */
 module.exports = function setupServer(moduleManager) {
   moduleManager.manager.registerState('deploy', ['lib']);
@@ -17,6 +17,6 @@ module.exports = function setupServer(moduleManager) {
 
   moduleManager.setupManager();
   return registerModuleWrapper(moduleManager, require('../webserver').WebServer)()
-  .then(registerModuleWrapper(moduleManager, require('om-ws-server').WsServer))
+  .then(registerModuleWrapper(moduleManager, require('om-websocket-server').WsServer))
   .then(registerModuleWrapper(moduleManager, require('../').Meetings));
 };
