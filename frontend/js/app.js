@@ -5,6 +5,7 @@ angular.module('meetingsApplication', [
   'op.socketio',
   'op.easyrtc',
   'op.websocket',
+  'op.live-conference',
   'restangular',
   'meetings.authentication',
   'meetings.session'
