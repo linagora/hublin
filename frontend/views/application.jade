@@ -6,6 +6,8 @@ html
     title Meetings!
     meta(name="viewport", content="width=device-width, initial-scale=1")
     link(rel='icon', type='image/png', href='images/logo-tiny.png')
+    link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet', href='/components/bootstrap-additions/dist/bootstrap-additions.css')
     link(rel='stylesheet', href='/css/default.css')
     script(src='/components/jquery/dist/jquery.min.js')
     script(src='/components/underscore/underscore.js')
@@ -14,6 +16,8 @@ html
     script(src='/components/angular-route/angular-route.min.js')
     script(src='/components/angular-animate/angular-animate.min.js')
     script(src='/components/restangular/dist/restangular.min.js')
+    script(src='/components/angular-strap/dist/angular-strap.min.js')
+    script(src='/components/angular-strap/dist/angular-strap.tpl.min.js')
     script(src='/socket.io/socket.io.js')
     script(src='/easyrtc/easyrtc.js')
 
@@ -27,6 +31,8 @@ html
 
     script(src='js/websocket.js')
     script(src='/components/opangular/src/websocket/services.js')
+
+    script(src='js/conference.js')
 
     script(src='js/live-conference.js')
     script(src='/components/angular-liveconference/src/js/directives.js')

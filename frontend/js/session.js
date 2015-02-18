@@ -36,7 +36,7 @@ angular.module('meetings.session', ['ngRoute'])
         session.setUser(user);
         return callback();
       }
-    }
+    };
   }])
  .controller('sessionInitLiveConferenceController', ['$scope', 'sessionFactory', '$route', function($scope, sessionFactory) {
 

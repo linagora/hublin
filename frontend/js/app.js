@@ -6,13 +6,31 @@ angular.module('meetingsApplication', [
   'op.easyrtc',
   'op.websocket',
   'op.live-conference',
-  'restangular',
   'meetings.authentication',
-  'meetings.session'
-  ]).config(function($routeProvider, RestangularProvider) {
+  'meetings.session',
+  'meetings.conference',
+  'restangular',
+  'mgcrea.ngStrap'
+]).config(function($routeProvider, RestangularProvider) {
 
   $routeProvider.when('/', {
-    templateUrl: '/views/application'
+    templateUrl: '/views/application',
+    controller: 'liveConferenceController',
+    resolve: {
+      conference: function(conferenceAPI, $route, $location) {
+        var urlParams = $location.absUrl().split('/');
+        urlParams.pop();
+        var conference_id = urlParams.pop().replace('#', '');
+        return conferenceAPI.get(conference_id).then(
+          function(response) {
+            return response.data;
+          },
+          function(err) {
+            $location.path('/');
+          }
+        );
+      }
+    }
   });
 
   $routeProvider.otherwise({redirectTo: '/'});

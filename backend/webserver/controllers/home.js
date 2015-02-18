@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ *
+ * @param {hash} dependencies
+ * @return {{index: index, app: app}}
+ */
 module.exports = function(dependencies) {
 
   function index(req, res) {
