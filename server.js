@@ -8,7 +8,14 @@ var config = core.config('default');
 
 var modules = config.modules;
 
-moduleManager.setupServerEnvironment();
+function setupServerEnvironment(callback) {
+  moduleManager.setupServerEnvironment().then(function() {
+    return callback();
+  },
+  function(err) {
+    return callback(err);
+  });
+}
 
 function fireAppState(state) {
   return function fireApp(callback) {
@@ -36,7 +43,7 @@ function initCore(callback) {
   });
 }
 
-async.series([fireAppState('lib'), initCore, fireAppState('start')], function(err) {
+async.series([setupServerEnvironment, fireAppState('lib'), initCore, fireAppState('start')], function(err) {
   if (err) {
     logger.error('Fatal error:', err);
     if (err.stack) {

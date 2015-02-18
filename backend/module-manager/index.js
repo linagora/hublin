@@ -43,7 +43,7 @@ function setupManager() {
 }
 
 function setupServerEnvironment() {
-  setupServer(module.exports);
+  return setupServer(module.exports);
 }
 
 /**
