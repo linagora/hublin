@@ -17,6 +17,6 @@ module.exports = function setupServer(moduleManager) {
 
   moduleManager.setupManager();
   return registerModuleWrapper(moduleManager, require('../webserver').WebServer)()
-  .then(registerModuleWrapper(moduleManager, require('om-websocket-server').WsServer))
+  .then(registerModuleWrapper(moduleManager, require('om-websocket-server')))
   .then(registerModuleWrapper(moduleManager, require('../').Meetings));
 };
