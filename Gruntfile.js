@@ -1,5 +1,10 @@
 'use strict';
 
+var fs = require('fs-extra');
+var path = require('path');
+
+var conf_path = './test/config/';
+var servers = require(conf_path + 'servers-conf');
 var config = require('./config/default.json');
 
 /**
@@ -82,6 +87,48 @@ module.exports = function(grunt) {
       },
       quick: {
         src: ['<%= jshint.quick.src %>']
+      }
+    },
+    shell: {
+      redis: {
+        command: servers.redis.cmd + ' --port ' +
+        (servers.redis.port ? servers.redis.port : '23457') +
+        (servers.redis.pwd ? ' --requirepass ' + servers.redis.pwd : '') +
+        (servers.redis.conf_file ? ' ' + servers.redis.conf_file : ''),
+        options: {
+          async: false,
+          stdout: function(chunk) {
+            var done = grunt.task.current.async();
+            var out = '' + chunk;
+            var started = /on port/;
+            if (started.test(out)) {
+              grunt.log.write('Redis server is started.');
+              done(true);
+            }
+          },
+          stderr: function(chunk) {
+            grunt.log.error(chunk);
+          }
+        }
+      },
+      mongo: {
+        command: servers.mongodb.cmd + ' --dbpath ' + servers.mongodb.dbpath + ' --port ' +
+        (servers.mongodb.port ? servers.mongodb.port : '23456') + ' --nojournal',
+        options: {
+          async: false,
+          stdout: function(chunk) {
+            var done = grunt.task.current.async();
+            var out = '' + chunk;
+            var started = new RegExp('connections on port ' + servers.mongodb.port);
+            if (started.test(out)) {
+              grunt.log.write('MongoDB server is started.');
+              done(true);
+            }
+          },
+          stderr: function(chunk) {
+            grunt.log.error(chunk);
+          }
+        }
       }
     },
     nodemon: {
@@ -198,18 +245,50 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-gjslint');
+  grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
+  grunt.loadNpmTasks('grunt-shell-spawn');
+  grunt.loadNpmTasks('grunt-continue');
   grunt.loadNpmTasks('grunt-run-grunt');
   grunt.loadNpmTasks('grunt-node-inspector');
   grunt.loadNpmTasks('grunt-lint-pattern');
 
   grunt.loadTasks('tasks');
 
+  grunt.registerTask('spawn-servers', 'spawn servers', ['shell:redis', 'shell:mongo']);
+  grunt.registerTask('kill-servers', 'kill servers', ['shell:redis:kill', 'shell:mongo:kill']);
+
+  grunt.registerTask('setup-environment', 'create temp folders and files for tests', function() {
+    try {
+      fs.mkdirsSync(servers.mongodb.dbpath);
+      fs.mkdirsSync(servers.tmp);
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  grunt.registerTask('clean-environment', 'remove temp folder for tests', function() {
+
+    var testsFailed = !grunt.config.get('esn.tests.success');
+    var applog = path.join(servers.tmp, 'application.log');
+
+    if (testsFailed && fs.existsSync(applog)) {
+      fs.copySync(applog, 'application.log');
+    }
+    fs.removeSync(servers.tmp);
+
+    if (testsFailed) {
+      grunt.log.writeln('Tests failure');
+      grunt.fail.fatal('error', 3);
+    }
+  });
+
   grunt.registerTask('dev', ['nodemon:dev']);
   grunt.registerTask('debug', ['node-inspector:dev']);
+  grunt.registerTask('setup-server', ['spawn-servers', 'continueOn']);
   grunt.registerTask('test-unit-backend', ['run_grunt:unit_backend']);
-  grunt.registerTask('test-midway-backend', ['run_grunt:midway_backend']);
-  grunt.registerTask('test', ['linters', 'run_grunt:unit_backend', 'run_grunt:midway_backend']);
+  grunt.registerTask('test-midway-backend', ['setup-environment', 'setup-server', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
+  grunt.registerTask('test', ['linters', 'setup-environment', 'run_grunt:unit_backend', 'setup-server', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
   grunt.registerTask('linters', 'Check code for lint', ['jshint:all', 'gjslint:all', 'lint_pattern:all']);
 
   /**
@@ -220,4 +299,10 @@ module.exports = function(grunt) {
   grunt.registerTask('linters-dev', 'Check changed files for lint', ['prepare-quick-lint', 'jshint:quick', 'gjslint:quick', 'lint_pattern:quick']);
 
   grunt.registerTask('default', ['test']);
+  grunt.registerTask('fixtures', 'Launch the fixtures injection', function() {
+    var done = this.async();
+    require('./fixtures')(function(err) {
+      done(err ? false : true);
+    });
+  });
 };

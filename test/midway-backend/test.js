@@ -14,7 +14,7 @@ describe('Midway test', function() {
 
   it('should work', function(done) {
     request(application)
-      .get('/api/meetings')
+      .get('/meetings')
       .expect(200)
       .end(function(err, res) {
         expect(res.text).to.equal('Hello Meetings !');

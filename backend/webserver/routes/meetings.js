@@ -1,7 +1,6 @@
 'use strict';
 
 var express = require('express');
-var cors = require('cors');
 
 /**
  * Fake router for testing purposes
@@ -15,9 +14,7 @@ module.exports = function(dependencies) {
 
   var router = express.Router();
 
-  router.all('/api/*', cors(), middlewares.passThrough);
-
-  router.get('/api/meetings', controllers.hello);
+  router.get('/meetings', middlewares.passThrough, controllers.hello);
 
   return router;
 };

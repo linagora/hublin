@@ -1,6 +1,7 @@
 'use strict';
 
 var path = require('path');
+var passport = require('passport');
 var FRONTEND_PATH = path.join(__dirname, '../../frontend');
 var CSS_PATH = FRONTEND_PATH + '/css';
 var VIEW_PATH = FRONTEND_PATH + '/views';
@@ -60,6 +61,20 @@ require('./middlewares/setup-sessions')({}).setupSession(sessionMiddleware);
 
 var i18n = require('../i18n');
 application.use(i18n.init);
+
+require('./passport');
+
+application.use(passport.initialize());
+application.use(passport.session());
+
+application.use(function(req, res, next) {
+  // put the user in locals
+  // so they it can be used directly in template
+  res.locals.user = req.user;
+  next();
+});
+
+application.use(require('./middlewares/setup-settings')());
 
 var flash = require('connect-flash');
 application.use(flash());

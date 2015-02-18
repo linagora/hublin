@@ -1,0 +1,36 @@
+{
+  "webserver": {
+    "enabled": true,
+    "ip": "127.0.0.1",
+    "ipv6": "::1",
+    "port": 8081,
+    "virtualhosts": [],
+    "startupBufferTimeout": 500
+  },
+  "wsserver": {
+    "enabled": false,
+    "port": 8081
+  },
+  "log": {
+    "file": {
+      "enabled": true,
+      "filename": "./log/mozilla-updater.log",
+      "level": "info",
+      "handleExceptions": true,
+      "json": false,
+      "prettyPrint": true,
+      "colorize": false
+    },
+    "console": {
+      "enabled": true,
+      "level": "debug",
+      "handleExceptions": true,
+      "json": false,
+      "prettyPrint": true,
+      "colorize": true
+    }
+  },
+  "auth": {
+    "strategies": ["mongo"]
+  }
+}

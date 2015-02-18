@@ -7,7 +7,16 @@ var mockery = require('mockery'),
 before(function() {
   var basePath = path.resolve(__dirname + '/../..');
   this.testEnv = {
-    basePath: basePath
+    basePath: basePath,
+    initCore: function(callback) {
+      var core = require(basePath + '/backend/core');
+      core.init(function() {
+        if (callback) {
+          process.nextTick(callback);
+        }
+      });
+      return core;
+    }
   };
   this.helpers = {};
   helpers(this.helpers, this.testEnv);

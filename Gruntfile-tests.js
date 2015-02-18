@@ -40,7 +40,7 @@ module.exports = function(grunt) {
       options: {
         require: ['chai', 'mockery'],
         reporter: 'spec',
-        timeout: process.env.TEST_TIMEOUT || 20000
+        timeout: process.env.TEST_TIMEOUT || 3000
       },
       backend: {
         options: {
