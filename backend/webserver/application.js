@@ -56,9 +56,19 @@ var session = require('express-session');
 var cdm = require('connect-dynamic-middleware');
 var sessionMiddleware = cdm(session({ cookie: { maxAge: 60000 }}));
 application.use(sessionMiddleware);
+require('./middlewares/setup-sessions')({}).setupSession(sessionMiddleware);
 
 var i18n = require('../i18n');
 application.use(i18n.init);
+
+application.use(function(req, res, next) {
+  // put the user in locals
+  // so they it can be used directly in template
+  res.locals.user = req.user;
+  next();
+});
+
+application.use(require('./middlewares/setup-settings')());
 
 var flash = require('connect-flash');
 application.use(flash());

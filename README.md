@@ -43,6 +43,15 @@ Some specialized Grunt tasks are available :
     grunt test-midway-bakend # only run the midway backend tests
     grunt test # launch all the testsuite
 
+Fixtures
+--------
+
+Fixtures can be configured in the fixtures folder and injected in the system using grunt:
+
+    grunt fixtures
+
+Note that this will override all the current configuration resources with the fixtures ones.
+
 Starting the server
 ------------------
 

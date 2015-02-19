@@ -19,6 +19,8 @@ fs.readdirSync(__dirname).forEach(function(filename) {
  * @param {function} callback
  */
 exports.init = function(callback) {
+  exports.db.mongo.init();
+  exports.pubsub.init();
   if (callback) {
     callback();
   }

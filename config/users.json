@@ -1,0 +1,24 @@
+{
+  "users": [
+    {
+      "id": "admin",
+      "displayName": "Admin",
+      "name": {
+        "familyName": "Ad",
+        "givenName": "Min"
+      },
+      "password": "$2a$05$spm9WF0kAzZwc5jmuVsuYexJ8py8HkkZIs4VsNr3LmDtYZEBJeiSe",
+      "emails": [{"value": "admin@linagora.com", "type": "work"}]
+    },
+    {
+      "id": "linagora",
+      "displayName": "Linagora",
+      "name": {
+        "familyName": "Linagora",
+        "givenName": "Tux"
+      },
+      "password": "$2a$05$spm9WF0kAzZwc5jmuVsuYexJ8py8HkkZIs4VsNr3LmDtYZEBJeiSe",
+      "emails": [{"value": "hello@linagora.com", "type": "work"}, {"value": "hello@myhomemail.com", "type": "home"}]
+    }
+  ]
+}
