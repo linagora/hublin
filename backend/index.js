@@ -6,7 +6,8 @@ var Dependency = AwesomeModule.AwesomeModuleDependency;
 var Meetings = new AwesomeModule('linagora.io.meetings', {
   dependencies: [
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.webserver', 'webserver'),
-    new Dependency(Dependency.TYPE_NAME, 'linagora.om.wsserver', 'wsserver')
+    new Dependency(Dependency.TYPE_NAME, 'linagora.om.wsserver', 'wsserver'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.io.webrtc', 'webrtc')
   ],
   states: {
     lib: function(dependencies, callback) {

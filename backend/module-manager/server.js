@@ -16,7 +16,9 @@ module.exports = function setupServer(moduleManager) {
   moduleManager.manager.registerState('start', ['lib', 'deploy']);
 
   moduleManager.setupManager();
-  return registerModuleWrapper(moduleManager, require('../webserver').WebServer)()
-  .then(registerModuleWrapper(moduleManager, require('om-websocket-server')))
-  .then(registerModuleWrapper(moduleManager, require('../').Meetings));
+  return moduleManager.manager.load('linagora.io.meetings.core.conference')
+    .then(registerModuleWrapper(moduleManager, require('../webserver').WebServer))
+    .then(registerModuleWrapper(moduleManager, require('om-websocket-server')))
+    .then(registerModuleWrapper(moduleManager, require('om-webrtc')))
+    .then(registerModuleWrapper(moduleManager, require('../').Meetings));
 };
