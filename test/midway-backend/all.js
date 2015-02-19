@@ -53,7 +53,7 @@ before(function(done) {
   process.env.NODE_CONFIG = this.testEnv.tmp;
   process.env.NODE_ENV = 'test';
 
-  fs.copySync(this.testEnv.fixtures + '/default.mongoAuth.json', this.testEnv.tmp + '/default.json');
+  fs.copySync(this.testEnv.fixtures + '/default.json', this.testEnv.tmp + '/default.json');
   this.mongoose = require('mongoose');
   this.testEnv.initRedisConfiguration(this.mongoose, done);
 });

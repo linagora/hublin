@@ -29,8 +29,5 @@
       "prettyPrint": true,
       "colorize": true
     }
-  },
-  "auth": {
-    "strategies": ["mongo"]
   }
 }

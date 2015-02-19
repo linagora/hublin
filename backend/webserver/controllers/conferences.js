@@ -120,7 +120,6 @@ module.exports = function(dependencies) {
       }
       return res.send(204);
     });
-
   }
 
   function removeAttendee(req, res) {

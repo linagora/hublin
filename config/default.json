@@ -46,9 +46,6 @@
       "colorize": true
     }
   },
-  "auth": {
-    "strategies": ["local", "mongo"]
-  },
   "modules": [
     "linagora.io.meetings"
   ]

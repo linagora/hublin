@@ -10,11 +10,9 @@ var cors = require('cors');
  */
 module.exports = function(dependencies) {
 
-  var authorize = require('../middlewares/authorization');
-
   var router = express.Router();
 
-  router.all('/api/*', cors(), authorize.requiresAPILogin);
+  router.all('/api/*', cors());
 
   return router;
 };

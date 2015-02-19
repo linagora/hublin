@@ -12,32 +12,9 @@ function getRouter(route, dependencies) {
 function getApplication(router) {
   var application = require(MAIN_APPLICATION_PATH);
   var all = getRouter('all');
-  var login = getRouter('login');
   application.use(all);
-  application.use(login);
   application.use(router);
   return application;
-}
-
-function loginAsUser(app, email, password, done) {
-  var request = require('supertest');
-  request(app)
-    .post('/login')
-    .send({username: email, password: password, rememberme: false})
-    .expect(200)
-    .end(function(err, res) {
-      if (err) {
-        return done(err);
-      }
-      var cookies = res.headers['set-cookie'].pop().split(';').shift();
-      function requestWithSessionCookie(cookies) {
-        return function(r) {
-          r.cookies = cookies;
-          return r;
-        };
-      }
-      return done(null, requestWithSessionCookie(cookies));
-    });
 }
 
 function createConference(creator, attendees, done) {
@@ -101,12 +78,11 @@ function applyDeployment(name, testEnv, options, callback) {
 
 /**
  *
- * @type {{getRouter: getRouter, getApplication: getApplication, createConference: createConference, loginAsUser: loginAsUser}|*}
+ * @type {{getRouter: getRouter, getApplication: getApplication, createConference: createConference, applyDeployment: applyDeployment}|*}
  */
 module.exports = {
   getRouter: getRouter,
   getApplication: getApplication,
   createConference: createConference,
-  loginAsUser: loginAsUser,
   applyDeployment: applyDeployment
 };
