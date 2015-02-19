@@ -8,15 +8,29 @@ var config = core.config('default');
 
 var modules = config.modules;
 
-moduleManager.setupServerEnvironment();
+function setupServerEnvironment(callback) {
+  moduleManager.setupServerEnvironment().then(function() {
+    return callback();
+  },
+  function(err) {
+    return callback(err);
+  });
+}
 
 function fireAppState(state) {
   return function fireApp(callback) {
-    moduleManager.manager.fire(state, modules).then(function() {
-      callback(null);
-    }, function(err) {
-      callback(err);
-    });
+    moduleManager.manager.load(['linagora.io.meetings.webserver', 'linagora.om.wsserver']).then(
+      function() {
+        moduleManager.manager.fire(state, modules).then(function() {
+          callback(null);
+        }, function(err) {
+          callback(err);
+        })
+      },
+      function(err) {
+        callback(err);
+      }
+    );
   };
 }
 
@@ -29,7 +43,7 @@ function initCore(callback) {
   });
 }
 
-async.series([fireAppState('lib'), initCore, fireAppState('start')], function(err) {
+async.series([setupServerEnvironment, fireAppState('lib'), initCore, fireAppState('start')], function(err) {
   if (err) {
     logger.error('Fatal error:', err);
     if (err.stack) {

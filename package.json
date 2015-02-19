@@ -21,6 +21,7 @@
     "konphyg": "git+https://github.com/linagora/konphyg.git",
     "less-middleware": "~1.0.4",
     "morgan": "^1.5.1",
+    "om-ws-server": "git+https://ci.open-paas.org/stash/scm/om/om-websocket-server.git",
     "open": "0.0.5",
     "winston": "~0.9.0"
   },
