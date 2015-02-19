@@ -32,11 +32,11 @@ exports.create = function(req, res, next) {
 
   user.save({ emails: [req.body.email], displayName: req.body.displayName })
     .then(function(saved) {
-      req.user = saved;
+      req.user = saved[0];
       next();
     })
     .catch (function(err) {
-      res.json(400, {
+      res.json(500, {
         error: {
           code: 500,
           message: 'Server error',

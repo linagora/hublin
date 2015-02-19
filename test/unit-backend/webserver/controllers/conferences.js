@@ -171,7 +171,7 @@ describe('The conferences controller', function() {
     controller.join({user: {}, conference: {}}, res);
   });
 
-  it('leave should send back HTTP 400 when user is not defined in req', function(done) {
+  it.skip('leave should send back HTTP 400 when user is not defined in req', function(done) {
     mockery.registerMock('../../core/conference', {});
     var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
     var res = {
@@ -183,7 +183,7 @@ describe('The conferences controller', function() {
     controller.leave({conference: {}}, res);
   });
 
-  it('leave should send back HTTP 400 when conference is not defined in req', function(done) {
+  it.skip('leave should send back HTTP 400 when conference is not defined in req', function(done) {
     mockery.registerMock('../../core/conference', {});
     var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
     var res = {
@@ -195,7 +195,7 @@ describe('The conferences controller', function() {
     controller.leave({user: {}}, res);
   });
 
-  it('leave should send back HTTP 500 when conference sends back error', function(done) {
+  it.skip('leave should send back HTTP 500 when conference sends back error', function(done) {
     mockery.registerMock('../../core/conference', {
       leave: function(conf, user, callback) {
         return callback(new Error());
@@ -211,7 +211,7 @@ describe('The conferences controller', function() {
     controller.leave({user: {}, conference: {}}, res);
   });
 
-  it('leave should send back HTTP 204 when conference creates resource', function(done) {
+  it.skip('leave should send back HTTP 204 when conference creates resource', function(done) {
     mockery.registerMock('../../core/conference', {
       leave: function(conf, user, callback) {
         return callback(null, {});
@@ -288,7 +288,7 @@ describe('The conferences controller', function() {
     controller.updateAttendee(req, res);
   });
 
-  it('updateAttendee should call leave when action=leave', function(done) {
+  it.skip('updateAttendee should call leave when action=leave', function(done) {
     mockery.registerMock('../../core/conference', {
       leave: function() {
         done();

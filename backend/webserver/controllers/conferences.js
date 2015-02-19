@@ -20,7 +20,7 @@ module.exports = function(dependencies) {
   function list(req, res) {
     conference.list(function(err, list) {
       if (err) {
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.details}});
+        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
       }
       return res.json(200, list);
     });
@@ -34,7 +34,7 @@ module.exports = function(dependencies) {
 
     conference.create(user, function(err, created) {
       if (err) {
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.details}});
+        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
       }
       return res.json(201, created);
     });
@@ -53,29 +53,14 @@ module.exports = function(dependencies) {
 
     conference.join(conf, user, function(err, updated) {
       if (err) {
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.details}});
+        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
       }
       return res.json(204);
     });
   }
 
   function leave(req, res) {
-    var user = req.user;
-    if (!user) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'User is missing'}});
-    }
-
-    var conf = req.conference;
-    if (!conf) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Conference is missing'}});
-    }
-
-    conference.leave(conf, user, function(err, updated) {
-      if (err) {
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.details}});
-      }
-      return res.json(204);
-    });
+    return res.json(500, {error: {code: 500, message: 'Server Error', details: 'Not implemented yet'}});
   }
 
   function updateAttendee(req, res) {
@@ -116,7 +101,7 @@ module.exports = function(dependencies) {
 
     conference.invite(conf, user, function(err, updated) {
       if (err) {
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.details}});
+        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
       }
       return res.send(204);
     });
