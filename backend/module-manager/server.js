@@ -20,6 +20,6 @@ module.exports = function setupServer(moduleManager) {
     .then(registerModuleWrapper(moduleManager, require('../webserver').WebServer))
     .then(registerModuleWrapper(moduleManager, require('om-websocket-server')))
     .then(registerModuleWrapper(moduleManager, require('om-webrtc')))
-    .then(registerModuleWrapper(moduleManager, require('../').Meetings))
-    .then(registerModuleWrapper(moduleManager, require('../wsserver').WsServer));
+    .then(registerModuleWrapper(moduleManager, require('../wsserver').WsServer))
+    .then(registerModuleWrapper(moduleManager, require('../').Meetings));
 };

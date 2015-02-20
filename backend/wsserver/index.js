@@ -9,14 +9,16 @@ var WsServer = new AwesomeModule('linagora.io.meetings.wsserver', {
   ],
   states: {
     lib: function(dependencies, callback) {
-      var wsserver = dependencies('wsserver');
+      var wsserver = dependencies('wsserver').server;
       var auth = require('./auth')(wsserver);
-      return callback(null, {auth: auth});
+      return callback(null, {
+        server: wsserver,
+        auth: auth
+      });
     },
     start: function(dependencies, callback) {
       console.log('XXX START linagora.io.meetings.wsserver')
-      var wsserver = dependencies('wsserver');
-      wsserver.io.use(this.api.wsserver.auth);
+      this.server.io.use(this.auth);
       return callback();
     }
   }

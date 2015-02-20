@@ -19,7 +19,7 @@ function setupServerEnvironment(callback) {
 
 function fireAppState(state) {
   return function fireApp(callback) {
-    moduleManager.manager.load(['linagora.io.meetings.webserver', 'linagora.io.meetings.wsserver', 'linagora.om.wsserver', 'linagora.io.webrtc']).then(
+    moduleManager.manager.load(['linagora.io.meetings.webserver', 'linagora.io.meetings.wsserver', 'linagora.io.webrtc']).then(
       function() {
         moduleManager.manager.fire(state, modules).then(function() {
           callback(null);
