@@ -22,7 +22,7 @@
       "colorize": false
     },
     "console": {
-      "enabled": true,
+      "enabled": false,
       "level": "debug",
       "handleExceptions": true,
       "json": false,

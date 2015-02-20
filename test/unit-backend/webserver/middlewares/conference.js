@@ -10,14 +10,6 @@ describe('The conference middleware', function() {
     dependencies = {};
   });
 
-  it('load should call next if id is not set', function(done) {
-    mockery.registerMock('../../core/conference', {});
-    var controller = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies);
-    controller.load({params: {}}, {}, function() {
-      done();
-    });
-  });
-
   it('load should set req.conference when id is set', function(done) {
     var result = {
       creator: 234
@@ -41,14 +33,6 @@ describe('The conference middleware', function() {
       done();
     };
     controller.load(req, resp, next);
-  });
-
-  it('loadWithAttendees should call next if id is not set', function(done) {
-    mockery.registerMock('../../core/conference', {});
-    var controller = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies);
-    controller.loadWithAttendees({params: {}}, {}, function() {
-      done();
-    });
   });
 
   it('loadWithAttendees should set req.conference when id is set', function(done) {
@@ -154,7 +138,7 @@ describe('The conference middleware', function() {
 
   it('canJoin should call next when user can join the conference', function(done) {
     mockery.registerMock('../../core/conference', {
-      userCanJoinConference: function(conference, user, callback) {
+      userCanJoinConference: function(cofnference, user, callback) {
         return callback(null, true);
       }
     });

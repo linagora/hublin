@@ -10,25 +10,57 @@ var conference = require('../../core/conference');
 module.exports = function(dependencies) {
 
   function load(req, res, next) {
-    if (req.params.id) {
-      conference.get(req.params.id, function(err, conf) {
-        req.conference = conf;
-        next();
-      });
-    } else {
+    conference.get(req.params.id, function(err, conf) {
+      if (err) {
+        return res.json(500, {
+          error: {
+            code: 500,
+            message: 'Server Error',
+            details: err.message
+          }
+        });
+      }
+
+      if (!conf) {
+        return res.json(404, {
+          error: {
+            code: 404,
+            message: 'Not Found',
+            details: 'conference not found: ' + req.params.id
+          }
+        });
+      }
+
+      req.conference = conf;
       next();
-    }
+    });
   }
 
   function loadWithAttendees(req, res, next) {
-    if (req.params.id) {
-      conference.loadWithAttendees(req.params.id, function(err, conf) {
-        req.conference = conf;
-        next();
-      });
-    } else {
+    conference.loadWithAttendees(req.params.id, function(err, conf) {
+      if (err) {
+        return res.json(500, {
+          error: {
+            code: 500,
+            message: 'Server Error',
+            details: err.message
+          }
+        });
+      }
+
+      if (!conf) {
+        return res.json(404, {
+          error: {
+            code: 404,
+            message: 'Bad request',
+            details: 'conference not found: ' + req.params.id
+          }
+        });
+      }
+
+      req.conference = conf;
       next();
-    }
+    });
   }
 
   function canJoin(req, res, next) {

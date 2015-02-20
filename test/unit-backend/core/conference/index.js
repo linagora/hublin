@@ -32,8 +32,7 @@ describe('The conference module', function() {
     var conference = this.helpers.requireBackend('core/conference');
     var id = 123;
     conference.create(id, function(err, saved) {
-      expect(err).to.not.exist;
-      expect(saved).to.exist;
+      expect(err).to.exist;
       done();
     });
   });

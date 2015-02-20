@@ -13,12 +13,11 @@ var logger = require('../logger');
  * @return {*}
  */
 function create(user, callback) {
-  if (!user) {
+  if (!user || !user._id) {
     return callback(new Error('Creator can not be null'));
   }
 
-  var user_id = user._id || user;
-  var conf = new Conference({creator: user_id, attendees: [{user: user_id, status: 'creator'}], history: [{user: user_id, status: 'creation'}]});
+  var conf = new Conference({creator: user._id, attendees: [{user: user._id, status: 'creator'}], history: [{user: user._id, status: 'creation'}]});
   return conf.save(callback);
 }
 
