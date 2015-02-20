@@ -32,7 +32,7 @@ angular.module('meetings.session', ['ngRoute'])
   .factory('sessionFactory', ['session', function(session) {
     return {
       fetchUser: function(callback) {
-        var user = {id: 'you@lng.com'};
+        var user = {_id: 'you@lng.com'};
         session.setUser(user);
         return callback();
       }
@@ -49,7 +49,7 @@ angular.module('meetings.session', ['ngRoute'])
         $scope.session.error = error.data;
         $scope.session.template = '/views/commons/loading-error.html';
       } else {
-        $scope.session.template = '/views/partials/conference.html';
+        $scope.session.template = '/views/partials/container.html';
       }
     });
   }]);
