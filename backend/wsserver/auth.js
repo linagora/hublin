@@ -1,12 +1,12 @@
 'use strict';
 
+/**
+ * @param {WebSocketServer} wsserver
+ * @return {Function}
+ */
 module.exports = function(wsserver) {
 
   var auth = function(socket, callback) {
-
-    console.log('WWWWWWOOOOOOOOT')
-
-
     var infos = wsserver.helper.getInfos(socket);
     if (!infos || !infos.query) {
       return callback(new Error('Invalid socket object passed in argument'));
