@@ -14,7 +14,7 @@ angular.module('meetingsApplication', [
 ]).config(function($routeProvider, RestangularProvider) {
 
   $routeProvider.when('/', {
-    templateUrl: '/views/application',
+    templateUrl: '/views/partials/conference',
     controller: 'liveConferenceController',
     resolve: {
       conference: function(conferenceAPI, $route, $location) {
@@ -39,8 +39,9 @@ angular.module('meetingsApplication', [
   RestangularProvider.setFullResponse(true);
 
 })
-  .run(['session', 'ioConnectionManager', function(session, ioConnectionManager) {
+  .run(['$log', 'session', 'ioConnectionManager', function($log, session, ioConnectionManager) {
     session.ready.then(function() {
+      $log.debug('Session is ready, connecting to websocket', session.user);
       ioConnectionManager.connect();
     });
   }]);
