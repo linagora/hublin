@@ -17,16 +17,12 @@ function getApplication(router) {
   return application;
 }
 
-function createConference(creator, attendees, done) {
+function createConference(name, members, history, done) {
   var Conference = require('mongoose').model('Conference');
   var json = {
-    creator: creator._id || creator,
-    attendees: attendees.map(function(attendee) {
-      return {
-        user: attendee._id || attendee,
-        status: 'online'
-      };
-    })
+    _id: name,
+    members: members || [],
+    history: history || []
   };
   var conference = new Conference(json);
   return conference.save(done);

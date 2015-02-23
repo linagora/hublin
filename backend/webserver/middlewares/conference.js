@@ -9,6 +9,8 @@ var conference = require('../../core/conference');
  */
 module.exports = function(dependencies) {
 
+  var logger = dependencies('logger');
+
   function load(req, res, next) {
     conference.get(req.params.id, function(err, conf) {
       if (err) {
@@ -24,6 +26,26 @@ module.exports = function(dependencies) {
       if (conf) {
         req.conference = conf;
       }
+      return next();
+    });
+  }
+
+  function loadFromMemberToken(req, res, next) {
+    if (!req.query.token) {
+      return res.redirect('/');
+    }
+
+    conference.getFromMemberToken(req.query.token, function(err, conf) {
+      if (err) {
+        logger.error('Error while getting member from token %s : %e', req.query.token, err);
+        return res.send(500);
+      }
+
+      if (!conf) {
+        return res.send(404);
+      }
+
+      req.conference = conf;
       return next();
     });
   }
@@ -211,6 +233,7 @@ module.exports = function(dependencies) {
 
   return {
     load: load,
+    loadFromMemberToken: loadFromMemberToken,
     loadWithAttendees: loadWithAttendees,
     canJoin: canJoin,
     isAdmin: isAdmin,

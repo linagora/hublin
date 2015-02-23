@@ -1,5 +1,34 @@
 # /api/conferences
 
+## GET /conferences?token=:token
+
+Open an existing conference from a user token.
+
+**Query Parameters:**
+
+- token: A unique token which links an unique user to an unique conference.
+
+**Response Headers:**
+
+- Location: The URL of the conference to redirect to.
+
+**Status Codes:**
+
+- 302 Moved Temporarily
+- 404 Not found. No conference found for the given token
+- 500 Internal Server Error
+
+**Request:**
+
+    GET /conferences?token=54eb5dff8e7036781b03abad
+    Host: localhost:8080
+
+**Response:**
+
+    HTTP/1.1 302 Moved
+    Location: /foobar
+
+
 ## GET /conferences/:id
 
 Open the a conference page, creates the conference if needed.
