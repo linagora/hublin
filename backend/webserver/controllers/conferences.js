@@ -39,7 +39,6 @@ function createConference(req, callback) {
   }
 
   conference.create(conf, function(err, created) {
-    console.log('err', err);
     if (err) {
       return callback(err);
     }
@@ -54,6 +53,7 @@ function createConference(req, callback) {
  * @return {hash}
  */
 module.exports = function(dependencies) {
+  var logger = dependencies('logger');
 
   function get(req, res) {
     var conf = req.conference;
@@ -66,6 +66,7 @@ module.exports = function(dependencies) {
   function create(req, res) {
     return createConference(req, function(err, created) {
       if (err) {
+        logger.warn('Error while creating conference %e', err);
         return res.send(500);
       }
       return res.redirect('/' + created.id);
@@ -75,6 +76,7 @@ module.exports = function(dependencies) {
   function createAPI(req, res) {
     createConference(req, function(err, created) {
       if (err) {
+        logger.warn('Error while creating conference %e', err);
         return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
       }
       return res.json(201, created);

@@ -8,10 +8,16 @@ describe.skip('The conference API', function() {
   var creator, attendee, user, conferenceId;
 
   var application;
+  var deps = {
+    logger: require('../fixtures/logger-noop')()
+  };
+  var dependencies = function(name) {
+    return deps[name];
+  };
 
   beforeEach(function(done) {
     this.testEnv.initCore(function() {
-      var router = apiHelpers.getRouter('conferences');
+      var router = apiHelpers.getRouter('conferences', dependencies);
       application = apiHelpers.getApplication(router);
       done();
     });

@@ -2,12 +2,17 @@
 
 var expect = require('chai').expect;
 var mockery = require('mockery');
+var logger = require('../../../fixtures/logger-noop');
 
 describe('The conferences controller', function() {
   var dependencies;
 
   before(function() {
-    dependencies = {};
+    dependencies = function(name) {
+      if (name === 'logger') {
+        return logger();
+      }
+    };
   });
 
   it('get should send back HTTP 200 when conference is in request', function(done) {
