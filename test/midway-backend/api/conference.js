@@ -21,7 +21,7 @@ describe.skip('The conference API', function() {
     this.mongoose.connection.db.dropDatabase();
   });
 
-  describe('GET /api/conferences/:id', function() {
+  describe.skip('GET /api/conferences/:id', function() {
     it('should send back 404 if the conference is not found', function(done) {
       request(application)
         .get('/api/conferences/54e5e86e65806d7c16764b79')
@@ -63,7 +63,7 @@ describe.skip('The conference API', function() {
     });
   });
 
-  describe('GET /api/conferences', function() {
+  describe.skip('GET /api/conferences', function() {
     it('should send back 200 with the conference if it is found', function(done) {
       request(application)
         .get('/api/conferences')
@@ -102,75 +102,53 @@ describe.skip('The conference API', function() {
     });
   });
 
-  describe('POST /api/conferences', function() {
-    it('should return 400 if req.body.email is not defined', function(done) {
-      request(application)
-        .post('/api/conferences')
-        .send({})
-        .expect(400)
-        .end(done);
-    });
-
-    it('should return 400 if req.body.displayName is not defined', function(done) {
-      request(application)
-        .post('/api/conferences')
-        .send({email: 'test@open-paas.org'})
-        .expect(400)
-        .end(done);
-    });
-
-    it('should return 500 if the email is not valid (simulating a server error)', function(done) {
-      request(application)
-        .post('/api/conferences')
-        .send({email: 'test', displayName: 'JDoe'})
-        .expect(500)
-        .end(done);
-    });
+  describe('PUT /api/conferences/:id?displayName=XXX', function() {
 
     it('should return 201 if the conference is correctly created', function(done) {
+      var name = '123456789';
+      var displayName = 'Yo Lo';
+
       request(application)
-        .post('/api/conferences')
-        .send({email: 'test@open-paas.org', displayName: 'JDoe'})
+        .put('/api/conferences/' + name + '?displayName=' + displayName)
+        .send()
         .expect(201)
         .end(function(err, res) {
           expect(err).to.not.exist;
           expect(res.body._id).to.exist;
-          var newConferenceId = res.body._id;
-
-          request(application)
-            .get('/api/conferences/' + newConferenceId)
-            .expect(200)
-            .end(function(err, res) {
-              expect(err).to.not.exist;
-              delete res.body.timestamps.creation;
-              delete res.body.creator;
-              delete res.body.attendees[0].user;
-              delete res.body.history[0].user;
-              delete res.body.history[0].date;
-              expect(res.body).to.deep.equal(
-                {
-                  '__v': 0,
-                  '_id': newConferenceId,
-                  'attendees': [
-                    {
-                      'status': 'creator'
-                    }
-                  ],
-                  'history': [
-                    {
-                      'status': 'creation'
-                    }
-                  ],
-                  'schemaVersion': 1,
-                  'timestamps': {}
-                });
-              done();
-            });
+          expect(res.body._id).to.equal(name);
+          expect(res.body.members).to.exist;
+          expect(res.body.members.length).to.equal(1);
+          expect(res.body.members[0].displayName).to.equal(displayName);
+          expect(res.body.members[0].objectType).to.equal('hublin:anonymous');
+          expect(res.body.members[0].id).to.equal('creator');
+          done();
         });
     });
+
   });
 
-  describe('GET /api/conferences/:id/attendees', function() {
+  describe('PUT /api/conferences/:id', function() {
+
+    it('should return 201 if the conference is correctly created with a user displayName', function(done) {
+      var name = '123456789';
+
+      request(application)
+        .put('/api/conferences/' + name)
+        .send()
+        .expect(201)
+        .end(function(err, res) {
+          expect(err).to.not.exist;
+          expect(res.body._id).to.exist;
+          expect(res.body._id).to.equal(name);
+          expect(res.body.members).to.exist;
+          expect(res.body.members.length).to.equal(0);
+          done();
+        });
+    });
+
+  });
+
+  describe.skip('GET /api/conferences/:id/attendees', function() {
     it('should send back 404 if the conference is not found', function(done) {
       request(application)
         .get('/api/conferences/54e5e86e65806d7c16764b79/attendees')
@@ -208,7 +186,7 @@ describe.skip('The conference API', function() {
     });
   });
 
-  describe('PUT /api/conferences/:id/attendees', function() {
+  describe.skip('PUT /api/conferences/:id/attendees', function() {
     it('should send back 404 if the conference is not found', function(done) {
       request(application)
         .put('/api/conferences/54e5e86e65806d7c16764b79/attendees')
@@ -271,7 +249,7 @@ describe.skip('The conference API', function() {
     });
   });
 
-  describe('PUT /api/conferences/:id/attendees/:user_id', function() {
+  describe.skip('PUT /api/conferences/:id/attendees/:user_id', function() {
     it('should send back HTTP 204 if all went ok', function(done) {
       request(application)
         .put('/api/conferences/' + conferenceId + '/attendees/' + user._id)

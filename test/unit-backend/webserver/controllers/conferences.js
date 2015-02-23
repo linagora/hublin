@@ -39,50 +39,6 @@ describe('The conferences controller', function() {
     controller.get({}, res);
   });
 
-  it('list should send back HTTP 500 when conference sends back error', function(done) {
-    mockery.registerMock('../../core/conference', {
-      list: function(callback) {
-        return callback(new Error());
-      }
-    });
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status) {
-        expect(status).to.equal(500);
-        done();
-      }
-    };
-    controller.list({}, res);
-  });
-
-  it('list should send back HTTP 200 when conference sends back list', function(done) {
-    mockery.registerMock('../../core/conference', {
-      list: function(callback) {
-        return callback(null, []);
-      }
-    });
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status) {
-        expect(status).to.equal(200);
-        done();
-      }
-    };
-    controller.list({}, res);
-  });
-
-  it('create should send back HTTP 400 when user is not defined in req', function(done) {
-    mockery.registerMock('../../core/conference', {});
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status) {
-        expect(status).to.equal(400);
-        done();
-      }
-    };
-    controller.create({}, res);
-  });
-
   it('create should send back HTTP 500 when conference sends back error', function(done) {
     mockery.registerMock('../../core/conference', {
       create: function(user, callback) {
@@ -96,7 +52,7 @@ describe('The conferences controller', function() {
         done();
       }
     };
-    controller.create({user: {_id: 123}}, res);
+    controller.create({user: {displayName: 'foobar'}, params: {id: 123}, body: {}, headers: [], query: []}, res);
   });
 
   it('create should send back HTTP 201 when conference creates resource', function(done) {
@@ -112,7 +68,7 @@ describe('The conferences controller', function() {
         done();
       }
     };
-    controller.create({user: {_id: 123}}, res);
+    controller.create({user: {displayName: 'foobar'}, params: {id: 123}, body: {}, headers: [], query: []}, res);
   });
 
   it('join should send back HTTP 400 when user is not defined in req', function(done) {
