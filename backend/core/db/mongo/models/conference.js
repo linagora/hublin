@@ -3,26 +3,46 @@
 var mongoose = require('mongoose');
 
 var HistorySchema = new mongoose.Schema({
-  user: {type: mongoose.Schema.ObjectId, ref: 'User'},
-  status: {type: String, required: true},
+  actor: {
+    objectType: {type: String, required: true},
+    id: {type: mongoose.Schema.Types.Mixed, required: true}
+  },
+  object: {
+    objectType: {type: String, required: true},
+    id: {type: mongoose.Schema.Types.Mixed, required: true}
+  },
+  target: {
+    objectType: {type: String, required: true},
+    id: {type: mongoose.Schema.Types.Mixed, required: true}
+  },
   context: {type: mongoose.Schema.Types.Mixed},
-  date: {type: Date, default: Date.now}
-}, {_id: false});
+  timestamps: {
+    created: {type: Date, default: Date.now}
+  }
+});
 
-var AttendeeSchema = new mongoose.Schema({
-  user: {type: mongoose.Schema.ObjectId, ref: 'User'},
-  status: {type: String, required: true}
-}, {_id: false});
+var MemberSchema = new mongoose.Schema({
+  objectType: {type: String, required: true},
+  id: {type: mongoose.Schema.Types.Mixed, required: true},
+  displayName: {type: String, required: true},
+  status: {type: String, required: false},
+  connection: {
+    ipAddress: {type: String},
+    userAgent: {type: String}
+  }
+});
 
 var ConferenceSchema = new mongoose.Schema({
-  name: {type: String},
-  status: {type: String},
-  creator: {type: mongoose.Schema.ObjectId, ref: 'User'},
+  _id: {type: String, required: true},
+  active: {type: Boolean, default: true},
+  createdFrom: {type: String, default: 'web'},
   timestamps: {
-    creation: {type: Date, default: Date.now}
+    created: {type: Date, default: Date.now},
+    archived: {type: Date},
+    closed: {type: Date}
   },
   history: [HistorySchema],
-  attendees: [AttendeeSchema],
+  members: [MemberSchema],
   schemaVersion: {type: Number, default: 1}
 });
 
