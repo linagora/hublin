@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='')
+    meta(name='author', content='')
+
+    title Hubl.in, the Awesome video conference service
+
+    link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/components/font-awesome/css/font-awesome.min.css')
+    link(href='/css/hublin.css', rel='stylesheet')
+    link(href='http://fonts.googleapis.com/css?family=Montserrat:400,700', rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Kaushan+Script', rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic', rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700', rel='stylesheet', type='text/css')
+
+    script(src='/components/jquery/dist/jquery.min.js')
+    script(src='/components/underscore/underscore.js')
+    script(src='/components/bootstrap/dist/js/bootstrap.min.js')
+    script(src='/components/angular/angular.min.js')
+    script(src='/components/angular-route/angular-route.min.js')
+    script(src='/components/restangular/dist/restangular.min.js')
+    script(src='/components/angular-uuid4/angular-uuid4.min.js')
+
+    script(src='js/modules/session/session.js')
+    script(src='js/modules/conference/conference.js')
+
+    script(src='js/meetings/app.js')
+
+    body.ng-cloak#page-top.index(ng-app='meetingsApplication', ng-controller="sessionInitMeetingsController")
+      #wrap(ng-include='session.template')

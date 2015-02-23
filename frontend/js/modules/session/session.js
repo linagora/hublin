@@ -38,7 +38,7 @@ angular.module('meetings.session', ['ngRoute'])
       }
     };
   }])
- .controller('sessionInitLiveConferenceController', ['$scope', 'sessionFactory', '$route', function($scope, sessionFactory) {
+ .controller('sessionInitLiveConferenceController', ['$scope', 'sessionFactory', function($scope, sessionFactory) {
 
     $scope.session = {
       template: '/views/commons/loading.html'
@@ -49,7 +49,14 @@ angular.module('meetings.session', ['ngRoute'])
         $scope.session.error = error.data;
         $scope.session.template = '/views/commons/loading-error.html';
       } else {
-        $scope.session.template = '/views/partials/container.html';
+        $scope.session.template = '/views/live-conference/partials/container.html';
       }
     });
+  }])
+  .controller('sessionInitMeetingsController', ['$scope', function($scope) {
+
+    $scope.session = {
+      template: '/views/meetings/partials/landing-page.html'
+    };
+
   }]);
