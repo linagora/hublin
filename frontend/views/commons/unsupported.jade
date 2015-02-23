@@ -1,0 +1,18 @@
+.hublin-unsupported.well
+  a.hublin-title-brand(href='https://hubl.in/') Hubl.in
+  p #{__('Your browser seems to not be compatible.')}
+  p #{__('Please upgrade your browser experience to a compatible browser:')}
+  ul.list-inline
+    li
+      a(href='https://www.getfirefox.com/')
+        img(src='/images/firefox.png', alt='Firefox')
+    li
+      a(href='https://www.google.com/chrome/browser/')
+        img(src='/images/chrome.png', alt='Google Chrome')
+    li
+      a(href='http://www.opera.com/')
+        img(src='/images/opera.png', alt='Opera')
+  p #{__('Hublin is using WebRTC technology to provide its incredible video conference experience. Unfortunately, all internet browsers are not compatible for the moment.')}
+  p #{__('More details about compatibility:')} #[a(href='http://caniuse.com/#feat=rtcpeerconnection') caniuse]
+  p #{__('What is exactly WebRTC?')} #[a(href='http://www.webrtc.org/') webrtc]
+  p #{__('Go back to')} #[a(href="https://hubl.in/") Hubl.in] !

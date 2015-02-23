@@ -3,5 +3,11 @@
   "%s has joined the conference": "%s has joined the conference",
   "%s has left the conference": "%s has left the conference",
   "Enter your name in this room": "Enter your name in this room",
-  "Choose your video quality": "Choose your video quality"
+  "Choose your video quality": "Choose your video quality",
+  "Your browser seems to not be compatible.": "Your browser seems to not be compatible.",
+  "Please upgrade your browser experience to a compatible browser:": "Please upgrade your browser experience to a compatible browser:",
+  "Hublin is using WebRTC technology to provide its incredible video conference experience. Unfortunately, all internet browsers are not compatible for the moment.": "Hublin is using WebRTC technology to provide its incredible video conference experience. Unfortunately, all internet browsers are not compatible for the moment.",
+  "More details about compatibility:": "More details about compatibility:",
+  "What is exactly WebRTC?": "What is exactly WebRTC?",
+  "Go back to": "Go back to"
 }

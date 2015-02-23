@@ -36,7 +36,7 @@ module.exports = function(grunt) {
     jshint: {
       options: {
         jshintrc: '.jshintrc',
-        ignores: ['test/frontend/karma-include/*', 'frontend/js/modules/modernizr.js', 'frontend/js/analytics/*'],
+        ignores: ['test/frontend/karma-include/*', 'frontend/js/thirdparty/*', 'frontend/js/analytics/*'],
         reporter: CI && 'checkstyle',
         reporterOutput: CI && 'jshint.xml'
       },
@@ -62,8 +62,7 @@ module.exports = function(grunt) {
           '--disable 0110',
           '--jsdoc',
           '-e test/frontend/karma-include',
-          '-x frontend/js/modules/modernizr.js',
-          '-x frontend/js/analytics/*'
+          '-e frontend/js/analytics,frontend/js/thirdparty'
         ],
         reporter: {
           name: CI ? 'gjslint_xml' : 'console',
