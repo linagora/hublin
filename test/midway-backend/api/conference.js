@@ -4,7 +4,7 @@ var expect = require('chai').expect,
     request = require('supertest'),
     apiHelpers = require('../../helpers/api-helpers.js');
 
-describe.skip('The conference API', function() {
+describe('The conference API', function() {
   var creator, attendee, user, conferenceId;
 
   var application;
