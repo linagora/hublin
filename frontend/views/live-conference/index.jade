@@ -10,7 +10,7 @@ html
 
     link(rel='icon', type='image/png', href='images/logo-tiny.png')
     link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.css')
-    link(rel='stylesheet', href='/css/default.css')
+    link(rel='stylesheet', href='/css/live-conference.css')
 
     script(src='/components/jquery/dist/jquery.min.js')
     script(src='/components/underscore/underscore.js')
@@ -44,5 +44,5 @@ html
     script(src='js/modules/conference/conference.js')
     script(src='js/live-conference/app.js')
 
-  body.ng-cloak.esn-conference-app(ng-app='liveConferenceApplication' ng-controller="sessionInitLiveConferenceController")
+  body.ng-cloak.hublin-live-conference-app(ng-app='liveConferenceApplication' ng-controller="sessionInitLiveConferenceController")
     #wrap(ng-include='session.template')
