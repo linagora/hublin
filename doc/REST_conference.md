@@ -1,227 +1,27 @@
 # /api/conferences
 
-## GET /api/conferences
+## GET /conferences/:id
 
-Get the list of conferences.
-
-**Request Headers:**
-
-- Accept: application/json
+Open the a conference page, creates the conference if needed.
 
 **Response Headers:**
 
-- Content-Length: Document size
-- Content-Type: application/json
-
-**Response JSON Object**
-
-An array of conferences.
+- Location: The URL of the conference to redirect to.
 
 **Status Codes:**
 
-- 200 OK
+- 302 Moved Temporarily
+- 500 Internal Server Error
 
 **Request:**
 
-    GET /api/conferences
-    Accept: application/json
+    GET /conferences/foobar
     Host: localhost:8080
 
 **Response:**
 
-    HTTP/1.1 200 OK
-    [
-
-      {
-        "__v": 5,
-        "_id": "5391ba41367488554ffd20b5",
-        "creator": "5375de9fd684db7f6fbd5010",
-        "schemaVersion": 1,
-        "attendees": [
-            {
-                "user": "5375de9fd684db7f6fbd5010",
-                "status": "offline"
-            },
-            {
-                "user": "5375de4bd684db7f6fbd4f97",
-                "status": "online"
-            },
-            {
-                "user": "537cbe3a22ac6e00007fab31",
-                "status": "invited",
-                "_id": "5391ba45367488554ffd20b9"
-            },
-            {
-                "user": "5375de9fd684db7f6fbd5010",
-                "status": "invited",
-                "_id": "5391ba46367488554ffd20ba"
-            }
-        ],
-        "history": [
-            {
-                "user": "5375de9fd684db7f6fbd5010",
-                "status": "creation",
-                "_id": "5391ba41367488554ffd20b6",
-                "date": "2014-06-06T12:55:29.045Z"
-            },
-            {
-                "user": "5375de4bd684db7f6fbd4f97",
-                "status": "join",
-                "_id": "5391ba54367488554ffd20bb",
-                "date": "2014-06-06T12:55:48.126Z"
-            },
-            {
-                "user": "5375de9fd684db7f6fbd5010",
-                "status": "leave",
-                "_id": "5391ba5c367488554ffd20bc",
-                "date": "2014-06-06T12:55:56.101Z"
-            }
-        ],
-        "timestamps": {
-            "creation": "2014-06-06T12:55:29.044Z"
-        }
-      },
-      {
-        "__v": 5,
-        "_id": "5391b9ff367488554ffd20a9",
-        "creator": "5375de9fd684db7f6fbd5010",
-        "schemaVersion": 1,
-        "attendees": [
-            {
-                "user": "5375de9fd684db7f6fbd5010",
-                "status": "online"
-            },
-            {
-                "user": "5375de4bd684db7f6fbd4f97",
-                "status": "invited",
-                "_id": "5391ba38367488554ffd20af"
-            }
-        ],
-        "history": [
-            {
-                "user": "5375de9fd684db7f6fbd5010",
-                "status": "creation",
-                "_id": "5391b9ff367488554ffd20aa",
-                "date": "2014-06-06T12:54:23.026Z"
-            },
-            {
-                "user": "5375de9fd684db7f6fbd5010",
-                "status": "leave",
-                "_id": "5391ba3a367488554ffd20b0",
-                "date": "2014-06-06T12:55:22.704Z"
-            },
-            {
-                "user": "5375de9fd684db7f6fbd5010",
-                "status": "join",
-                "_id": "5391ba5d367488554ffd20bd",
-                "date": "2014-06-06T12:55:57.703Z"
-            },
-            {
-                "user": "5375de9fd684db7f6fbd5010",
-                "status": "leave",
-                "_id": "5391ba61367488554ffd20be",
-                "date": "2014-06-06T12:56:01.570Z"
-            },
-            {
-                "user": "5375de9fd684db7f6fbd5010",
-                "status": "join",
-                "_id": "5391ba66367488554ffd20c3",
-                "date": "2014-06-06T12:56:06.486Z"
-            }
-        ],
-        "timestamps": {
-            "creation": "2014-06-06T12:54:23.025Z"
-        }
-      }
-    ]
-
-## GET /api/conferences/{id}
-
-Get a conference from its id.
-
-**Request Headers:**
-
-- Accept: application/json
-
-**Parameters:**
-
-- id: The conference id
-
-**Response Headers:**
-
-- Content-Length: Document size
-- Content-Type: application/json
-
-**Response JSON Object**
-
-A conference.
-
-**Status Codes:**
-
-- 200 OK
-- 404 Not Found
-
-**Request:**
-
-    GET /api/conferences/5391b9ff367488554ffd20a9
-    Accept: application/json
-    Host: localhost:8080
-
-**Response:**
-
-    HTTP/1.1 200 OK
-    {
-      "__v": 5,
-      "_id": "5391b9ff367488554ffd20a9",
-      "creator": "5375de9fd684db7f6fbd5010",
-      "schemaVersion": 1,
-      "attendees": [
-          {
-              "user": "5375de9fd684db7f6fbd5010",
-              "status": "online"
-          },
-          {
-              "user": "5375de4bd684db7f6fbd4f97",
-              "status": "invited",
-              "_id": "5391ba38367488554ffd20af"
-          }
-      ],
-      "history": [
-          {
-              "user": "5375de9fd684db7f6fbd5010",
-              "status": "creation",
-              "_id": "5391b9ff367488554ffd20aa",
-              "date": "2014-06-06T12:54:23.026Z"
-          },
-          {
-              "user": "5375de9fd684db7f6fbd5010",
-              "status": "leave",
-              "_id": "5391ba3a367488554ffd20b0",
-              "date": "2014-06-06T12:55:22.704Z"
-          },
-          {
-              "user": "5375de9fd684db7f6fbd5010",
-              "status": "join",
-              "_id": "5391ba5d367488554ffd20bd",
-              "date": "2014-06-06T12:55:57.703Z"
-          },
-          {
-              "user": "5375de9fd684db7f6fbd5010",
-              "status": "leave",
-              "_id": "5391ba61367488554ffd20be",
-              "date": "2014-06-06T12:56:01.570Z"
-          },
-          {
-              "user": "5375de9fd684db7f6fbd5010",
-              "status": "join",
-              "_id": "5391ba66367488554ffd20c3",
-              "date": "2014-06-06T12:56:06.486Z"
-          }
-      ],
-      "timestamps": {
-          "creation": "2014-06-06T12:54:23.025Z"
-      }
-    }
+    HTTP/1.1 302 Moved
+    Location: /foobar
 
 ## PUT /api/conferences/:id
 

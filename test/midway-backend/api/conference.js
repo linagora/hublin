@@ -108,6 +108,41 @@ describe('The conference API', function() {
     });
   });
 
+  describe('GET /conferences/:id', function() {
+
+    it('should redirect to the conference page', function(done) {
+      var name = '123456789';
+
+      request(application)
+        .get('/conferences/' + name)
+        .send()
+        .expect(302)
+        .end(function(err, res) {
+          expect(err).to.not.exist;
+          expect(res.headers.location).to.equal('/' + name);
+          done();
+        });
+    });
+
+  });
+
+  describe('GET /conferences/:id?displayName=XXX', function() {
+
+    it('should redirect to the conference page', function(done) {
+      var name = '123456789';
+
+      request(application)
+        .get('/conferences/' + name)
+        .send()
+        .expect(302)
+        .end(function(err, res) {
+          expect(err).to.not.exist;
+          expect(res.headers.location).to.equal('/' + name);
+          done();
+        });
+    });
+  });
+
   describe('PUT /api/conferences/:id?displayName=XXX', function() {
 
     it('should return 201 if the conference is correctly created', function(done) {

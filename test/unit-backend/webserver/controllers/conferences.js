@@ -15,7 +15,7 @@ describe('The conferences controller', function() {
     };
   });
 
-  it('get should send back HTTP 200 when conference is in request', function(done) {
+  it('redirect when conference is in request', function(done) {
     mockery.registerMock('../../core/conference', {});
     var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
     var req = {
@@ -24,24 +24,11 @@ describe('The conferences controller', function() {
       }
     };
     var res = {
-      json: function(status) {
-        expect(status).to.equal(200);
+      redirect: function() {
         done();
       }
     };
     controller.get(req, res);
-  });
-
-  it('get should send back HTTP 400 when conference is not in request', function(done) {
-    mockery.registerMock('../../core/conference', {});
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status) {
-        expect(status).to.equal(400);
-        done();
-      }
-    };
-    controller.get({}, res);
   });
 
   it('create should send back HTTP 500 when conference sends back error', function(done) {
