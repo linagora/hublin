@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('meetingsApplication', [
+angular.module('liveConferenceApplication', [
   'ngRoute',
   'op.socketio',
   'op.easyrtc',
@@ -14,7 +14,7 @@ angular.module('meetingsApplication', [
 ]).config(function($routeProvider, RestangularProvider) {
 
   $routeProvider.when('/', {
-    templateUrl: '/views/partials/conference',
+    templateUrl: '/views/live-conference/index',
     controller: 'liveConferenceController',
     resolve: {
       conference: function(conferenceAPI, $route, $location) {

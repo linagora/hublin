@@ -8,11 +8,11 @@
 module.exports = function(dependencies) {
 
   function index(req, res) {
-    return res.render('index');
+    return res.render('meetings/index');
   }
 
   function app(req, res) {
-    return res.render('application');
+    return res.render('live-conference/index');
   }
 
   return {

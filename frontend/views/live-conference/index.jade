@@ -2,12 +2,16 @@ doctype html
 html
   head
     meta(charset='utf8')
-    base(href='/')
-    title Meetings!
     meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    base(href='/')
+
+    title Meetings!
+
     link(rel='icon', type='image/png', href='images/logo-tiny.png')
     link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.css')
-    link(rel='stylesheet', href='/css/default.css')
+    link(rel='stylesheet', href='/css/live-conference.css')
+
     script(src='/components/jquery/dist/jquery.min.js')
     script(src='/components/underscore/underscore.js')
     script(src='/components/bootstrap/dist/js/bootstrap.min.js')
@@ -26,20 +30,19 @@ html
     script(src='/components/opangular/src/socketio.js')
     script(src='/components/opangular/src/socketio/services.js')
 
-    script(src='js/authentication.js')
+    script(src='js/modules/authentication/authentication.js')
 
-    script(src='js/websocket.js')
+    script(src='js/modules/websocket/websocket.js')
     script(src='/components/opangular/src/websocket/services.js')
 
-    script(src='js/conference.js')
-
-    script(src='js/live-conference.js')
+    script(src='js/modules/live-conference/live-conference.js')
     script(src='/components/angular-liveconference/src/js/directives.js')
     script(src='/components/angular-liveconference/src/js/services.js')
     script(src='/components/angular-liveconference/src/js/templates.js')
 
-    script(src='js/session.js')
-    script(src='js/app.js')
+    script(src='js/modules/session/session.js')
+    script(src='js/modules/conference/conference.js')
+    script(src='js/live-conference/app.js')
 
-  body.ng-cloak.esn-conference-app(ng-app='meetingsApplication' ng-controller="sessionInitLiveConferenceController")
+  body.ng-cloak.hublin-live-conference-app(ng-app='liveConferenceApplication' ng-controller="sessionInitLiveConferenceController")
     #wrap(ng-include='session.template')
