@@ -17,10 +17,41 @@ var invitation = {
   }
 };
 
+function createConference(req, callback) {
+
+  var conf = {
+    _id: req.params.id,
+    history: [],
+    members: []
+  };
+
+  if (req.query.displayName) {
+    var currentUser = {
+      objectType: 'hublin:anonymous',
+      id: 'creator',
+      displayName: req.query.displayName,
+      connection: {
+        ipAdress: '',
+        userAgent: req.headers['user-agent']
+      }
+    };
+    conf.members.push(currentUser);
+  }
+
+  conference.create(conf, function(err, created) {
+    console.log('err', err);
+    if (err) {
+      return callback(err);
+    }
+
+    var members = req.body.members || [];
+    return invitation.inviteUsers(created, members, callback);
+  });
+}
+
 /**
- *
  * @param {object} dependencies
- * @return {{get: get, list: list, create: create, join: join, leave: leave, updateAttendee: updateAttendee, removeAttendee: removeAttendee, addAttendee: addAttendee, getAttendees: getAttendees}}
+ * @return {hash}
  */
 module.exports = function(dependencies) {
 
@@ -33,42 +64,20 @@ module.exports = function(dependencies) {
   }
 
   function create(req, res) {
+    return createConference(req, function(err, created) {
+      if (err) {
+        return res.send(500);
+      }
+      return res.redirect('/' + created.id);
+    });
+  }
 
-    var conf = {
-      _id: req.params.id,
-      history: [],
-      members: []
-    };
-
-    if (req.query.displayName) {
-      var currentUser = {
-        objectType: 'hublin:anonymous',
-        id: 'creator',
-        displayName: req.query.displayName,
-        connection: {
-          ipAdress: '',
-          userAgent: req.headers['user-agent']
-        }
-      };
-      conf.members.push(currentUser);
-    }
-
-    var members = req.body.members;
-    if (members && members.length > 0) {
-      conf.members.concat(req.body.members);
-    }
-
-    conference.create(conf, function(err, created) {
+  function createAPI(req, res) {
+    createConference(req, function(err, created) {
       if (err) {
         return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
       }
-
-      invitation.inviteUsers(created, members, function(err, updated) {
-        if (err) {
-          return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
-        }
-        return res.json(201, updated);
-      });
+      return res.json(201, created);
     });
   }
 
@@ -165,6 +174,7 @@ module.exports = function(dependencies) {
   return {
     get: get,
     create: create,
+    createAPI: createAPI,
     join: join,
     leave: leave,
     updateAttendee: updateAttendee,
