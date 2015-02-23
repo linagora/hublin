@@ -52,13 +52,13 @@ angular.module('meetings.conference', [])
   .controller('meetingsLandingPageController', ['$scope', '$q', function($scope, $q) {
     console.log('meetingsLandingPageController');
   }])
-  .directive('conferenceCreateForm', ['$q', function($q) {
+  .directive('conferenceCreateForm', ['uuid4', function(uuid4) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/conference/conference-create-form.html',
       link: function(scope) {
         function randomizeRoom() {
-          return 'new-room';
+          return uuid4.generate();
         }
         scope.room = randomizeRoom();
       }
