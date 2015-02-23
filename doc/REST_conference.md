@@ -262,9 +262,9 @@ No response.
 
     HTTP/1.1 204 No Content
 
-## PUT /conferences/{id}/attendees/{user_id}
+## PUT /api/conferences/{id}/members
 
-Add an attendee to the conference. The caller must be creator/administrator or attendee of the conference to perform this action.
+Add attendees to the conference. The caller must be attendee of the conference to perform this action.
 
 **Request Headers:**
 
@@ -273,7 +273,6 @@ Add an attendee to the conference. The caller must be creator/administrator or a
 **Parameters:**
 
 - id: Conference id
-- user_id: User to add as attendee of the conference
 
 **Response Headers:**
 
@@ -286,20 +285,21 @@ No response.
 
 **Status Codes:**
 
-- 204 No content
+- 202 Accepted
 - 400 Bad request
-- 404 Not found (conference or user)
+- 404 Not found (conference)
 - 500 Internal server error
 
 **Request:**
 
-    PUT /api/conferences/538e3bd6654d7c3307f990fa/attendees/538df8e110eca70000040b1d
+    PUT /api/conferences/538e3bd6654d7c3307f990fa/members
     Accept: application/json
     Host: localhost:8080
+    ['user1@linagora.com', 'user1@lng.fr']
 
 **Response:**
 
-    HTTP/1.1 204 No Content
+    HTTP/1.1 202 Accepted
 
 ## DELETE /conferences/{id}/attendees/{user_id}
 
