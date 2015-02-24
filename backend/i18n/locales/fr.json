@@ -1,3 +1,5 @@
 {
-  "Hello Meetings !": "Bonjour Meetings !"
+  "Hello Meetings !": "Bonjour Meetings !",
+  "%s has joined the conference": "%s a rejoint la conférence",
+  "%s has left the conference": "%s a quitté la conférence"
 }
