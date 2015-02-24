@@ -21,18 +21,10 @@ module.exports = function(dependencies) {
         });
       }
 
-      if (!conf) {
-        return res.json(404, {
-          error: {
-            code: 404,
-            message: 'Not Found',
-            details: 'conference not found: ' + req.params.id
-          }
-        });
+      if (conf) {
+        req.conference = conf;
       }
-
-      req.conference = conf;
-      next();
+      return next();
     });
   }
 

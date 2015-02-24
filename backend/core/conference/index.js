@@ -97,9 +97,10 @@ function invite(conference, attendees, callback) {
  * Get a conference by its id
  * @param {string} id
  * @param {function} callback
+ * @return {*}
  */
 function get(id, callback) {
-  Conference.findById(id).exec(callback);
+  return Conference.findOne({_id: id}, callback);
 }
 
 /**

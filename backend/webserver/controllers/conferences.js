@@ -58,9 +58,15 @@ module.exports = function(dependencies) {
   function get(req, res) {
     var conf = req.conference;
     if (!conf) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Conference is missing'}});
+      return createConference(req, function(err, created) {
+        if (err) {
+          logger.error('Error while creating conference %e', err);
+          return res.send(500);
+        }
+        return res.redirect('/' + created._id);
+      });
     }
-    return res.json(200, conf);
+    return res.redirect('/' + req.conference._id);
   }
 
   function create(req, res) {
