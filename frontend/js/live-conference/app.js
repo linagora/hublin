@@ -14,7 +14,7 @@ angular.module('liveConferenceApplication', [
 ]).config(function($routeProvider, RestangularProvider) {
 
   $routeProvider.when('/', {
-    templateUrl: '/views/live-conference/index',
+    templateUrl: '/views/live-conference/partials/conference',
     controller: 'liveConferenceController',
     resolve: {
       conference: function(conferenceAPI, $route, $location) {

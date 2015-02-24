@@ -25,7 +25,19 @@ angular.module('meetings.conference', [])
       redirectTo: redirectTo
     };
   }])
-  .factory('conferenceAPI', ['Restangular', function(Restangular) {
+  .factory('conferenceAPI', ['$q', 'Restangular', function($q, Restangular) {
+    function get(id) {
+      var defer = $q.defer();
+      defer.resolve({data: {_id: id}});
+      return defer.promise;
+    }
+
+    function getMembers(conference) {
+      var defer = $q.defer();
+      defer.resolve({data: []});
+      return defer.promise;
+    }
+
     function create(id, displayName) {
       return Restangular.one('conferences', id).put({displayName: displayName});
     }
@@ -43,10 +55,12 @@ angular.module('meetings.conference', [])
     }
 
     return {
+      get: get,
       create: create,
       getOrCreate: getOrCreate,
       addAttendee: addAttendee,
-      redirectTo: redirectTo
+      redirectTo: redirectTo,
+      getMembers: getMembers
     };
   }])
   .controller('meetingsLandingPageController', ['$scope', '$q', function($scope, $q) {
