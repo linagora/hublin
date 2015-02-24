@@ -55,6 +55,13 @@ function createConference(req, callback) {
 module.exports = function(dependencies) {
   var logger = dependencies('logger');
 
+  function redirect(req, res) {
+    if (!req.conference) {
+      return res.redirect('/');
+    }
+    return res.redirect('/' + req.conference._id);
+  }
+
   function get(req, res) {
     var conf = req.conference;
     if (!conf) {
@@ -180,6 +187,7 @@ module.exports = function(dependencies) {
   }
 
   return {
+    redirect: redirect,
     get: get,
     create: create,
     createAPI: createAPI,

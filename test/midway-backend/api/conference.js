@@ -108,6 +108,62 @@ describe('The conference API', function() {
     });
   });
 
+  describe('GET /conferences', function() {
+
+    it('should redirect to / when no query parameter', function(done) {
+
+      request(application)
+        .get('/conferences')
+        .send()
+        .expect(302)
+        .end(function(err, res) {
+          expect(err).to.not.exist;
+          expect(res.headers.location).to.equal('/');
+          done();
+        });
+    });
+
+    it('should redirect to conference page when valid query parameter', function(done) {
+      var members = [
+        {
+          displayName: 'FooBar',
+          objectType: 'hublin:anonymous',
+          id: 'creator'
+        }
+      ];
+
+      apiHelpers.createConference('MyTestConference', members, [], function(err, conference) {
+        if (err) {
+          return done(err);
+        }
+
+        request(application)
+          .get('/conferences?token=' + conference.members[0]._id)
+          .send()
+          .expect(302)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            expect(res.headers.location).to.equal('/' + conference._id);
+            done();
+          });
+      });
+    });
+
+    it('should 404 when invalid query parameter', function(done) {
+      var token = require('mongoose').Types.ObjectId();
+
+      request(application)
+        .get('/conferences?token=' + token.toString())
+        .send()
+        .expect(404)
+        .end(function(err, res) {
+          expect(err).to.not.exist;
+          done();
+        });
+    });
+
+  });
+
   describe('GET /conferences/:id', function() {
 
     it('should redirect to the conference page', function(done) {

@@ -2,12 +2,17 @@
 
 var expect = require('chai').expect;
 var mockery = require('mockery');
+var logger = require('../../../fixtures/logger-noop');
 
 describe('The conference middleware', function() {
   var dependencies;
 
   before(function() {
-    dependencies = {};
+    dependencies = function(name) {
+      if (name === 'logger') {
+        return logger();
+      }
+    };
   });
 
   it('load should set req.conference when id is set', function(done) {

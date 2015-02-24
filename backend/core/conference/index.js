@@ -104,6 +104,16 @@ function get(id, callback) {
 }
 
 /**
+ * Get conference from a member token
+ *
+ * @param {String} token
+ * @param {Function} callback
+ */
+function getFromMemberToken(token, callback) {
+  Conference.findOne({'members._id': token}).exec(callback);
+}
+
+/**
  * Load a conference with its attendees
  * @param {string} id
  * @param {function} callback
@@ -307,6 +317,12 @@ module.exports.invite = invite;
  * @type {get}
  */
 module.exports.get = get;
+
+/**
+ * @type {getFromMemberToken}
+ */
+module.exports.getFromMemberToken = getFromMemberToken;
+
 /**
  * @type {loadWithAttendees}
  */
