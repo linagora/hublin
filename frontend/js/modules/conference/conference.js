@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('meetings.conference', [])
+angular.module('meetings.conference', ['meetings.user'])
   .factory('conferenceService', ['$q', 'conferenceAPI', function($q, conferenceAPI) {
     function create() {
 
@@ -77,4 +77,22 @@ angular.module('meetings.conference', [])
         scope.room = randomizeRoom();
       }
     };
-  }]);
+  }])
+  .controller('usernameController', ['$scope', 'userService', function($scope, userService) {
+
+    $scope.getDisplayName = function() {
+      return userService.getDisplayName();
+    };
+
+    $scope.setDisplayName = function() {
+      userService.setDisplayName($scope.displayName);
+    };
+
+    $scope.username = $scope.getDisplayName();
+
+  }]).directive('usernameForm', [function() {
+    return {
+      restrict: 'E',
+      templateUrl: '/views/modules/live-conference/username-form.html'
+    };
+}]);
