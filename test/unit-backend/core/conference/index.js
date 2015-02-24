@@ -16,27 +16,6 @@ describe('The conference module', function() {
     });
   });
 
-  it('create should create the conference when user is id', function(done) {
-    var mongoose = {
-      model: function() {
-        return function() {
-          return {
-            save: function(callback) {
-              return callback(null, {});
-            }
-          };
-        };
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-    var conference = this.helpers.requireBackend('core/conference');
-    var id = 123;
-    conference.create(id, function(err, saved) {
-      expect(err).to.exist;
-      done();
-    });
-  });
-
   it('create should create the conference when user is object', function(done) {
     var mongoose = {
       model: function() {

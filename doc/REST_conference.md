@@ -223,13 +223,17 @@ A conference.
       }
     }
 
-## POST /api/conferences
+## PUT /api/conferences/:id
 
-Creates a new conference where the creator is the logged in user.
+Creates a new conference
 
 **Request Headers:**
 
 - Accept: application/json
+
+**Query Parameters:**
+
+- displayName: The display name of the user creating the public conference
 
 **Response Headers:**
 
@@ -246,7 +250,7 @@ The created conference.
 
 **Request:**
 
-    POST /api/conferences
+    POST /api/conferences/foobar?displayName=Bruce
     Accept: application/json
     Host: localhost:8080
 
@@ -254,14 +258,45 @@ The created conference.
 
     HTTP/1.1 201 Created
     {
-      "_id": "538e3bd6654d7c3307f990fa",
-      "creator": "5375de9fd684db7f6fbd5010"
-      "attendees": [],
+      "_id": "foobar",
+      "members": [
+        {
+          "_id": "123456789",
+          "objectType": "hublin:anonymous",
+          "id": "creator",
+          "displayName": "Bruce"
+        }
+      ],
       "history": [],
       "timestamps": {
           "creation": "2014-06-03T21:19:18.766Z"
       }
     }
+
+## PUT /conferences/:id
+
+Creates a new conference and redirects to the conference page.
+
+**Request Headers:**
+
+- Location: The URL of the conference
+
+**Status Codes:**
+
+- 302 Moved Temporarily
+- 500 Internal Server Error
+
+**Request:**
+
+    POST /conferences/foobar
+    Accept: application/json
+    Host: localhost:8080
+
+**Response:**
+
+    HTTP/1.1 302 Found
+    Location: https://hubl.in/foobar
+
 
 ## GET /api/conferences/{id}/attendees
 

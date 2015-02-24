@@ -1,13 +1,59 @@
 'use strict';
 
 var conference = require('../../core/conference');
+var invitation = {
+
+  /**
+   * Send invitation to users, update the conference by calling core.conference#invite
+   * Note: This can be handled asynchronously by a task runner.
+   *
+   * @param {Conference} conference
+   * @param {Array} users
+   * @param {Function} callback
+   * @return {*}
+   */
+  inviteUsers: function(conference, users, callback) {
+    return callback(null, conference);
+  }
+};
+
+function createConference(req, callback) {
+
+  var conf = {
+    _id: req.params.id,
+    history: [],
+    members: []
+  };
+
+  if (req.query.displayName) {
+    var currentUser = {
+      objectType: 'hublin:anonymous',
+      id: 'creator',
+      displayName: req.query.displayName,
+      connection: {
+        ipAdress: '',
+        userAgent: req.headers['user-agent']
+      }
+    };
+    conf.members.push(currentUser);
+  }
+
+  conference.create(conf, function(err, created) {
+    if (err) {
+      return callback(err);
+    }
+
+    var members = req.body.members || [];
+    return invitation.inviteUsers(created, members, callback);
+  });
+}
 
 /**
- *
  * @param {object} dependencies
- * @return {{get: get, list: list, create: create, join: join, leave: leave, updateAttendee: updateAttendee, removeAttendee: removeAttendee, addAttendee: addAttendee, getAttendees: getAttendees}}
+ * @return {hash}
  */
 module.exports = function(dependencies) {
+  var logger = dependencies('logger');
 
   function get(req, res) {
     var conf = req.conference;
@@ -17,23 +63,20 @@ module.exports = function(dependencies) {
     return res.json(200, conf);
   }
 
-  function list(req, res) {
-    conference.list(function(err, list) {
+  function create(req, res) {
+    return createConference(req, function(err, created) {
       if (err) {
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
+        logger.error('Error while creating conference %e', err);
+        return res.send(500);
       }
-      return res.json(200, list);
+      return res.redirect('/' + created.id);
     });
   }
 
-  function create(req, res) {
-    var user = req.user;
-    if (!user) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'User is missing'}});
-    }
-
-    conference.create(user, function(err, created) {
+  function createAPI(req, res) {
+    createConference(req, function(err, created) {
       if (err) {
+        logger.error('Error while creating conference %e', err);
         return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
       }
       return res.json(201, created);
@@ -132,8 +175,8 @@ module.exports = function(dependencies) {
 
   return {
     get: get,
-    list: list,
     create: create,
+    createAPI: createAPI,
     join: join,
     leave: leave,
     updateAttendee: updateAttendee,

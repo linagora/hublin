@@ -2,12 +2,17 @@
 
 var expect = require('chai').expect;
 var mockery = require('mockery');
+var logger = require('../../../fixtures/logger-noop');
 
 describe('The conferences controller', function() {
   var dependencies;
 
   before(function() {
-    dependencies = {};
+    dependencies = function(name) {
+      if (name === 'logger') {
+        return logger();
+      }
+    };
   });
 
   it('get should send back HTTP 200 when conference is in request', function(done) {
@@ -39,50 +44,6 @@ describe('The conferences controller', function() {
     controller.get({}, res);
   });
 
-  it('list should send back HTTP 500 when conference sends back error', function(done) {
-    mockery.registerMock('../../core/conference', {
-      list: function(callback) {
-        return callback(new Error());
-      }
-    });
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status) {
-        expect(status).to.equal(500);
-        done();
-      }
-    };
-    controller.list({}, res);
-  });
-
-  it('list should send back HTTP 200 when conference sends back list', function(done) {
-    mockery.registerMock('../../core/conference', {
-      list: function(callback) {
-        return callback(null, []);
-      }
-    });
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status) {
-        expect(status).to.equal(200);
-        done();
-      }
-    };
-    controller.list({}, res);
-  });
-
-  it('create should send back HTTP 400 when user is not defined in req', function(done) {
-    mockery.registerMock('../../core/conference', {});
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status) {
-        expect(status).to.equal(400);
-        done();
-      }
-    };
-    controller.create({}, res);
-  });
-
   it('create should send back HTTP 500 when conference sends back error', function(done) {
     mockery.registerMock('../../core/conference', {
       create: function(user, callback) {
@@ -91,15 +52,47 @@ describe('The conferences controller', function() {
     });
     var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
     var res = {
+      send: function(status) {
+        expect(status).to.equal(500);
+        done();
+      }
+    };
+    controller.create({user: {displayName: 'foobar'}, params: {id: 123}, body: {}, headers: [], query: []}, res);
+  });
+
+  it('create should redirect to /:name', function(done) {
+    mockery.registerMock('../../core/conference', {
+      create: function(user, callback) {
+        return callback(null, {id: 'name'});
+      }
+    });
+    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+    var res = {
+      redirect: function(path) {
+        expect(path).to.equals('/name');
+        done();
+      }
+    };
+    controller.create({user: {displayName: 'foobar'}, params: {id: 123}, body: {}, headers: [], query: []}, res);
+  });
+
+  it('createAPI should send back HTTP 500 when conference sends back error', function(done) {
+    mockery.registerMock('../../core/conference', {
+      create: function(user, callback) {
+        return callback(new Error());
+      }
+    });
+    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+    var res = {
       json: function(status) {
         expect(status).to.equal(500);
         done();
       }
     };
-    controller.create({user: {_id: 123}}, res);
+    controller.createAPI({user: {displayName: 'foobar'}, params: {id: 123}, body: {}, headers: [], query: []}, res);
   });
 
-  it('create should send back HTTP 201 when conference creates resource', function(done) {
+  it('createAPI should send back HTTP 201 when conference creates resource', function(done) {
     mockery.registerMock('../../core/conference', {
       create: function(user, callback) {
         return callback(null, {});
@@ -107,12 +100,12 @@ describe('The conferences controller', function() {
     });
     var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
     var res = {
-      json: function(status) {
-        expect(status).to.equal(201);
+      json: function(code) {
+        expect(code).to.equal(201);
         done();
       }
     };
-    controller.create({user: {_id: 123}}, res);
+    controller.createAPI({user: {displayName: 'foobar'}, params: {id: 123}, body: {}, headers: [], query: []}, res);
   });
 
   it('join should send back HTTP 400 when user is not defined in req', function(done) {

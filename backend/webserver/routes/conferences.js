@@ -15,11 +15,12 @@ module.exports = function(dependencies) {
 
   var router = express.Router();
 
+  router.put('/api/conferences/:id', user.load, controllers.createAPI);
+  router.put('/conferences/:id', user.load, controllers.create);
+
   router.get('/api/conferences/:id', middlewares.load, controllers.get);
-  router.get('/api/conferences', controllers.list);
-  router.post('/api/conferences', user.create, controllers.create);
-  router.get('/api/conferences/:id/attendees', middlewares.loadWithAttendees, controllers.getAttendees);
-  router.put('/api/conferences/:id/attendees', middlewares.load, user.create, controllers.updateAttendee);
+  router.get('/api/conferences/:id/members', middlewares.loadWithAttendees, controllers.getAttendees);
+  router.put('/api/conferences/:id/members', middlewares.load, user.load, controllers.updateAttendee);
   router.put('/api/conferences/:id/attendees/:user_id', middlewares.load, controllers.addAttendee);
 
   return router;

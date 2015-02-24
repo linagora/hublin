@@ -8,16 +8,15 @@ var logger = require('../logger');
 
 /**
  * Create a new conference in Mongo
- * @param {string} user
+ * @param {string} conference
  * @param {function} callback
  * @return {*}
  */
-function create(user, callback) {
-  if (!user || !user._id) {
-    return callback(new Error('Creator can not be null'));
+function create(conference, callback) {
+  if (!conference) {
+    return callback(new Error('Conference can not be null'));
   }
-
-  var conf = new Conference({creator: user._id, attendees: [{user: user._id, status: 'creator'}], history: [{user: user._id, status: 'creation'}]});
+  var conf = new Conference(conference);
   return conf.save(callback);
 }
 

@@ -1,47 +1,20 @@
 'use strict';
 
-var user = require('../../core/user');
-
 /**
- *
- * @param {req} req
- * @param {res} res
- * @param {next} next
+ * @param {request} req
+ * @param {response} res
+ * @param {function} next
  * @return {*}
  */
-exports.create = function(req, res, next) {
-  if (!req.body.email) {
-    return res.json(400, {
-      error: {
-        code: 400,
-        message: 'Bad request',
-        details: 'An email is required'
-      }
-    });
+module.exports.load = function(req, res, next) {
+
+  if (req.user) {
+    return next();
   }
 
-  if (!req.body.displayName) {
-    return res.json(400, {
-      error: {
-        code: 400,
-        message: 'Bad request',
-        details: 'A displayName is required'
-      }
-    });
-  }
-
-  user.save({ emails: [req.body.email], displayName: req.body.displayName })
-    .then(function(saved) {
-      req.user = saved[0];
-      next();
-    })
-    .catch (function(err) {
-      res.json(500, {
-        error: {
-          code: 500,
-          message: 'Server error',
-          details: err.message
-        }
-      });
-    });
+  req.user = {
+    objectType: 'hublin:anonymous',
+    id: 'user'
+  };
+  return next();
 };
