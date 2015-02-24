@@ -6,6 +6,7 @@ angular.module('liveConferenceApplication', [
   'op.easyrtc',
   'op.websocket',
   'op.live-conference',
+  'op.notification',
   'meetings.authentication',
   'meetings.session',
   'meetings.user',

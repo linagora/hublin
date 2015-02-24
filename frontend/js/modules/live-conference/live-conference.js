@@ -4,6 +4,7 @@ angular.module('op.live-conference', [
   'op.liveconference-templates',
   'op.easyrtc',
   'op.websocket',
+  'op.notification',
   'meetings.authentication',
   'meetings.session',
   'meetings.conference'
@@ -86,4 +87,24 @@ angular.module('op.live-conference', [
       }
     });
   }
-]);
+]).directive('liveConferenceNotification', ['$log', 'session', 'notificationFactory', 'livenotification',
+  function($log, session, notificationFactory, livenotification) {
+    return {
+      restrict: 'E',
+      link: function(scope, element, attrs) {
+        function liveNotificationHandler(msg) {
+          $log.debug('Got a live notification', msg);
+          if (msg.user_id !== session.user._id) {
+            notificationFactory.weakInfo('Conference updated!', msg.message);
+          }
+        }
+
+        var socketIORoom = livenotification('/conferences', attrs.conferenceId)
+          .on('notification', liveNotificationHandler);
+
+        scope.$on('$destroy', function() {
+          socketIORoom.removeListener('notification', liveNotificationHandler);
+        });
+      }
+    };
+  }]);
