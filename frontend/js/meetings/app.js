@@ -5,6 +5,7 @@ angular.module('meetingsApplication', [
   'uuid4',
   'ngRoute',
   'meetings.session',
+  'meetings.user',
   'meetings.conference'
 ]).config(function($routeProvider, RestangularProvider) {
 

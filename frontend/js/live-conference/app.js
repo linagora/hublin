@@ -8,20 +8,18 @@ angular.module('liveConferenceApplication', [
   'op.live-conference',
   'meetings.authentication',
   'meetings.session',
+  'meetings.user',
   'meetings.conference',
   'restangular',
   'mgcrea.ngStrap'
 ]).config(function($routeProvider, RestangularProvider) {
 
-  $routeProvider.when('/', {
+  $routeProvider.when('/live', {
     templateUrl: '/views/live-conference/partials/conference',
     controller: 'liveConferenceController',
     resolve: {
       conference: function(conferenceAPI, $route, $location) {
-        var urlParams = $location.absUrl().split('/');
-        urlParams.pop();
-        var conference_id = urlParams.pop().replace('#', '');
-        return conferenceAPI.get(conference_id).then(
+        return conferenceAPI.get(123).then(
           function(response) {
             return response.data;
           },
@@ -31,6 +29,11 @@ angular.module('liveConferenceApplication', [
         );
       }
     }
+  });
+
+  $routeProvider.when('/', {
+    templateUrl: '/views/live-conference/partials/username',
+    controller: 'usernameController'
   });
 
   $routeProvider.otherwise({redirectTo: '/'});

@@ -9,7 +9,9 @@ html
     title Meetings!
 
     link(rel='icon', type='image/png', href='images/logo-tiny.png')
-    link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/components/font-awesome/css/font-awesome.min.css')
+    link(href='/css/hublin.css', rel='stylesheet')
     link(rel='stylesheet', href='/css/live-conference.css')
 
     script(src='/components/jquery/dist/jquery.min.js')
@@ -32,6 +34,8 @@ html
 
     script(src='js/modules/authentication/authentication.js')
 
+    script(src='js/modules/user/user.js')
+
     script(src='js/modules/websocket/websocket.js')
     script(src='/components/opangular/src/websocket/services.js')
 
@@ -44,5 +48,5 @@ html
     script(src='js/modules/conference/conference.js')
     script(src='js/live-conference/app.js')
 
-  body.ng-cloak.hublin-live-conference-app(ng-app='liveConferenceApplication' ng-controller="sessionInitLiveConferenceController")
+  body.ng-cloak(ng-app='liveConferenceApplication' ng-controller="sessionInitLiveConferenceController")
     #wrap(ng-include='session.template')
