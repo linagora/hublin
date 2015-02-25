@@ -17,7 +17,6 @@ module.exports = function(dependencies) {
 
   var wsserver = dependencies('wsserver');
   var logger = dependencies('logger');
-  var conference = dependencies('conference');
   var pubsub = dependencies('pubsub');
   var global = pubsub.global;
 
@@ -39,38 +38,30 @@ module.exports = function(dependencies) {
 
     global.topic(JOINER_TOPIC).subscribe(function(msg) {
       logger.debug('Got a %s event', JOINER_TOPIC, msg);
-      conference.getMemberFromToken(msg.user_id, function(err, user) {
-        if (err) {
-          return logger.error('Can not get member from notification user id %e', err, msg);
-        }
+      if (!msg.user) {
+        return logger.debug('Can not find user from notification', msg);
+      }
 
-        if (!user) {
-          return logger.debug('Can not find user from notification', msg);
-        }
+      if (!msg.conference) {
+        return logger.debug('Can not find user from notification', msg);
+      }
 
-        if (user) {
-          msg.message = i18n.__('%s has joined the conference', user.displayName);
-          notifyRoom(io, msg.conference_id, msg);
-        }
-      });
+      msg.message = i18n.__('%s has joined the conference', msg.user.displayName);
+      notifyRoom(io, msg.conference._id, msg);
     });
 
     global.topic(LEAVER_TOPIC).subscribe(function(msg) {
       logger.debug('Got a %s event', LEAVER_TOPIC, msg);
-      conference.getMemberFromToken(msg.user_id, function(err, user) {
-        if (err) {
-          return logger.error('Can not get member from notification user id : %e', err, msg);
-        }
+      if (!msg.user) {
+        return logger.debug('Can not find user from notification', msg);
+      }
 
-        if (!user) {
-          return logger.debug('Can not find user from notification', msg);
-        }
+      if (!msg.conference) {
+        return logger.debug('Can not find user from notification', msg);
+      }
 
-        if (user) {
-          msg.message = i18n.__('%s has left the conference', user.displayName);
-          notifyRoom(io, msg.conference_id, msg);
-        }
-      });
+      msg.message = i18n.__('%s has left the conference', msg.user.displayName);
+      notifyRoom(io, msg.conference._id, msg);
     });
 
     io.of(NAMESPACE)

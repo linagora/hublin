@@ -78,6 +78,7 @@
     "mocha": "~1.18.2",
     "mockery": "~1.4.0",
     "nodemon": "1.0.19",
+    "rewire": "^2.3.1",
     "supertest": "^0.12.1"
   },
   "scripts": {
