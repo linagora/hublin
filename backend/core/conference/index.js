@@ -45,11 +45,7 @@ function addHistory(conference, user, status, callback) {
   if (!status) {
     return callback(new Error('Undefined status'));
   }
-
-  var id = user._id || user;
-  var conference_id = conference._id || conference;
-
-  Conference.update({_id: conference_id}, {$push: {history: {user: id, status: status}}}, {upsert: true}, callback);
+  return callback();
 }
 
 /**
@@ -232,8 +228,9 @@ function userCanJoinConference(conference, user, callback) {
   });
 }
 
-  /**
- * Push user inside conference attendees
+/**
+ * Sets the member presence to online and adds history
+ *
  * @param {string} conference
  * @param {string} user
  * @param {function} callback
@@ -251,47 +248,26 @@ function join(conference, user, callback) {
   var conferenceId = conference._id || conference;
   var userId = user._id || user;
 
-  Conference.findById(conferenceId, function(err, conf) {
+  Conference.update({_id: conferenceId, members: {$elemMatch: {_id: userId}}}, {$set: {'members.$': {_id: userId, status: 'online'}}}, {upsert: true}, function(err, updated) {
     if (err) {
       return callback(err);
     }
 
-    if (!conf) {
-      return callback(new Error('No such conference'));
-    }
+    localpubsub.topic('conference:join')
+      .forward(globalpubsub, {conference_id: conferenceId, user_id: userId});
 
-    var found = false;
-    conf.attendees.forEach(function(attendee) {
-      if (attendee.user.toString() === userId + '') {
-        found = true;
-        attendee.status = 'online';
-      }
-    });
-
-    if (!found) {
-      conf.attendees.push({user: new mongoose.Types.ObjectId(userId + ''), status: 'online'});
-    }
-
-    conf.save(function(err, updated) {
+    addHistory(conferenceId, userId, 'join', function(err, history) {
       if (err) {
-        return callback(err);
+        logger.warn('Error while pushing new history element %e', err);
       }
-
-      localpubsub.topic('conference:join')
-        .forward(globalpubsub, {conference_id: conf._id, user_id: userId});
-
-      addHistory(conf._id, userId, 'join', function(err, history) {
-        if (err) {
-          logger.warn('Error while pushing new history element ' + err.message);
-        }
-        return callback(null, conf);
-      });
+      return callback(null, updated);
     });
   });
 }
 
-  /**
- * Remove user from conference attendees
+/**
+ * Sets the member status to offline and adds history
+ *
  * @param {string} conference
  * @param {string} user
  * @param {function} callback
@@ -309,7 +285,7 @@ function leave(conference, user, callback) {
   var id = user._id || user;
   var conference_id = conference._id || conference;
 
-  Conference.update({_id: conference_id, attendees: {$elemMatch: {user: id}}}, {$set: {'attendees.$': {user: id, status: 'offline'}}}, {upsert: true}, function(err, updated) {
+  Conference.update({_id: conference_id, members: {$elemMatch: {_id: id}}}, {$set: {'members.$': {_id: id, status: 'offline'}}}, {upsert: true}, function(err, updated) {
     if (err) {
       return callback(err);
     }
@@ -319,7 +295,7 @@ function leave(conference, user, callback) {
 
     addHistory(conference_id, id, 'leave', function(err, history) {
       if (err) {
-        logger.warn('Error while pushing new history element ' + err.message);
+        logger.warn('Error while pushing new history element %e', err);
       }
       return callback(null, updated);
     });

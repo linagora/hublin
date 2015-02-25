@@ -555,19 +555,19 @@ describe('The conference module', function() {
 
     var conf = {
       creator: 333,
-      attendees: [],
+      members: [],
       history: [],
       save: function(callback) {
         var self = this;
-        expect(self.attendees.length === 1);
-        return callback(null, {attendees: self.attendees});
+        expect(self.members.length === 1);
+        return callback(null, {members: self.members});
       }
     };
 
     var mongoose = {
       model: function() {
         return {
-          findById: function(id, callback) {
+          update: function(a, b, c, callback) {
             return callback(null, conf);
           }
         };
