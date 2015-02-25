@@ -264,7 +264,7 @@ No response.
 
 ## PUT /api/conferences/{id}/members
 
-Add attendees to the conference. The caller must be attendee of the conference to perform this action.
+Add members to the conference. The caller must be a member of the conference to perform this action.
 
 **Request Headers:**
 

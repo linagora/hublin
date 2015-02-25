@@ -53,10 +53,10 @@ function addHistory(conference, user, status, callback) {
 }
 
 /**
- * Invite a list of attendees inside a conference
+ * Invite a list of members inside a conference
  * @param {string} conference
  * @param {string} creator - user inviting into the conference
- * @param {[members]} members - an array of members
+ * @param {[member]} members - an array of members
  * @param {function} callback
  * @return {*}
  */
@@ -66,7 +66,7 @@ function invite(conference, creator, members, callback) {
   }
 
   if (!members) {
-    return callback(new Error('Can not invite undefined attendees'));
+    return callback(new Error('Can not invite undefined members'));
   }
 
   if (!Array.isArray(members)) {

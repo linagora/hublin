@@ -150,7 +150,7 @@ module.exports = function(dependencies) {
 
     var newMembers = req.body;
     if (!newMembers) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Invited attendees missing'}});
+      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Invited members missing'}});
     }
 
     conference.invite(conf, user, newMembers, function(err) {

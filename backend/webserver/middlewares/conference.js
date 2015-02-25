@@ -206,7 +206,7 @@ module.exports = function(dependencies) {
           error: {
             code: 403,
             message: 'Forbidden',
-            details: 'User cannot invite attendees into a conference in which he is not attendee himself.'
+            details: 'User cannot invite members into a conference in which he is not member himself.'
           }
         });
       }
