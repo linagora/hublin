@@ -5,6 +5,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var ObjectId = require('bson').ObjectId;
 
+
 describe('The conference module', function() {
 
   it('create should send back error when user is not set', function(done) {
@@ -38,329 +39,403 @@ describe('The conference module', function() {
     });
   });
 
-  it('invite should send back error when conference is not set', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.invite(null, {}, function(err, saved) {
-      expect(err).to.exist;
-      done();
+  describe('the invite function', function() {
+    it('should send back error when conference is not set', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.invite(null, {}, {},function(err, saved) {
+        expect(err).to.exist;
+        expect(saved).to.not.exist;
+        done();
+      });
     });
-  });
 
-  it('invite should send back error when attendees is not set', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.invite({}, null, function(err, saved) {
-      expect(err).to.exist;
-      done();
+    it('should send back error when attendees is not set', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.invite({}, {}, null, function(err, saved) {
+        expect(err).to.exist;
+        expect(saved).to.not.exist;
+        done();
+      });
     });
-  });
 
-  it('invite should send back error when conference and attendees are not set', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.invite(null, null, function(err, saved) {
-      expect(err).to.exist;
-      done();
+    it('should send back error when conference and attendees are not set', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.invite(null, {}, null, function(err, saved) {
+        expect(err).to.exist;
+        expect(saved).to.not.exist;
+        done();
+      });
     });
-  });
 
-  it('invite should send back error when conference.save send back error', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
+    it('should send back error when conference.save send back error', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
 
-    var attendees = {
-      _id: 123
-    };
-
-    var conf = {
-      save: function(callback) {
-        return callback(new Error());
-      },
-      attendees: []
-    };
-
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.invite(conf, attendees, function(err) {
-      expect(err).to.exist;
-      done();
-    });
-  });
-
-  it('invite should send back updated conference when attendees is object', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-
-    var attendees = {
-      _id: 123
-    };
-
-    var conf = {
-      attendees: [],
-      save: function(callback) {
-        var self = this;
-        return callback(null, {attendees: self.attendees});
-      }
-    };
-
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.invite(conf, attendees, function(err, updated) {
-      expect(err).to.not.exist;
-      expect(updated).to.exist;
-      expect(updated.attendees).to.exist;
-      expect(updated.attendees.length).to.equal(1);
-      done();
-    });
-  });
-
-  it('invite should send back updated conference when attendees is array', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-
-    var attendees = [
-      {
+      var attendees = {
         _id: 123
-      },
-      {
-        _id: 456
-      }
-    ];
+      };
 
-    var conf = {
-      attendees: [],
-      save: function(callback) {
-        var self = this;
-        return callback(null, {attendees: self.attendees});
-      }
-    };
+      var conf = {
+        save: function(callback) {
+          return callback(new Error());
+        },
+        members: []
+      };
 
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.invite(conf, attendees, function(err, updated) {
-      expect(err).to.not.exist;
-      expect(updated).to.exist;
-      expect(updated.attendees).to.exist;
-      expect(updated.attendees.length).to.equal(2);
-      done();
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.invite(conf, {}, attendees, function(err) {
+        expect(err).to.exist;
+        done();
+      });
+    });
+
+    it('should send back updated conference when attendees is object', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+      var attendees = {
+        _id: 123
+      };
+
+      var conf = {
+        members: [],
+        save: function(callback) {
+          var self = this;
+          return callback(null, {members: self.members});
+        }
+      };
+
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.invite(conf, {}, attendees, function(err, updated) {
+        expect(err).to.not.exist;
+        expect(updated).to.exist;
+        expect(updated.members).to.exist;
+        expect(updated.members.length).to.equal(1);
+        done();
+      });
+    });
+
+    it('should send back updated conference when attendees is array', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+      var attendees = [
+        {
+          _id: 123
+        },
+        {
+          _id: 456
+        }
+      ];
+
+      var conf = {
+        members: [],
+        save: function(callback) {
+          var self = this;
+          return callback(null, {members: self.members});
+        }
+      };
+
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.invite(conf, {}, attendees, function(err, updated) {
+        expect(err).to.not.exist;
+        expect(updated).to.exist;
+        expect(updated.members).to.exist;
+        expect(updated.members.length).to.equal(2);
+        done();
+      });
+    });
+
+    it('invite should forward invitation into conference:invite', function(done) {
+      this.mongoose = mockery.registerMock('mongoose', {
+        model: function() {
+          return {};
+        }
+      });
+
+      var localstub = {}, globalstub = {};
+      this.helpers.mock.pubsub('../pubsub', localstub, globalstub);
+
+      var conference = this.helpers.requireBackend('core/conference');
+
+      var creator = {id: 'creator'};
+      var newMember = { id: 'newMemberId'};
+      var conf = {
+        members: [],
+        history: [],
+        save: function(callback) {
+          callback(null, conf);
+        }
+      };
+
+      conference.invite(conf, creator, newMember, function() {
+        expect(localstub.topics['conference:invite'].data[0]).to.deep.equal({
+          conference: conf,
+          user: newMember,
+          creator: creator
+        });
+        expect(globalstub.topics['conference:invite'].data[0]).to.deep.equal({
+          conference: conf,
+          user: newMember,
+          creator: creator
+        });
+        done();
+      });
     });
   });
 
-  it('userCanJoinConference should send back error when user is not set', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
+  describe('userCanJoinConference function', function() {
+    it('should send back error when user is not set', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
 
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.userCanJoinConference({}, null, function(err) {
-      expect(err).to.exist;
-      done();
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.userCanJoinConference({}, null, function(err) {
+        expect(err).to.exist;
+        done();
+      });
+    });
+
+    it('should send back error when conference is not set', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.userCanJoinConference(null, {}, function(err) {
+        expect(err).to.exist;
+        done();
+      });
+    });
+
+    it('should send true when user is conference creator', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+      var user_id = new ObjectId();
+      var conf = {
+        creator: user_id,
+        attendees: []
+      };
+
+      var user = {
+        _id: user_id
+      };
+
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.userCanJoinConference(conf, user, function(err, status) {
+        expect(err).to.not.exist;
+        expect(status).to.be.true;
+        done();
+      });
+    });
+
+    it('should send true when user is attendee', function(done) {
+      var user = {
+        _id: new ObjectId(),
+        id: 'me@linagora.com'
+      };
+
+      var conf = {
+        creator: new ObjectId(),
+        members: [
+          {id: user.id},
+          {id: 'myfriend@linagora.com'}
+        ]
+      };
+
+      var mongoose = {
+        model: function() {
+          return {
+            findOne: function() {
+              return {
+                exec: function(callback) {
+                  return callback(null, conf);
+                }
+              };
+            }
+          };
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.userCanJoinConference(conf, user, function(err, status) {
+        expect(err).to.not.exist;
+        expect(status).to.be.true;
+        done();
+      });
+    });
+
+    it('userCanJoinConference should send false when user is not in attendees list', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+      var conf = {
+        creator: new ObjectId(),
+        attendees: [
+          {user: new ObjectId()}
+        ]
+      };
+
+      var user = {
+        _id: new ObjectId()
+      };
+
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.userIsConferenceCreator(conf, user, function(err, status) {
+        expect(err).to.not.exist;
+        expect(status).to.be.false;
+        done();
+      });
     });
   });
 
-  it('userCanJoinConference should send back error when conference is not set', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
 
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.userCanJoinConference(null, {}, function(err) {
-      expect(err).to.exist;
-      done();
+  describe('userIsConferenceMember function', function() {
+    it('should send back error when user is not set', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.userIsConferenceMember({}, null, function(err) {
+        expect(err).to.exist;
+        done();
+      });
     });
-  });
 
-  it('userCanJoinConference should send true when user is conference creator', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
+    it('should send back error when conference is not set', function(done) {
+      var mongoose = {
+        model: function() {
+          return {};
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
 
-    var user_id = new ObjectId();
-    var conf = {
-      creator: user_id,
-      attendees: []
-    };
-
-    var user = {
-      _id: user_id
-    };
-
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.userCanJoinConference(conf, user, function(err, status) {
-      expect(err).to.not.exist;
-      expect(status).to.be.true;
-      done();
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.userIsConferenceMember(null, {}, function(err) {
+        expect(err).to.exist;
+        done();
+      });
     });
-  });
 
-  it('userCanJoinConference should send true when user is attendee', function(done) {
+    it('should send true when user is in attendee list', function(done) {
+      var user = {
+        id: 'me@linagora.com'
+      };
 
-    var user = {
-      _id: new ObjectId()
-    };
+      var conf = {
+        creator: 123,
+        members: [
+          {id: user.id},
+          {id: 111}
+        ]
+      };
 
-    var conf = {
-      creator: new ObjectId(),
-      attendees: [
-        {user: user._id},
-        {user: new ObjectId()}
-      ]
-    };
+      var mongoose = {
+        model: function() {
+          return {
+            findOne: function() {
+              return {
+                exec: function(callback) {
+                  return callback(null, conf);
+                }
+              };
+            }
+          };
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
 
-    var mongoose = {
-      model: function() {
-        return {
-          findOne: function() {
-            return {
-              exec: function(callback) {
-                return callback(null, conf);
-              }
-            };
-          }
-        };
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.userCanJoinConference(conf, user, function(err, status) {
-      expect(err).to.not.exist;
-      expect(status).to.be.true;
-      done();
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.userIsConferenceMember(conf, user, function(err, status) {
+        expect(err).to.not.exist;
+        expect(status).to.be.true;
+        done();
+      });
     });
-  });
 
-  it('userIsConferenceAttendee should send back error when user is not set', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
+    it('should send false when user is not in attendees list', function(done) {
+      var user = {
+        id: 'me@linagora.com'
+      };
 
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.userIsConferenceAttendee({}, null, function(err) {
-      expect(err).to.exist;
-      done();
-    });
-  });
+      var conf = {
+        creator: 123,
+        members: [
+        ]
+      };
 
-  it('userIsConferenceAttendee should send back error when conference is not set', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
+      var mongoose = {
+        model: function() {
+          return {
+            findOne: function() {
+              return {
+                exec: function(callback) {
+                  return callback(null, conf);
+                }
+              };
+            }
+          };
+        }
+      };
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
 
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.userIsConferenceAttendee(null, {}, function(err) {
-      expect(err).to.exist;
-      done();
-    });
-  });
-
-  it('userIsConferenceAttendee should send true when user is in attendee list', function(done) {
-    var user = {
-      _id: new ObjectId()
-    };
-
-    var conf = {
-      creator: 123,
-      attendees: [
-        {user: user._id},
-        {user: 111}
-      ]
-    };
-
-    var mongoose = {
-      model: function() {
-        return {
-          findOne: function() {
-            return {
-              exec: function(callback) {
-                return callback(null, conf);
-              }
-            };
-          }
-        };
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.userIsConferenceAttendee(conf, user, function(err, status) {
-      expect(err).to.not.exist;
-      expect(status).to.be.true;
-      done();
-    });
-  });
-
-  it('userIsConferenceAttendee should send false when user is not in attendees list', function(done) {
-    var user = {
-      _id: new ObjectId()
-    };
-
-    var conf = {
-      creator: 123,
-      attendees: [
-      ]
-    };
-
-    var mongoose = {
-      model: function() {
-        return {
-          findOne: function() {
-            return {
-              exec: function(callback) {
-                return callback(null, conf);
-              }
-            };
-          }
-        };
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.userIsConferenceAttendee(conf, user, function(err, status) {
-      expect(err).to.not.exist;
-      expect(status).to.be.false;
-      done();
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.userIsConferenceMember(conf, user, function(err, status) {
+        expect(err).to.not.exist;
+        expect(status).to.be.false;
+        done();
+      });
     });
   });
 
@@ -428,68 +503,6 @@ describe('The conference module', function() {
 
     var conf = {
       creator: new ObjectId()
-    };
-
-    var user = {
-      _id: new ObjectId()
-    };
-
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.userIsConferenceCreator(conf, user, function(err, status) {
-      expect(err).to.not.exist;
-      expect(status).to.be.false;
-      done();
-    });
-  });
-
-  it('userCanJoinConference should send true when user is in attendees list', function(done) {
-    var user = {
-      _id: new ObjectId()
-    };
-
-    var conf = {
-      creator: new ObjectId(),
-      attendees: [
-        {user: user._id}
-      ]
-    };
-
-    var mongoose = {
-      model: function() {
-        return {
-          findOne: function() {
-            return {
-              exec: function(callback) {
-                return callback(null, conf);
-              }
-            };
-          }
-        };
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.userCanJoinConference(conf, user, function(err, status) {
-      expect(err).to.not.exist;
-      expect(status).to.be.true;
-      done();
-    });
-  });
-
-  it('userCanJoinConference should send false when user is not in attendees list', function(done) {
-    var mongoose = {
-      model: function() {
-        return {};
-      }
-    };
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-
-    var conf = {
-      creator: new ObjectId(),
-      attendees: [
-        {user: new ObjectId()}
-      ]
     };
 
     var user = {
@@ -627,41 +640,6 @@ describe('The conference module', function() {
     };
 
     conference.addHistory(conf, {user: 123}, 'hey', function(err) {
-      done();
-    });
-  });
-
-  it('invite should forward invitation into conference:invite', function(done) {
-    this.mongoose = mockery.registerMock('mongoose', {
-      model: function() {
-        return {};
-      }
-    });
-
-    var localstub = {}, globalstub = {};
-    this.helpers.mock.pubsub('../pubsub', localstub, globalstub);
-
-    var conference = this.helpers.requireBackend('core/conference');
-
-    var conf = {
-      attendees: [],
-      history: [],
-      save: function(callback) {
-        callback(null, { _id: 12345, creator: 123456 });
-      }
-    };
-
-    conference.invite(conf, { _id: 123 }, function() {
-      expect(localstub.topics['conference:invite'].data[0]).to.deep.equal({
-        conference_id: 12345,
-        user_id: 123,
-        creator_id: 123456
-      });
-      expect(globalstub.topics['conference:invite'].data[0]).to.deep.equal({
-        conference_id: 12345,
-        user_id: 123,
-        creator_id: 123456
-      });
       done();
     });
   });
