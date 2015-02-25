@@ -56,7 +56,7 @@ function addHistory(conference, user, status, callback) {
  * Invite a list of attendees inside a conference
  * @param {string} conference
  * @param {string} creator - user inviting into the conference
- * @param {[string]} members - an array of email addresses as strings
+ * @param {[members]} members - an array of members
  * @param {function} callback
  * @return {*}
  */
