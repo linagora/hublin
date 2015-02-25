@@ -295,7 +295,16 @@ No response.
     PUT /api/conferences/538e3bd6654d7c3307f990fa/members
     Accept: application/json
     Host: localhost:8080
-    ['user1@linagora.com', 'user1@lng.fr']
+    [
+      {
+        objectType: 'email',
+        id: 'user1@linagora.com'
+      },
+      {
+        objectType: 'email',
+        id: 'user1@lng.fr'
+      }
+    ]
 
 **Response:**
 

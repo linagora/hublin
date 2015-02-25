@@ -5,6 +5,7 @@ var Conference = mongoose.model('Conference');
 var localpubsub = require('../pubsub').local;
 var globalpubsub = require('../pubsub').global;
 var logger = require('../logger');
+var extend = require('extend');
 
 var MEMBER_STATUS = {
   INVITED: 'invited'
@@ -73,12 +74,14 @@ function invite(conference, creator, members, callback) {
   }
 
   members.forEach(function(member) {
-    conference.members.push({
-      objectType: 'email',
-      id: member,
-      displayName: member,
-      status: MEMBER_STATUS.INVITED
-    });
+    var confMember = {};
+    extend(true, confMember, member);
+
+    if (!confMember.displayName) {
+      confMember.displayName = confMember.id;
+    }
+    confMember.status = MEMBER_STATUS.INVITED;
+    conference.members.push(confMember);
   });
 
   var localtopic = localpubsub.topic('conference:invite');
@@ -192,7 +195,7 @@ function userIsConferenceMember(conference, user, callback) {
 
   var conference_id = conference._id || conference;
 
-  Conference.findOne({_id: conference_id}, {members: {$elemMatch: {id: user.id}}}).exec(function(err, conf) {
+  Conference.findOne({_id: conference_id}, {members: {$elemMatch: {id: user.id, objectType: user.objectType}}}).exec(function(err, conf) {
     if (err) {
       return callback(err);
     }
