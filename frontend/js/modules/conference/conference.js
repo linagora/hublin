@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('meetings.conference', ['meetings.user'])
+angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
   .factory('conferenceService', ['$q', 'conferenceAPI', function($q, conferenceAPI) {
-    function create() {
-
+    function create(conferenceName, displayName) {
+      return conferenceAPI.create(conferenceName, displayName);
     }
 
-    function enter() {
-
+    function enter(conferenceName, displayName) {
+      return conferenceAPI.get(conferenceName, displayName);
     }
 
     function addAttendee() {
@@ -66,7 +66,8 @@ angular.module('meetings.conference', ['meetings.user'])
   .controller('meetingsLandingPageController', ['$scope', '$q', function($scope, $q) {
     console.log('meetingsLandingPageController');
   }])
-  .directive('conferenceCreateForm', ['uuid4', function(uuid4) {
+  .directive('conferenceCreateForm', ['$window', '$log', 'uuid4', 'conferenceService', '$location', 'URI',
+    function($window, $log, uuid4, conferenceService, $location, URI) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/conference/conference-create-form.html',
@@ -74,7 +75,18 @@ angular.module('meetings.conference', ['meetings.user'])
         function randomizeRoom() {
           return uuid4.generate();
         }
+
+        function buildUrl(room) {
+          return URI($location.absUrl())
+          .query('')
+          .fragment('')
+          .segmentCoded(room);
+        }
+
         scope.room = randomizeRoom();
+        scope.go = function() {
+          $window.location.href = buildUrl(scope.room);
+        };
       }
     };
   }])
