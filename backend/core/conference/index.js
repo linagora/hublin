@@ -114,6 +114,23 @@ function getFromMemberToken(token, callback) {
 }
 
 /**
+ * @param {String} token
+ * @param {Function} callback
+ * @return {*}
+ */
+function getMemberFromToken(token, callback) {
+  getFromMemberToken(token, function(err, conference) {
+    if (err) {
+      return callback(err);
+    }
+    if (!conference) {
+      return callback(new Error('No such conference'));
+    }
+    return callback(null, conference.members.id(token));
+  });
+}
+
+/**
  * Load a conference with its attendees
  * @param {string} id
  * @param {function} callback
@@ -322,6 +339,11 @@ module.exports.get = get;
  * @type {getFromMemberToken}
  */
 module.exports.getFromMemberToken = getFromMemberToken;
+
+/**
+ * @type {getMemberFromToken}
+ */
+module.exports.getMemberFromToken = getMemberFromToken;
 
 /**
  * @type {loadWithAttendees}
