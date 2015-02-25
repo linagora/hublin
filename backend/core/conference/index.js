@@ -175,13 +175,13 @@ function userIsConferenceCreator(conference, user, callback) {
 }
 
 /**
- * Check is user is one of the conference attendees
+ * Check is user is one of the conference members
  * @param {string} conference
  * @param {string} user
  * @param {function} callback
  * @return {*}
  */
-function userIsConferenceAttendee(conference, user, callback) {
+function userIsConferenceMember(conference, user, callback) {
   if (!user) {
     return callback(new Error('Undefined user'));
   }
@@ -190,14 +190,13 @@ function userIsConferenceAttendee(conference, user, callback) {
     return callback(new Error('Undefined conference'));
   }
 
-  var id = user._id || user;
   var conference_id = conference._id || conference;
 
-  Conference.findOne({_id: conference_id}, {attendees: {$elemMatch: {user: id}}}).exec(function(err, conf) {
+  Conference.findOne({_id: conference_id}, {members: {$elemMatch: {id: user.id}}}).exec(function(err, conf) {
     if (err) {
       return callback(err);
     }
-    return callback(null, (conf.attendees !== null && conf.attendees.length > 0));
+    return callback(null, (conf && conf.members !== null && conf.members.length > 0));
   });
 }
 
@@ -226,7 +225,7 @@ function userCanJoinConference(conference, user, callback) {
       return callback(null, true);
     }
 
-    return userIsConferenceAttendee(conference, user, callback);
+    return userIsConferenceMember(conference, user, callback);
   });
 }
 
@@ -365,9 +364,9 @@ module.exports.list = list;
  */
 module.exports.userIsConferenceCreator = userIsConferenceCreator;
 /**
- * @type {userIsConferenceAttendee}
+ * @type {function}
  */
-module.exports.userIsConferenceAttendee = userIsConferenceAttendee;
+module.exports.userIsConferenceMember = userIsConferenceMember;
 /**
  * @type {userCanJoinConference}
  */
