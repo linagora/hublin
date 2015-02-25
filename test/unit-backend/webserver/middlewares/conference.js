@@ -250,7 +250,7 @@ describe('The conference middleware', function() {
   describe('canAddAttendee function', function() {
     it('should send back HTTP 400 when user is not set in request', function(done) {
       mockery.registerMock('../../core/conference', {});
-      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddAttendee;
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddMember;
       var req = {
         conference: {}
       };
@@ -265,7 +265,7 @@ describe('The conference middleware', function() {
 
     it('should send back HTTP 400 when conference is not set in request', function(done) {
       mockery.registerMock('../../core/conference', {});
-      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddAttendee;
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddMember;
       var req = {
         user: {}
       };
@@ -278,14 +278,14 @@ describe('The conference middleware', function() {
       middleware(req, res);
     });
 
-    it('should send back HTTP 500 when conference#userIsConferenceCreator fails', function(done) {
+    it('should send back HTTP 500 when conference#userIsConferenceMember fails', function(done) {
       mockery.registerMock('../../core/conference', {
-        userIsConferenceCreator: function(conference, user, callback) {
+        userIsConferenceMember: function(conference, user, callback) {
           return callback(new Error());
         }
       });
 
-      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddAttendee;
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddMember;
       var req = {
         user: {},
         conference: {}
@@ -299,14 +299,14 @@ describe('The conference middleware', function() {
       middleware(req, res);
     });
 
-    it('should call next when conference#userIsConferenceCreator returns true', function(done) {
+    it('should call next when conference#userIsConferenceMember returns true', function(done) {
       mockery.registerMock('../../core/conference', {
-        userIsConferenceCreator: function(conference, user, callback) {
+        userIsConferenceMember: function(conference, user, callback) {
           return callback(null, true);
         }
       });
 
-      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddAttendee;
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddMember;
       var req = {
         user: {},
         conference: {}
@@ -319,18 +319,14 @@ describe('The conference middleware', function() {
       middleware(req, res, done);
     });
 
-    it('should send back HTTP 403 when conference#userIsConferenceCreator returns false ' +
-      'and userIsConferenceAttendee return false', function(done) {
+    it('should send back HTTP 403 when conference#userIsConferenceMember returns false ' , function(done) {
       mockery.registerMock('../../core/conference', {
-        userIsConferenceCreator: function(conference, user, callback) {
-          return callback(null, false);
-        },
-        userIsConferenceAttendee: function(conference, user, callback) {
+        userIsConferenceMember: function(conference, user, callback) {
           return callback(null, false);
         }
       });
 
-      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddAttendee;
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddMember;
       var req = {
         user: {},
         conference: {}
@@ -342,55 +338,6 @@ describe('The conference middleware', function() {
         }
       };
       middleware(req, res);
-    });
-
-    it('should send back HTTP 500 when conference#userIsConferenceCreator returns false ' +
-      'and userIsConferenceAttendee fails', function(done) {
-      mockery.registerMock('../../core/conference', {
-        userIsConferenceCreator: function(conference, user, callback) {
-          return callback(null, false);
-        },
-        userIsConferenceAttendee: function(conference, user, callback) {
-          return callback(new Error());
-        }
-      });
-
-      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddAttendee;
-      var req = {
-        user: {},
-        conference: {}
-      };
-      var res = {
-        json: function(code) {
-          expect(code).to.equal(500);
-          done();
-        }
-      };
-      middleware(req, res);
-    });
-
-    it('should call next when conference#userIsConferenceCreator returns false ' +
-      'and userIsConferenceAttendee return true', function(done) {
-      mockery.registerMock('../../core/conference', {
-        userIsConferenceCreator: function(conference, user, callback) {
-          return callback(null, false);
-        },
-        userIsConferenceAttendee: function(conference, user, callback) {
-          return callback(null, true);
-        }
-      });
-
-      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).canAddAttendee;
-      var req = {
-        user: {},
-        conference: {}
-      };
-      var res = {
-        json: function(code) {
-          done(new Error());
-        }
-      };
-      middleware(req, res, done);
     });
   });
 });
