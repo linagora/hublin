@@ -200,7 +200,8 @@ function userIsConferenceMember(conference, user, callback) {
 }
 
 /**
- * Check if user can join conference
+ * Check if user can join conference.
+ * Conferences are public for now so everybody can join.
  * @param {string} conference
  * @param {string} user
  * @param {function} callback
@@ -215,17 +216,7 @@ function userCanJoinConference(conference, user, callback) {
     return callback(new Error('Undefined conference'));
   }
 
-  userIsConferenceCreator(conference, user, function(err, status) {
-    if (err) {
-      return callback(err);
-    }
-
-    if (status) {
-      return callback(null, true);
-    }
-
-    return userIsConferenceMember(conference, user, callback);
-  });
+  return callback(null, true);
 }
 
 /**
