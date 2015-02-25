@@ -10,7 +10,7 @@ module.exports.init = function(dependencies) {
   var invitation = dependencies('invitation');
 
   function processInvitation(data, callback) {
-    invitation.sendInvitation(data.creator, data.user, data.conference, 'email', callback);
+    invitation.sendInvitation(data.creator, data.user, data.conference, data.user.objectType, callback);
   }
 
   pubsub.topic('conference:invite').subscribe(processInvitation);
