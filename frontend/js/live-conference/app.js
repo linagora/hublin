@@ -13,18 +13,21 @@ angular.module('liveConferenceApplication', [
   'meetings.conference',
   'restangular',
   'mgcrea.ngStrap'
-]).config(function($routeProvider, RestangularProvider) {
+]).config(function($routeProvider, $locationProvider, RestangularProvider) {
 
-  $routeProvider.when('/live', {
+  $routeProvider.when('/:conferenceId', {
     templateUrl: '/views/live-conference/partials/conference',
     controller: 'liveConferenceController',
     resolve: {
-      conference: function(conferenceAPI, $route, $location) {
-        return conferenceAPI.get(123).then(
+      conference: function($route, $location, $log, conferenceService) {
+        var id = $route.current.params.conferenceId;
+        return conferenceService.enter(id).then(
           function(response) {
+            $log.info('Successfully entered room', id, 'with response', response);
             return response.data;
           },
           function(err) {
+            $log.info('Failed to enter room', id, err);
             $location.path('/');
           }
         );
@@ -37,13 +40,14 @@ angular.module('liveConferenceApplication', [
     controller: 'usernameController'
   });
 
-  $routeProvider.otherwise({redirectTo: '/'});
+  $routeProvider.otherwise({redirectTo: '/noop'});
 
-  RestangularProvider.setBaseUrl('/api');
+  $locationProvider.html5Mode(true);
+
+  RestangularProvider.setBaseUrl('/');
   RestangularProvider.setFullResponse(true);
-
 })
-  .run(['$log', 'session', 'ioConnectionManager', function($log, session, ioConnectionManager) {
+  .run(['$log', 'session', 'ioConnectionManager', '$route', function($log, session, ioConnectionManager, $route) {
     session.ready.then(function() {
       $log.debug('Session is ready, connecting to websocket', session.user);
       ioConnectionManager.connect();
