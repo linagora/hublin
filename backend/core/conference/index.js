@@ -6,6 +6,10 @@ var localpubsub = require('../pubsub').local;
 var globalpubsub = require('../pubsub').global;
 var logger = require('../logger');
 
+var MEMBER_STATUS = {
+  INVITED: 'invited'
+};
+
 /**
  * Create a new conference in Mongo
  * @param {string} conference
@@ -50,27 +54,30 @@ function addHistory(conference, user, status, callback) {
 /**
  * Invite a list of attendees inside a conference
  * @param {string} conference
- * @param {[string]} attendees - an array of user
+ * @param {string} creator - user inviting into the conference
+ * @param {[string]} members - an array of email addresses as strings
  * @param {function} callback
  * @return {*}
  */
-function invite(conference, attendees, callback) {
+function invite(conference, creator, members, callback) {
   if (!conference) {
     return callback(new Error('Can not invite to an undefined conference'));
   }
 
-  if (!attendees) {
+  if (!members) {
     return callback(new Error('Can not invite undefined attendees'));
   }
 
-  if (!Array.isArray(attendees)) {
-    attendees = [attendees];
+  if (!Array.isArray(members)) {
+    members = [members];
   }
 
-  attendees.forEach(function(element) {
-    conference.attendees.push({
-      user: element._id || element,
-      status: 'invited'
+  members.forEach(function(member) {
+    conference.members.push({
+      objectType: 'email',
+      id: member,
+      displayName: member,
+      status: MEMBER_STATUS.INVITED
     });
   });
 
@@ -81,11 +88,11 @@ function invite(conference, attendees, callback) {
       return callback(err);
     }
 
-    attendees.forEach(function(attendee) {
+    members.forEach(function(member) {
       var invitation = {
-        conference_id: updated._id,
-        user_id: attendee._id || attendee,
-        creator_id: updated.creator
+        conference: updated,
+        user: member,
+        creator: creator
       };
       localtopic.forward(globalpubsub, invitation);
     });
@@ -373,3 +380,7 @@ module.exports.join = join;
  * @type {leave}
  */
 module.exports.leave = leave;
+/**
+ * @type {hash} The possible statuses for conference members
+ */
+module.exports.MEMBER_STATUS = MEMBER_STATUS;
