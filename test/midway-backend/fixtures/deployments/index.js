@@ -49,6 +49,27 @@ module.exports.linagora_IT = function() {
         lastname: 'User2',
         emails: ['user@externalcompany2.com']
       }
+    ],
+    conferences: []
+  };
+};
+
+/**
+ * @return {{users: Array, conferences: {_id: string, members: {objectType: string, id: string, displayName: string}[]}[]}}
+ */
+module.exports.oneMemberConference = function() {
+  return {
+    users: [],
+    conferences: [
+      {
+        _id: 'oneMemberConf',
+        members: [{
+          objectType: 'email',
+          id: 'user1@linagora.com',
+          displayName: 'user1'
+        }]
+      }
     ]
   };
 };
+

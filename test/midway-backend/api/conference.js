@@ -318,66 +318,47 @@ describe('The conference API', function() {
     });
   });
 
-  describe.skip('PUT /api/conferences/:id/attendees', function() {
-    it('should send back 404 if the conference is not found', function(done) {
+  describe('PUT /api/conferences/:id/members', function() {
+    it('should send back 400 if the conference does not exist', function(done) {
       request(application)
-        .put('/api/conferences/54e5e86e65806d7c16764b79/attendees')
-        .expect(404)
+        .put('/api/conferences/54e5e86e65806d7c16764b79/members')
+        .expect(400)
         .end(done);
     });
 
-    it('should send back 500 if there is a server error', function(done) {
-      request(application)
-        .put('/api/conferences/123456/attendees')
-        .expect(500)
-        .end(done);
-    });
-
-    it('should send back 200 and new attendees of the conference with action=join', function(done) {
-      request(application)
-        .put('/api/conferences/' + conferenceId + '/attendees?action=join')
-        .send({email: 'test@open-paas.org', displayName: 'JDoe'})
-        .expect(200)
-        .end(function(err, res) {
-          request(application)
-            .get('/api/conferences/' + conferenceId + '/attendees')
-            .expect(200)
-            .end(function(err, res) {
-              expect(err).to.not.exist;
-              delete res.body[0].timestamps.creation;
-              delete res.body[1].timestamps.creation;
-              delete res.body[1]._id;
-              expect(res.body).to.deep.equal([
-                {
-                  '__v': 0,
-                  '_id': attendee._id.toString(),
-                  'emails': [
-                    'jdee@lng.net'
-                  ],
-                  'schemaVersion': 1,
-                  'timestamps': {}
-                },
-                {
-                  '__v': 0,
-                  'displayName': 'JDoe',
-                  'emails': [
-                    'test@open-paas.org'
-                  ],
-                  'schemaVersion': 1,
-                  'timestamps': {}
-                }
-              ]);
+    it('should send back 200 and add new members of the conference', function(done) {
+      apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+        var conference = models.conference[0];
+        var onlyMemberId = conference.members[0]._id;
+        var newMember = {id: 'test@open-paas.org', objectType: 'email'};
+        request(application)
+          .put('/api/conferences/' + conference._id + '/members')
+          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
+          .send([newMember])
+          .expect(202)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
+            require('mongoose').model('Conference').findOne({_id: conference._id}, function(err, conf) {
+              if (err) {
+                done(err);
+              }
+              expect(conf.members).to.exist;
+              expect(conf.members.length).to.equal(2);
+              var newMemberFromDB = conf.members[1];
+              expect(newMemberFromDB).to.exist;
+              expect(newMemberFromDB.id).to.equal(newMember.id);
+              expect(newMemberFromDB.objectType).to.equal(newMember.objectType);
+              var conferenceModule = require('../../../backend/core/conference');
+              expect(newMemberFromDB.status).to.equal(conferenceModule.MEMBER_STATUS.INVITED);
               done();
             });
-        });
-    });
-
-    it('should send back 500 with action=leave', function(done) {
-      request(application)
-        .put('/api/conferences/' + conferenceId + '/attendees?action=leave')
-        .send({email: 'test@open-paas.org', displayName: 'JDoe'})
-        .expect(500)
-        .end(done);
+          });
+      });
     });
   });
 
