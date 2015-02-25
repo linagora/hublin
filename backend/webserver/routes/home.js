@@ -12,8 +12,10 @@ module.exports = function(dependencies) {
   var controllers = require('../controllers/home')(dependencies);
 
   var router = express.Router();
-  router.get('/', controllers.index);
-  router.get('/app', controllers.app);
+
+  // MEET-52 Keep this order, it is important here.
+  router.get('/:id', controllers.liveconference);
+  router.get('/', controllers.meetings);
 
   return router;
 };

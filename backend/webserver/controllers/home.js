@@ -7,16 +7,16 @@
  */
 module.exports = function(dependencies) {
 
-  function index(req, res) {
+  function meetings(req, res) {
     return res.render('meetings/index');
   }
 
-  function app(req, res) {
-    return res.render('live-conference/index');
+  function liveconference(req, res) {
+    return res.render('live-conference/index', {id: req.params.id});
   }
 
   return {
-    index: index,
-    app: app
+    meetings: meetings,
+    liveconference: liveconference
   };
 };
