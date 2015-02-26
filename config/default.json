@@ -47,7 +47,7 @@
     }
   },
   "emailInvitation": {
-    "templatesDir": "./backend/core/invitation/email/html.ejs"
+    "templatesDir": "./templates/email"
   },
   "modules": [
     "linagora.io.meetings"
