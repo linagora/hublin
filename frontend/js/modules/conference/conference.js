@@ -27,15 +27,11 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
   }])
   .factory('conferenceAPI', ['$q', 'Restangular', function($q, Restangular) {
     function get(id) {
-      var defer = $q.defer();
-      defer.resolve({data: {_id: id}});
-      return defer.promise;
+      return Restangular.one('conferences', id).get();
     }
 
-    function getMembers(conference) {
-      var defer = $q.defer();
-      defer.resolve({data: []});
-      return defer.promise;
+    function getMembers(conferenceId) {
+      return Restangular.one('conferences', conferenceId).getList('members');
     }
 
     function create(id, displayName) {
