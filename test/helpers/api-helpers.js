@@ -57,17 +57,41 @@ function applyDeployment(name, testEnv, options, callback) {
 
   deployment.models = {};
 
+  function saveConferences() {
+    var Conference = require('mongoose').model('Conference');
+    async.map(deployment.conferences, function(conf, mapCallback) {
+        new Conference(conf).save(function(err, saved) {
+          if (err) {
+            console.log(err);
+          }
+          return mapCallback(err, saved);
+        });
+      },
+      function(err, results) {
+        if (err) {
+          return callback(err);
+        }
+        deployment.models.conference = results;
+        callback(err, deployment.models);
+      }
+    );
+  }
+
   var User = require('mongoose').model('User');
-  async.map(deployment.users, function(user, callback) {
+  async.map(deployment.users, function(user, mapCallback) {
       new User(user).save(function(err, saved) {
         if (err) {
           console.log(err);
         }
-        return callback(err, saved);
+        return mapCallback(err, saved);
       });
     },
     function(err, results) {
-      callback(err, results);
+      if (err) {
+        return callback(err);
+      }
+      deployment.models.users = results;
+      saveConferences();
     }
   );
 }

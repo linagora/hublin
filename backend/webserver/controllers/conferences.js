@@ -144,22 +144,20 @@ module.exports = function(dependencies) {
     }
   }
 
-  function addAttendee(req, res) {
-    var user = req.param('user_id');
-    if (!user) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'User is missing'}});
-    }
-
+  function addMembers(req, res) {
+    var user = req.user;
     var conf = req.conference;
-    if (!conf) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Conference is missing'}});
+
+    var newMembers = req.body;
+    if (!newMembers) {
+      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Invited members missing'}});
     }
 
-    conference.invite(conf, user, function(err, updated) {
+    conference.invite(conf, user, newMembers, function(err) {
       if (err) {
         return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
       }
-      return res.send(204);
+      return res.send(202);
     });
   }
 
@@ -195,7 +193,7 @@ module.exports = function(dependencies) {
     leave: leave,
     updateAttendee: updateAttendee,
     removeAttendee: removeAttendee,
-    addAttendee: addAttendee,
+    addMembers: addMembers,
     getAttendees: getAttendees
   };
 };

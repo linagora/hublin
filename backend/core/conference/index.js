@@ -5,6 +5,11 @@ var Conference = mongoose.model('Conference');
 var localpubsub = require('../pubsub').local;
 var globalpubsub = require('../pubsub').global;
 var logger = require('../logger');
+var extend = require('extend');
+
+var MEMBER_STATUS = {
+  INVITED: 'invited'
+};
 
 /**
  * Create a new conference in Mongo
@@ -48,30 +53,35 @@ function addHistory(conference, user, status, callback) {
 }
 
 /**
- * Invite a list of attendees inside a conference
+ * Invite a list of members inside a conference
  * @param {string} conference
- * @param {[string]} attendees - an array of user
+ * @param {string} creator - user inviting into the conference
+ * @param {[member]} members - an array of members
  * @param {function} callback
  * @return {*}
  */
-function invite(conference, attendees, callback) {
+function invite(conference, creator, members, callback) {
   if (!conference) {
     return callback(new Error('Can not invite to an undefined conference'));
   }
 
-  if (!attendees) {
-    return callback(new Error('Can not invite undefined attendees'));
+  if (!members) {
+    return callback(new Error('Can not invite undefined members'));
   }
 
-  if (!Array.isArray(attendees)) {
-    attendees = [attendees];
+  if (!Array.isArray(members)) {
+    members = [members];
   }
 
-  attendees.forEach(function(element) {
-    conference.attendees.push({
-      user: element._id || element,
-      status: 'invited'
-    });
+  members.forEach(function(member) {
+    var confMember = {};
+    extend(true, confMember, member);
+
+    if (!confMember.displayName) {
+      confMember.displayName = confMember.id;
+    }
+    confMember.status = MEMBER_STATUS.INVITED;
+    conference.members.push(confMember);
   });
 
   var localtopic = localpubsub.topic('conference:invite');
@@ -81,11 +91,11 @@ function invite(conference, attendees, callback) {
       return callback(err);
     }
 
-    attendees.forEach(function(attendee) {
+    members.forEach(function(member) {
       var invitation = {
-        conference_id: updated._id,
-        user_id: attendee._id || attendee,
-        creator_id: updated.creator
+        conference: updated,
+        user: member,
+        creator: creator
       };
       localtopic.forward(globalpubsub, invitation);
     });
@@ -168,13 +178,13 @@ function userIsConferenceCreator(conference, user, callback) {
 }
 
 /**
- * Check is user is one of the conference attendees
+ * Check is user is one of the conference members
  * @param {string} conference
  * @param {string} user
  * @param {function} callback
  * @return {*}
  */
-function userIsConferenceAttendee(conference, user, callback) {
+function userIsConferenceMember(conference, user, callback) {
   if (!user) {
     return callback(new Error('Undefined user'));
   }
@@ -183,14 +193,13 @@ function userIsConferenceAttendee(conference, user, callback) {
     return callback(new Error('Undefined conference'));
   }
 
-  var id = user._id || user;
   var conference_id = conference._id || conference;
 
-  Conference.findOne({_id: conference_id}, {attendees: {$elemMatch: {user: id}}}).exec(function(err, conf) {
+  Conference.findOne({_id: conference_id}, {members: {$elemMatch: {id: user.id, objectType: user.objectType}}}).exec(function(err, conf) {
     if (err) {
       return callback(err);
     }
-    return callback(null, (conf.attendees !== null && conf.attendees.length > 0));
+    return callback(null, (conf && conf.members !== null && conf.members.length > 0));
   });
 }
 
@@ -219,7 +228,7 @@ function userCanJoinConference(conference, user, callback) {
       return callback(null, true);
     }
 
-    return userIsConferenceAttendee(conference, user, callback);
+    return userIsConferenceMember(conference, user, callback);
   });
 }
 
@@ -358,9 +367,9 @@ module.exports.list = list;
  */
 module.exports.userIsConferenceCreator = userIsConferenceCreator;
 /**
- * @type {userIsConferenceAttendee}
+ * @type {function}
  */
-module.exports.userIsConferenceAttendee = userIsConferenceAttendee;
+module.exports.userIsConferenceMember = userIsConferenceMember;
 /**
  * @type {userCanJoinConference}
  */
@@ -373,3 +382,7 @@ module.exports.join = join;
  * @type {leave}
  */
 module.exports.leave = leave;
+/**
+ * @type {hash} The possible statuses for conference members
+ */
+module.exports.MEMBER_STATUS = MEMBER_STATUS;

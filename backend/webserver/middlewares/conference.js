@@ -5,7 +5,7 @@ var conference = require('../../core/conference');
 /**
  *
  * @param {object} dependencies
- * @return {{load: load, loadWithAttendees: loadWithAttendees, canJoin: canJoin, isAdmin: isAdmin, canAddAttendee: canAddAttendee}}
+ * @return {{load: load, loadWithAttendees: loadWithAttendees, canJoin: canJoin, isAdmin: isAdmin, canAddMember: function}}
  */
 module.exports = function(dependencies) {
 
@@ -169,7 +169,7 @@ module.exports = function(dependencies) {
   }
 
 
-  function canAddAttendee(req, res, next) {
+  function canAddMember(req, res, next) {
     if (!req.user) {
       return res.json(400, {
         error: {
@@ -190,7 +190,7 @@ module.exports = function(dependencies) {
       });
     }
 
-    conference.userIsConferenceCreator(req.conference, req.user, function(err, isCreator) {
+    conference.userIsConferenceMember(req.conference, req.user, function(err, isMember) {
       if (err) {
         return res.json(500, {
           error: {
@@ -201,33 +201,17 @@ module.exports = function(dependencies) {
         });
       }
 
-      if (isCreator) {
-        return next();
+      if (!isMember) {
+        return res.json(403, {
+          error: {
+            code: 403,
+            message: 'Forbidden',
+            details: 'User cannot invite members into a conference in which he is not member himself.'
+          }
+        });
       }
 
-      conference.userIsConferenceAttendee(req.conference, req.user, function(err, isAttendee) {
-        if (err) {
-          return res.json(500, {
-            error: {
-              code: 500,
-              message: 'Server error',
-              details: err.message
-            }
-          });
-        }
-
-        if (!isAttendee) {
-          return res.json(403, {
-            error: {
-              code: 403,
-              message: 'Forbidden',
-              details: 'User cannot invite attendees into a conference in which he is not attendee himself.'
-            }
-          });
-        }
-
-        return next();
-      });
+      return next();
     });
   }
 
@@ -237,6 +221,6 @@ module.exports = function(dependencies) {
     loadWithAttendees: loadWithAttendees,
     canJoin: canJoin,
     isAdmin: isAdmin,
-    canAddAttendee: canAddAttendee
+    canAddMember: canAddMember
   };
 };

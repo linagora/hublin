@@ -30,6 +30,8 @@ var Meetings = new AwesomeModule('linagora.io.meetings', {
     },
 
     deploy: function(dependencies, callback) {
+      require('./core/pubsub').init(dependencies);
+
       var webserver = dependencies('webserver');
       webserver.application.use('/', this.api.all);
       webserver.application.use('/', this.api.conferences);
