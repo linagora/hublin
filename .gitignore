@@ -1,4 +1,4 @@
-node_modules/
+node_modules
 config/default.dev.json
 config/default.test.json
 config/default.production.json
