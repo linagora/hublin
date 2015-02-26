@@ -1,0 +1,32 @@
+.modal.invite-modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+  .modal-dialog.modal-lg
+    .modal-content.left
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+        h4.hidden-xs Invite your contacts to join the room
+        h4.visible-xs Invite your contacts
+      .modal-body
+        p Feeling lonely? Your conference could use a few more participants.
+        h5 Send invitations via email
+        .row
+          .col-xs-10.col-xs-offset-1
+            form(name='inviteForm')
+              div.input-group(ng-class='{ "has-error": formHasError(inviteForm) }')
+                input.form-control(type='text', name='inviteText', ng-model='inviteText', placeholder='Enter your contact\'s Email', bs-typeahead='', ng-options='item.id for item in autocomplete($viewValue)', invitation-dialog-validate='')
+                span.input-group-btn
+                  input.btn.btn-default(type='submit', ng-disabled='inviteForm.inviteText.$invalid', ng-click='add()', value='Add')
+          .col-xs-10.col-sm-8.col-sm-offset-2.right
+            ul.invitation-user-list
+              li(ng-repeat='(id,contact) in contacts')
+                div(data-invitation-dialog-switch="", object-type='contact.objectType' contact='contact' remove='remove(who)')
+          .row
+            .col-xs-10.col-xs-offset-1
+              .error
+        .row
+          .col-xs-12.conferenceLink
+            span.pull-right
+              | You can also share this link:&nbsp;
+              a(href='', clip-copy='conference.link' clip-click='copyLink($event)') {{conference.link}}
+      .modal-footer
+        button.btn.btn-default(type='button', ng-disabled='contactCount < 1', ng-click='sendInvitations()') Send Invitations

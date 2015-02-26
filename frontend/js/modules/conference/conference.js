@@ -10,7 +10,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
       return conferenceAPI.get(conferenceName, displayName);
     }
 
-    function addAttendee() {
+    function addMember() {
 
     }
 
@@ -21,7 +21,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
     return {
       create: create,
       enter: enter,
-      addAttendee: addAttendee,
+      addMember: addMember,
       redirectTo: redirectTo
     };
   }])
@@ -38,8 +38,8 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
       return Restangular.one('conferences', id).get({displayName: displayName});
     }
 
-    function addAttendee(id, attendee) {
-      return Restangular.one('conferences', id).customPUT(attendee);
+    function addMembers(id, members) {
+      return Restangular.one('conferences', id).customPUT(members);
     }
 
     function redirectTo(id, tokenUuid) {
@@ -49,7 +49,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
     return {
       create: create,
       getOrCreate: getOrCreate,
-      addAttendee: addAttendee,
+      addMembers: addMembers,
       redirectTo: redirectTo,
       getMembers: getMembers
     };
