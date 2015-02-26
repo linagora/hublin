@@ -2,6 +2,7 @@
 
 var mockery = require('mockery');
 var chai = require('chai');
+var rewire = require('rewire');
 var expect = chai.expect;
 var ObjectId = require('bson').ObjectId;
 
@@ -547,7 +548,7 @@ describe('The conference module', function() {
     });
   });
 
-  it('join should load the conference and update the attendees', function(done) {
+  it('join call update on Conference', function(done) {
 
     var user = {
       _id: 123
@@ -555,19 +556,19 @@ describe('The conference module', function() {
 
     var conf = {
       creator: 333,
-      attendees: [],
+      members: [],
       history: [],
       save: function(callback) {
         var self = this;
-        expect(self.attendees.length === 1);
-        return callback(null, {attendees: self.attendees});
+        expect(self.members.length === 1);
+        return callback(null, {members: self.members});
       }
     };
 
     var mongoose = {
       model: function() {
         return {
-          findById: function(id, callback) {
+          update: function(a, b, c, callback) {
             return callback(null, conf);
           }
         };
@@ -576,9 +577,31 @@ describe('The conference module', function() {
     mongoose.Types = { ObjectId: function() {} };
     this.mongoose = mockery.registerMock('mongoose', mongoose);
 
-    var conference = this.helpers.requireBackend('core/conference');
+    var conference = rewire('../../../../backend/core/conference');
+    var addUser = function(conference, user, callback) {return callback();};
+    conference.__set__('addUser', addUser);
+
     conference.join(conf, user, function(err, updated) {
       expect(err).to.not.exist;
+      done();
+    });
+  });
+
+  it('join send back error when user can not be added first', function(done) {
+
+    var mongoose = {
+      model: function() {
+      }
+    };
+    this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+    var conference = rewire('../../../../backend/core/conference');
+    var addUser = function(conference, user, callback) {return callback(new Error('1'));};
+    conference.__set__('addUser', addUser);
+
+    conference.join({}, {}, function(err) {
+      expect(err).to.exist;
+      expect(err.message).to.equal('1');
       done();
     });
   });
@@ -645,61 +668,68 @@ describe('The conference module', function() {
   });
 
   it('join should forward invitation into conference:join', function(done) {
-    var mongoose = {
-      model: function() {
-        return {
-          update: function(a, b, c, callback) {
-            return callback();
-          },
-          findById: function(id, callback) {
-            return callback(null, {
-              _id: 12345,
-              attendees: [],
-              save: function(callback) {
-                return callback(null, this);
-              }
-            });
-          }
-        };
-      }
-    };
-    mongoose.Types = { ObjectId: function() {} };
-
-    this.mongoose = mockery.registerMock('mongoose', mongoose);
-
-    var localstub = {}, globalstub = {};
-    this.helpers.mock.pubsub('../pubsub', localstub, globalstub);
-
-    var conference = this.helpers.requireBackend('core/conference');
 
     var conf = {
       _id: 12345,
-      attendees: [],
+      members: [],
       history: [],
       save: function(callback) {
         callback(null, { _id: 12345 });
       }
     };
 
-    conference.join(conf, { _id: 123 }, function() {
+    var user = {_id: 123};
+
+    var mongoose = {
+      model: function() {
+        return {
+          update: function(value, options, upsert, callback) {
+            return callback(null, conf);
+          }
+        };
+      }
+    };
+    mongoose.Types = { ObjectId: function() {} };
+    this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+    var localstub = {}, globalstub = {};
+    this.helpers.mock.pubsub('../pubsub', localstub, globalstub);
+
+    var conference = rewire('../../../../backend/core/conference');
+    var addUser = function(conference, user, callback) {return callback();};
+    conference.__set__('addUser', addUser);
+    conference.__set__('addHistory', function(conference, user, event, callback) {
+      return callback();
+    });
+
+    conference.join(conf, user, function() {
       expect(localstub.topics['conference:join'].data[0]).to.deep.equal({
-        conference_id: 12345,
-        user_id: 123
+        conference: conf,
+        user: user
       });
       expect(globalstub.topics['conference:join'].data[0]).to.deep.equal({
-        conference_id: 12345,
-        user_id: 123
+        conference: conf,
+        user: user
       });
       done();
     });
   });
 
   it('leave should forward invitation into conference:leave', function(done) {
+
+    var conf = {
+      _id: 12345,
+      members: [],
+      history: []
+    };
+
+    var user = { _id: 123};
+
     this.mongoose = mockery.registerMock('mongoose', {
       model: function() {
         return {
           update: function(value, options, upsert, callback) {
-            return callback(null, { _id: 12345 });
+            return callback(null, conf);
           }
         };
       }
@@ -708,25 +738,22 @@ describe('The conference module', function() {
     var localstub = {}, globalstub = {};
     this.helpers.mock.pubsub('../pubsub', localstub, globalstub);
 
-    var conference = this.helpers.requireBackend('core/conference');
+    var conference = rewire('../../../../backend/core/conference');
+    conference.__set__('addHistory', function(conference, user, event, callback) {
+      return callback();
+    });
+    conference.__set__('userIsConferenceMember', function(conference, user, callback) {
+      return callback(null, true);
+    });
 
-    var conf = {
-      _id: 12345,
-      attendees: [],
-      history: [],
-      save: function(callback) {
-        callback(null, { _id: 12345 });
-      }
-    };
-
-    conference.leave(conf, { _id: 123 }, function() {
+    conference.leave(conf, user, function() {
       expect(localstub.topics['conference:leave'].data[0]).to.deep.equal({
-        conference_id: 12345,
-        user_id: 123
+        conference: conf,
+        user: user
       });
       expect(globalstub.topics['conference:leave'].data[0]).to.deep.equal({
-        conference_id: 12345,
-        user_id: 123
+        conference: conf,
+        user: user
       });
       done();
     });

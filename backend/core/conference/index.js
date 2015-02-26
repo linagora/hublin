@@ -8,7 +8,14 @@ var logger = require('../logger');
 var extend = require('extend');
 
 var MEMBER_STATUS = {
-  INVITED: 'invited'
+  INVITED: 'invited',
+  ONLINE: 'online',
+  OFFLINE: 'offline'
+};
+
+var EVENTS = {
+  join: 'conference:join',
+  leave: 'conference:leave'
 };
 
 /**
@@ -45,11 +52,7 @@ function addHistory(conference, user, status, callback) {
   if (!status) {
     return callback(new Error('Undefined status'));
   }
-
-  var id = user._id || user;
-  var conference_id = conference._id || conference;
-
-  Conference.update({_id: conference_id}, {$push: {history: {user: id, status: status}}}, {upsert: true}, callback);
+  return callback();
 }
 
 /**
@@ -194,17 +197,51 @@ function userIsConferenceMember(conference, user, callback) {
   }
 
   var conference_id = conference._id || conference;
-
   Conference.findOne({_id: conference_id}, {members: {$elemMatch: {id: user.id, objectType: user.objectType}}}).exec(function(err, conf) {
     if (err) {
       return callback(err);
     }
-    return callback(null, (conf && conf.members !== null && conf.members.length > 0));
+    return callback(null, (conf.members !== null && conf.members.length > 0));
   });
 }
 
 /**
- * Check if user can join conference
+ * Get a member from a conference based on its tuple data
+ *
+ * @param {Conference} conference
+ * @param {Tuple} tuple
+ * @param {Function} callback
+ * @return {*}
+ */
+function getMember(conference, tuple, callback) {
+  if (!tuple) {
+    return callback(new Error('Undefined tuple'));
+  }
+
+  if (!conference) {
+    return callback(new Error('Undefined conference'));
+  }
+
+  var id = conference._id || conference;
+
+  Conference.findOne(
+    {_id: id},
+    {members: {$elemMatch: {id: tuple.id, objectType: tuple.objectType}}}
+  ).exec(function(err, conf) {
+    if (err) {
+      return callback(err);
+    }
+
+    if (!conference || !conf.members || conf.members.length === 0) {
+      return callback(new Error('No such user'));
+    }
+    return callback(null, conf.members[0]);
+  });
+}
+
+/**
+ * Check if user can join conference.
+ * Conferences are public for now so everybody can join.
  * @param {string} conference
  * @param {string} user
  * @param {function} callback
@@ -219,23 +256,60 @@ function userCanJoinConference(conference, user, callback) {
     return callback(new Error('Undefined conference'));
   }
 
-  userIsConferenceCreator(conference, user, function(err, status) {
+  return callback(null, true);
+}
+
+/**
+ * Add user to the conference if not already in
+ *
+ * @param {Conference} conference
+ * @param {User} user
+ * @param {Function} callback
+ * @return {*}
+ */
+function addUser(conference, user, callback) {
+  if (!user) {
+    return callback(new Error('Undefined user'));
+  }
+
+  if (!conference) {
+    return callback(new Error('Undefined conference'));
+  }
+
+  var conferenceId = conference._id || conference;
+
+  get(conferenceId, function(err, conf) {
     if (err) {
       return callback(err);
     }
 
-    if (status) {
-      return callback(null, true);
+    if (!conf) {
+      return callback(new Error('No such conference'));
     }
 
-    return userIsConferenceMember(conference, user, callback);
+    userIsConferenceMember(conference, user, function(err, isMember) {
+      if (err) {
+        return callback(err);
+      }
+
+      if (isMember) {
+        return callback();
+      }
+
+      user.status = user.status || MEMBER_STATUS.OFFLINE;
+      user.displayName = user.displayName || user.id;
+
+      conf.members.push(user);
+      return conf.save(callback);
+    });
   });
 }
 
-  /**
- * Push user inside conference attendees
- * @param {string} conference
- * @param {string} user
+/**
+ * Join a conference sets the member if not in list, sets member status to online and adds history
+ *
+ * @param {Conference} conference
+ * @param {User} user
  * @param {function} callback
  * @return {*}
  */
@@ -249,51 +323,39 @@ function join(conference, user, callback) {
   }
 
   var conferenceId = conference._id || conference;
-  var userId = user._id || user;
 
-  Conference.findById(conferenceId, function(err, conf) {
+   addUser(conference, user, function(err) {
     if (err) {
       return callback(err);
     }
 
-    if (!conf) {
-      return callback(new Error('No such conference'));
-    }
-
-    var found = false;
-    conf.attendees.forEach(function(attendee) {
-      if (attendee.user.toString() === userId + '') {
-        found = true;
-        attendee.status = 'online';
-      }
-    });
-
-    if (!found) {
-      conf.attendees.push({user: new mongoose.Types.ObjectId(userId + ''), status: 'online'});
-    }
-
-    conf.save(function(err, updated) {
-      if (err) {
-        return callback(err);
-      }
-
-      localpubsub.topic('conference:join')
-        .forward(globalpubsub, {conference_id: conf._id, user_id: userId});
-
-      addHistory(conf._id, userId, 'join', function(err, history) {
+    Conference.update(
+      {_id: conferenceId, members: {$elemMatch: {id: user.id, objectType: user.objectType}}},
+      {$set: {'members.$.status': MEMBER_STATUS.ONLINE}},
+      {upsert: true},
+      function(err, updated) {
         if (err) {
-          logger.warn('Error while pushing new history element ' + err.message);
+          logger.error('Error while updating the conference %e', err);
+          return callback(err);
         }
-        return callback(null, conf);
-      });
+
+        localpubsub.topic(EVENTS.join).forward(globalpubsub, {conference: updated, user: user});
+
+        addHistory(conferenceId, user, 'join', function(err, history) {
+          if (err) {
+            logger.error('Error while pushing new history element %e', err);
+          }
+          return callback(null, updated);
+        });
     });
   });
 }
 
-  /**
- * Remove user from conference attendees
- * @param {string} conference
- * @param {string} user
+/**
+ * Leave a conference sets member status to offline and adds history
+ *
+ * @param {Conference} conference
+ * @param {Tuple} user
  * @param {function} callback
  * @return {*}
  */
@@ -306,22 +368,33 @@ function leave(conference, user, callback) {
     return callback(new Error('Undefined conference'));
   }
 
-  var id = user._id || user;
-  var conference_id = conference._id || conference;
-
-  Conference.update({_id: conference_id, attendees: {$elemMatch: {user: id}}}, {$set: {'attendees.$': {user: id, status: 'offline'}}}, {upsert: true}, function(err, updated) {
+  userIsConferenceMember(conference, user, function(err, isMember) {
     if (err) {
       return callback(err);
     }
 
-    localpubsub.topic('conference:leave')
-               .forward(globalpubsub, { conference_id: conference_id, user_id: id });
+    if (!isMember) {
+      return callback(new Error('User is not member of this conference'));
+    }
 
-    addHistory(conference_id, id, 'leave', function(err, history) {
-      if (err) {
-        logger.warn('Error while pushing new history element ' + err.message);
-      }
-      return callback(null, updated);
+    var conference_id = conference._id || conference;
+    Conference.update(
+      {_id: conference_id, members: {$elemMatch: {id: user.id, objectType: user.objectType}}},
+      {$set: {'members.$.status': MEMBER_STATUS.OFFLINE}},
+      {upsert: true},
+      function(err, updated) {
+        if (err) {
+          return callback(err);
+        }
+
+        localpubsub.topic(EVENTS.leave).forward(globalpubsub, {conference: updated, user: user});
+
+        addHistory(updated, user, 'leave', function(err, history) {
+          if (err) {
+            logger.warn('Error while pushing new history element %e', err);
+          }
+          return callback(null, updated);
+        });
     });
   });
 }
@@ -382,6 +455,22 @@ module.exports.join = join;
  * @type {leave}
  */
 module.exports.leave = leave;
+
+/**
+ * @type {getMember}
+ */
+module.exports.getMember = getMember;
+
+/**
+ * @type {addUser}
+ */
+module.exports.addUser = addUser;
+
+/**
+ * @type {{join: string, leave: string}}
+ */
+module.exports.EVENTS = EVENTS;
+
 /**
  * @type {hash} The possible statuses for conference members
  */
