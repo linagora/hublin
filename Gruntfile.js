@@ -60,7 +60,7 @@ module.exports = function(grunt) {
       options: {
         flags: [
           '--disable 0110',
-          '--jsdoc',
+          '--nojsdoc',
           '-e test/frontend/karma-include',
           '-x frontend/js/modules/modernizr.js',
           '-x frontend/js/analytics/*'
