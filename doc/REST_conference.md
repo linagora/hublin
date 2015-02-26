@@ -127,9 +127,9 @@ Creates a new conference and redirects to the conference page.
     Location: https://hubl.in/foobar
 
 
-## GET /api/conferences/{id}/attendees
+## GET /api/conferences/{id}/members
 
-Get full information about the conference attendees.
+Get full information about the conference members.
 
 **Request Headers:**
 
@@ -146,7 +146,7 @@ Get full information about the conference attendees.
 
 **Response JSON Object**
 
-Array or attendees with user information.
+Array of members.
 
 **Status Codes:**
 
@@ -157,7 +157,7 @@ Array or attendees with user information.
 
 **Request:**
 
-    GET /api/conferences/538e3bd6654d7c3307f990fa/attendees
+    GET /api/conferences/538e3bd6654d7c3307f990fa/members
     Accept: application/json
     Host: localhost:8080
 
@@ -167,60 +167,18 @@ Array or attendees with user information.
 
     [
       {
-
-        "__v": 5,
-        "_id": "5375de4bd684db7f6fbd4f97",
-        "currentAvatar": "e5396080-dcde-11e3-b0dd-978201406e85",
-        "firstname": "christophe",
-        "lastname": "hamerling",
-        "avatars": [
-            "e5396080-dcde-11e3-b0dd-978201406e85"
-        ],
-        "schemaVersion": 1,
-        "login": {
-            "success": "2014-06-05T20:28:31.843Z",
-            "failures": [ ]
-        },
-        "domains": [
-            {
-                "domain_id": "5375de4bd684db7f6fbd4f98",
-                "joined_at": "2014-05-16T09:45:47.307Z"
-            }
-        ],
-        "timestamps": {
-            "creation": "2014-05-16T09:45:47.231Z"
-        },
-        "emails": [
-            "chamerling@linagora.com"
-        ]
-
+        _id: "54eb5dff8e7036781b03abad"
+        objectType: "email",
+        id: "user1@linagora.com",
+        displayName: "user1",
+        status: "invited"
       },
       {
-        "__v": 5,
-        "_id": "5375de4bd684db7f6fbd4f97",
-        "currentAvatar": "e5396080-dcde-11e3-b0dd-978201406e85",
-        "firstname": "christophe",
-        "lastname": "hamerling",
-        "avatars": [
-            "e5396080-dcde-11e3-b0dd-978201406e85"
-        ],
-        "schemaVersion": 1,
-        "login": {
-            "success": "2014-06-05T20:28:31.843Z",
-            "failures": [ ]
-        },
-        "domains": [
-            {
-                "domain_id": "5375de4bd684db7f6fbd4f98",
-                "joined_at": "2014-05-16T09:45:47.307Z"
-            }
-        ],
-        "timestamps": {
-            "creation": "2014-05-16T09:45:47.231Z"
-        },
-        "emails": [
-            "chamerling@linagora.com"
-        ]
+        _id: "538e3bd6654d7c3307f990fa"
+        objectType: "email",
+        id: "user2@linagora.com",
+        displayName: "user2",
+        status: "invited"
       }
     ]
 

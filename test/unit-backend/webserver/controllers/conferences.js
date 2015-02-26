@@ -47,70 +47,62 @@ describe('The conferences controller', function() {
     controller.createAPI({user: {displayName: 'foobar'}, params: {id: 123}, body: {}, headers: [], query: []}, res);
   });
 
-  it('getAttendees should send back HTTP 400 when conference is not defined in req', function(done) {
-    mockery.registerMock('../../core/conference', {});
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status) {
-        expect(status).to.equal(400);
+  describe('getMembers function', function() {
+    it('should send back HTTP 400 when conference is not defined in req', function(done) {
+      mockery.registerMock('../../core/conference', {});
+      var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+      var res = this.helpers.httpStatusCodeValidatingJsonResponse(400, function(data) {
+        expect(data.error).to.exist;
         done();
-      }
-    };
-    controller.getAttendees({user: {}}, res);
-  });
+      });
+      controller.getMembers({user: {}}, res);
+    });
 
-  it('getAttendees should send back HTTP 200 with empty array if conference has undefined attendees', function(done) {
-    mockery.registerMock('../../core/conference', {});
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status) {
-        expect(status).to.equal(200);
+    it('should send back HTTP 200 with empty array if conference has undefined members', function(done) {
+      mockery.registerMock('../../core/conference', {});
+      var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+      var res = this.helpers.httpStatusCodeValidatingJsonResponse(200, function(data) {
+        expect(data).to.deep.equal([]);
         done();
-      }
-    };
-    var req = {
-      conference: {}
-    };
-    controller.getAttendees(req, res);
-  });
+      });
+      var req = {
+        conference: {}
+      };
+      controller.getMembers(req, res);
+    });
 
-  it('getAttendees should send back HTTP 200 with empty array if conference has empty attendees', function(done) {
-    mockery.registerMock('../../core/conference', {});
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status) {
-        expect(status).to.equal(200);
+    it('should send back HTTP 200 with empty array if conference has empty members', function(done) {
+      mockery.registerMock('../../core/conference', {});
+      var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+      var res = this.helpers.httpStatusCodeValidatingJsonResponse(200, function(data) {
+        expect(data).to.deep.equal([]);
         done();
-      }
-    };
-    var req = {
-      conference: {
-        attendees: []
-      }
-    };
-    controller.getAttendees(req, res);
-  });
+      });
+      var req = {
+        conference: {
+          attendees: []
+        }
+      };
+      controller.getMembers(req, res);
+    });
 
-  it('getAttendees should send back HTTP 200 with attendees array', function(done) {
-    mockery.registerMock('../../core/conference', {});
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status, users) {
-        expect(status).to.equal(200);
-        expect(users).to.exist;
-        expect(users.length).to.equal(2);
-
+    it('should send back HTTP 200 with members array', function(done) {
+      mockery.registerMock('../../core/conference', {});
+      var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+      var members = [
+        {id: 'user1', objcetType: 'ot1'},
+        {id: 'user2', objcetType: 'ot2'}
+      ];
+      var res = this.helpers.httpStatusCodeValidatingJsonResponse(200, function(users) {
+        expect(users).to.deep.equal(members);
         done();
-      }
-    };
-    var req = {
-      conference: {
-        attendees: [
-          {user: {toObject: function() { return {_id: 1};}}},
-          {user: {toObject: function() { return {_id: 2};}}}
-        ]
-      }
-    };
-    controller.getAttendees(req, res);
+      });
+      var req = {
+        conference: {
+          members: members
+        }
+      };
+      controller.getMembers(req, res);
+    });
   });
 });

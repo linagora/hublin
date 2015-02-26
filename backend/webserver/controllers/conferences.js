@@ -86,29 +86,18 @@ module.exports = function(dependencies) {
     return res.json(500, {error: {code: 500, message: 'Server Error', details: 'Not implemented'}});
   }
 
-  function getAttendees(req, res) {
+  function getMembers(req, res) {
     var conf = req.conference;
     if (!conf) {
       return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Conference is missing'}});
     }
-
-    if (!conf.attendees || conf.attendees.length === 0) {
-      return res.json(200, []);
-    }
-
-    var users = conf.attendees.map(function(entry) {
-      var user = entry.user.toObject();
-      delete user.password;
-      return user;
-    });
-
-    return res.json(200, users);
+    return res.json(200, conf.members || []);
   }
 
   return {
     createAPI: createAPI,
     removeAttendee: removeAttendee,
     addMembers: addMembers,
-    getAttendees: getAttendees
+    getMembers: getMembers
   };
 };

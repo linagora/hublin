@@ -229,4 +229,13 @@ module.exports = function(mixin, testEnv) {
   mixin.requireFixture = function(path) {
     return require(testEnv.fixtures + '/' + path);
   };
+
+  mixin.httpStatusCodeValidatingJsonResponse = function(status, done) {
+    return {
+      json: function(s, data) {
+        expect(s).to.equal(status);
+        done(data);
+      }
+    };
+  };
 };
