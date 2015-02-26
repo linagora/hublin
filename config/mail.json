@@ -1,0 +1,14 @@
+{
+  "_id" : "mail",
+  "mail" : {
+    "noreply" : "noreply@hubl.in"
+  },
+  "transport" : {
+    "module" : "nodemailer-browser",
+    "type" : "MailBrowser",
+    "config" : {
+      "dir" : "/tmp",
+      "browser" : true
+    }
+  }
+}
