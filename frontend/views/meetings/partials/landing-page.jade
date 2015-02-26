@@ -12,6 +12,8 @@
         ul.nav.navbar-nav.navbar-right
           li.hidden
             a(href='#page-top')
+          li.conference-li.hidden
+            conference-create-form
           li
             a.page-scroll(href='#about') About
           li
@@ -19,7 +21,8 @@
   section.create
     .container
       .row
-        .col-lg-12.text-center
+        .col-lg-2
+        .col-lg-8.text-center.conference-create
           conference-create-form
   section.about.bg-light-gray#about
     .container

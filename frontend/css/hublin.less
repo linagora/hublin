@@ -67,6 +67,11 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
+.btn-lg {
+  .button-variant(white; @brand-primary; @brand-primary);
+  .heading-font;
+}
+
 .btn-xl {
   .button-variant(white; @brand-primary; @brand-primary);
   .heading-font;
@@ -79,7 +84,7 @@ h1, h2, h3, h4, h5, h6 {
 // Custom Navigation Bar
 
 .navbar-default {
-  background-color: @gray-darkest;
+  background-color: transparent;
   border-color: transparent;
   .navbar-brand {
     color: @brand-primary;
@@ -111,7 +116,7 @@ h1, h2, h3, h4, h5, h6 {
         .heading-font;
         font-weight: 400;
         letter-spacing: 1px;
-        color: white;
+        color: @gray-darkest;
         &:hover,
         &:focus {
           color: @brand-primary;
@@ -134,11 +139,11 @@ h1, h2, h3, h4, h5, h6 {
 
 @media(min-width:768px) {
   .navbar-default {
-    background-color: @gray-darkest;
+    background-color: rgba(34, 34, 34, 0);
     padding: 25px 0;
-    -webkit-transition: padding 0.3s;
-    -moz-transition: padding 0.3s;
-    transition: padding 0.3s;
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.7s;
+    transition: all 0.7s;
     border: none;
     .navbar-brand {
       font-size: 2em;
@@ -151,7 +156,10 @@ h1, h2, h3, h4, h5, h6 {
     }
   }
   .navbar-default.navbar-shrink {
-    background-color: @gray-darkest;
+    background-color: rgba(34, 34, 34, 0.95);
+    .nav li a {
+      color: @gray-lighter;
+    }
     padding: 10px 0;
     .navbar-brand {
       font-size: 1.5em;
@@ -160,10 +168,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 header {
-  //background-image: url('../img/header-bg.jpg');
-  //background-repeat: none;
-  background-attachment: scroll;
-  background-position: center center;
   .background-cover;
   text-align: center;
   color: white;
@@ -211,7 +215,7 @@ section {
 
 @media(min-width:768px) {
   section {
-    padding: 150px 0;
+    padding: 100px 0;
   }
 }
 
@@ -257,22 +261,22 @@ section {
   ::-webkit-input-placeholder {
     .heading-font;
     font-weight: 700;
-    color: @placeholder-text;
+    color: @brand-primary;
   }
   :-moz-placeholder { /* Firefox 18- */
     .heading-font;
     font-weight: 700;
-    color: @placeholder-text;
+    color: @brand-primary;
   }
   ::-moz-placeholder {  /* Firefox 19+ */
     .heading-font;
     font-weight: 700;
-    color: @placeholder-text;
+    color: @brand-primary;
   }
   :-ms-input-placeholder {
     .heading-font;
     font-weight: 700;
-    color: @placeholder-text;
+    color: @brand-primary;
   }
   .text-danger {
     color: @brand-danger;
@@ -281,20 +285,59 @@ section {
 
 .create {
   .contact();
+  background: url(@background-img) 20% 23% no-repeat;
+  background-size: 100%;
+  padding-bottom: 170px;
+  .conference-form {
+    .form-group {
+      label {
+        color: @gray-darkest;
+      }
+    }
+  }
+}
+
+.conference-form {
   .form-group {
+    width: auto;
     margin-bottom: 0px;
-    margin-right: 10px;
     label {
-      .heading-font;
-      color: @gray-lighter;
+      color: @placeholder-text;
     }
     input {
-      padding: 20px;
+      padding: 10px 16px;
+      color: @brand-primary;
+      width: 333px;
+      margin: 0 10px;
     }
     input.form-control {
       height: auto;
     }
   }
+  ::-webkit-input-placeholder {
+    font-weight: 700;
+    text-transform: lowercase;
+    color: @brand-primary;
+  }
+  :-moz-placeholder { /* Firefox 18- */
+    font-weight: 700;
+    text-transform: lowercase;
+    color: @brand-primary;
+  }
+  ::-moz-placeholder {  /* Firefox 19+ */
+    font-weight: 700;
+    text-transform: lowercase;
+    color: @brand-primary;
+  }
+  :-ms-input-placeholder {
+    font-weight: 700;
+    text-transform: lowercase;
+    color: @brand-primary;
+  }
+}
+
+.conference-li {
+  margin-right: 135px;
 }
 
 .username {
