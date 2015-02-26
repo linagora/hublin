@@ -1,6 +1,7 @@
 'use strict';
 
 var conference = require('../../core/conference');
+var async = require('async');
 
 /**
  *
@@ -32,7 +33,7 @@ module.exports = function(dependencies) {
 
   function loadFromMemberToken(req, res, next) {
     if (!req.query.token) {
-      return res.redirect('/');
+      return next();
     }
 
     conference.getFromMemberToken(req.query.token, function(err, conf) {
@@ -215,12 +216,54 @@ module.exports = function(dependencies) {
     });
   }
 
+  function joinOrCreate(req, res, next) {
+
+    function createConference(id, firstUser, callback) {
+      var conf = {
+        _id: id,
+        history: [],
+        members: [firstUser]
+      };
+
+      conference.create(conf, function(err, created) {
+        return callback(err, created);
+      });
+    }
+
+    function joinOrCreateConf(conf, callback) {
+      if (conf) {
+        logger.debug('A conference', conf, 'has been found, joining it.');
+        return conference.join(conf, req.user, callback);
+      }
+      logger.debug('Conference of id %s not found. Creating a new one.', req.params.id);
+      createConference(req.params.id, req.user, callback);
+    }
+
+    async.waterfall([
+      conference.get.bind(null, req.params.id),
+      joinOrCreateConf
+    ], function(err, result) {
+      if (err) {
+        return res.json(500, {
+          error: {
+            code: 500,
+            message: 'Server Error',
+            details: err.message
+          }
+        });
+      }
+
+      next();
+    });
+  }
+
   return {
     load: load,
     loadFromMemberToken: loadFromMemberToken,
     loadWithAttendees: loadWithAttendees,
     canJoin: canJoin,
     isAdmin: isAdmin,
-    canAddMember: canAddMember
+    canAddMember: canAddMember,
+    joinOrCreate: joinOrCreate
   };
 };

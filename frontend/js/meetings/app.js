@@ -9,7 +9,7 @@ angular.module('meetingsApplication', [
   'meetings.session',
   'meetings.user',
   'meetings.conference'
-]).config(function($httpProvider, $routeProvider, $locationProvider, RestangularProvider) {
+]).config(function($routeProvider, RestangularProvider) {
 
   $routeProvider.otherwise({redirectTo: '/'});
   RestangularProvider.setBaseUrl('/');

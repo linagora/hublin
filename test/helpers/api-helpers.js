@@ -28,6 +28,11 @@ function createConference(name, members, history, done) {
   return conference.save(done);
 }
 
+function getConference(id, done) {
+  var Conference = require('mongoose').model('Conference');
+  return Conference.findById(id, done);
+}
+
 /**
  * This enables deployments of common needed resources (domain, users)
  * using defined fixtures.
@@ -104,5 +109,6 @@ module.exports = {
   getRouter: getRouter,
   getApplication: getApplication,
   createConference: createConference,
+  getConference: getConference,
   applyDeployment: applyDeployment
 };

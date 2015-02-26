@@ -14,8 +14,14 @@ module.exports.load = function(req, res, next) {
 
   req.user = {
     objectType: 'hublin:anonymous',
-    id: 'user'
+    id: 'user',
+    displayName: req.query.displayName || 'anonymous',
+    connection: {
+      ipAdress: '',
+      userAgent: req.headers['user-agent']
+    }
   };
+
   return next();
 };
 

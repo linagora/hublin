@@ -108,97 +108,6 @@ describe('The conference API', function() {
     });
   });
 
-  describe('GET /conferences', function() {
-
-    it('should redirect to / when no query parameter', function(done) {
-
-      request(application)
-        .get('/conferences')
-        .send()
-        .expect(302)
-        .end(function(err, res) {
-          expect(err).to.not.exist;
-          expect(res.headers.location).to.equal('/');
-          done();
-        });
-    });
-
-    it('should redirect to conference page when valid query parameter', function(done) {
-      var members = [
-        {
-          displayName: 'FooBar',
-          objectType: 'hublin:anonymous',
-          id: 'creator'
-        }
-      ];
-
-      apiHelpers.createConference('MyTestConference', members, [], function(err, conference) {
-        if (err) {
-          return done(err);
-        }
-
-        request(application)
-          .get('/conferences?token=' + conference.members[0]._id)
-          .send()
-          .expect(302)
-          .end(function(err, res) {
-            expect(err).to.not.exist;
-            expect(res.headers.location).to.equal('/' + conference._id);
-            done();
-          });
-      });
-    });
-
-    it('should 404 when invalid query parameter', function(done) {
-      var token = require('mongoose').Types.ObjectId();
-
-      request(application)
-        .get('/conferences?token=' + token.toString())
-        .send()
-        .expect(404)
-        .end(function(err, res) {
-          expect(err).to.not.exist;
-          done();
-        });
-    });
-
-  });
-
-  describe('GET /conferences/:id', function() {
-
-    it('should redirect to the conference page', function(done) {
-      var name = '123456789';
-
-      request(application)
-        .get('/conferences/' + name)
-        .send()
-        .expect(302)
-        .end(function(err, res) {
-          expect(err).to.not.exist;
-          expect(res.headers.location).to.equal('/' + name);
-          done();
-        });
-    });
-
-  });
-
-  describe('GET /conferences/:id?displayName=XXX', function() {
-
-    it('should redirect to the conference page', function(done) {
-      var name = '123456789';
-
-      request(application)
-        .get('/conferences/' + name)
-        .send()
-        .expect(302)
-        .end(function(err, res) {
-          expect(err).to.not.exist;
-          expect(res.headers.location).to.equal('/' + name);
-          done();
-        });
-    });
-  });
-
   describe('PUT /api/conferences/:id?displayName=XXX', function() {
 
     it('should return 201 if the conference is correctly created', function(done) {
@@ -239,41 +148,6 @@ describe('The conference API', function() {
           expect(res.body._id).to.equal(name);
           expect(res.body.members).to.exist;
           expect(res.body.members.length).to.equal(0);
-          done();
-        });
-    });
-
-  });
-
-  describe('PUT /conferences/:id?displayName=XXX', function() {
-
-    it('should redirect if the conference is correctly created', function(done) {
-      var name = '123456789';
-      var displayName = 'Yo Lo';
-
-      request(application)
-        .put('/conferences/' + name + '?displayName=' + displayName)
-        .send()
-        .expect(302)
-        .end(function(err, res) {
-          expect(err).to.not.exist;
-          done();
-        });
-    });
-
-  });
-
-  describe('PUT /conferences/:id', function() {
-
-    it('should redirect if the conference is correctly created with a user displayName', function(done) {
-      var name = '123456789';
-
-      request(application)
-        .put('/conferences/' + name)
-        .send()
-        .expect(302)
-        .end(function(err, res) {
-          expect(err).to.not.exist;
           done();
         });
     });

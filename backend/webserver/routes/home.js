@@ -10,12 +10,14 @@ var express = require('express');
 module.exports = function(dependencies) {
 
   var controllers = require('../controllers/home')(dependencies);
+  var conference = require('../middlewares/conference')(dependencies);
+  var user = require('../middlewares/user');
 
   var router = express.Router();
 
   // MEET-52 Keep this order, it is important here.
-  router.get('/:id', controllers.liveconference);
-  router.get('/', controllers.meetings);
+  router.get('/:id', user.load, conference.joinOrCreate, controllers.liveconference);
+  router.get('/', conference.loadFromMemberToken, controllers.meetings);
 
   return router;
 };
