@@ -96,54 +96,6 @@ module.exports = function(dependencies) {
     });
   }
 
-  function join(req, res) {
-    var user = req.user;
-    if (!user) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'User is missing'}});
-    }
-
-    var conf = req.conference;
-    if (!conf) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Conference is missing'}});
-    }
-
-    conference.join(conf, user, function(err, updated) {
-      if (err) {
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
-      }
-      return res.json(204);
-    });
-  }
-
-  function leave(req, res) {
-    return res.json(500, {error: {code: 500, message: 'Server Error', details: 'Not implemented yet'}});
-  }
-
-  function updateAttendee(req, res) {
-    var user = req.user;
-    if (!user) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'User is missing'}});
-    }
-
-    var conf = req.conference;
-    if (!conf) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Conference is missing'}});
-    }
-
-    if (!req.param('action')) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Action is missing'}});
-    }
-
-    var action = req.param('action');
-    if (action === 'join') {
-      return join(req, res);
-    } else if (action === 'leave') {
-      return leave(req, res);
-    } else {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Unknown action'}});
-    }
-  }
-
   function addMembers(req, res) {
     var user = req.user;
     var conf = req.conference;
@@ -189,9 +141,6 @@ module.exports = function(dependencies) {
     get: get,
     create: create,
     createAPI: createAPI,
-    join: join,
-    leave: leave,
-    updateAttendee: updateAttendee,
     removeAttendee: removeAttendee,
     addMembers: addMembers,
     getAttendees: getAttendees
