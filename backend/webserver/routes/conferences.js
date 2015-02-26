@@ -23,7 +23,6 @@ module.exports = function(dependencies) {
 
   router.get('/api/conferences/:id/members', middlewares.loadWithAttendees, controllers.getAttendees);
   router.put('/api/conferences/:id/members', middlewares.load, user.loadFromCookie, middlewares.canAddMember, controllers.addMembers);
-  router.put('/api/conferences/:id/members/:attendeeid', middlewares.load, user.load, controllers.updateAttendee);
 
   return router;
 };

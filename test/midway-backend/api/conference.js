@@ -5,7 +5,7 @@ var expect = require('chai').expect,
     apiHelpers = require('../../helpers/api-helpers.js');
 
 describe('The conference API', function() {
-  var creator, attendee, user, conferenceId;
+  var creator, attendee, conferenceId;
 
   var application;
   var deps = {
@@ -361,44 +361,4 @@ describe('The conference API', function() {
       });
     });
   });
-
-  describe.skip('PUT /api/conferences/:id/attendees/:user_id', function() {
-    it('should send back HTTP 204 if all went ok', function(done) {
-      request(application)
-        .put('/api/conferences/' + conferenceId + '/attendees/' + user._id)
-        .expect(204)
-        .end(function(err, res) {
-          request(application)
-            .get('/api/conferences/' + conferenceId + '/attendees')
-            .expect(200)
-            .end(function(err, res) {
-              expect(err).to.not.exist;
-              delete res.body[0].timestamps.creation;
-              delete res.body[1].timestamps.creation;
-              delete res.body[1]._id;
-              expect(res.body).to.deep.equal([
-                {
-                  '__v': 0,
-                  '_id': attendee._id.toString(),
-                  'emails': [
-                    'jdee@lng.net'
-                  ],
-                  'schemaVersion': 1,
-                  'timestamps': {}
-                },
-                {
-                  '__v': 0,
-                  'emails': [
-                    'itadmin@lng.net'
-                  ],
-                  'schemaVersion': 1,
-                  'timestamps': {}
-                }
-              ]);
-              done();
-            });
-        });
-    });
-  });
-
 });
