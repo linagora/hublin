@@ -154,41 +154,37 @@ describe('The conference API', function() {
 
   });
 
-  describe.skip('GET /api/conferences/:id/attendees', function() {
-    it('should send back 404 if the conference is not found', function(done) {
+  describe('GET /api/conferences/:id/members', function() {
+    it('should send back 400 if the conference does not exist', function(done) {
       request(application)
-        .get('/api/conferences/54e5e86e65806d7c16764b79/attendees')
-        .expect(404)
-        .end(done);
-    });
-
-    it('should send back 500 if there is a server error', function(done) {
-      request(application)
-        .get('/api/conferences/123456/attendees')
-        .expect(500)
+        .get('/api/conferences/54e5e86e65806d7c16764b79/members')
+        .expect(400)
         .end(done);
     });
 
     it('should send back 200 and attendees of the conference', function(done) {
-      request(application)
-        .get('/api/conferences/' + conferenceId + '/attendees')
-        .expect(200)
-        .end(function(err, res) {
-          expect(err).to.not.exist;
-          delete res.body[0].timestamps.creation;
-          expect(res.body).to.deep.equal([
-            {
-              '__v': 0,
-              '_id': attendee._id.toString(),
-              'emails': [
-                'jdee@lng.net'
-              ],
-              'schemaVersion': 1,
-              'timestamps': {}
-            }
-          ]);
-          done();
-        });
+      apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+        var conference = models.conference[0];
+        var confMember = conference.members[0];
+        request(application)
+          .get('/api/conferences/' + conference._id + '/members')
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.be.an.array;
+            expect(res.body.length).to.equal(1);
+            var returnedMember = res.body[0];
+            expect(returnedMember._id).to.equal(confMember._id.toString());
+            expect(returnedMember.id).to.equal(confMember.id);
+            expect(returnedMember.objectType).to.equal(confMember.objectType);
+            expect(returnedMember.displayName).to.equal(confMember.displayName);
+
+            done();
+          });
+      });
     });
   });
 
