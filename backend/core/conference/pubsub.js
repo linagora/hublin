@@ -1,6 +1,8 @@
 'use strict';
 
-var pubsub = require('../pubsub').local;
+var pubsub = require('../pubsub').local,
+    conference = require('./index.js'),
+    EVENTS = conference.EVENTS;
 
 /**
  * Instantiates all pubsub listener related to conferences
@@ -20,5 +22,21 @@ module.exports.init = function(dependencies) {
       });
   }
 
-  pubsub.topic('conference:invite').subscribe(processInvitation);
+  function processHistoryEvent(event) {
+    return function(data) {
+      conference.addHistory(data.conference, data.user, event, function(err, conference) {
+        if (err) {
+          return logger.error('Error while pushing event %s in history of conference %s: %e', event, data.conference, err);
+        }
+
+        return logger.debug('Added event %s in history of conference %s', event, data.conference);
+      });
+    };
+  }
+
+  pubsub.topic(EVENTS.invite).subscribe(processInvitation);
+
+  Object.keys(EVENTS).forEach(function(key) {
+    pubsub.topic(EVENTS[key]).subscribe(processHistoryEvent(EVENTS[key]));
+  });
 };
