@@ -355,12 +355,7 @@ function join(conference, user, callback) {
 
         localpubsub.topic(EVENTS.join).forward(globalpubsub, {conference: conference, user: user});
 
-        addHistory(conference._id, user, 'join', function(err, history) {
-          if (err) {
-            logger.error('Error while pushing new history element %e', err);
-          }
-          return callback(null, updated);
-        });
+        return callback(null, updated);
     });
   });
 }
@@ -402,12 +397,7 @@ function leave(conference, user, callback) {
 
         localpubsub.topic(EVENTS.leave).forward(globalpubsub, {conference: conference, user: user});
 
-        addHistory(updated, user, 'leave', function(err, history) {
-          if (err) {
-            logger.warn('Error while pushing new history element %e', err);
-          }
-          return callback(null, updated);
-        });
+        return callback(null, updated);
     });
   });
 }

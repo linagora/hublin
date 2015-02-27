@@ -645,28 +645,6 @@ describe('The conference module', function() {
     });
   });
 
-  it('addHistory should call Conference.update', function(done) {
-    this.mongoose = mockery.registerMock('mongoose', {
-      model: function() {
-        return {
-          update: function(query, options, upsert, callback) {
-            return callback();
-          }
-        };
-      }
-    });
-    var conference = this.helpers.requireBackend('core/conference');
-
-    var conf = {
-      attendees: [],
-      history: []
-    };
-
-    conference.addHistory(conf, {user: 123}, 'hey', function(err) {
-      done();
-    });
-  });
-
   it('join should forward invitation into conference:join', function(done) {
 
     var conf = {
@@ -698,9 +676,6 @@ describe('The conference module', function() {
     var conference = rewire('../../../../backend/core/conference');
     var addUser = function(conference, user, callback) {return callback();};
     conference.__set__('addUser', addUser);
-    conference.__set__('addHistory', function(conference, user, event, callback) {
-      return callback();
-    });
 
     conference.join(conf, user, function() {
       expect(localstub.topics['conference:join'].data[0]).to.deep.equal({
@@ -739,9 +714,6 @@ describe('The conference module', function() {
     this.helpers.mock.pubsub('../pubsub', localstub, globalstub);
 
     var conference = rewire('../../../../backend/core/conference');
-    conference.__set__('addHistory', function(conference, user, event, callback) {
-      return callback();
-    });
     conference.__set__('userIsConferenceMember', function(conference, user, callback) {
       return callback(null, true);
     });
