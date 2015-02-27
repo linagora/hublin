@@ -3,7 +3,6 @@
 angular.module('meetingsApplication', [
   'restangular',
   'uuid4',
-  'uri',
   'ngRoute',
   'meetings.uri',
   'meetings.session',
