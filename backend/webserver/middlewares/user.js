@@ -1,5 +1,8 @@
 'use strict';
 
+var conference = require('../../core/conference');
+var uuid = require('node-uuid')
+
 /**
  * @param {request} req
  * @param {response} res
@@ -14,7 +17,7 @@ module.exports.load = function(req, res, next) {
 
   req.user = {
     objectType: 'hublin:anonymous',
-    id: 'user',
+    id: uuid.v4(),
     displayName: req.query.displayName || 'anonymous',
     connection: {
       ipAdress: '',
@@ -68,4 +71,29 @@ module.exports.setUserCookie = function(req, res, next) {
   return next();
 };
 
+/**
+ * Set the request user from its token
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+module.exports.loadFromToken = function(req, res, next) {
+  if (!req.query.token) {
+    return next();
+  }
+
+  conference.getMemberFromToken(req.query.token, function(err, member) {
+    if (err) {
+      return res.send(500);
+    }
+
+    if (!member) {
+      return res.send(404);
+    }
+
+    req.user = member;
+    return next();
+  });
+};
 

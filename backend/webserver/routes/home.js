@@ -17,7 +17,7 @@ module.exports = function(dependencies) {
 
   // MEET-52 Keep this order, it is important here.
   router.get('/:id', user.load, conference.joinOrCreate, user.setUserCookie, controllers.liveconference);
-  router.get('/', conference.loadFromMemberToken, user.setUserCookie, controllers.meetings);
+  router.get('/', user.loadFromToken, conference.loadFromMemberToken, user.setUserCookie, controllers.meetings);
 
   return router;
 };
