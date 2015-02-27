@@ -52,3 +52,20 @@ module.exports.loadFromCookie = function(req, res, next) {
   return next();
 };
 
+/**
+ * Set the request user as cookie
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+module.exports.setUserCookie = function(req, res, next) {
+
+  if (req.user) {
+    res.cookie('user', JSON.stringify(req.user));
+  }
+
+  return next();
+};
+
+

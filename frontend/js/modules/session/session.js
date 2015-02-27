@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('meetings.session', ['ngRoute'])
+angular.module('meetings.session', ['ngRoute', 'ngCookies'])
   .factory('session', ['$q', function($q) {
 
     var bootstrapDefer = $q.defer();
@@ -36,11 +36,14 @@ angular.module('meetings.session', ['ngRoute'])
 
     return session;
   }])
-  .factory('sessionFactory', ['session', function(session) {
+  .factory('sessionFactory', ['$log', '$cookies', 'session', function($log, $cookies, session) {
     return {
       fetchUser: function(callback) {
-        var user = {_id: 'you@lng.com'};
-        session.setUser(user);
+        if ($cookies.user) {
+          var user = JSON.parse($cookies.user);
+          $log.debug('Got the user from cookie', user);
+          session.setUser(user);
+        }
         return callback();
       }
     };
