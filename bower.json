@@ -34,7 +34,8 @@
     "font-awesome": "~4.3.0",
     "angular-uuid4": "~0.3.0",
     "angular-moment": "~0.7.1",
-    "angular-pines-notify": "~1.0.0"
+    "angular-pines-notify": "~1.0.0",
+    "URIjs": "~1.14.2"
   },
   "resolutions": {
     "angular": "1.3.0",

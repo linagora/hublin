@@ -28,6 +28,7 @@ html
     script(src='/components/pines-notify/pnotify.desktop.js')
     script(src='/components/pines-notify/pnotify.history.js')
     script(src='/components/pines-notify/pnotify.nonblock.js')
+    script(src='/components/URIjs/src/URI.min.js')
     script(src='/components/angular/angular.min.js')
     script(src='/components/angular-route/angular-route.min.js')
     script(src='/components/angular-animate/angular-animate.min.js')
@@ -45,23 +46,24 @@ html
     script(src='/components/opangular/src/socketio.js')
     script(src='/components/opangular/src/socketio/services.js')
 
-    script(src='js/modules/authentication/authentication.js')
+    script(src='/js/modules/authentication/authentication.js')
 
-    script(src='js/modules/user/user.js')
+    script(src='/js/modules/user/user.js')
     script(src='/components/opangular/src/notification.js')
     script(src='/components/opangular/src/notification/services.js')
 
-    script(src='js/modules/websocket/websocket.js')
+    script(src='/js/modules/websocket/websocket.js')
     script(src='/components/opangular/src/websocket/services.js')
 
-    script(src='js/modules/live-conference/live-conference.js')
+    script(src='/js/modules/live-conference/live-conference.js')
     script(src='/components/angular-liveconference/src/js/directives.js')
     script(src='/components/angular-liveconference/src/js/services.js')
     script(src='/components/angular-liveconference/src/js/templates.js')
 
-    script(src='js/modules/session/session.js')
-    script(src='js/modules/conference/conference.js')
-    script(src='js/live-conference/app.js')
+    script(src='/js/modules/utils/uri.js')
+    script(src='/js/modules/session/session.js')
+    script(src='/js/modules/conference/conference.js')
+    script(src='/js/live-conference/app.js')
 
   body.ng-cloak(ng-app='liveConferenceApplication' ng-controller="sessionInitLiveConferenceController")
     #wrap(ng-include='session.template')

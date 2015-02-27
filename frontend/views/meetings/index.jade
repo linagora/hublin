@@ -20,16 +20,18 @@ html
     script(src='/components/jquery/dist/jquery.min.js')
     script(src='/components/underscore/underscore.js')
     script(src='/components/bootstrap/dist/js/bootstrap.min.js')
+    script(src='/components/URIjs/src/URI.min.js')
     script(src='/components/angular/angular.min.js')
     script(src='/components/angular-route/angular-route.min.js')
     script(src='/components/restangular/dist/restangular.min.js')
     script(src='/components/angular-uuid4/angular-uuid4.min.js')
 
-    script(src='js/modules/user/user.js')
-    script(src='js/modules/session/session.js')
-    script(src='js/modules/conference/conference.js')
+    script(src='/js/modules/user/user.js')
+    script(src='/js/modules/utils/uri.js')
+    script(src='/js/modules/session/session.js')
+    script(src='/js/modules/conference/conference.js')
 
-    script(src='js/meetings/app.js')
+    script(src='/js/meetings/app.js')
 
     body.ng-cloak#page-top.index(ng-app='meetingsApplication', ng-controller="sessionInitMeetingsController")
       #wrap(ng-include='session.template')

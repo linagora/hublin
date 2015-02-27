@@ -20,7 +20,7 @@ var EVENTS = {
 
 /**
  * Create a new conference in Mongo
- * @param {string} conference
+ * @param {object} conference
  * @param {function} callback
  * @return {*}
  */

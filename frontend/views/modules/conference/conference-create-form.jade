@@ -1,5 +1,5 @@
 form.form-inline.conference-form
   .form-group
     label http://hubl.in/
-    input.form-control.conference-input(type='text', placeholder='{{room}}', required='')
-    button.btn.btn-lg(type='submit') hubl!
+    input.form-control.conference-input(ng-model='room', type='text')
+  button.btn.btn-xl(type='submit', ng-click='go()') #{__('Hubl !')}
