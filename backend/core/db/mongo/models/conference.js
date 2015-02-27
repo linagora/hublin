@@ -10,13 +10,13 @@ var TimelineEntrySchema = new mongoose.Schema({
     published: {type: Date, default: Date.now},
     actor: {
         objectType: {type: String, required: true},
-        _id: {type: mongoose.Schema.ObjectId, required: true},
+        _id: {type: String, required: true},
         image: {type: String},
         displayName: {type: String}
     },
     object: {
         objectType: {type: String},
-        _id: {type: mongoose.Schema.ObjectId, required: true}
+        _id: {type: String, required: true}
     },
     target: [{
         objectType: {type: String},

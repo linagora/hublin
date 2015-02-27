@@ -39,7 +39,7 @@
     },
     "console": {
       "enabled": true,
-      "level": "debug",
+      "level": "info",
       "handleExceptions": true,
       "json": false,
       "prettyPrint": true,
