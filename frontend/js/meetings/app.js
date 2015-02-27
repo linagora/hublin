@@ -7,7 +7,8 @@ angular.module('meetingsApplication', [
   'meetings.uri',
   'meetings.session',
   'meetings.user',
-  'meetings.conference'
+  'meetings.conference',
+  'mgcrea.ngStrap'
 ]).config(function($routeProvider, RestangularProvider) {
 
   $routeProvider.otherwise({redirectTo: '/'});

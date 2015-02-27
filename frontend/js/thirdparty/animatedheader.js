@@ -14,33 +14,25 @@
 
   var docElem = document.documentElement;
   var header = $('.navbar-default');
-  var conferenceInput = $('.conference-input');
-  var conferenceLi = $('.conference-li');
-  var conferenceCreate = $('.conference-create');
   var didScroll = false;
-  var changeHeaderOn = 60;
+  var changeHeaderOn = 150;
 
   function init() {
     window.addEventListener('scroll', function(event) {
       if (!didScroll) {
         didScroll = true;
-        setTimeout(scrollPage, 60);
+        setTimeout(scrollPage, 150);
       }
     }, false);
-    conferenceInput.focus();
   }
 
   function scrollPage() {
     var sy = scrollY();
     if (sy >= changeHeaderOn) {
       header.addClass('navbar-shrink');
-      conferenceLi.removeClass('hidden');
-      conferenceCreate.addClass('hidden');
     }
     else {
       header.removeClass('navbar-shrink');
-      conferenceLi.addClass('hidden');
-      conferenceCreate.removeClass('hidden');
     }
     didScroll = false;
   }

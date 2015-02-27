@@ -79,7 +79,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
     return {
       restrict: 'E',
       templateUrl: '/views/modules/conference/conference-create-form.html',
-      link: function(scope) {
+      link: function(scope, element, attr) {
         function randomizeRoom() {
           return uuid4.generate();
         }
