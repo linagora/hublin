@@ -17,8 +17,8 @@ angular.module('liveConferenceApplication', [
 ]).config(function($routeProvider, $locationProvider, RestangularProvider) {
 
   $routeProvider.when('/:conferenceId', {
-    templateUrl: '/views/live-conference/partials/conference',
-    controller: 'liveConferenceController',
+    templateUrl: '/views/live-conference/partials/main',
+    controller: 'conferenceController',
     resolve: {
       conference: function($route, $location, $log, conferenceService) {
         var id = $route.current.params.conferenceId;

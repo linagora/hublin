@@ -1,0 +1,5 @@
+div(ng-switch='process.step')
+  div(ng-switch-when='username')
+    div(ng-include="'/views/live-conference/partials/username.html'", ng-controller='usernameController')
+  div(ng-switch-when='conference')
+    div(ng-include="'/views/live-conference/partials/conference.html'", ng-controller='liveConferenceController')

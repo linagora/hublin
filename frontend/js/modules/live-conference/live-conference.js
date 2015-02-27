@@ -9,6 +9,25 @@ angular.module('op.live-conference', [
   'meetings.session',
   'meetings.conference',
   'meetings.invitation'
+]).controller('conferenceController', [
+  '$scope',
+  '$log',
+  'session',
+  'conference',
+  function($scope, $log, session, conference) {
+    $scope.templates = {
+      username: '/views/live-conference/partials/username',
+      conference: '/views/live-conference/partials/conference'
+    };
+    $scope.conference = conference;
+    $scope.process = {
+      step: 'username'
+    };
+
+    session.initialized.then(function() {
+      $scope.process.step = 'conference';
+    });
+  }
 ]).controller('liveConferenceController', [
   '$scope',
   '$log',
@@ -17,10 +36,7 @@ angular.module('op.live-conference', [
   'conferenceAPI',
   'easyRTCService',
   'conferenceHelpers',
-  'conference',
-  function($scope, $log, $timeout, session, conferenceAPI, easyRTCService, conferenceHelpers, conference) {
-
-    $scope.conference = conference;
+  function($scope, $log, $timeout, session, conferenceAPI, easyRTCService, conferenceHelpers) {
     $scope.users = [];
     $scope.attendees = [];
     $scope.idToAttendeeNameMap = {};
@@ -37,7 +53,7 @@ angular.module('op.live-conference', [
       'video-thumb8'
     ];
 
-    $scope.$on('$locationChangeStart', easyRTCService.leaveRoom(conference));
+    $scope.$on('$locationChangeStart', easyRTCService.leaveRoom($scope.conference));
 
     $scope.getMainVideoAttendeeIndex = function(mainVideoId) {
       return conferenceHelpers.getMainVideoAttendeeIndexFrom(mainVideoId);
@@ -102,7 +118,8 @@ angular.module('op.live-conference', [
       link: function(scope, element, attrs) {
         function liveNotificationHandler(msg) {
           $log.debug('Got a live notification', msg);
-          if (msg.user_id !== session.user._id) {
+   }])
+         if (msg.user_id !== session.user._id) {
             notificationFactory.weakInfo('Conference updated!', msg.message);
           }
         }

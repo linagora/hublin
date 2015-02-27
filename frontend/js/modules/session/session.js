@@ -4,9 +4,11 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
   .factory('session', ['$q', function($q) {
 
     var bootstrapDefer = $q.defer();
+    var initializedDefer = $q.defer();
     var session = {
       user: {},
-      ready: bootstrapDefer.promise
+      ready: bootstrapDefer.promise,
+      initialized: initializedDefer.promise
     };
 
     var sessionIsBootstraped = false;
@@ -28,6 +30,10 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
 
     session.getUsername = function() {
       return 'Anonymous';
+    };
+
+    session.setUserName = function(name) {
+      initializedDefer.resolve(session.user);
     };
 
     session.getUserId = function() {
