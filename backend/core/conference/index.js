@@ -201,7 +201,7 @@ function userIsConferenceMember(conference, user, callback) {
     if (err) {
       return callback(err);
     }
-    return callback(null, (conf.members !== null && conf.members.length > 0));
+    return callback(null, (conf && conf.members !== null && conf.members.length > 0));
   });
 }
 
@@ -232,7 +232,7 @@ function getMember(conference, tuple, callback) {
       return callback(err);
     }
 
-    if (!conference || !conf.members || conf.members.length === 0) {
+    if (!conf || !conf.members || conf.members.length === 0) {
       return callback(new Error('No such user'));
     }
     return callback(null, conf.members[0]);
@@ -284,7 +284,7 @@ function addUser(conference, user, callback) {
     }
 
     if (!conf) {
-      return callback(new Error('No such conference'));
+      return callback(new Error('No such conference', conferenceId));
     }
 
     userIsConferenceMember(conference, user, function(err, isMember) {
