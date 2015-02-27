@@ -24,8 +24,15 @@ angular.module('meetings.session', ['ngRoute'])
       angular.copy(user, session.user);
       checkBootstrap();
     }
-
     session.setUser = setUser;
+
+    session.getUsername = function() {
+      return 'Anonymous';
+    };
+
+    session.getUserId = function() {
+      return '123';
+    };
 
     return session;
   }])
