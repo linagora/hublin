@@ -74,7 +74,7 @@ angular.module('op.live-conference', [
       );
     };
 
-    conferenceAPI.getMembers(123).then(
+    conferenceAPI.getMembers($scope.conference._id).then(
       function(response) {
         $scope.users = response.data;
         $scope.idToAttendeeNameMap = conferenceHelpers.mapUserIdToName($scope.users);
