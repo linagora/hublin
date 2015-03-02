@@ -216,6 +216,63 @@ module.exports = function(dependencies) {
     });
   }
 
+  function canUpdateUser(req, res, next) {
+    if (!req.user) {
+      return res.json(400, {
+        error: {
+          code: 400,
+          message: 'Bad request',
+          details: 'User is required'
+        }
+      });
+    }
+
+    if (!req.conference) {
+      return res.json(400, {
+        error: {
+          code: 400,
+          message: 'Bad request',
+          details: 'Conference is required'
+        }
+      });
+    }
+
+    conference.userIsConferenceMember(req.conference, req.user, function(err, isMember) {
+      if (err) {
+        return res.json(500, {
+          error: {
+            code: 500,
+            message: 'Server error',
+            details: err.message
+          }
+        });
+      }
+
+      if (!isMember) {
+        return res.json(403, {
+          error: {
+            code: 403,
+            message: 'Forbidden',
+            details: 'User cannot update member in a conference he is not member'
+          }
+        });
+      }
+
+      if (!req.user._id.equals(req.params.mid)) {
+        return res.json(403, {
+          error: {
+            code: 403,
+            message: 'Forbidden',
+            details: 'User cannot update other member.'
+          }
+        });
+      }
+
+      return next();
+    });
+
+  }
+
   function joinOrCreate(req, res, next) {
 
     function createConference(id, firstUser, callback) {
@@ -277,6 +334,7 @@ module.exports = function(dependencies) {
     canJoin: canJoin,
     isAdmin: isAdmin,
     canAddMember: canAddMember,
+    canUpdateUser: canUpdateUser,
     joinOrCreate: joinOrCreate
   };
 };

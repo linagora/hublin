@@ -1,20 +1,16 @@
 'use strict';
 
 angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meetings.session'])
-  .factory('conferenceService', ['$q', 'conferenceAPI', 'session', function($q, conferenceAPI, session) {
+  .factory('conferenceService', ['conferenceAPI', 'session', function(conferenceAPI, session) {
     function create(conferenceName, displayName) {
       return conferenceAPI.create(conferenceName, displayName);
     }
 
     function enter(conferenceName, displayName) {
-      var defer = $q.defer();
-      conferenceAPI.get(conferenceName, displayName).then(function(response) {
+      return conferenceAPI.get(conferenceName, displayName).then(function(response) {
         session.setConference(response.data);
-        defer.resolve(response.data);
-      }, function(err) {
-        defer.reject(err);
+        return response;
       });
-      return defer.promise;
     }
 
     function addMember() {
@@ -45,8 +41,8 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       return Restangular.one('conferences', conferenceId).getList('members');
     }
 
-    function setMemberDisplayName(id, memberId, displayName) {
-      return Restangular.one('conferences', id).one('members', memberId).customPUT({displayName: displayName});
+    function updateMemberField(id, memberId, field, value) {
+      return Restangular.one('conferences', id).one('members', memberId).one(field).customPUT({value: value});
     }
 
     function create(id, displayName) {
@@ -72,7 +68,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       addMembers: addMembers,
       redirectTo: redirectTo,
       getMembers: getMembers,
-      setMemberDisplayName: setMemberDisplayName
+      updateMemberField: updateMemberField
     };
   }])
   .controller('meetingsLandingPageController', ['$scope', '$q', function($scope, $q) {

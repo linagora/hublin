@@ -1,7 +1,7 @@
 'use strict';
 
 var conference = require('../../core/conference');
-var extend = require('extend');
+var AUTHORIZED_FIELDS = ['displayName'];
 
 var invitation = {
 
@@ -96,15 +96,20 @@ module.exports = function(dependencies) {
     return res.json(200, conf.members || []);
   }
 
-  function updateMember(req, res) {
+  function updateMemberField(req, res) {
     var conf = req.conference;
     if (!conf) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Conference is missing'}});
+      return res.json(404, {error: {code: 404, message: 'Not found', details: 'Conference not found'}});
     }
 
     var data = req.body;
-    if (!data) {
+    if (!data || !data.value) {
       return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Data is missing'}});
+    }
+
+    var field = req.params.field;
+    if (AUTHORIZED_FIELDS.indexOf(field) < 0) {
+      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Can not update ' + field}});
     }
 
     conference.getMemberFromToken(req.params.mid, function(err, member) {
@@ -117,14 +122,12 @@ module.exports = function(dependencies) {
         return res.json(404, {error: {code: 404, message: 'Not found', details: 'Member not found in conference'}});
       }
 
-      extend(true, member, data);
-
-      conference.updateMember(conf, member, function(err) {
+      conference.updateMemberField(conf, member, field, data.value, function(err) {
         if (err) {
           logger.error('Can not update member %e', err);
           return res.json(500, {error: {code: 500, message: 'Server Error', details: 'Can not update member'}});
         }
-        return res.json(201, member);
+        return res.json(200, member);
       });
     });
   }
@@ -142,6 +145,6 @@ module.exports = function(dependencies) {
     removeAttendee: removeAttendee,
     addMembers: addMembers,
     getMembers: getMembers,
-    updateMember: updateMember
+    updateMemberField: updateMemberField
   };
 };

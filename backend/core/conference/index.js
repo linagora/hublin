@@ -144,14 +144,16 @@ function getMemberFromToken(token, callback) {
 }
 
 /**
- * Update given member properties
+ * Update member field in a conference
  *
  * @param {Conference} conference
  * @param {Member} member
+ * @param {String} field
+ * @param {String} value
  * @param {Function} callback
  * @return {*}
  */
-function updateMember(conference, member, callback) {
+function updateMemberField(conference, member, field, value, callback) {
   if (!conference) {
     return callback(new Error('Conference is required'));
   }
@@ -160,9 +162,22 @@ function updateMember(conference, member, callback) {
     return callback(new Error('Member is required'));
   }
 
+  if (!field) {
+    return callback(new Error('Field is required'));
+  }
+
+  if (!value) {
+    return callback(new Error('Value is required'));
+  }
+
+  var update = {displayName: {$set: {'members.$.displayName': value}}};
+  if (!update[field]) {
+    return callback(new Error('Can not update the field', field));
+  }
+
   Conference.update(
     {_id: conference._id, members: {$elemMatch: {id: member.id, objectType: member.objectType}}},
-    {$set: {'members.$.displayName': member.displayName}},
+    update[field],
     {upsert: true},
     callback
   );
@@ -481,9 +496,9 @@ module.exports.getMember = getMember;
 module.exports.addUser = addUser;
 
 /**
- * @type {updateMember}
+ * @type {updateMemberField}
  */
-module.exports.updateMember = updateMember;
+module.exports.updateMemberField = updateMemberField;
 
 /**
  * @type {{join: string, leave: string}}

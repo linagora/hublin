@@ -50,7 +50,7 @@ module.exports = function(dependencies) {
       return next();
     }
 
-    var userIds = req.cookies['hublin.userIds'];
+    var userIds = req.cookies['hublin.userIds'] || [];
     var members = req.conference.members.filter(function(member) {
       if (userIds.indexOf(member._id) > -1) {
         return member;

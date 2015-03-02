@@ -9,7 +9,7 @@ angular.module('meetings.user', ['meetings.session', 'meetings.conference', 'mee
 
     function configure(configuration) {
       $log.debug('Configuring displayname', configuration);
-      return conferenceAPI.setMemberDisplayName(session.conference._id, session.user._id, configuration.displayName);
+      return conferenceAPI.updateMemberField(session.conference._id, session.user._id, 'displayName', configuration.displayName);
     }
 
     return {
