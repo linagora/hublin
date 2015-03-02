@@ -395,6 +395,9 @@ ul.social-buttons {
 
 .full-modal {
   .modal-content {
+    &.left {
+      text-align: left;
+    }
     border-radius: 0;
     background-clip: border-box;
     -webkit-box-shadow: none;
@@ -487,4 +490,55 @@ img::-moz-selection {
 
 body {
   webkit-tap-highlight-color: @brand-primary;
+}
+
+.invite-modal {
+  .modal-header {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .modal-body {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .modal-footer {
+    margin-top: 0;
+  }
+
+  .conferenceLink {
+    font-size: 0.8em;
+    margin-top: 15px;
+
+    a {
+      transition: all 0.4s ease;
+
+      &:active, &:visited {
+        color: @brand-primary;
+      }
+
+      &[copying] {
+        text-shadow: 0 0 0.5em darken(@brand-primary, 20%);
+        color: transparent;
+        transition: all 0.2s ease;
+      }
+    }
+  }
+
+  .right {
+    text-align: right;
+  }
+
+  .invitation-user-list {
+    list-style-type: none;
+    margin-top: 10px;
+    min-height: 5em;
+
+    li {
+      white-space: nowrap;
+    }
+
+    a {
+      margin-left: 10px;
+    }
+  }
 }

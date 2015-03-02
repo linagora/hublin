@@ -7,7 +7,8 @@ angular.module('op.live-conference', [
   'op.notification',
   'meetings.authentication',
   'meetings.session',
-  'meetings.conference'
+  'meetings.conference',
+  'meetings.invitation'
 ]).controller('liveConferenceController', [
   '$scope',
   '$log',
@@ -44,6 +45,13 @@ angular.module('op.live-conference', [
 
     $scope.streamToMainCanvas = function(index) {
       $scope.mainVideoId = $scope.attendeeVideoIds[index];
+    };
+
+    $scope.showInvitation = function() {
+      $('#invite').modal('show');
+    };
+    $scope.onLeave = function() {
+      $log.log('leave conference call');
     };
 
     $scope.isMainVideo = function(videoId) {
