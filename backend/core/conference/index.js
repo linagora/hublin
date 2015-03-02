@@ -144,6 +144,31 @@ function getMemberFromToken(token, callback) {
 }
 
 /**
+ * Update given member properties
+ *
+ * @param {Conference} conference
+ * @param {Member} member
+ * @param {Function} callback
+ * @return {*}
+ */
+function updateMember(conference, member, callback) {
+  if (!conference) {
+    return callback(new Error('Conference is required'));
+  }
+
+  if (!member) {
+    return callback(new Error('Member is required'));
+  }
+
+  Conference.update(
+    {_id: conference._id, members: {$elemMatch: {id: member.id, objectType: member.objectType}}},
+    {$set: {'members.$.displayName': member.displayName}},
+    {upsert: true},
+    callback
+  );
+}
+
+/**
  * Load a conference with its attendees
  * @param {string} id
  * @param {function} callback
@@ -454,6 +479,11 @@ module.exports.getMember = getMember;
  * @type {addUser}
  */
 module.exports.addUser = addUser;
+
+/**
+ * @type {updateMember}
+ */
+module.exports.updateMember = updateMember;
 
 /**
  * @type {{join: string, leave: string}}

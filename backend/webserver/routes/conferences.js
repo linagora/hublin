@@ -18,6 +18,7 @@ module.exports = function(dependencies) {
   router.put('/api/conferences/:id', user.load, controllers.createAPI);
   router.get('/api/conferences/:id/members', middlewares.load, controllers.getMembers);
   router.put('/api/conferences/:id/members', middlewares.load, user.loadFromCookie, middlewares.canAddMember, controllers.addMembers);
+  router.put('/api/conferences/:id/members/:mid', middlewares.load, controllers.updateMember);
 
   return router;
 };
