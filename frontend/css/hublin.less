@@ -267,11 +267,41 @@ section {
   }
 }
 
-.contact {
+.quickstart {
   background-color: @gray-darkest;
-  .section-heading {
-    color: white;
+  color: @gray-lighter;
+  h2 {
+    margin: 0 0 3em 0;
   }
+  img {
+    width: 200px;
+    margin: 0 0 20px 0;
+  }
+}
+
+.social{
+  background-color: @gray-darkest;
+  color: @gray-lighter;
+  h2, h3, h4 {
+    margin: 1.5em 0;
+  }
+  ul li{
+    display: inline-block;
+    margin-right: 1.5em;
+    a {
+      color: @gray-lighter;
+      font-size: 7em;
+      :hover{
+        color: @brand-primary;
+      }
+    }
+  }
+  .linagora:hover{
+    color: darkred;
+  }
+}
+
+.contact {
   .form-group {
     margin-bottom: 25px;
     textarea {
@@ -281,7 +311,7 @@ section {
       height: auto;
     }
     textarea.form-control {
-      height: 236px;
+      height: 149px;
     }
   }
   .form-control:focus {
@@ -402,6 +432,8 @@ section {
 footer {
   padding: 25px 0;
   text-align: center;
+  background-color: @gray-darkest;
+  color: @gray;
   span.copyright {
     line-height: 40px;
     .heading-font;
@@ -412,31 +444,6 @@ footer {
     line-height: 40px;
     .heading-font;
     text-transform: none;
-  }
-}
-
-ul.social-buttons {
-  margin-bottom: 0;
-  li {
-    a {
-      display: block;
-      background-color: @gray-darkest;
-      height: 40px;
-      width: 40px;
-      border-radius: 100%;
-      font-size: 20px;
-      line-height: 40px;
-      color: white;
-      outline: none;
-      -webkit-transition: all 0.3s;
-      -moz-transition: all 0.3s;
-      transition: all 0.3s;
-      &:hover,
-      &:focus,
-      &:active {
-        background-color: @brand-primary;
-      }
-    }
   }
 }
 
