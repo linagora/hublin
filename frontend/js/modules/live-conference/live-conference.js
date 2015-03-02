@@ -90,7 +90,10 @@ angular.module('op.live-conference', [
     conferenceAPI.getMembers($scope.conference._id).then(
       function(response) {
         $scope.users = response.data;
-        $scope.idToAttendeeNameMap = conferenceHelpers.mapUserIdToName($scope.users);
+        $scope.idToAttendeeNameMap = {};
+        $scope.users.forEach(function(user) {
+          $scope.idToAttendeeNameMap[user._id] = user.displayName || 'No name';
+        });
       },
       function(error) {
         $log.error('Can not get members ' + error);

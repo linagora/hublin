@@ -41,7 +41,7 @@ angular.module('liveConferenceApplication', [
 
   $locationProvider.html5Mode(true);
 
-  RestangularProvider.setBaseUrl('/');
+  RestangularProvider.setBaseUrl('/api');
   RestangularProvider.setFullResponse(true);
 })
   .run(['$log', 'session', 'ioConnectionManager', '$route', function($log, session, ioConnectionManager, $route) {
