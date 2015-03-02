@@ -119,8 +119,9 @@ module.exports = function(dependencies) {
 
       extend(true, member, data);
 
-      conference.updateMember(conference, member, function(err) {
+      conference.updateMember(conf, member, function(err) {
         if (err) {
+          logger.error('Can not update member %e', err);
           return res.json(500, {error: {code: 500, message: 'Server Error', details: 'Can not update member'}});
         }
         return res.json(201, member);
@@ -128,7 +129,15 @@ module.exports = function(dependencies) {
     });
   }
 
+  function get(req, res) {
+    if (!req.conference) {
+      return res.json(404, {error: {code: 404, message: 'Not found', details: 'No such conference'}});
+    }
+    return res.json(200, req.conference);
+  }
+
   return {
+    get: get,
     createAPI: createAPI,
     removeAttendee: removeAttendee,
     addMembers: addMembers,

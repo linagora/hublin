@@ -15,6 +15,7 @@ module.exports = function(dependencies) {
 
   var router = express.Router();
 
+  router.get('/api/conferences/:id', middlewares.load, controllers.get);
   router.put('/api/conferences/:id', user.load, controllers.createAPI);
   router.get('/api/conferences/:id/members', middlewares.load, controllers.getMembers);
   router.put('/api/conferences/:id/members', middlewares.load, user.loadFromCookie, middlewares.canAddMember, controllers.addMembers);
