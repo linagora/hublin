@@ -15,13 +15,13 @@
   var docElem = document.documentElement;
   var header = $('.navbar-default');
   var didScroll = false;
-  var changeHeaderOn = 150;
+  var changeHeaderOn = 200;
 
   function init() {
     window.addEventListener('scroll', function(event) {
       if (!didScroll) {
         didScroll = true;
-        setTimeout(scrollPage, 150);
+        setTimeout(scrollPage, 200);
       }
     }, false);
   }
