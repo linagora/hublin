@@ -35,9 +35,6 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard']
       getHandlers: getHandlers
     };
   }])
-  .controller('configurationController', ['$log', '$scope', function($log, $scope) {
-    $log.debug('Configuration controller');
-  }])
   .directive('conferenceConfiguration', ['$log', 'widget.wizard', 'session', 'configurationService', function($log, Wizard, session, configurationService) {
 
     function link($scope) {
