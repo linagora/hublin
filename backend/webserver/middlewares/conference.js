@@ -243,7 +243,7 @@ module.exports = function(dependencies) {
                 req.user = member;
               }
               return callback(null, joined);
-            })
+            });
           }
           return callback(err, joined);
         });

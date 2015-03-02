@@ -137,7 +137,7 @@ function getMemberFromToken(token, callback) {
       return callback(err);
     }
     if (!conference) {
-      return callback(new Error('No such conference'));
+      return callback();
     }
     return callback(null, conference.members.id(token));
   });

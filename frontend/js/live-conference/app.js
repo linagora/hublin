@@ -12,6 +12,7 @@ angular.module('liveConferenceApplication', [
   'meetings.user',
   'meetings.conference',
   'meetings.invitation.email',
+  'meetings.configuration',
   'restangular',
   'mgcrea.ngStrap'
 ]).config(function($routeProvider, $locationProvider, RestangularProvider) {
@@ -34,11 +35,6 @@ angular.module('liveConferenceApplication', [
         );
       }
     }
-  });
-
-  $routeProvider.when('/', {
-    templateUrl: '/views/live-conference/partials/username',
-    controller: 'usernameController'
   });
 
   $routeProvider.otherwise({redirectTo: '/noop'});

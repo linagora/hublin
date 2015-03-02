@@ -1,7 +1,7 @@
 'use strict';
 
 var conference = require('../../core/conference');
-var uuid = require('node-uuid')
+var uuid = require('node-uuid');
 
 /**
  * @param {request} req
@@ -58,9 +58,10 @@ module.exports.loadFromCookie = function(req, res, next) {
 /**
  * Set the request user as cookie
  *
- * @param req
- * @param res
- * @param next
+ * @param {Request} req
+ * @param {Response} res
+ * @param {Function} next
+ * @return {*}
  */
 module.exports.setUserCookie = function(req, res, next) {
 
@@ -74,9 +75,10 @@ module.exports.setUserCookie = function(req, res, next) {
 /**
  * Set the request user from its token
  *
- * @param req
- * @param res
- * @param next
+ * @param {Request} req
+ * @param {Response} res
+ * @param {Function} next
+ * @return {*}
  */
 module.exports.loadFromToken = function(req, res, next) {
   if (!req.query.token) {

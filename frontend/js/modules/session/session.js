@@ -33,11 +33,18 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
     };
 
     session.setUserName = function(name) {
-      initializedDefer.resolve(session.user);
     };
 
     session.getUserId = function() {
       return '123';
+    };
+
+    session.setConfigured = function(success) {
+      if (!success) {
+        initializedDefer.reject(session.user);
+      } else {
+        initializedDefer.resolve(session.user);
+      }
     };
 
     return session;

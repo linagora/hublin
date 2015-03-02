@@ -96,6 +96,7 @@ describe('The home API', function() {
             var object = saved.toObject();
             delete object.timestamps.created;
             delete object.members[0]._id;
+            delete object.members[0].id;
             expect(object).to.deep.equal({
               '__v': 0,
               '_id': '123456789',
@@ -108,7 +109,6 @@ describe('The home API', function() {
                     'userAgent': 'node-superagent/0.18.0'
                   },
                   'displayName': 'anonymous',
-                  'id': 'user',
                   'objectType': 'hublin:anonymous'
                 }
               ],
@@ -134,6 +134,7 @@ describe('The home API', function() {
             var object = saved.toObject();
             delete object.timestamps.created;
             delete object.members[0]._id;
+            delete object.members[0].id;
             expect(object).to.deep.equal({
               '__v': 0,
               '_id': '123456789',
@@ -146,7 +147,6 @@ describe('The home API', function() {
                     'userAgent': 'node-superagent/0.18.0'
                   },
                   'displayName': 'aGuy',
-                  'id': 'user',
                   'objectType': 'hublin:anonymous'
                 }
               ],
@@ -184,6 +184,7 @@ describe('The home API', function() {
               delete object.timestamps.created;
               delete object.members[0]._id;
               delete object.members[1]._id;
+              delete object.members[1].id;
               expect(object).to.deep.equal({
                 '__v': 1,
                 '_id': 'MyTestConference',
@@ -201,7 +202,6 @@ describe('The home API', function() {
                       'userAgent': 'node-superagent/0.18.0'
                     },
                     'displayName': 'aGuy',
-                    'id': 'user',
                     'status': 'online',
                     'objectType': 'hublin:anonymous'
                   }

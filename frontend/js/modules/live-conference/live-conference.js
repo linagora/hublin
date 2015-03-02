@@ -8,20 +8,17 @@ angular.module('op.live-conference', [
   'meetings.authentication',
   'meetings.session',
   'meetings.conference',
-  'meetings.invitation'
+  'meetings.invitation',
+  'meetings.wizard'
 ]).controller('conferenceController', [
   '$scope',
   '$log',
   'session',
   'conference',
   function($scope, $log, session, conference) {
-    $scope.templates = {
-      username: '/views/live-conference/partials/username',
-      conference: '/views/live-conference/partials/conference'
-    };
     $scope.conference = conference;
     $scope.process = {
-      step: 'username'
+      step: 'configuration'
     };
 
     session.initialized.then(function() {
@@ -118,8 +115,7 @@ angular.module('op.live-conference', [
       link: function(scope, element, attrs) {
         function liveNotificationHandler(msg) {
           $log.debug('Got a live notification', msg);
-   }])
-         if (msg.user_id !== session.user._id) {
+          if (msg.user_id !== session.user._id) {
             notificationFactory.weakInfo('Conference updated!', msg.message);
           }
         }

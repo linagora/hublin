@@ -1,0 +1,8 @@
+.row
+  .col-lg-12
+    p Enter your name in this room
+    .text-center
+      form.form-inline.conference-form(ng-controller='usernameController')
+        .form-group
+          input.form-control(type='text', required='', placeholder='{{displayName}}' ng-model='configuration.displayName')
+          button.btn.btn-xl(type='button' ng-click='wizard.nextStep()') #{__('Next')}
