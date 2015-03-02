@@ -1,12 +1,14 @@
 'use strict';
 
-angular.module('meetings.session', ['ngRoute'])
+angular.module('meetings.session', ['ngRoute', 'ngCookies'])
   .factory('session', ['$q', function($q) {
 
     var bootstrapDefer = $q.defer();
+    var initializedDefer = $q.defer();
     var session = {
       user: {},
-      ready: bootstrapDefer.promise
+      ready: bootstrapDefer.promise,
+      initialized: initializedDefer.promise
     };
 
     var sessionIsBootstraped = false;
@@ -24,16 +26,34 @@ angular.module('meetings.session', ['ngRoute'])
       angular.copy(user, session.user);
       checkBootstrap();
     }
-
     session.setUser = setUser;
+
+    session.getUsername = function() {
+      return session.user ? session.user.displayName : 'Anonymous';
+    };
+
+    session.getUserId = function() {
+      return session.user ? session.user._id : null;
+    };
+
+    session.setConfigured = function(success) {
+      if (!success) {
+        initializedDefer.reject(session.user);
+      } else {
+        initializedDefer.resolve(session.user);
+      }
+    };
 
     return session;
   }])
-  .factory('sessionFactory', ['session', function(session) {
+  .factory('sessionFactory', ['$log', '$cookies', 'session', function($log, $cookies, session) {
     return {
       fetchUser: function(callback) {
-        var user = {_id: 'you@lng.com'};
-        session.setUser(user);
+        if ($cookies.user) {
+          var user = JSON.parse($cookies.user);
+          $log.debug('Got the user from cookie', user);
+          session.setUser(user);
+        }
         return callback();
       }
     };

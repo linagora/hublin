@@ -26,8 +26,18 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
     };
   }])
   .factory('conferenceAPI', ['$q', 'Restangular', function($q, Restangular) {
+    function get(id) {
+      var defer = $q.defer();
+      defer.resolve({data: {_id: id}});
+      return defer.promise;
+    }
+
     function getMembers(conferenceId) {
       return Restangular.one('conferences', conferenceId).getList('members');
+    }
+
+    function setMemberDisplayName(id, memberId, displayName) {
+      return Restangular.one('conferences', id).one('members', memberId).put({displayName: displayName});
     }
 
     function create(id, displayName) {
@@ -47,11 +57,13 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
     }
 
     return {
+      get: get,
       create: create,
       getOrCreate: getOrCreate,
       addMembers: addMembers,
       redirectTo: redirectTo,
-      getMembers: getMembers
+      getMembers: getMembers,
+      setMemberDisplayName: setMemberDisplayName
     };
   }])
   .controller('meetingsLandingPageController', ['$scope', '$q', function($scope, $q) {
@@ -80,22 +92,4 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
         };
       }
     };
-  }])
-  .controller('usernameController', ['$scope', 'userService', function($scope, userService) {
-
-    $scope.getDisplayName = function() {
-      return userService.getDisplayName();
-    };
-
-    $scope.setDisplayName = function() {
-      userService.setDisplayName($scope.displayName);
-    };
-
-    $scope.username = $scope.getDisplayName();
-
-  }]).directive('usernameForm', [function() {
-    return {
-      restrict: 'E',
-      templateUrl: '/views/modules/live-conference/username-form.html'
-    };
-}]);
+  }]);

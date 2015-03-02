@@ -1,17 +1,33 @@
 'use strict';
 
-angular.module('meetings.user', [])
-  .factory('userService', function() {
+angular.module('meetings.user', ['meetings.session', 'meetings.conference', 'meetings.configuration'])
+  .factory('userService', ['$log', '$q', 'session', 'conferenceAPI', function($log, $q) {
 
     function getDisplayName() {
       return 'No Name';
     }
 
-    function setDisplayName(value) {
+    function configure(configuration) {
+      $log.debug('Configuring displayname', configuration);
+      var defer = $q.defer();
+      defer.resolve();
+      return defer.promise;
     }
 
     return {
       getDisplayName: getDisplayName,
-      setDisplayName: setDisplayName
+      configure: configure
     };
-  });
+  }])
+  .controller('usernameController', ['$scope', 'userService', function($scope, userService) {
+
+    $scope.getDisplayName = function() {
+      return userService.getDisplayName();
+    };
+
+    $scope.displayName = $scope.getDisplayName();
+
+  }])
+  .run(['configurationHandlerService', 'userService', function(configurationHandlerService, userService) {
+    configurationHandlerService.register(userService.configure);
+  }]);

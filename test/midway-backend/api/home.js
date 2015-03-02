@@ -2,7 +2,8 @@
 
 var expect = require('chai').expect,
   request = require('supertest'),
-  apiHelpers = require('../../helpers/api-helpers.js');
+  apiHelpers = require('../../helpers/api-helpers.js'),
+  httpHelpers = require('../../helpers/http-helpers.js');
 
 describe('The home API', function() {
 
@@ -39,7 +40,7 @@ describe('The home API', function() {
         });
     });
 
-    it('should render live-conference/index if conf is found by token', function(done) {
+    it('should render live-conference/index if conference is found by token', function(done) {
       var members = [
         {
           displayName: 'FooBar',
@@ -60,6 +61,36 @@ describe('The home API', function() {
           .end(function(err, res) {
             expect(err).to.not.exist;
             expect(res.text).to.contain('liveConferenceApplication');
+            done();
+          });
+      });
+    });
+
+    it('should set the user cookie when conference is found by token', function(done) {
+      var displayName = 'FooBar';
+      var members = [
+        {
+          displayName: displayName,
+          objectType: 'hublin:anonymous',
+          id: 'creator'
+        }
+      ];
+
+      apiHelpers.createConference('MyTestConference', members, [], function(err, conference) {
+        if (err) {
+          return done(err);
+        }
+
+        request(application)
+          .get('/?token=' + conference.members[0]._id)
+          .send()
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            var userCookie = httpHelpers.getCookie('user', res.headers['set-cookie']);
+            expect(userCookie).to.not.be.null;
+            var user = JSON.parse(userCookie);
+            expect(user.displayName).to.equal(displayName);
             done();
           });
       });
@@ -96,6 +127,7 @@ describe('The home API', function() {
             var object = saved.toObject();
             delete object.timestamps.created;
             delete object.members[0]._id;
+            delete object.members[0].id;
             expect(object).to.deep.equal({
               '__v': 0,
               '_id': '123456789',
@@ -108,7 +140,6 @@ describe('The home API', function() {
                     'userAgent': 'node-superagent/0.18.0'
                   },
                   'displayName': 'anonymous',
-                  'id': 'user',
                   'objectType': 'hublin:anonymous'
                 }
               ],
@@ -134,6 +165,7 @@ describe('The home API', function() {
             var object = saved.toObject();
             delete object.timestamps.created;
             delete object.members[0]._id;
+            delete object.members[0].id;
             expect(object).to.deep.equal({
               '__v': 0,
               '_id': '123456789',
@@ -146,7 +178,6 @@ describe('The home API', function() {
                     'userAgent': 'node-superagent/0.18.0'
                   },
                   'displayName': 'aGuy',
-                  'id': 'user',
                   'objectType': 'hublin:anonymous'
                 }
               ],
@@ -184,6 +215,7 @@ describe('The home API', function() {
               delete object.timestamps.created;
               delete object.members[0]._id;
               delete object.members[1]._id;
+              delete object.members[1].id;
               expect(object).to.deep.equal({
                 '__v': 1,
                 '_id': 'MyTestConference',
@@ -201,7 +233,6 @@ describe('The home API', function() {
                       'userAgent': 'node-superagent/0.18.0'
                     },
                     'displayName': 'aGuy',
-                    'id': 'user',
                     'status': 'online',
                     'objectType': 'hublin:anonymous'
                   }
@@ -210,6 +241,38 @@ describe('The home API', function() {
                 'timestamps': {}
               });
             });
+            done();
+          });
+      });
+    });
+
+    it('should create the user cookie', function(done) {
+      var displayName = 'aGuy';
+      var members = [
+        {
+          displayName: 'FooBar',
+          objectType: 'hublin:anonymous',
+          id: 'creator'
+        }
+      ];
+
+      apiHelpers.createConference('MyTestConference', members, [], function(err, conference) {
+        if (err) {
+          return done(err);
+        }
+
+        request(application)
+          .get('/' + conference._id + '?displayName=' + displayName)
+          .send()
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            expect(res.text).to.contain('liveConferenceApplication');
+
+            var userCookie = httpHelpers.getCookie('user', res.headers['set-cookie']);
+            expect(userCookie).to.not.be.null;
+            var user = JSON.parse(userCookie);
+            expect(user.displayName).to.equal(displayName);
             done();
           });
       });

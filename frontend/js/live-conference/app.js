@@ -12,13 +12,14 @@ angular.module('liveConferenceApplication', [
   'meetings.user',
   'meetings.conference',
   'meetings.invitation.email',
+  'meetings.configuration',
   'restangular',
   'mgcrea.ngStrap'
 ]).config(function($routeProvider, $locationProvider, RestangularProvider) {
 
   $routeProvider.when('/:conferenceId', {
-    templateUrl: '/views/live-conference/partials/conference',
-    controller: 'liveConferenceController',
+    templateUrl: '/views/live-conference/partials/main',
+    controller: 'conferenceController',
     resolve: {
       conference: function($route, $location, $log, conferenceService) {
         var id = $route.current.params.conferenceId;
@@ -36,16 +37,11 @@ angular.module('liveConferenceApplication', [
     }
   });
 
-  $routeProvider.when('/', {
-    templateUrl: '/views/live-conference/partials/username',
-    controller: 'usernameController'
-  });
-
   $routeProvider.otherwise({redirectTo: '/noop'});
 
   $locationProvider.html5Mode(true);
 
-  RestangularProvider.setBaseUrl('/');
+  RestangularProvider.setBaseUrl('/api');
   RestangularProvider.setFullResponse(true);
 })
   .run(['$log', 'session', 'ioConnectionManager', '$route', function($log, session, ioConnectionManager, $route) {

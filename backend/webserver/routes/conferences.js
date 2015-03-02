@@ -11,7 +11,7 @@ module.exports = function(dependencies) {
 
   var controllers = require('../controllers/conferences')(dependencies);
   var middlewares = require('../middlewares/conference')(dependencies);
-  var user = require('../middlewares/user');
+  var user = require('../middlewares/user')(dependencies);
 
   var router = express.Router();
 

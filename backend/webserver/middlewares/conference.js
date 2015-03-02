@@ -226,6 +226,9 @@ module.exports = function(dependencies) {
       };
 
       conference.create(conf, function(err, created) {
+        if (created) {
+          req.user = created.members[0];
+        }
         return callback(err, created);
       });
     }
@@ -233,7 +236,17 @@ module.exports = function(dependencies) {
     function joinOrCreateConf(conf, callback) {
       if (conf) {
         logger.debug('A conference', conf, 'has been found, joining it.');
-        return conference.join(conf, req.user, callback);
+        return conference.join(conf, req.user, function(err, joined) {
+          if (joined) {
+            return conference.getMember(joined, req.user, function(err, member) {
+              if (!err && member) {
+                req.user = member;
+              }
+              return callback(null, joined);
+            });
+          }
+          return callback(err, joined);
+        });
       }
       logger.debug('Conference of id %s not found. Creating a new one.', req.params.id);
       createConference(req.params.id, req.user, callback);

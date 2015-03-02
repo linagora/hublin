@@ -8,7 +8,23 @@ angular.module('op.live-conference', [
   'meetings.authentication',
   'meetings.session',
   'meetings.conference',
-  'meetings.invitation'
+  'meetings.invitation',
+  'meetings.wizard'
+]).controller('conferenceController', [
+  '$scope',
+  '$log',
+  'session',
+  'conference',
+  function($scope, $log, session, conference) {
+    $scope.conference = conference;
+    $scope.process = {
+      step: 'configuration'
+    };
+
+    session.initialized.then(function() {
+      $scope.process.step = 'conference';
+    });
+  }
 ]).controller('liveConferenceController', [
   '$scope',
   '$log',
@@ -17,10 +33,7 @@ angular.module('op.live-conference', [
   'conferenceAPI',
   'easyRTCService',
   'conferenceHelpers',
-  'conference',
-  function($scope, $log, $timeout, session, conferenceAPI, easyRTCService, conferenceHelpers, conference) {
-
-    $scope.conference = conference;
+  function($scope, $log, $timeout, session, conferenceAPI, easyRTCService, conferenceHelpers) {
     $scope.users = [];
     $scope.attendees = [];
     $scope.idToAttendeeNameMap = {};
@@ -37,7 +50,7 @@ angular.module('op.live-conference', [
       'video-thumb8'
     ];
 
-    $scope.$on('$locationChangeStart', easyRTCService.leaveRoom(conference));
+    $scope.$on('$locationChangeStart', easyRTCService.leaveRoom($scope.conference));
 
     $scope.getMainVideoAttendeeIndex = function(mainVideoId) {
       return conferenceHelpers.getMainVideoAttendeeIndexFrom(mainVideoId);
@@ -74,10 +87,13 @@ angular.module('op.live-conference', [
       );
     };
 
-    conferenceAPI.getMembers(123).then(
+    conferenceAPI.getMembers($scope.conference._id).then(
       function(response) {
         $scope.users = response.data;
-        $scope.idToAttendeeNameMap = conferenceHelpers.mapUserIdToName($scope.users);
+        $scope.idToAttendeeNameMap = {};
+        $scope.users.forEach(function(user) {
+          $scope.idToAttendeeNameMap[user._id] = user.displayName || 'No name';
+        });
       },
       function(error) {
         $log.error('Can not get members ' + error);
