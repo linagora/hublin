@@ -25,11 +25,10 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
       redirectTo: redirectTo
     };
   }])
-  .factory('conferenceAPI', ['$q', 'Restangular', function($q, Restangular) {
+  .factory('conferenceAPI', ['$q', '$window', 'Restangular', function($q, $window, Restangular) {
     function get(id) {
-      var defer = $q.defer();
-      defer.resolve({data: {_id: id}});
-      return defer.promise;
+      var href = $window.location.origin + '/' + encodeURIComponent(id);
+      return $q.when({data: { _id: id, href: href }});
     }
 
     function getMembers(conferenceId) {
