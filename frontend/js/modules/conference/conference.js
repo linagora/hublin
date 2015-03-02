@@ -1,13 +1,20 @@
 'use strict';
 
-angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
-  .factory('conferenceService', ['$q', 'conferenceAPI', function($q, conferenceAPI) {
+angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meetings.session'])
+  .factory('conferenceService', ['$q', 'conferenceAPI', 'session', function($q, conferenceAPI, session) {
     function create(conferenceName, displayName) {
       return conferenceAPI.create(conferenceName, displayName);
     }
 
     function enter(conferenceName, displayName) {
-      return conferenceAPI.get(conferenceName, displayName);
+      var defer = $q.defer();
+      conferenceAPI.get(conferenceName, displayName).then(function(response) {
+        session.setConference(response.data);
+        defer.resolve(response.data);
+      }, function(err) {
+        defer.reject(err);
+      });
+      return defer.promise;
     }
 
     function addMember() {
@@ -28,7 +35,10 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
   .factory('conferenceAPI', ['$q', '$window', 'Restangular', function($q, $window, Restangular) {
     function get(id) {
       var href = $window.location.origin + '/' + encodeURIComponent(id);
-      return $q.when({data: { _id: id, href: href }});
+      return Restangular.one('conferences', id).get({displayName: displayName}).then(function(response) {
+        response.data.href = href;
+        return response;
+      });
     }
 
     function getMembers(conferenceId) {
@@ -36,7 +46,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
     }
 
     function setMemberDisplayName(id, memberId, displayName) {
-      return Restangular.one('conferences', id).one('members', memberId).put({displayName: displayName});
+      return Restangular.one('conferences', id).one('members', memberId).customPUT({displayName: displayName});
     }
 
     function create(id, displayName) {
