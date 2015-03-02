@@ -40,6 +40,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard']
     function link($scope) {
 
       $scope.configuration = {
+        displayName: session.getUsername()
       };
 
       $scope.createConference = function() {

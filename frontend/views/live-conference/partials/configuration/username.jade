@@ -4,5 +4,5 @@
     .text-center
       form.form-inline.conference-form(ng-controller='usernameController')
         .form-group
-          input.form-control(type='text', required='', placeholder='{{displayName}}' ng-model='configuration.displayName')
+          input.form-control(type='text', required='', ng-model='configuration.displayName')
           button.btn.btn-xl(type='button' ng-click='wizard.nextStep()') #{__('Next')}

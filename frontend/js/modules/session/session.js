@@ -29,7 +29,7 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
     session.setUser = setUser;
 
     session.getUsername = function() {
-      return session.user ? session.user.displayName : null;
+      return session.user ? session.user.displayName : 'Anonymous';
     };
 
     session.getUserId = function() {
