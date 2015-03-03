@@ -5,7 +5,11 @@
 
 @defaultImageSizeMedium: 48px;
 @overActionColor: @yellow;
-@attendeeBarColor: @light-grey;;
+@attendeeBarColor: @light-grey;
+
+@screen-sm-min: 768px;
+@screen-md-min: 992px;
+@screen-lg-min: 1200px;
 
 .hublin-live-conference-app {
   height: auto !important;
@@ -19,4 +23,51 @@
   .container-fluid {
     padding: 0;
   }
+}
+
+.hublin-browser-authorization-dialog {
+  .modal-content {
+    background: none;
+    color: white;
+    .text-muted, .close-modal {
+      color: white;
+    }
+    padding: 0;
+    .top {
+      position: absolute;
+      top: 0;
+    }
+    .bottom {
+      position: absolute;
+      bottom: 0;
+    }
+  }
+}
+
+@media (min-width: @screen-sm-min) {
+
+  .hublin-browser-authorization-dialog {
+    .modal-content {
+      background: none;
+      color: white;
+      .text-muted, .close-modal {
+        color: white;
+      }
+      .top {
+        position: inherit;
+      }
+      .bottom {
+        position: inherit;
+      }
+    }
+  }
+
+  .vertical-center {
+    min-height: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+  }
+
 }

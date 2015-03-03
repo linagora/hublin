@@ -111,4 +111,39 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
         };
       }
     };
+  }])
+  .controller('usernameController', ['$scope', 'userService', function($scope, userService) {
+
+    $scope.getDisplayName = function() {
+      return userService.getDisplayName();
+    };
+
+    $scope.setDisplayName = function() {
+      userService.setDisplayName($scope.displayName);
+    };
+
+    $scope.username = $scope.getDisplayName();
+
+  }]).directive('usernameForm', [function() {
+    return {
+      restrict: 'E',
+      templateUrl: '/views/modules/live-conference/username-form.html'
+    };
+  }]).directive('browserAuthorizationDialog', ['$window', function($window) {
+    return {
+      restrict: 'E',
+      templateUrl: '/views/modules/live-conference/browser-authorization-dialog.html',
+      replace: true,
+      link: function(scope, element) {
+        $window.easyrtc.setGotMedia(function(gotMediaCB, errorText) {
+          element.modal('hide');
+        });
+
+        var oldGetUserMedia = $window.getUserMedia;
+        $window.getUserMedia = function getUserMedia(constraints, successCallback, errorCallback) {
+          element.modal('show');
+          oldGetUserMedia(constraints, successCallback, errorCallback);
+        };
+      }
+    };
   }]);

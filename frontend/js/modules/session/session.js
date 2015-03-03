@@ -26,6 +26,7 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
       angular.copy(user, session.user);
       checkBootstrap();
     }
+
     session.setUser = setUser;
 
     session.getUsername = function() {
