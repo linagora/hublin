@@ -353,7 +353,7 @@ function join(conference, user, callback) {
           return callback(err);
         }
 
-        localpubsub.topic(EVENTS.join).forward(globalpubsub, {conference: updated, user: user});
+        localpubsub.topic(EVENTS.join).forward(globalpubsub, {conference: conference, user: user});
 
         addHistory(conference._id, user, 'join', function(err, history) {
           if (err) {
@@ -400,7 +400,7 @@ function leave(conference, user, callback) {
           return callback(err);
         }
 
-        localpubsub.topic(EVENTS.leave).forward(globalpubsub, {conference: updated, user: user});
+        localpubsub.topic(EVENTS.leave).forward(globalpubsub, {conference: conference, user: user});
 
         addHistory(updated, user, 'leave', function(err, history) {
           if (err) {
