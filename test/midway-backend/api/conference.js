@@ -126,7 +126,6 @@ describe('The conference API', function() {
           expect(res.body.members.length).to.equal(1);
           expect(res.body.members[0].displayName).to.equal(displayName);
           expect(res.body.members[0].objectType).to.equal('hublin:anonymous');
-          expect(res.body.members[0].id).to.equal('creator');
           done();
         });
     });
@@ -135,7 +134,7 @@ describe('The conference API', function() {
 
   describe('PUT /api/conferences/:id', function() {
 
-    it('should return 201 if the conference is correctly created with a user displayName', function(done) {
+    it('should return 201 if the conference is correctly created', function(done) {
       var name = '123456789';
 
       request(application)
@@ -147,11 +146,11 @@ describe('The conference API', function() {
           expect(res.body._id).to.exist;
           expect(res.body._id).to.equal(name);
           expect(res.body.members).to.exist;
-          expect(res.body.members.length).to.equal(0);
+          expect(res.body.members.length).to.equal(1);
+          expect(res.body.members[0].objectType).to.equal('hublin:anonymous');
           done();
         });
     });
-
   });
 
   describe('GET /api/conferences/:id/members', function() {
