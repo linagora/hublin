@@ -27,6 +27,6 @@
           .col-xs-12.conferenceLink
             span.pull-right
               | You can also share this link:&nbsp;
-              a(href='', clip-copy='conference.link' clip-click='copyLink($event)') {{conference.link}}
+              a(href='', clip-copy='conference.href' clip-click='copyLink($event)') {{conference.href}}
       .modal-footer
         button.btn.btn-default(type='button', ng-disabled='contactCount < 1', ng-click='sendInvitations()') Send Invitations
