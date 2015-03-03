@@ -12,8 +12,8 @@ module.exports = function(wsserver) {
       return callback(new Error('Invalid socket object passed in argument'));
     }
     var query = infos.query;
-    if (!query.token || !query.user) {
-      return callback(new Error('Token or user not found'));
+    if (!query.user || query.user === 'undefined') {
+      return callback(new Error('User is required'));
     }
 
     // TODO : Get user from backend if needed

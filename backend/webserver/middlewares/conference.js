@@ -238,14 +238,14 @@ module.exports = function(dependencies) {
         logger.debug('A conference', conf, 'has been found, joining it.');
         return conference.join(conf, req.user, function(err, joined) {
           if (joined) {
-            return conference.getMember(joined, req.user, function(err, member) {
+            return conference.getMember(conf, req.user, function(err, member) {
               if (!err && member) {
                 req.user = member;
               }
-              return callback(null, joined);
+              return callback(null, conf);
             });
           }
-          return callback(err, joined);
+          return callback(err, conf);
         });
       }
       logger.debug('Conference of id %s not found. Creating a new one.', req.params.id);
