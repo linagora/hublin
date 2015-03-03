@@ -49,7 +49,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
     }
 
     function addMembers(id, members) {
-      return Restangular.one('conferences', id).customPUT(members);
+      return Restangular.one('conferences', id).all('members').customPUT(members);
     }
 
     function redirectTo(id, tokenUuid) {
