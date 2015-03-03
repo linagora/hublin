@@ -230,4 +230,153 @@ describe('The conference API', function() {
       });
     });
   });
+
+  describe('PUT /api/conferences/:id/members/:mid/:field', function() {
+
+    it('should send back 400 if the conference does not exist', function(done) {
+      apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+        var conference = models.conference[0];
+        var onlyMemberId = conference.members[0]._id;
+
+        request(application)
+          .put('/api/conferences/54e5e86e65806d7c16764b79/members/' + conference.members[0]._id + '/displayName')
+          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
+          .send({value: 'Bruce'})
+          .expect(400)
+          .end(function(err, data) {
+            if (err) {
+              return done(err);
+            }
+            expect(data.body.error.details).to.match(/conference is required in request/);
+             done();
+          });
+      });
+    });
+
+    it.skip('should send back 403 when trying to update member which is not himself', function(done) {
+      apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+
+        var conference = models.conference[0];
+        var onlyMemberId = conference.members[0]._id;
+
+        request(application)
+          .put('/api/conferences/' + conference._id + '/members/54e5e86e65806d7c16764b79/displayName')
+          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
+          .send({value: 'Bruce'})
+          .expect(403)
+          .end(function(err, data) {
+            if (err) {
+              return done(err);
+            }
+            expect(data.body.error.details).to.match(/User cannot update other member/);
+            done();
+          });
+      });
+    });
+
+    it('should send back 400 if the field is not supported', function(done) {
+      apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+
+        var conference = models.conference[0];
+        var onlyMemberId = conference.members[0]._id;
+
+        request(application)
+          .put('/api/conferences/' + conference._id + '/members/' + conference.members[0]._id + '/unsupported')
+          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
+          .send({value: 'Bruce'})
+          .expect(400)
+          .end(done);
+      });
+    });
+
+    it('should send back 400 if the data is not set', function(done) {
+      apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+
+        var conference = models.conference[0];
+        var onlyMemberId = conference.members[0]._id;
+
+        request(application)
+          .put('/api/conferences/' + conference._id + '/members/' + conference.members[0]._id + '/unsupported')
+          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
+          .expect(400)
+          .end(done);
+      });
+    });
+
+    it('should send back 200 and have updated data', function(done) {
+      apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+
+        var field = 'displayName';
+        var value = 'Bruce';
+
+        var conference = models.conference[0];
+        var onlyMemberId = conference.members[0]._id;
+
+        request(application)
+          .put('/api/conferences/' + conference._id + '/members/' + conference.members[0]._id + '/' + field)
+          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
+          .send({value: value})
+          .expect(200)
+          .end(function(err) {
+            if (err) {
+              return done(err);
+            }
+
+            require('mongoose').model('Conference').findOne({_id: conference._id}, function(err, conf) {
+              if (err) {
+                done(err);
+              }
+              expect(conf.members[0].displayName).to.equal(value);
+              done();
+            });
+          });
+      });
+    });
+
+    it.skip('should not be able to update without user cookie', function(done) {
+      apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+
+        var field = 'displayName';
+        var value = 'Bruce';
+
+        var conference = models.conference[0];
+
+        request(application)
+          .put('/api/conferences/' + conference._id + '/members/' + conference.members[0]._id + '/' + field)
+          .send({value: value})
+          .expect(400)
+          .end(function(err) {
+            if (err) {
+              return done(err);
+            }
+
+            require('mongoose').model('Conference').findOne({_id: conference._id}, function(err, conf) {
+              if (err) {
+                done(err);
+              }
+              expect(conf.members[0].displayName).to.not.equal(value);
+              done();
+            });
+          });
+      });
+    });
+  });
 });

@@ -34,6 +34,7 @@ angular.module('op.live-conference', [
   'easyRTCService',
   'conferenceHelpers',
   function($scope, $log, $timeout, session, conferenceAPI, easyRTCService, conferenceHelpers) {
+    $scope.conference = session.conference;
     $scope.users = [];
     $scope.attendees = [];
     $scope.idToAttendeeNameMap = {};
@@ -64,7 +65,8 @@ angular.module('op.live-conference', [
       $('#invite').modal('show');
     };
     $scope.onLeave = function() {
-      $log.log('leave conference call');
+      $log.debug('leave conference call');
+      easyRTCService.leaveRoom($scope.conference);
     };
 
     $scope.isMainVideo = function(videoId) {

@@ -144,6 +144,30 @@ function getMemberFromToken(token, callback) {
 }
 
 /**
+ * Update member field in a conference
+ *
+ * @param {Conference} conference
+ * @param {Member} member
+ * @param {String} field
+ * @param {String} value
+ * @param {Function} callback
+ * @return {*}
+ */
+function updateMemberField(conference, member, field, value, callback) {
+  var update = {displayName: {$set: {'members.$.displayName': value}}};
+  if (!update[field]) {
+    return callback(new Error('Can not update the field', field));
+  }
+
+  Conference.update(
+    {_id: conference._id, members: {$elemMatch: {id: member.id, objectType: member.objectType}}},
+    update[field],
+    {upsert: true},
+    callback
+  );
+}
+
+/**
  * Load a conference with its attendees
  * @param {string} id
  * @param {function} callback
@@ -454,6 +478,11 @@ module.exports.getMember = getMember;
  * @type {addUser}
  */
 module.exports.addUser = addUser;
+
+/**
+ * @type {updateMemberField}
+ */
+module.exports.updateMemberField = updateMemberField;
 
 /**
  * @type {{join: string, leave: string}}

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('meetings.user', ['meetings.session', 'meetings.conference', 'meetings.configuration'])
-  .factory('userService', ['$log', '$q', 'session', 'conferenceAPI', function($log, $q) {
+  .factory('userService', ['$log', '$q', 'session', 'conferenceAPI', function($log, $q, session, conferenceAPI) {
 
     function getDisplayName() {
       return 'No Name';
@@ -9,9 +9,7 @@ angular.module('meetings.user', ['meetings.session', 'meetings.conference', 'mee
 
     function configure(configuration) {
       $log.debug('Configuring displayname', configuration);
-      var defer = $q.defer();
-      defer.resolve();
-      return defer.promise;
+      return conferenceAPI.updateMemberField(session.conference._id, session.user._id, 'displayName', configuration.displayName);
     }
 
     return {

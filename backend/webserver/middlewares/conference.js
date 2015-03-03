@@ -216,6 +216,63 @@ module.exports = function(dependencies) {
     });
   }
 
+  function canUpdateUser(req, res, next) {
+    if (!req.user) {
+      return res.json(400, {
+        error: {
+          code: 400,
+          message: 'Bad request',
+          details: 'User is required'
+        }
+      });
+    }
+
+    if (!req.conference) {
+      return res.json(400, {
+        error: {
+          code: 400,
+          message: 'Bad request',
+          details: 'Conference is required'
+        }
+      });
+    }
+
+    conference.userIsConferenceMember(req.conference, req.user, function(err, isMember) {
+      if (err) {
+        return res.json(500, {
+          error: {
+            code: 500,
+            message: 'Server error',
+            details: err.message
+          }
+        });
+      }
+
+      if (!isMember) {
+        return res.json(403, {
+          error: {
+            code: 403,
+            message: 'Forbidden',
+            details: 'User cannot update member in a conference he is not member'
+          }
+        });
+      }
+
+      if (!req.user._id.equals(req.params.mid)) {
+        return res.json(403, {
+          error: {
+            code: 403,
+            message: 'Forbidden',
+            details: 'User cannot update other member.'
+          }
+        });
+      }
+
+      return next();
+    });
+
+  }
+
   function joinOrCreate(req, res, next) {
 
     function createConference(id, firstUser, callback) {
@@ -238,7 +295,7 @@ module.exports = function(dependencies) {
         logger.debug('A conference', conf, 'has been found, joining it.');
         return conference.join(conf, req.user, function(err, joined) {
           if (joined) {
-            return conference.getMember(joined, req.user, function(err, member) {
+            return conference.getMember(conf, req.user, function(err, member) {
               if (!err && member) {
                 req.user = member;
               }
@@ -277,6 +334,7 @@ module.exports = function(dependencies) {
     canJoin: canJoin,
     isAdmin: isAdmin,
     canAddMember: canAddMember,
+    canUpdateUser: canUpdateUser,
     joinOrCreate: joinOrCreate
   };
 };

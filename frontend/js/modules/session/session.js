@@ -7,6 +7,7 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
     var initializedDefer = $q.defer();
     var session = {
       user: {},
+      conference: {},
       ready: bootstrapDefer.promise,
       initialized: initializedDefer.promise
     };
@@ -28,6 +29,11 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
     }
 
     session.setUser = setUser;
+
+    function setConference(conference) {
+      angular.copy(conference, session.conference);
+    }
+    session.setConference = setConference;
 
     session.getUsername = function() {
       return session.user ? session.user.displayName : 'Anonymous';

@@ -243,4 +243,42 @@ No response.
 
     HTTP/1.1 202 Accepted
 
+## PUT /api/conferences/{id}/members/:mid/:field
+
+Update a conference member field.
+
+**Request Headers:**
+
+- Accept: application/json
+
+**Parameters:**
+
+- id: Conference id
+- mid: The member id in the given conference
+- field: The field to update
+
+**Response Headers:**
+
+- Content-Length: Document size
+- Content-Type: application/json
+
+**Status Codes:**
+
+- 200 OK
+- 400 Bad request
+- 404 Not found (conference)
+- 500 Internal server error
+
+**Request:**
+
+    PUT /api/conferences/awesome/members/538e3bd6654d7c3307f990fa/displayName
+    Accept: application/json
+    Host: localhost:8080
+    {
+      value: 'Bruce Willis',
+    }
+
+**Response:**
+
+    HTTP/1.1 200 OK
 

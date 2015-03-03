@@ -1,13 +1,16 @@
 'use strict';
 
-angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
-  .factory('conferenceService', ['$q', 'conferenceAPI', function($q, conferenceAPI) {
+angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meetings.session'])
+  .factory('conferenceService', ['conferenceAPI', 'session', function(conferenceAPI, session) {
     function create(conferenceName, displayName) {
       return conferenceAPI.create(conferenceName, displayName);
     }
 
     function enter(conferenceName, displayName) {
-      return conferenceAPI.get(conferenceName, displayName);
+      return conferenceAPI.get(conferenceName, displayName).then(function(response) {
+        session.setConference(response.data);
+        return response;
+      });
     }
 
     function addMember() {
@@ -26,17 +29,20 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
     };
   }])
   .factory('conferenceAPI', ['$q', '$window', 'Restangular', function($q, $window, Restangular) {
-    function get(id) {
+    function get(id, displayName) {
       var href = $window.location.origin + '/' + encodeURIComponent(id);
-      return $q.when({data: { _id: id, href: href }});
+      return Restangular.one('conferences', id).get({displayName: displayName}).then(function(response) {
+        response.data.href = href;
+        return response;
+      });
     }
 
     function getMembers(conferenceId) {
       return Restangular.one('conferences', conferenceId).getList('members');
     }
 
-    function setMemberDisplayName(id, memberId, displayName) {
-      return Restangular.one('conferences', id).one('members', memberId).put({displayName: displayName});
+    function updateMemberField(id, memberId, field, value) {
+      return Restangular.one('conferences', id).one('members', memberId).one(field).customPUT({value: value});
     }
 
     function create(id, displayName) {
@@ -62,7 +68,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
       addMembers: addMembers,
       redirectTo: redirectTo,
       getMembers: getMembers,
-      setMemberDisplayName: setMemberDisplayName
+      updateMemberField: updateMemberField
     };
   }])
   .controller('meetingsLandingPageController', ['$scope', '$q', function($scope, $q) {
