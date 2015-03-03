@@ -128,6 +128,11 @@ describe('The home API', function() {
             delete object.timestamps.created;
             delete object.members[0]._id;
             delete object.members[0].id;
+            expect(object.members).to.be.an('array');
+            expect(object.members).to.have.length(1);
+            expect(object.members[0].connection).to.have.property('userAgent');
+            expect(object.members[0].connection.userAgent).to.match(/node-superagent/);
+            delete(object.members[0].connection.userAgent);
             expect(object).to.deep.equal({
               '__v': 0,
               '_id': '123456789',
@@ -136,9 +141,7 @@ describe('The home API', function() {
               'history': [],
               'members': [
                 {
-                  'connection': {
-                    'userAgent': 'node-superagent/0.18.0'
-                  },
+                  'connection': {},
                   'displayName': 'anonymous',
                   'objectType': 'hublin:anonymous'
                 }
@@ -146,8 +149,8 @@ describe('The home API', function() {
               'schemaVersion': 1,
               'timestamps': {}
             });
+            done();
           });
-          done();
         });
     });
 
@@ -166,6 +169,11 @@ describe('The home API', function() {
             delete object.timestamps.created;
             delete object.members[0]._id;
             delete object.members[0].id;
+            expect(object.members).to.be.an('array');
+            expect(object.members).to.have.length(1);
+            expect(object.members[0].connection).to.have.property('userAgent');
+            expect(object.members[0].connection.userAgent).to.match(/node-superagent/);
+            delete(object.members[0].connection.userAgent);
             expect(object).to.deep.equal({
               '__v': 0,
               '_id': '123456789',
@@ -174,9 +182,7 @@ describe('The home API', function() {
               'history': [],
               'members': [
                 {
-                  'connection': {
-                    'userAgent': 'node-superagent/0.18.0'
-                  },
+                  'connection': {},
                   'displayName': 'aGuy',
                   'objectType': 'hublin:anonymous'
                 }
@@ -184,8 +190,8 @@ describe('The home API', function() {
               'schemaVersion': 1,
               'timestamps': {}
             });
+            done();
           });
-          done();
         });
     });
 
@@ -216,6 +222,11 @@ describe('The home API', function() {
               delete object.members[0]._id;
               delete object.members[1]._id;
               delete object.members[1].id;
+              expect(object.members).to.be.an('array');
+              expect(object.members).to.have.length(2);
+              expect(object.members[1].connection).to.have.property('userAgent');
+              expect(object.members[1].connection.userAgent).to.match(/node-superagent/);
+              delete(object.members[1].connection.userAgent);
               expect(object).to.deep.equal({
                 '__v': 1,
                 '_id': 'MyTestConference',
@@ -230,7 +241,6 @@ describe('The home API', function() {
                   },
                   {
                     'connection': {
-                      'userAgent': 'node-superagent/0.18.0'
                     },
                     'displayName': 'aGuy',
                     'status': 'online',
@@ -240,8 +250,8 @@ describe('The home API', function() {
                 'schemaVersion': 1,
                 'timestamps': {}
               });
+              done();
             });
-            done();
           });
       });
     });

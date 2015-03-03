@@ -175,9 +175,7 @@ function userIsConferenceCreator(conference, user, callback) {
   if (!conference) {
     return callback(new Error('Undefined conference'));
   }
-
-  var id = user._id || user;
-  return callback(null, conference.creator.equals(id));
+  return callback(null, conference.creator.equals(user._id));
 }
 
 /**
@@ -195,9 +193,7 @@ function userIsConferenceMember(conference, user, callback) {
   if (!conference) {
     return callback(new Error('Undefined conference'));
   }
-
-  var conference_id = conference._id || conference;
-  Conference.findOne({_id: conference_id}, {members: {$elemMatch: {id: user.id, objectType: user.objectType}}}).exec(function(err, conf) {
+  Conference.findOne({_id: conference._id}, {members: {$elemMatch: {id: user.id, objectType: user.objectType}}}).exec(function(err, conf) {
     if (err) {
       return callback(err);
     }
@@ -222,10 +218,8 @@ function getMember(conference, tuple, callback) {
     return callback(new Error('Undefined conference'));
   }
 
-  var id = conference._id || conference;
-
   Conference.findOne(
-    {_id: id},
+    {_id: conference._id},
     {members: {$elemMatch: {id: tuple.id, objectType: tuple.objectType}}}
   ).exec(function(err, conf) {
     if (err) {
@@ -276,15 +270,13 @@ function addUser(conference, user, callback) {
     return callback(new Error('Undefined conference'));
   }
 
-  var conferenceId = conference._id || conference;
-
-  get(conferenceId, function(err, conf) {
+  get(conference._id, function(err, conf) {
     if (err) {
       return callback(err);
     }
 
     if (!conf) {
-      return callback(new Error('No such conference', conferenceId));
+      return callback(new Error('No such conference', conference._id));
     }
 
     userIsConferenceMember(conference, user, function(err, isMember) {
@@ -322,15 +314,13 @@ function join(conference, user, callback) {
     return callback(new Error('Undefined conference'));
   }
 
-  var conferenceId = conference._id || conference;
-
    addUser(conference, user, function(err) {
     if (err) {
       return callback(err);
     }
 
     Conference.update(
-      {_id: conferenceId, members: {$elemMatch: {id: user.id, objectType: user.objectType}}},
+      {_id: conference._id, members: {$elemMatch: {id: user.id, objectType: user.objectType}}},
       {$set: {'members.$.status': MEMBER_STATUS.ONLINE}},
       {upsert: true},
       function(err, updated) {
@@ -341,7 +331,7 @@ function join(conference, user, callback) {
 
         localpubsub.topic(EVENTS.join).forward(globalpubsub, {conference: updated, user: user});
 
-        addHistory(conferenceId, user, 'join', function(err, history) {
+        addHistory(conference._id, user, 'join', function(err, history) {
           if (err) {
             logger.error('Error while pushing new history element %e', err);
           }
@@ -377,9 +367,8 @@ function leave(conference, user, callback) {
       return callback(new Error('User is not member of this conference'));
     }
 
-    var conference_id = conference._id || conference;
     Conference.update(
-      {_id: conference_id, members: {$elemMatch: {id: user.id, objectType: user.objectType}}},
+      {_id: conference._id, members: {$elemMatch: {id: user.id, objectType: user.objectType}}},
       {$set: {'members.$.status': MEMBER_STATUS.OFFLINE}},
       {upsert: true},
       function(err, updated) {
