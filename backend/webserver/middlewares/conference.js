@@ -299,10 +299,10 @@ module.exports = function(dependencies) {
               if (!err && member) {
                 req.user = member;
               }
-              return callback(null, joined);
+              return callback(null, conf);
             });
           }
-          return callback(err, joined);
+          return callback(err, conf);
         });
       }
       logger.debug('Conference of id %s not found. Creating a new one.', req.params.id);
