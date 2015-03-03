@@ -29,7 +29,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
     };
   }])
   .factory('conferenceAPI', ['$q', '$window', 'Restangular', function($q, $window, Restangular) {
-    function get(id) {
+    function get(id, displayName) {
       var href = $window.location.origin + '/' + encodeURIComponent(id);
       return Restangular.one('conferences', id).get({displayName: displayName}).then(function(response) {
         response.data.href = href;
