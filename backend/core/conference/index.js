@@ -154,22 +154,6 @@ function getMemberFromToken(token, callback) {
  * @return {*}
  */
 function updateMemberField(conference, member, field, value, callback) {
-  if (!conference) {
-    return callback(new Error('Conference is required'));
-  }
-
-  if (!member) {
-    return callback(new Error('Member is required'));
-  }
-
-  if (!field) {
-    return callback(new Error('Field is required'));
-  }
-
-  if (!value) {
-    return callback(new Error('Value is required'));
-  }
-
   var update = {displayName: {$set: {'members.$.displayName': value}}};
   if (!update[field]) {
     return callback(new Error('Can not update the field', field));

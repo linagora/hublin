@@ -3,22 +3,6 @@
 var conference = require('../../core/conference');
 var AUTHORIZED_FIELDS = ['displayName'];
 
-var invitation = {
-
-  /**
-   * Send invitation to users, update the conference by calling core.conference#invite
-   * Note: This can be handled asynchronously by a task runner.
-   *
-   * @param {Conference} conference
-   * @param {Array} users
-   * @param {Function} callback
-   * @return {*}
-   */
-  inviteUsers: function(conference, users, callback) {
-    return callback(null, conference);
-  }
-};
-
 function createConference(req, callback) {
   var conf = {
     _id: req.params.id,
@@ -98,9 +82,6 @@ module.exports = function(dependencies) {
 
   function updateMemberField(req, res) {
     var conf = req.conference;
-    if (!conf) {
-      return res.json(404, {error: {code: 404, message: 'Not found', details: 'Conference not found'}});
-    }
 
     var data = req.body;
     if (!data || !data.value) {
