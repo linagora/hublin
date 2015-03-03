@@ -399,6 +399,65 @@ function leave(conference, user, callback) {
   });
 }
 
+/**
+ * Hook for room join event called from om-webrtc module
+ *
+ * @param {String} roomId
+ * @param {String} userId
+ * @param {Function} callback
+ * @return {*}
+ */
+function onRoomJoin(roomId, userId, callback) {
+  get(roomId, function(err, conference) {
+    if (err) {
+      logger.error('Error while getting room %e', err);
+      return callback(new Error('Error while getting conference from room'));
+    }
+
+    if (!conference) {
+      logger.info('Can not find conference from room', roomId);
+      return callback(new Error('Can not find conference from room', roomId));
+    }
+
+    var user = conference.members.id(userId);
+    if (!user) {
+      logger.info('No valid user found for room %s with id %s', roomId, userId);
+      return callback();
+    }
+
+    return join(conference, user, callback);
+  });
+}
+
+/**
+ * Hook for room leave event called from om-webrtc module
+ *
+ * @param {String} roomId
+ * @param {String} userId
+ * @param {Function} callback
+ * @return {*}
+ */
+function onRoomLeave(roomId, userId, callback) {
+  get(roomId, function(err, conference) {
+    if (err) {
+      logger.error('Error while getting room %s : %e', roomId, err);
+      return callback(new Error('Error while getting conference from room', roomId));
+    }
+
+    if (!conference) {
+      logger.info('Can not find conference from room %s', roomId);
+      return callback(new Error('Can not find conference from room', roomId));
+    }
+
+    var user = conference.members.id(userId);
+    if (!user) {
+      logger.info('No valid user found for room %s with id %s', roomId, userId);
+      return callback();
+    }
+
+    return leave(conference, user, callback);
+  });
+}
 
 /**
  * @type {create}
@@ -451,6 +510,16 @@ module.exports.userCanJoinConference = userCanJoinConference;
  * @type {join}
  */
 module.exports.join = join;
+/**
+ *
+ * @type {onRoomJoin}
+ */
+module.exports.onRoomJoin = onRoomJoin;
+/**
+ *
+ * @type {onRoomLeave}
+ */
+module.exports.onRoomLeave = onRoomLeave;
 /**
  * @type {leave}
  */
