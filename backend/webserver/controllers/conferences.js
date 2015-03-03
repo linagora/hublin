@@ -1,50 +1,31 @@
 'use strict';
 
 var conference = require('../../core/conference');
-var invitation = {
-
-  /**
-   * Send invitation to users, update the conference by calling core.conference#invite
-   * Note: This can be handled asynchronously by a task runner.
-   *
-   * @param {Conference} conference
-   * @param {Array} users
-   * @param {Function} callback
-   * @return {*}
-   */
-  inviteUsers: function(conference, users, callback) {
-    return callback(null, conference);
-  }
-};
 
 function createConference(req, callback) {
-
   var conf = {
     _id: req.params.id,
     history: [],
     members: []
   };
 
-  if (req.query.displayName) {
-    var currentUser = {
-      objectType: 'hublin:anonymous',
-      id: 'creator',
-      displayName: req.query.displayName,
-      connection: {
-        ipAdress: '',
-        userAgent: req.headers['user-agent']
-      }
-    };
-    conf.members.push(currentUser);
-  }
+  conf.members.push(req.user);
 
   conference.create(conf, function(err, created) {
     if (err) {
       return callback(err);
     }
 
-    var members = req.body.members || [];
-    return invitation.inviteUsers(created, members, callback);
+    if (!req.body.members || req.body.members.length === 0) {
+      return callback(null, created);
+    }
+
+    conference.invite(created, req.user, req.body.members, function(err) {
+      if (err) {
+        return callback(err);
+      }
+      return callback(null, created);
+    });
   });
 }
 
@@ -56,6 +37,10 @@ module.exports = function(dependencies) {
   var logger = dependencies('logger');
 
   function createAPI(req, res) {
+    if (!req.user) {
+      return res.json(400, {error: {code: 400, message: 'Bad request', details: 'User is required'}});
+    }
+
     createConference(req, function(err, created) {
       if (err) {
         logger.error('Error while creating conference %e', err);

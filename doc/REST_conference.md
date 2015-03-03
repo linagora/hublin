@@ -54,7 +54,7 @@ Open the a conference page, creates the conference if needed.
 
 ## PUT /api/conferences/:id
 
-Creates a new conference
+Creates a new conference. It will also invites members which are defined in the request.
 
 **Request Headers:**
 
@@ -63,6 +63,10 @@ Creates a new conference
 **Query Parameters:**
 
 - displayName: The display name of the user creating the public conference
+
+**Request JSON Object:**
+
+- members: Array of members to invite to join the created conference.
 
 **Response Headers:**
 
@@ -79,9 +83,18 @@ The created conference.
 
 **Request:**
 
-    POST /api/conferences/foobar?displayName=Bruce
+    PUT /api/conferences/foobar?displayName=Bruce
     Accept: application/json
     Host: localhost:8080
+
+    {
+      members: [
+        {
+          "objectType": "email",
+          "id": "inviteme@hubl.in"
+        }
+      ]
+    }
 
 **Response:**
 
@@ -92,7 +105,7 @@ The created conference.
         {
           "_id": "123456789",
           "objectType": "hublin:anonymous",
-          "id": "creator",
+          "id": "5ddbb5c3-1adc-43e9-a1ba-3c10a8b6c905",
           "displayName": "Bruce"
         }
       ],
@@ -182,44 +195,6 @@ Array of members.
       }
     ]
 
-## PUT /api/conferences/{id}/attendees
-
-Update the current user status as attendee in the conference.
-
-**Request Headers:**
-
-- Accept: application/json
-
-**Request Parameters:**
-
-- action: join|leave
-
-**Response Headers:**
-
-- Content-Length: Document size
-- Content-Type: application/json
-
-**Response JSON Object**
-
-No response.
-
-**Status Codes:**
-
-- 204 No content
-- 400 Bad request
-- 404 Not found
-- 500 Internal server error
-
-**Request:**
-
-    PUT /api/conferences/538e3bd6654d7c3307f990fa/attendees?action=join
-    Accept: application/json
-    Host: localhost:8080
-
-**Response:**
-
-    HTTP/1.1 204 No Content
-
 ## PUT /api/conferences/{id}/members
 
 Add members to the conference. The caller must be a member of the conference to perform this action.
@@ -268,42 +243,4 @@ No response.
 
     HTTP/1.1 202 Accepted
 
-## DELETE /conferences/{id}/attendees/{user_id}
-
-Delete an attendee from the conference. The caller must write access to the conference to perform this action (creator or moderator).
-
-**Request Headers:**
-
-- Accept: application/json
-
-**Parameters:**
-
-- id: Conference id
-- user_id: User to remove as attendee from the conference
-
-**Response Headers:**
-
-- Content-Length: Document size
-- Content-Type: application/json
-
-**Response JSON Object**
-
-No response.
-
-**Status Codes:**
-
-- 204 No content
-- 400 Bad request
-- 404 Not found (conference or user)
-- 500 Internal server error
-
-**Request:**
-
-    DELETE /api/conferences/538e3bd6654d7c3307f990fa/attendees/538df8e110eca70000040b1d
-    Accept: application/json
-    Host: localhost:8080
-
-**Response:**
-
-    HTTP/1.1 204 No Content
 
