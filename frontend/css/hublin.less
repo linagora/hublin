@@ -1,7 +1,7 @@
 @import "./variables.less";
 @import "./mixins.less";
 
-@import url(http://fonts.googleapis.com/css?family=Merienda:700);
+@import url(//fonts.googleapis.com/css?family=Merienda:700);
 
 body {
   overflow-x: hidden;
@@ -293,7 +293,25 @@ section {
   .contact();
   background: url(@background-img) 20% 25% no-repeat;
   background-size: 100%;
-  padding-bottom: 300px;
+  padding: 135px 0;
+  h2{
+    padding: 20px 0;
+    margin: 0;
+    color: @gray-lighter;
+  }
+}
+@media(max-width: 730px) {
+  .create {
+    padding: 100px 0 100px 0;
+  }
+}
+@media(max-width: 420px) {
+  .create {
+    padding: 70px 0 100px 0;
+    h2 {
+      padding: 20px 0;
+    }
+  }
 }
 
 .conference-form {
@@ -471,7 +489,7 @@ ul.social-buttons {
 }
 
 .affix {
-  padding-top: 0.7%;
+  padding-top: 0.5%;
   right: 0;
   left: 0;
   height: auto;
@@ -513,7 +531,7 @@ ul.social-buttons {
   }
 
   .conference-box {
-    transition: all 0.5s;
+    background: transparent;
   }
 
   .conference-box.affix {
