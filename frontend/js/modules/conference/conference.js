@@ -87,8 +87,27 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri'])
         }
 
         scope.room = randomizeRoom();
+
+        function escapeRoomName(room) {
+          var result = room.replace(/\s+/g, '');
+
+          //removes all url associated characters : , / ? : @ & = + $ #
+          result = result.replace(/[,\/\?:@&=\+\$#]+/g, '');
+
+          var blackList = ['api'];
+          if (blackList.indexOf(result) >= 0) { result = ''; }
+
+          return result;
+        }
+
         scope.go = function() {
-          $window.location.href = buildUrl(scope.room);
+          var escapedName = escapeRoomName(scope.room);
+          if (escapedName === '') {
+            $window.location.href = buildUrl(randomizeRoom());
+          }
+          else {
+            $window.location.href = buildUrl(escapedName);
+          }
         };
       }
     };
