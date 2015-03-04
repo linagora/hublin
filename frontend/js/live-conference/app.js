@@ -14,6 +14,7 @@ angular.module('liveConferenceApplication', [
   'meetings.invitation.email',
   'meetings.configuration',
   'restangular',
+  'uuid4',
   'mgcrea.ngStrap'
 ]).config(function($routeProvider, $locationProvider, RestangularProvider) {
 

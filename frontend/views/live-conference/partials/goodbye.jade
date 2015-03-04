@@ -1,0 +1,18 @@
+section.goodbye
+  .container
+    .row
+      .col-lg-12.jumbotron
+        .row.text-center
+          h2 #{__('Thank you for using Hublin!')}
+        .row.text-center
+          p
+            span #{__('Did you enjoy the experience? Spread the word!')}
+            include ../../commons/socialshare
+        .row
+          p
+            button.btn(type='button', ng-click='reopen()') #{__('Reopen the room')}
+          p
+            span #{__('or create a new one')}
+            conference-create-form
+        .row
+          include ../../commons/whatis

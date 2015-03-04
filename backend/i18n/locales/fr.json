@@ -11,5 +11,9 @@
   "Hublin is using WebRTC technology to provide its incredible video conference experience. Unfortunately, all internet browsers are not compatible for the moment.": "Hublin utilise la technologie WebRTC afin de procurer son incroyable expérience de la vidéo conférence. Malheureusement, les navigateurs ne sont pas tous compatible pour le moment.",
   "More details about compatibility:": "Plus de détails sur la compatibilité",
   "What is exactly WebRTC?": "Qu'est ce que WebRTC ?",
-  "Go back to": "Revenir sur"
+  "Go back to": "Revenir sur",
+  "Thank you for using Hublin!": "Merci d'avoir utilisé Hublin!",
+  "Did you enjoy the experience? Spread the word!": "Avez vous apprécié Hublin? Parlez en autour de vous!",
+  "Reopen the room": "Réouvrir la conférence",
+  "or create a new one": "ou en créer une autre"
 }

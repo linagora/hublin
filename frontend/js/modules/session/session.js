@@ -5,11 +5,13 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
 
     var bootstrapDefer = $q.defer();
     var initializedDefer = $q.defer();
+    var goodbyeDefer = $q.defer();
     var session = {
       user: {},
       conference: {},
       ready: bootstrapDefer.promise,
-      initialized: initializedDefer.promise
+      initialized: initializedDefer.promise,
+      goodbye: goodbyeDefer.promise
     };
 
     var sessionIsBootstraped = false;
@@ -49,6 +51,10 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
       } else {
         initializedDefer.resolve(session.user);
       }
+    };
+
+    session.leave = function() {
+      goodbyeDefer.resolve();
     };
 
     return session;
