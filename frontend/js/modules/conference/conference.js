@@ -85,7 +85,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
         }
 
         function buildUrl(room) {
-          return URI($location.absUrl())
+          return URI('/')
           .query('')
           .fragment('')
           .segmentCoded(room);
