@@ -121,19 +121,6 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
     $scope.reopen = function() {
       session.reopen();
     };
-  }])
-  .controller('usernameController', ['$scope', 'userService', function($scope, userService) {
-
-    $scope.getDisplayName = function() {
-      return userService.getDisplayName();
-    };
-
-    $scope.setDisplayName = function() {
-      userService.setDisplayName($scope.displayName);
-    };
-
-    $scope.username = $scope.getDisplayName();
-
   }]).directive('usernameForm', [function() {
     return {
       restrict: 'E',
