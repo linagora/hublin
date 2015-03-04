@@ -40,7 +40,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard']
     function link($scope) {
 
       $scope.configuration = {
-        displayName: session.getUsername()
+        displayName: ''
       };
 
       $scope.createConference = function() {
@@ -89,5 +89,5 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard']
 
         $scope.selectBitRate('nolimit');
       }
-    }
-  }])
+    };
+  }]);
