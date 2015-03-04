@@ -37,7 +37,8 @@
     "angular-pines-notify": "~1.0.0",
     "ng-clip": "~0.2.6",
     "URIjs": "~1.14.2",
-    "angular-cookies": "~1.3.14"
+    "angular-cookies": "~1.3.14",
+    "angular-social": "git+https://github.com/esvit/angular-social.git#503ef3c50057ab4f8726026a9437bb4e6bffc657"
   },
   "resolutions": {
     "angular": "1.3.0",

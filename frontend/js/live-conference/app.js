@@ -15,7 +15,8 @@ angular.module('liveConferenceApplication', [
   'meetings.configuration',
   'restangular',
   'uuid4',
-  'mgcrea.ngStrap'
+  'mgcrea.ngStrap',
+  'ngSocial'
 ]).config(function($routeProvider, $locationProvider, RestangularProvider) {
 
   $routeProvider.when('/:conferenceId', {
