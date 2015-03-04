@@ -119,7 +119,8 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
   }])
   .controller('goodbyeController', ['$scope', 'session', function($scope, session) {
     $scope.reopen = function() {
-    }
+      session.reopen();
+    };
   }])
   .controller('usernameController', ['$scope', 'userService', function($scope, userService) {
 

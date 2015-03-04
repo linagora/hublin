@@ -21,13 +21,21 @@ angular.module('op.live-conference', [
       step: 'configuration'
     };
 
-    session.initialized.then(function() {
-      $scope.process.step = 'conference';
-    });
+    $scope.init = function() {
+      session.initialized.then(function() {
+        $scope.process.step = 'conference';
+      });
 
-    session.goodbye.then(function() {
-      $scope.process.step = 'goodbye';
-    })
+      session.goodbye.then(function() {
+        $scope.process.step = 'goodbye';
+      });
+    };
+
+    $scope.init();
+
+    $scope.$on('conference:init', function() {
+      $scope.init();
+    });
   }
 ]).controller('liveConferenceController', [
   '$scope',
