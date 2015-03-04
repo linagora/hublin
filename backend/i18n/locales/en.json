@@ -1,5 +1,7 @@
 {
   "Hello Meetings !": "Hello Meetings !",
   "%s has joined the conference": "%s has joined the conference",
-  "%s has left the conference": "%s has left the conference"
+  "%s has left the conference": "%s has left the conference",
+  "Enter your name in this room": "Enter your name in this room",
+  "Choose your video quality": "Choose your video quality"
 }

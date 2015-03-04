@@ -68,4 +68,26 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard']
       templateUrl: '/views/modules/configuration/configuration',
       link: link
     };
-  }]);
+  }])
+  .directive('bitrateConfiguration', ['easyRTCService', 'easyRTCBitRates', function(easyRTCService, easyRTCBitRates) {
+    return {
+      restrict: 'E',
+      templateUrl: '/views/modules/configuration/bitrate-configuration',
+      link: function($scope) {
+        var bitRates = Object.keys(easyRTCBitRates);
+
+        $scope.selectBitRate = function(rate) {
+          if (bitRates.indexOf(rate) >= 0) {
+            $scope.selected = rate;
+            easyRTCService.configureBandwidth(rate);
+          }
+        };
+
+        $scope.isSelected = function(rate) {
+          return $scope.selected === rate;
+        };
+
+        $scope.selectBitRate('nolimit');
+      }
+    }
+  }])
