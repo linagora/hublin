@@ -662,27 +662,7 @@ describe('The conference module', function() {
 
     this.helpers
       .requireBackend('core/conference')
-      .addHistory({ id: 'myConferenceId' }, {}, {}, this.helpers.callbacks.noError(done));
-  });
-
-  it('addHistory should support a conference id', function(done) {
-    this.mongoose = mockery.registerMock('mongoose', {
-      model: function() {
-        return {
-          update: function(value, options, upsert, callback) {
-            expect(value).to.deep.equals({
-              _id: 'myConferenceId'
-            });
-
-            return callback();
-          }
-        };
-      }
-    });
-
-    this.helpers
-      .requireBackend('core/conference')
-      .addHistory('myConferenceId', {}, {}, this.helpers.callbacks.noError(done));
+      .addHistory({ _id: 'myConferenceId' }, {}, {}, this.helpers.callbacks.noError(done));
   });
 
   it('addHistory should push a new element in the conference history', function(done) {
@@ -722,7 +702,7 @@ describe('The conference module', function() {
 
     this.helpers
       .requireBackend('core/conference')
-      .addHistory('myConferenceId', { id: 'myUserId' }, 'myShinyEvent', this.helpers.callbacks.noError(done));
+      .addHistory({ _id: 'myConferenceId' }, { id: 'myUserId' }, 'myShinyEvent', this.helpers.callbacks.noError(done));
   });
 
   it('addHistory should push a new element in the conference history, using the user\'s objectType', function(done) {
@@ -802,7 +782,7 @@ describe('The conference module', function() {
 
     this.helpers
       .requireBackend('core/conference')
-      .addHistory('myConferenceId', { id: 'myUserId', displayName: 'Sponge Bob' }, 'myShinyEvent', this.helpers.callbacks.noError(done));
+      .addHistory({ _id: 'myConferenceId' }, { id: 'myUserId', displayName: 'Sponge Bob' }, 'myShinyEvent', this.helpers.callbacks.noError(done));
   });
 
   it('addHistory should not upsert', function(done) {
@@ -822,7 +802,7 @@ describe('The conference module', function() {
 
     this.helpers
       .requireBackend('core/conference')
-      .addHistory('myConferenceId', { id: 'myUserId' }, 'myShinyEvent', this.helpers.callbacks.noError(done));
+      .addHistory({ _id: 'myConferenceId' }, { id: 'myUserId' }, 'myShinyEvent', this.helpers.callbacks.noError(done));
   });
 
   it('addHistory should send back an error when it cannot update a conference', function(done) {
@@ -840,7 +820,7 @@ describe('The conference module', function() {
 
     this.helpers
       .requireBackend('core/conference')
-      .addHistory('myConferenceId', { id: 'myUserId' }, 'myShinyEvent', this.helpers.callbacks.errorWithMessage(done, errorMessage));
+      .addHistory({ _id: 'myConferenceId' }, { id: 'myUserId' }, 'myShinyEvent', this.helpers.callbacks.errorWithMessage(done, errorMessage));
   });
 
   it('join should forward invitation into conference:join', function(done) {
