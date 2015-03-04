@@ -2,6 +2,7 @@
 
 var expect = require('chai').expect,
     request = require('supertest'),
+    express = require('express'),
     apiHelpers = require('../../helpers/api-helpers.js');
 
 describe('The conference API', function() {
@@ -26,6 +27,24 @@ describe('The conference API', function() {
   afterEach(function() {
     this.mongoose.connection.db.dropDatabase();
   });
+
+  function withSession(data) {
+    var sessionApp = express();
+    sessionApp.all('*', function(req, res, next) {
+      req.session = data;
+      next();
+    });
+    sessionApp.use(application);
+    return sessionApp;
+  }
+
+  function withSessionUser(conference) {
+    var session = { conferenceToUser: {} };
+    if (conference) {
+      session.conferenceToUser[conference._id] = conference.members[0];
+    }
+    return withSession(session);
+  }
 
   describe('GET /api/conferences/:id', function() {
     it.skip('should send back 404 if the conference is not found', function(done) {
@@ -406,7 +425,7 @@ describe('The conference API', function() {
 
   describe('GET /api/conferences/:id/members', function() {
     it('should send back 400 if the conference does not exist', function(done) {
-      request(application)
+      request(withSessionUser())
         .get('/api/conferences/54e5e86e65806d7c16764b79/members')
         .expect(400)
         .end(done);
@@ -440,7 +459,7 @@ describe('The conference API', function() {
 
   describe('PUT /api/conferences/:id/members', function() {
     it('should send back 400 if the conference does not exist', function(done) {
-      request(application)
+      request(withSessionUser())
         .put('/api/conferences/54e5e86e65806d7c16764b79/members')
         .expect(400)
         .end(done);
@@ -452,11 +471,9 @@ describe('The conference API', function() {
           return done(err);
         }
         var conference = models.conference[0];
-        var onlyMemberId = conference.members[0]._id;
         var newMember = {id: 'test@open-paas.org', objectType: 'email'};
-        request(application)
+        request(withSessionUser(conference))
           .put('/api/conferences/' + conference._id + '/members')
-          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
           .send([newMember])
           .expect(202)
           .end(function(err, res) {
@@ -490,11 +507,9 @@ describe('The conference API', function() {
           return done(err);
         }
         var conference = models.conference[0];
-        var onlyMemberId = conference.members[0]._id;
 
-        request(application)
+        request(withSessionUser(conference))
           .put('/api/conferences/54e5e86e65806d7c16764b79/members/' + conference.members[0]._id + '/displayName')
-          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
           .send({value: 'Bruce'})
           .expect(400)
           .end(function(err, data) {
@@ -507,18 +522,15 @@ describe('The conference API', function() {
       });
     });
 
-    it.skip('should send back 403 when trying to update member which is not himself', function(done) {
+    it('should send back 403 when trying to update member which is not himself', function(done) {
       apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
         if (err) {
           return done(err);
         }
-
         var conference = models.conference[0];
-        var onlyMemberId = conference.members[0]._id;
 
-        request(application)
+        request(withSessionUser(conference))
           .put('/api/conferences/' + conference._id + '/members/54e5e86e65806d7c16764b79/displayName')
-          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
           .send({value: 'Bruce'})
           .expect(403)
           .end(function(err, data) {
@@ -536,16 +548,20 @@ describe('The conference API', function() {
         if (err) {
           return done(err);
         }
-
         var conference = models.conference[0];
         var onlyMemberId = conference.members[0]._id;
 
-        request(application)
-          .put('/api/conferences/' + conference._id + '/members/' + conference.members[0]._id + '/unsupported')
-          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
-          .send({value: 'Bruce'})
+        request(withSessionUser(conference))
+          .put('/api/conferences/' + conference._id + '/members/' + onlyMemberId + '/cupsize')
+          .send({value: 'Fred'})
           .expect(400)
-          .end(done);
+          .end(function(err, data) {
+            if (err) {
+              return done(err);
+            }
+            expect(data.body.error.details).to.match(/Can not update cupsize/);
+            done();
+          });
       });
     });
 
@@ -556,11 +572,9 @@ describe('The conference API', function() {
         }
 
         var conference = models.conference[0];
-        var onlyMemberId = conference.members[0]._id;
 
-        request(application)
+        request(withSessionUser(conference))
           .put('/api/conferences/' + conference._id + '/members/' + conference.members[0]._id + '/unsupported')
-          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
           .expect(400)
           .end(done);
       });
@@ -571,62 +585,36 @@ describe('The conference API', function() {
         if (err) {
           return done(err);
         }
-
-        var field = 'displayName';
-        var value = 'Bruce';
-
         var conference = models.conference[0];
         var onlyMemberId = conference.members[0]._id;
 
-        request(application)
-          .put('/api/conferences/' + conference._id + '/members/' + conference.members[0]._id + '/' + field)
-          .set('Cookie', ['hublin.userIds=' + onlyMemberId])
-          .send({value: value})
+        request(withSessionUser(conference))
+          .put('/api/conferences/' + conference._id + '/members/' + onlyMemberId + '/displayName')
+          .send({value: 'Fred'})
           .expect(200)
-          .end(function(err) {
+          .end(function(err, data) {
             if (err) {
               return done(err);
             }
-
-            require('mongoose').model('Conference').findOne({_id: conference._id}, function(err, conf) {
-              if (err) {
-                done(err);
-              }
-              expect(conf.members[0].displayName).to.equal(value);
-              done();
-            });
+            expect(data.body[0].displayName).to.equal('Fred');
+            done();
           });
       });
     });
 
-    it.skip('should not be able to update without user cookie', function(done) {
+    it('should not be able to update without user session', function(done) {
       apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
         if (err) {
           return done(err);
         }
 
-        var field = 'displayName';
-        var value = 'Bruce';
-
         var conference = models.conference[0];
 
         request(application)
-          .put('/api/conferences/' + conference._id + '/members/' + conference.members[0]._id + '/' + field)
-          .send({value: value})
-          .expect(400)
-          .end(function(err) {
-            if (err) {
-              return done(err);
-            }
-
-            require('mongoose').model('Conference').findOne({_id: conference._id}, function(err, conf) {
-              if (err) {
-                done(err);
-              }
-              expect(conf.members[0].displayName).to.not.equal(value);
-              done();
-            });
-          });
+          .put('/api/conferences/' + conference._id + '/members/' + conference.members[0]._id + '/displayName')
+          .send({value: 'Fred'})
+          .expect(403)
+          .end(done);
       });
     });
   });

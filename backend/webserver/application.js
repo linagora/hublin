@@ -5,6 +5,7 @@ var FRONTEND_PATH = path.join(__dirname, '../../frontend');
 var CSS_PATH = FRONTEND_PATH + '/css';
 var VIEW_PATH = FRONTEND_PATH + '/views';
 var config = require('../core').config('default');
+var uuid = require('node-uuid');
 
 var lessMiddlewareConfig = {
   production: {
@@ -54,7 +55,12 @@ application.use(cookieParser('this is the secret!'));
 
 var session = require('express-session');
 var cdm = require('connect-dynamic-middleware');
-var sessionMiddleware = cdm(session({ cookie: { maxAge: 60000 }}));
+var sessionMiddleware = cdm(session({
+  cookie: { maxAge: 1 },
+  secret: uuid.v4(),
+  saveUninitialized: false,
+  resave: false
+}));
 application.use(sessionMiddleware);
 require('./middlewares/setup-sessions')({}).setupSession(sessionMiddleware);
 

@@ -6,114 +6,144 @@ var uuid = require('node-uuid');
 /**
  *
  * @param {Dependencies} dependencies
- * @return {{load: load, loadFromCookie: loadFromCookie, setUserCookie: setUserCookie, loadFromToken: loadFromToken}}
+ * @return {Object}
  */
 module.exports = function(dependencies) {
 
   var logger = dependencies('logger');
 
   /**
-   * @param {request} req
-   * @param {response} res
-   * @param {function} next
-   * @return {*}
-   */
-  function load(req, res, next) {
-
-    if (req.user) {
-      return next();
-    }
-
-    req.user = {
-      objectType: 'hublin:anonymous',
-      id: uuid.v4(),
-      displayName: req.query.displayName || 'anonymous',
-      connection: {
-        ipAdress: '',
-        userAgent: req.headers['user-agent']
-      }
-    };
-
-    return next();
-  }
-
-  /**
-   * Load user data from cookie information
+   * Augment the request object to forward req.user to the session data for the
+   * given conference id.
    *
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   * @return {*}
+   * @param {Request} req           The request being processed.
+   * @param {String} conferenceId   The id of the conference to access.
    */
-  function loadFromCookie(req, res, next) {
-    if (!req.conference) {
-      return next();
-    }
-
-    var userIds = req.cookies['hublin.userIds'] || [];
-    var members = req.conference.members.filter(function(member) {
-      if (userIds.indexOf(member._id) > -1) {
-        return member;
+  function setupRequestUser(req, conferenceId) {
+    // Make sure that changing req.user also updates the session.
+    Object.defineProperty(req, 'user', {
+      configurable: true,
+      get: function() {
+        return this.session.conferenceToUser[conferenceId];
+      },
+      set: function(val) {
+        if (!req.session.conferenceToUser) {
+          this.session.conferenceToUser = {};
+        }
+        this.res.cookie('user', JSON.stringify(val));
+        return (this.session.conferenceToUser[conferenceId] = val);
       }
     });
-
-    if (members && members.length > 0) {
-      req.user = members[0];
-    }
-
-    return next();
   }
 
   /**
-   * Set the request user as cookie
+   * Loads the user for the conference provided by the :id param. If the
+   * conference doesn't exist, a new one is created.
    *
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   * @return {*}
+   * Requires the following request details:
+   *   - req.params.id          The conference id
+   *   - req.query.displayName  (optional) Display name for the user in this
+   *                              conference
+   *
+   * @param {Request} req       The request being processed
+   * @param {Response} res      The response being processed
+   * @param {Function} next     The next handler to call
    */
-  function setUserCookie(req, res, next) {
+  function createForConference(req, res, next) {
+    var conferenceId = req.params.id;
+    setupRequestUser(req, conferenceId);
 
-    if (req.user) {
-      res.cookie('user', JSON.stringify(req.user));
+    if (!req.session.conferenceToUser || !(conferenceId in req.session.conferenceToUser)) {
+      var user = {
+        objectType: 'hublin:anonymous',
+        id: uuid.v4(),
+        displayName: req.query.displayName || 'anonymous',
+        connection: {
+          ipAddress: '',
+          userAgent: req.headers['user-agent']
+        }
+      };
+
+      req.user = user;
     }
 
-    return next();
+    next();
   }
 
   /**
-   * Set the request user from its token
+   * Loads the user for the conference provided by the :id param.
    *
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   * @return {*}
+   * Requires the following request details:
+   *   - req.params.id          The conference id
+   *
+   * @param {Request} req       The request being processed
+   * @param {Response} res      The response being processed
+   * @param {Function} next     The next handler to call
+   */
+  function loadForConference(req, res, next) {
+    if (!req.params.id) {
+      res.json(404, { error: { code: 404, message: 'Not Found', details: 'Conference not found' } });
+      return;
+    }
+
+    var conferenceId = req.params.id;
+    if (!req.session.conferenceToUser || !(conferenceId in req.session.conferenceToUser)) {
+      res.json(403, { error: { code: 403, message: 'Forbidden', details: 'Access to user data denied' } });
+      return;
+    }
+
+    setupRequestUser(req, conferenceId);
+
+    next();
+  }
+
+  /**
+   * Loads the user from the token query parameter and sets up the session with
+   * the user.
+   *
+   * Requires the following request details:
+   *   - req.query.token        The member id token
+   *
+   * @param {Request} req       The request being processed
+   * @param {Response} res      The response being processed
+   * @param {Function} next     The next handler to call
    */
   function loadFromToken(req, res, next) {
-    if (!req.query.token) {
-      return next();
+    var token = req.query.token;
+
+    if (!token) {
+      next();
+      return;
     }
 
-    conference.getMemberFromToken(req.query.token, function(err, member) {
+    conference.getFromMemberToken(token, function(err, conference) {
       if (err) {
         logger.error('Can not get member from token %e', err);
         return res.send(500);
       }
 
-      if (!member) {
+      if (!conference) {
         return res.send(404);
       }
 
-      req.user = member;
-      return next();
+      var members = conference.members.filter(function(member) {
+        return member.token === token;
+      });
+
+      if (!members.length) {
+        return res.send(404);
+      }
+
+      setupRequestUser(req, conference._id);
+      req.user = members[0];
+
+      next();
     });
   }
 
   return {
-    load: load,
-    loadFromCookie: loadFromCookie,
-    setUserCookie: setUserCookie,
+    loadForConference: loadForConference,
+    createForConference: createForConference,
     loadFromToken: loadFromToken
   };
 };
-

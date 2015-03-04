@@ -2,6 +2,8 @@
 
 var expressSession = require('express-session'),
     MongoStore = require('awesome-sessionstore')(expressSession),
+    configuration = require('../../core/esn-config'),
+    uuid = require('node-uuid'),
     mongoose = require('mongoose'),
     core = require('../../core'),
     mongo = core.db.mongo,
@@ -18,15 +20,22 @@ module.exports = function(dependencies) {
 
   function setupSession(session) {
     var setSession = function() {
-      logger.debug('mongo is connected, setting up mongo session store');
-      session.setMiddleware(expressSession({
-        cookie: { maxAge: 6000000 },
-        store: new MongoStore({
-          mongoose: mongoose
-        })
-      }));
-      mongosessiontopic.publish({});
+      configuration('session').get(function(err, config) {
+        config = config || {};
+        logger.debug('mongo is connected, setting up mongo session store');
+        session.setMiddleware(expressSession({
+          cookie: { maxAge: config.remember || 6000000 },
+          secret: config.secret || uuid.v4(),
+          saveUninitialized: false,
+          resave: false,
+          store: new MongoStore({
+            mongoose: mongoose
+          })
+        }));
+        mongosessiontopic.publish({});
+      });
     };
+
     if (mongo.isConnected()) {
       setSession();
     }

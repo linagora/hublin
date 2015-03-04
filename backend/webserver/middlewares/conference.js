@@ -258,7 +258,7 @@ module.exports = function(dependencies) {
         });
       }
 
-      if (!req.user._id.equals(req.params.mid)) {
+      if (req.user._id.toString() !== req.params.mid) {
         return res.json(403, {
           error: {
             code: 403,
@@ -283,7 +283,7 @@ module.exports = function(dependencies) {
       };
 
       conference.create(conf, function(err, created) {
-        if (created) {
+        if (created && created.members && created.members.length) {
           req.created = true;
           req.user = created.members[0];
           req.conference = created;
