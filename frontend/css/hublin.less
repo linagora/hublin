@@ -1,8 +1,6 @@
 @import "./variables.less";
 @import "./mixins.less";
 
-@import url(//fonts.googleapis.com/css?family=Merienda:700);
-
 /*
  * Add here only technologies required by the Hublin landing page.
  * We do want that browsers which do not support WebRTC see this page.
@@ -30,7 +28,6 @@ html.no-getusermedia div.meetings-landing-page #unsupported {
 
 body {
   overflow-x: hidden;
-  .body-font;
 }
 
 .script-font {
@@ -46,7 +43,7 @@ body {
 }
 
 p {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.75;
 }
 
@@ -378,6 +375,9 @@ section {
     }
     label {
       color: @brand-primary;
+      @media (max-width: 768px) {
+        text-transform: capitalize;
+      }
       font-size: 120%;
       margin-right: 10px;
       font-weight: 400;
