@@ -121,7 +121,6 @@ h1, h2, h3, h4, h5, h6 {
   border-color: transparent;
   .navbar-brand {
     color: @brand-primary;
-    padding-left: 0.2%;
     margin-left: 0;
     .script-font;
     &:hover,
@@ -192,6 +191,7 @@ h1, h2, h3, h4, h5, h6 {
   }
   .navbar-default.navbar-shrink {
     background-color: fade(@gray-darkest, 95%);
+    border-bottom: 1px solid @brand-primary;
     padding: 5px 0;
     .nav li a {
       color: @gray-lighter;
@@ -378,7 +378,6 @@ section {
     }
     label {
       color: @brand-primary;
-      letter-spacing: 0.12em;
       font-size: 120%;
       margin-right: 10px;
       font-weight: 400;
@@ -544,6 +543,20 @@ footer {
   color: @gray-lighter;
 }
 
+.beta-overlay {
+  display: inline-block;
+  background: fade(@brand-primary, 60%);
+  color: @gray-lighter;
+  font-size: 0.5em;
+  padding: 0 4px;
+  margin-left: -6px;
+  border-radius: 5px;
+  -webkit-transform: rotate(-20deg);
+  -moz-transform: rotate(-20deg);
+  -o-transform: rotate(-20deg);
+  -ms-transform: rotate(-20deg);
+}
+
 @media(max-width: 768px) {
   .navbar-default{
     position: absolute;
@@ -580,7 +593,8 @@ footer {
     top:0;
     padding: 1% 0;
     background: fade(@gray-darkest, 95%);
-    .form-control {
+    border-bottom: 1px solid @brand-primary;
+    .form-control.conference-input {
       display: inline-block;
       width: 45%;
       vertical-align: middle;
@@ -691,7 +705,6 @@ body {
 
 .hublin-title-brand {
   color: #4f7fe5;
-  font-family: "Kaushan Script", "Helvetica Neue", Helvetica, Arial, cursive;
   font-size: 2em;
 }
 
