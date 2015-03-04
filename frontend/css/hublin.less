@@ -1,9 +1,15 @@
 @import "./variables.less";
 @import "./mixins.less";
 
+@import url(//fonts.googleapis.com/css?family=Merienda:700);
+
 body {
   overflow-x: hidden;
   .body-font;
+}
+
+.script-font {
+  font-family: 'Merienda', arial;
 }
 
 .text-muted {
@@ -70,6 +76,8 @@ h1, h2, h3, h4, h5, h6 {
 .btn-lg {
   .button-variant(white; @brand-primary; @brand-primary);
   .heading-font;
+  text-transform: capitalize;
+  padding: 8px;
 }
 
 .btn-xl {
@@ -88,6 +96,8 @@ h1, h2, h3, h4, h5, h6 {
   border-color: transparent;
   .navbar-brand {
     color: @brand-primary;
+    padding-left: 0.2%;
+    margin-left: 0;
     .script-font;
     &:hover,
     &:focus,
@@ -139,7 +149,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media(min-width:768px) {
   .navbar-default {
-    background-color: rgba(34, 34, 34, 0);
+    background-color:transparent;
     padding: 25px 0;
     -webkit-transition: all 0.7s;
     -moz-transition: all 0.7s;
@@ -156,19 +166,21 @@ h1, h2, h3, h4, h5, h6 {
     }
   }
   .navbar-default.navbar-shrink {
-    background-color: rgba(34, 34, 34, 0.95);
+    background-color: fade(@gray-darkest, 95%);
+    padding: 5px 0;
     .nav li a {
       color: @gray-lighter;
     }
-    padding: 10px 0;
-    .navbar-brand {
-      font-size: 1.5em;
+    .nav li a:hover {
+      color: @brand-primary;
     }
   }
 }
 
 header {
   .background-cover;
+  background-attachment: scroll;
+  background-position: center center;
   text-align: center;
   color: white;
 }
@@ -197,7 +209,7 @@ header {
 }
 
 section {
-  padding: 100px 0;
+  padding: 80px 0;
   h2.section-heading {
     font-size: 40px;
     margin-top: 0;
@@ -210,12 +222,6 @@ section {
     font-style: italic;
     font-weight: 400;
     margin-bottom: 75px;
-  }
-}
-
-@media(min-width:768px) {
-  section {
-    padding: 100px 0;
   }
 }
 
@@ -285,33 +291,50 @@ section {
 
 .create {
   .contact();
-  background: url(@background-img) 20% 23% no-repeat;
+  background: url(@background-img) 20% 25% no-repeat;
   background-size: 100%;
-  padding-bottom: 170px;
-  .conference-form {
-    .form-group {
-      label {
-        color: @gray-darkest;
-      }
+  padding: 135px 0;
+  h2{
+    padding: 20px 0;
+    margin: 0;
+    color: @gray-lighter;
+  }
+}
+@media(max-width: 730px) {
+  .create {
+    padding: 100px 0 100px 0;
+  }
+}
+@media(max-width: 420px) {
+  .create {
+    padding: 70px 0 100px 0;
+    h2 {
+      padding: 20px 0;
     }
   }
 }
 
 .conference-form {
   .form-group {
-    width: auto;
-    margin-bottom: 0px;
     label {
-      color: @placeholder-text;
+      color: @brand-primary;
+      letter-spacing: 0.12em;
+      font-size: 120%;
+      margin-right: 10px;
+      font-weight: 400;
+      .script-font;
     }
     input {
       padding: 10px 16px;
+      margin-right: 10px;
       color: @brand-primary;
-      width: 333px;
-      margin: 0 10px;
     }
     input.form-control {
       height: auto;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
     }
   }
   ::-webkit-input-placeholder {
@@ -334,10 +357,6 @@ section {
     text-transform: lowercase;
     color: @brand-primary;
   }
-}
-
-.conference-li {
-  margin-right: 135px;
 }
 
 .configuration {
@@ -469,6 +488,88 @@ ul.social-buttons {
   }
 }
 
+.affix {
+  padding-top: 0.5%;
+  right: 0;
+  left: 0;
+  height: auto;
+  z-index: 1040;
+  h2 {
+    display: none;
+  }
+}
+
+.gray-lighter {
+  color: @gray-lighter;
+}
+
+@media(max-width: 768px) {
+  .navbar-default{
+    position: absolute;
+    top: 0;
+  }
+  .navbar-default {
+    background: transparent;
+    transition: background 0.5s;
+    .navbar-nav li a {
+      color: @gray-lighter;
+    }
+    .navbar-header {
+      position: static;
+    }
+    .navbar-brand {
+      text-align: center;
+      width: 100%;
+      font-size: 200%;
+    }
+  }
+
+  .navbar-default.navbar-shrink {
+    .navbar-brand {
+      display: none;
+    }
+  }
+
+  .conference-box {
+    background: transparent;
+  }
+
+  .conference-box.affix {
+    position: absolute;
+    top:0;
+    padding: 1% 0;
+    background: fade(@gray-darkest, 95%);
+    .form-control {
+      display: inline-block;
+      width: 45%;
+      vertical-align: middle;
+      padding-left: 4px;
+    }
+  }
+  .conference-box .form-control {
+    display: inline-block;
+    width: 41%;
+    vertical-align: middle;
+  }
+  .create {
+    padding-bottom: 25%;
+    background-size: auto;
+    .form-group {
+      margin: 0;
+    }
+  }
+  section {
+    padding: 50px 0;
+  }
+}
+
+.logo-hublin {
+  background: url('../images/logo_hublin-bubbles.png') top left no-repeat;
+  background-size: 46px;
+  padding-left: 50px;
+  color: @brand-primary;
+}
+
 // Highlight Color Customization
 
 ::-moz-selection {
@@ -528,7 +629,10 @@ body {
   .right {
     text-align: right;
   }
-
+  .create-conference-div {
+    height: 150px;
+    overflow: hidden;
+  }
   .invitation-user-list {
     list-style-type: none;
     margin-top: 10px;

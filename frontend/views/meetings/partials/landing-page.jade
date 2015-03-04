@@ -1,35 +1,26 @@
 .meetings-landing-page(ng-controller='meetingsLandingPageController')
   nav.navbar.navbar-default.navbar-fixed-top
-    .container
+    .container-fluid
       .navbar-header.page-scroll
-        button.navbar-toggle(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
-          span.sr-only Toggle navigation
-          span.icon-bar
-          span.icon-bar
-          span.icon-bar
-        a.navbar-brand.page-scroll(href='#page-top') Hubl.in
+        a.navbar-brand.page-scroll(href='#page-top')
+          span.logo-hublin Hubl
+          span.gray-lighter .in
       #bs-example-navbar-collapse-1.collapse.navbar-collapse
         ul.nav.navbar-nav.navbar-right
-          li.hidden
-            a(href='#page-top')
-          li.conference-li.hidden
-            conference-create-form
           li
             a.page-scroll(href='#about') About
           li
             a.page-scroll(href='#contact') Contact
-  section.create
-    .container
-      .row
-        .col-lg-2
-        .col-lg-8.text-center.conference-create
-          conference-create-form
+  section.create.text-center
+    div.create-conference-div
+      h2 An easy and free OpenPaaS video service
+    conference-create-form.conference-box(bs-affix data-offset-top="200")
   section.about.bg-light-gray#about
     .container
       .row
         .col-lg-12.text-center
           h2.section-heading What is hublin?
-          h3.section-subheading.text-muted Lorem ipsum dolor sit amet consectetur.
+          h3.section-subheading.text-muted An easy and free OpenPaaS video service
       .row.text-center
         .col-md-4
           a(href="#opensourceModal" data-toggle="modal")
