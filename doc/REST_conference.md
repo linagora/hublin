@@ -55,6 +55,7 @@ Open the a conference page, creates the conference if needed.
 ## PUT /api/conferences/:id
 
 Creates a new conference. It will also invites members which are defined in the request.
+It will not accept following ids for technical reasons : 'api', 'views' and 'favicon.ico'.
 
 **Request Headers:**
 
@@ -80,6 +81,7 @@ The created conference.
 **Status Codes:**
 
 - 201 Created
+- 400 Bad request
 
 **Request:**
 

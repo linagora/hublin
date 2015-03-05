@@ -1,6 +1,7 @@
 'use strict';
 
 var conference = require('../../core/conference');
+var conferenceHelpers = require('../../core/conference/helpers');
 var async = require('async');
 
 /**
@@ -335,6 +336,21 @@ module.exports = function(dependencies) {
     });
   }
 
+  function checkIdForCreation(req, res, next) {
+    var confId = req.params.id;
+
+    if (conferenceHelpers.isIdForbidden(confId)) {
+      return res.json(400, {
+        error: {
+          code: 400,
+          message: 'Bad request',
+          details: 'Forbidden conference id'
+        }
+      });
+    }
+    next();
+  }
+
   return {
     load: load,
     loadFromMemberToken: loadFromMemberToken,
@@ -343,6 +359,7 @@ module.exports = function(dependencies) {
     isAdmin: isAdmin,
     canAddMember: canAddMember,
     canUpdateUser: canUpdateUser,
-    addUserOrCreate: addUserOrCreate
+    addUserOrCreate: addUserOrCreate,
+    checkIdForCreation: checkIdForCreation
   };
 };

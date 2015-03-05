@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    meta(charset='utf8')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    link(rel='icon', type='image/png', href='images/logo-tiny.png')
+    link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/components/font-awesome/css/font-awesome.min.css')
+    link(href='/css/hublin.css', rel='stylesheet')
+
+  body
+    section.create
+      h2.section-heading Error
+        .container-fluid
+          p #{__('An error happened while trying to open the room')}
+          br
+          p #{error}
