@@ -700,3 +700,26 @@ body {
     width: auto;
   }
 }
+
+
+ul.social-buttons {
+  li a {
+    color: @gray-darkest;
+    & i:last-child {
+      color: white;
+    }
+  }
+  .fa-square {
+    background: @gray-darkest;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+  }
+  a {
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: @brand-primary;
+    }
+  }
+}
