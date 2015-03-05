@@ -348,7 +348,7 @@ section {
   background: url(@background-img) 20% 25% no-repeat;
   background-size: 100%;
   padding: 135px 0;
-  h2{
+  h2.tagline {
     padding: 20px 0;
     margin: 0;
     color: @gray-lighter;
@@ -376,7 +376,7 @@ section {
     .btn-configuration-selected {
       background-color: @gray-darkest !important;
     }
-    label {
+    label.hublin-label {
       color: @brand-primary;
       font-size: 120%;
       margin-right: 5px;
@@ -609,6 +609,28 @@ footer {
   background-size: 46px;
   padding-left: 50px;
   color: @brand-primary;
+}
+
+.logo-conference{
+  position: fixed;
+  top: 0;
+  left: 15px;
+  padding: 0.2em;
+  border-radius: 0 0 15px 0;
+  z-index: 5;
+  .script-font();
+  font-size: 1.5em;
+  background: fade(@gray-darkest, 50%);
+  a {
+      text-decoration: none;
+  }
+  & .logo-hublin {
+    background-size: 30px;
+    padding-left: 32px;
+  }
+  & .beta-overlay{
+    margin-left: -12px;
+  }
 }
 
 // Highlight Color Customization
