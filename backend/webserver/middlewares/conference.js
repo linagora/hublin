@@ -351,6 +351,50 @@ module.exports = function(dependencies) {
     next();
   }
 
+  function _lazyArchive(conf) {
+    return conference.isActive(conf)
+    .then(function(active) {
+      if (active) {
+        return false;
+      }
+      return conference.archive(conf);
+    });
+  }
+
+  function lazyArchive(loadFirst) {
+    return function(req, res, next) {
+
+      function respond(promise) {
+        promise.then(
+          function(conferenceArchive) {
+            if (conferenceArchive) {
+              delete req.conference;
+            }
+            next();
+          },
+          function onError(err) {
+            return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
+          }
+        )
+        .done();
+      }
+
+      if (loadFirst) {
+        conference.get(req.params.id, function(err, conf) {
+          if (err || !conf) {
+            return next();
+          }
+          respond(_lazyArchive(conf));
+        });
+      } else {
+        if (!req.conference) {
+          return next();
+        }
+        respond(_lazyArchive(req.conference));
+      }
+    };
+  }
+
   return {
     load: load,
     loadFromMemberToken: loadFromMemberToken,
@@ -360,6 +404,7 @@ module.exports = function(dependencies) {
     canAddMember: canAddMember,
     canUpdateUser: canUpdateUser,
     addUserOrCreate: addUserOrCreate,
-    checkIdForCreation: checkIdForCreation
+    checkIdForCreation: checkIdForCreation,
+    lazyArchive: lazyArchive
   };
 };
