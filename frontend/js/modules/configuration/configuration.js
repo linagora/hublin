@@ -89,5 +89,5 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard']
 
         $scope.selectBitRate('nolimit');
       }
-    }
-  }])
+    };
+  }]);
