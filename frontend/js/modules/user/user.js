@@ -12,9 +12,14 @@ angular.module('meetings.user', ['meetings.session', 'meetings.conference', 'mee
       return conferenceAPI.updateMemberField(session.conference._id, session.user._id, 'displayName', configuration.displayName);
     }
 
+    function isAnonymous() {
+      return !session.user.displayName || session.user.displayName.match(/anonymous/gi) !== null;
+    }
+
     return {
       getDisplayName: getDisplayName,
-      configure: configure
+      configure: configure,
+      isAnonymous: isAnonymous
     };
   }])
   .run(['configurationHandlerService', 'userService', function(configurationHandlerService, userService) {

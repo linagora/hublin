@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard'])
+angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard', 'meetings.user'])
   .factory('configurationService', ['$q', '$log', 'session', 'configurationHandlerService', function($q, $log, session, configurationHandlerService) {
     function configure(configuration) {
       $log.debug('Configuring conference', configurationHandlerService.getHandlers());
@@ -35,12 +35,12 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard']
       getHandlers: getHandlers
     };
   }])
-  .directive('conferenceConfiguration', ['$log', 'widget.wizard', 'session', 'configurationService', function($log, Wizard, session, configurationService) {
+  .directive('conferenceConfiguration', ['$log', 'widget.wizard', 'session', 'configurationService', 'userService', function($log, Wizard, session, configurationService, userService) {
 
     function link($scope) {
 
       $scope.configuration = {
-        displayName: ''
+        displayName: userService.isAnonymous() ? '' : session.user.displayName
       };
 
       $scope.createConference = function() {
