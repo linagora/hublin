@@ -21,10 +21,10 @@ describe('The conference module', function() {
   it('create should create the conference when user is object', function(done) {
     var mongoose = {
       model: function() {
-        return function() {
+        return function(object) {
           return {
             save: function(callback) {
-              return callback(null, {});
+              return callback(null, object);
             }
           };
         };
@@ -33,7 +33,12 @@ describe('The conference module', function() {
     this.mongoose = mockery.registerMock('mongoose', mongoose);
     var conference = this.helpers.requireBackend('core/conference');
     var id = 123;
-    conference.create({_id: id}, function(err, saved) {
+    conference.create({
+      _id: id,
+      members: [{
+        id: 'myUSerId'
+      }]
+    }, function(err, saved) {
       expect(err).to.not.exist;
       expect(saved).to.exist;
       done();
@@ -908,4 +913,66 @@ describe('The conference module', function() {
       done();
     });
   });
+
+  it('create should publish conference:create event when creation succeeds', function(done) {
+    var conference = {
+      _id: 'myConferenceId',
+      members: [{
+        id: 'myUserId'
+      }]
+    };
+
+    this.mongoose = mockery.registerMock('mongoose', {
+      model: function() {
+        return function(object) {
+          return {
+            save: function(callback) {
+              callback(null, object);
+            }
+          };
+        };
+      }
+    });
+
+    this.helpers.mock.pubsub('../pubsub', {});
+    require('../pubsub').local.topic('conference:create').subscribe(function(data) {
+      expect(data).to.deep.equals({
+        conference: conference,
+        user: conference.members[0]
+      });
+
+      done();
+    });
+
+    this.helpers
+      .requireBackend('core/conference')
+      .create(conference, function() {});
+  });
+
+  it('create should not publish conference:create event when creation fails', function(done) {
+    this.mongoose = mockery.registerMock('mongoose', {
+      model: function() {
+        return function() {
+          return {
+            save: function(callback) {
+              callback(new Error('WTF'));
+            }
+          };
+        };
+      }
+    });
+
+    var localPubSub = {};
+    this.helpers.mock.pubsub('../pubsub', localPubSub);
+
+    this.helpers
+      .requireBackend('core/conference')
+      .create({}, function(err) {
+        expect(err).to.exist;
+        expect(localPubSub.topics['conference:create']).to.not.exist;
+
+        done();
+      });
+  });
+
 });
