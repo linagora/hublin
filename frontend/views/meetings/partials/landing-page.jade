@@ -14,7 +14,10 @@
   section.create.text-center
     div.create-conference-div
       h2 An easy and free OpenPaaS video service
-    conference-create-form.conference-box(bs-affix data-offset-top="200")
+    #supported
+      conference-create-form.conference-box(bs-affix data-offset-top="200")
+    #unsupported.text-center
+      include ../../commons/unsupported-mini
   section.about.bg-light-gray#about
     .container
       .row

@@ -11,7 +11,27 @@
 @screen-md-min: 992px;
 @screen-lg-min: 1200px;
 
-.hublin-live-conference-app {
+html.no-websockets body.hublin-live-conference-app #wrap,
+html.no-getusermedia body.hublin-live-conference-app #wrap,
+html body.hublin-live-conference-app #unsupported {
+  display: none;
+}
+
+html body.hublin-live-conference-app #unsupported li.no-getusermedia,
+html body.hublin-live-conference-app #unsupported li.no-websockets {
+  display: none;
+}
+
+html.no-websockets body.hublin-live-conference-app #unsupported,
+html.no-getusermedia body.hublin-live-conference-app #unsupported {
+  display: block;
+  margin-top: 5em;
+  img {
+    margin-bottom: 5em;
+  }
+}
+
+.hublin-live-conference-container {
   height: auto !important;
   width:100%;
   margin-bottom: 0;

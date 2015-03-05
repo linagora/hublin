@@ -3,6 +3,31 @@
 
 @import url(//fonts.googleapis.com/css?family=Merienda:700);
 
+/*
+ * Add here only technologies required by the Hublin landing page.
+ * We do want that browsers which do not support WebRTC see this page.
+ */
+html.no-websockets body.hublin-app #wrap,
+html body.hublin-app #unsupported {
+  display: none;
+}
+
+html.no-websockets body.hublin-app #unsupported {
+  display: block;
+  margin-top: 5em;
+  img {
+    margin-bottom: 5em;
+  }
+}
+
+html.no-getusermedia div.meetings-landing-page #supported {
+  display: none;
+}
+
+html.no-getusermedia div.meetings-landing-page #unsupported {
+  display: block;
+}
+
 body {
   overflow-x: hidden;
   .body-font;
@@ -654,5 +679,21 @@ body {
     a {
       margin-left: 10px;
     }
+  }
+}
+
+.hublin-title-brand {
+  color: #4f7fe5;
+  font-family: "Kaushan Script", "Helvetica Neue", Helvetica, Arial, cursive;
+  font-size: 2em;
+}
+
+.hublin-unsupported {
+}
+
+.hublin-unsupported-mini {
+  img {
+    height: 64px;
+    width: auto;
   }
 }

@@ -19,6 +19,7 @@ html
 
     script(src='/components/jquery/dist/jquery.min.js')
     script(src='/components/underscore/underscore.js')
+    script(src='/js/thirdparty/modernizr.js')
     script(src='/components/bootstrap/dist/js/bootstrap.min.js')
     script(src='/components/URIjs/src/URI.min.js')
     script(src='/components/angular/angular.min.js')
@@ -39,7 +40,11 @@ html
 
     script(src='/js/meetings/app.js')
 
-    script(src='js/analytics/ga.js')
+    script(src='/js/analytics/ga.js')
+    script(src='/js/thirdparty/modernizr.js')
 
-    body.ng-cloak#page-top.index(ng-app='meetingsApplication', ng-controller="sessionInitMeetingsController")
-      #wrap(ng-include='session.template')
+  body.hublin-app.ng-cloak#page-top.index(ng-app='meetingsApplication', ng-controller="sessionInitMeetingsController")
+    #wrap(ng-include='session.template')
+
+    #unsupported.text-center
+      include ../commons/unsupported
