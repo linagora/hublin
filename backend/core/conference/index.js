@@ -16,7 +16,8 @@ var MEMBER_STATUS = {
 var EVENTS = {
   join: 'conference:join',
   leave: 'conference:leave',
-  invite: 'conference:invite'
+  invite: 'conference:invite',
+  create: 'conference:create'
 };
 
 /**
@@ -29,8 +30,21 @@ function create(conference, callback) {
   if (!conference) {
     return callback(new Error('Conference can not be null'));
   }
-  var conf = new Conference(conference);
-  return conf.save(callback);
+
+  return new Conference(conference).save(function(err, conference) {
+    if (err) {
+      return callback(err);
+    }
+
+    localpubsub
+      .topic(EVENTS.create)
+      .forward(globalpubsub, {
+        conference: conference,
+        user: conference.members[0]
+      });
+
+    return callback(err, conference);
+  });
 }
 
 /**
