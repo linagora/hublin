@@ -15,7 +15,8 @@ var MEMBER_STATUS = {
 
 var EVENTS = {
   join: 'conference:join',
-  leave: 'conference:leave'
+  leave: 'conference:leave',
+  invite: 'conference:invite'
 };
 
 /**
@@ -45,14 +46,39 @@ function addHistory(conference, user, status, callback) {
     return callback(new Error('Undefined user'));
   }
 
-  if (!conference) {
-    return callback(new Error('Undefined conference'));
+  if (!conference || !conference._id) {
+    return callback(new Error('Undefined or invalid conference'));
   }
 
   if (!status) {
     return callback(new Error('Undefined status'));
   }
-  return callback();
+
+  Conference.update(
+    { _id: conference._id },
+    {
+      $push: {
+        history: {
+          verb: 'event',
+          target: [{
+            objectType: 'conference',
+            _id: conference._id
+          }],
+          object: {
+            objectType: 'event',
+            _id: status
+          },
+          actor: {
+            objectType: user.objectType || 'hublin:anonymous',
+            _id: user.id,
+            displayName: user.displayName || ''
+          }
+        }
+      }
+    },
+    { upsert: false },
+    callback
+  );
 }
 
 /**
@@ -87,7 +113,7 @@ function invite(conference, creator, members, callback) {
     conference.members.push(confMember);
   });
 
-  var localtopic = localpubsub.topic('conference:invite');
+  var localtopic = localpubsub.topic(EVENTS.invite);
 
   conference.save(function(err, updated) {
     if (err) {
@@ -355,12 +381,7 @@ function join(conference, user, callback) {
 
         localpubsub.topic(EVENTS.join).forward(globalpubsub, {conference: conference, user: user});
 
-        addHistory(conference._id, user, 'join', function(err, history) {
-          if (err) {
-            logger.error('Error while pushing new history element %e', err);
-          }
-          return callback(null, updated);
-        });
+        return callback(null, updated);
     });
   });
 }
@@ -402,12 +423,7 @@ function leave(conference, user, callback) {
 
         localpubsub.topic(EVENTS.leave).forward(globalpubsub, {conference: conference, user: user});
 
-        addHistory(updated, user, 'leave', function(err, history) {
-          if (err) {
-            logger.warn('Error while pushing new history element %e', err);
-          }
-          return callback(null, updated);
-        });
+        return callback(null, updated);
     });
   });
 }

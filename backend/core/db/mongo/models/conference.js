@@ -1,24 +1,33 @@
 'use strict';
 
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    tuple = require('../schemas/tuple'),
+    Tuple = tuple.Tuple;
 
-var HistorySchema = new mongoose.Schema({
+var TimelineEntrySchema = new mongoose.Schema({
+  verb: {type: String},
+  language: {type: String},
+  published: {type: Date, default: Date.now},
   actor: {
     objectType: {type: String, required: true},
-    id: {type: mongoose.Schema.Types.Mixed, required: true}
+    _id: {type: String, required: true},
+    image: {type: String},
+    displayName: {type: String}
   },
   object: {
-    objectType: {type: String, required: true},
-    id: {type: mongoose.Schema.Types.Mixed, required: true}
+    objectType: {type: String},
+    _id: {type: String, required: true}
   },
-  target: {
-    objectType: {type: String, required: true},
-    id: {type: mongoose.Schema.Types.Mixed, required: true}
-  },
-  context: {type: mongoose.Schema.Types.Mixed},
-  timestamps: {
-    created: {type: Date, default: Date.now}
-  }
+  target: [{
+    objectType: {type: String},
+    _id: {type: String, required: true}
+  }],
+  inReplyTo: [{
+    objectType: {type: String},
+    _id: {type: mongoose.Schema.ObjectId, required: true}
+  }],
+  to: {type: [Tuple], validate: [tuple.validateTuples, 'Bad to tuple']},
+  bto: {type: [Tuple], validate: [tuple.validateTuples, 'Bad to tuple']}
 });
 
 var MemberSchema = new mongoose.Schema({
@@ -41,7 +50,7 @@ var ConferenceSchema = new mongoose.Schema({
     archived: {type: Date},
     closed: {type: Date}
   },
-  history: [HistorySchema],
+  history: [TimelineEntrySchema],
   members: [MemberSchema],
   schemaVersion: {type: Number, default: 1}
 });

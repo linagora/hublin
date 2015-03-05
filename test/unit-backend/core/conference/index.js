@@ -645,26 +645,182 @@ describe('The conference module', function() {
     });
   });
 
-  it('addHistory should call Conference.update', function(done) {
+  it('addHistory should support a Conference object', function(done) {
     this.mongoose = mockery.registerMock('mongoose', {
       model: function() {
         return {
-          update: function(query, options, upsert, callback) {
+          update: function(value, options, upsert, callback) {
+            expect(value).to.deep.equals({
+              _id: 'myConferenceId'
+            });
+
             return callback();
           }
         };
       }
     });
-    var conference = this.helpers.requireBackend('core/conference');
 
-    var conf = {
-      attendees: [],
-      history: []
-    };
+    this.helpers
+      .requireBackend('core/conference')
+      .addHistory({ _id: 'myConferenceId' }, {}, {}, this.helpers.callbacks.noError(done));
+  });
 
-    conference.addHistory(conf, {user: 123}, 'hey', function(err) {
-      done();
+  it('addHistory should push a new element in the conference history', function(done) {
+    this.mongoose = mockery.registerMock('mongoose', {
+      model: function() {
+        return {
+          update: function(value, options, upsert, callback) {
+            expect(value).to.deep.equals({
+              _id: 'myConferenceId'
+            });
+            expect(options).to.deep.equals({
+              $push: {
+                history: {
+                  verb: 'event',
+                  target: [{
+                    objectType: 'conference',
+                    _id: 'myConferenceId'
+                  }],
+                  object: {
+                    objectType: 'event',
+                    _id: 'myShinyEvent'
+                  },
+                  actor: {
+                    objectType: 'hublin:anonymous',
+                    _id: 'myUserId',
+                    displayName: ''
+                  }
+                }
+              }
+            });
+
+            return callback();
+          }
+        };
+      }
     });
+
+    this.helpers
+      .requireBackend('core/conference')
+      .addHistory({ _id: 'myConferenceId' }, { id: 'myUserId' }, 'myShinyEvent', this.helpers.callbacks.noError(done));
+  });
+
+  it('addHistory should push a new element in the conference history, using the user\'s objectType', function(done) {
+    this.mongoose = mockery.registerMock('mongoose', {
+      model: function() {
+        return {
+          update: function(value, options, upsert, callback) {
+            expect(value).to.deep.equals({
+              _id: 'myConferenceId'
+            });
+            expect(options).to.deep.equals({
+              $push: {
+                history: {
+                  verb: 'event',
+                  target: [{
+                    objectType: 'conference',
+                    _id: 'myConferenceId'
+                  }],
+                  object: {
+                    objectType: 'event',
+                    _id: 'myShinyEvent'
+                  },
+                  actor: {
+                    objectType: 'hublin:member',
+                    _id: 'myUserId',
+                    displayName: ''
+                  }
+                }
+              }
+            });
+
+            return callback();
+          }
+        };
+      }
+    });
+
+    this.helpers
+      .requireBackend('core/conference')
+      .addHistory({ _id: 'myConferenceId' }, { id: 'myUserId', objectType: 'hublin:member' }, 'myShinyEvent', this.helpers.callbacks.noError(done));
+  });
+
+  it('addHistory should push a new element in the conference history, including the user\'s displayName', function(done) {
+    this.mongoose = mockery.registerMock('mongoose', {
+      model: function() {
+        return {
+          update: function(value, options, upsert, callback) {
+            expect(value).to.deep.equals({
+              _id: 'myConferenceId'
+            });
+            expect(options).to.deep.equals({
+              $push: {
+                history: {
+                  verb: 'event',
+                  target: [{
+                    objectType: 'conference',
+                    _id: 'myConferenceId'
+                  }],
+                  object: {
+                    objectType: 'event',
+                    _id: 'myShinyEvent'
+                  },
+                  actor: {
+                    objectType: 'hublin:anonymous',
+                    _id: 'myUserId',
+                    displayName: 'Sponge Bob'
+                  }
+                }
+              }
+            });
+
+            return callback();
+          }
+        };
+      }
+    });
+
+    this.helpers
+      .requireBackend('core/conference')
+      .addHistory({ _id: 'myConferenceId' }, { id: 'myUserId', displayName: 'Sponge Bob' }, 'myShinyEvent', this.helpers.callbacks.noError(done));
+  });
+
+  it('addHistory should not upsert', function(done) {
+    this.mongoose = mockery.registerMock('mongoose', {
+      model: function() {
+        return {
+          update: function(value, options, upsert, callback) {
+            expect(upsert).to.deep.equals({
+              upsert: false
+            });
+
+            return callback();
+          }
+        };
+      }
+    });
+
+    this.helpers
+      .requireBackend('core/conference')
+      .addHistory({ _id: 'myConferenceId' }, { id: 'myUserId' }, 'myShinyEvent', this.helpers.callbacks.noError(done));
+  });
+
+  it('addHistory should send back an error when it cannot update a conference', function(done) {
+    var errorMessage = 'Hey Bob, you are not a real sponge, are you?';
+
+    this.mongoose = mockery.registerMock('mongoose', {
+      model: function() {
+        return {
+          update: function(value, options, upsert, callback) {
+            return callback(new Error(errorMessage));
+          }
+        };
+      }
+    });
+
+    this.helpers
+      .requireBackend('core/conference')
+      .addHistory({ _id: 'myConferenceId' }, { id: 'myUserId' }, 'myShinyEvent', this.helpers.callbacks.errorWithMessage(done, errorMessage));
   });
 
   it('join should forward invitation into conference:join', function(done) {
@@ -698,9 +854,6 @@ describe('The conference module', function() {
     var conference = rewire('../../../../backend/core/conference');
     var addUser = function(conference, user, callback) {return callback();};
     conference.__set__('addUser', addUser);
-    conference.__set__('addHistory', function(conference, user, event, callback) {
-      return callback();
-    });
 
     conference.join(conf, user, function() {
       expect(localstub.topics['conference:join'].data[0]).to.deep.equal({
@@ -739,9 +892,6 @@ describe('The conference module', function() {
     this.helpers.mock.pubsub('../pubsub', localstub, globalstub);
 
     var conference = rewire('../../../../backend/core/conference');
-    conference.__set__('addHistory', function(conference, user, event, callback) {
-      return callback();
-    });
     conference.__set__('userIsConferenceMember', function(conference, user, callback) {
       return callback(null, true);
     });

@@ -79,24 +79,33 @@ function mockPubSub(path, localStub, globalStub) {
   var mockedPubSub = {
     local: {
       topic: function(topic) {
-        localStub.topics.push(topic);
-        localStub.topics[topic] = {
-          data: [],
-          handler: {}
-        };
+        if (!localStub.topics[topic]) {
+          localStub.topics.push(topic);
+          localStub.topics[topic] = {
+            data: [],
+            handler: []
+          };
+        }
+
         return {
           publish: function(data) {
-            localStub.topics[topic].data.push(data);
+            var t = localStub.topics[topic];
+
+            t.data.push(data);
+            t.handler.forEach(function(handler) {
+              handler(data);
+            });
           },
           subscribe: function(handler) {
-            localStub.topics[topic].handler = handler;
+            localStub.topics[topic].handler.push(handler);
           },
           forward: function(pubsub, data) {
-            localStub.topics[topic].data.push(data);
+            this.publish(data);
+
             globalStub.topics.push(topic);
             globalStub.topics[topic] = {
               data: [],
-              handler: {}
+              handler: function() {}
             };
             globalStub.topics[topic].data.push(data);
           }
@@ -105,17 +114,25 @@ function mockPubSub(path, localStub, globalStub) {
     },
     global: {
       topic: function(topic) {
-        globalStub.topics.push(topic);
-        globalStub.topics[topic] = {
-          data: [],
-          handler: {}
-        };
+        if (!globalStub.topics[topic]) {
+          globalStub.topics.push(topic);
+          globalStub.topics[topic] = {
+            data: [],
+            handler: []
+          };
+        }
+
         return {
           publish: function(data) {
-            globalStub.topics[topic].data.push(data);
+            var t = globalStub.topics[topic];
+
+            t.data.push(data);
+            t.handler.forEach(function(handler) {
+              handler(data);
+            });
           },
           subscribe: function(handler) {
-            globalStub.topics[topic].handler = handler;
+            globalStub.topics[topic].handler.push(handler);
           }
         };
       }
@@ -238,4 +255,30 @@ module.exports = function(mixin, testEnv) {
       }
     };
   };
+
+  mixin.callbacks = {
+    noError: function(done) {
+      return function(err) {
+        expect(err).to.not.exists;
+
+        done();
+      };
+    },
+    error: function(done) {
+      return function(err) {
+        expect(err).to.exists;
+
+        done();
+      };
+    },
+    errorWithMessage: function(done, message) {
+      return function(err) {
+        expect(err).to.exists;
+        expect(err.message).to.equals(message);
+
+        done();
+      };
+    }
+  };
+
 };
