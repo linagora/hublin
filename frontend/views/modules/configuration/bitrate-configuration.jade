@@ -1,0 +1,12 @@
+.form-group
+  label.col-lg-4.col-xs-12 #{__('Choose your video quality')}
+  .col-lg-4.col-xs-12
+    .btn-group.conference-field
+      button.btn.btn-lg(ng-click='selectBitRate("low")', ng-class='{"btn-configuration-selected": isSelected("low")}')
+        i.fa.fa-fw.fa-mobile
+    .btn-group.conference-field
+      button.btn.btn-lg(ng-click='selectBitRate("medium")', ng-class='{"btn-configuration-selected": isSelected("medium")}')
+        i.fa.fa-fw.fa-wifi
+    .btn-group.conference-field
+      button.btn.btn-lg(ng-click='selectBitRate("nolimit")', ng-class='{"btn-configuration-selected": isSelected("nolimit")}')
+        i.fa.fa-fw.fa-flash

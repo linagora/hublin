@@ -249,7 +249,6 @@ section {
   }
   .form-group {
     margin-bottom: 25px;
-    input,
     textarea {
       padding: 20px;
     }
@@ -316,6 +315,12 @@ section {
 
 .conference-form {
   .form-group {
+    .conference-field {
+      margin: 5px 5px 0px 10px;
+    }
+    .btn-configuration-selected {
+      background-color: @gray-darkest !important;
+    }
     label {
       color: @brand-primary;
       letter-spacing: 0.12em;
@@ -331,6 +336,7 @@ section {
     }
     input.form-control {
       height: auto;
+      width: auto;
     }
     a {
       text-decoration: none;
@@ -363,6 +369,9 @@ section {
   .create();
   background: none;
   background-color: inherit;
+  .configuration-container {
+    margin: 40px;
+  }
 }
 
 footer {
