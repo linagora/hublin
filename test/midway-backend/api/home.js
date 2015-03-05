@@ -195,7 +195,7 @@ describe('The home API', function() {
         });
     });
 
-    it('should render the liveconference/index and join the found conference with given displayName', function(done) {
+    it('should render the liveconference/index and add user to the found conference with given displayName', function(done) {
       var members = [
         {
           displayName: 'FooBar',
@@ -243,7 +243,7 @@ describe('The home API', function() {
                     'connection': {
                     },
                     'displayName': 'aGuy',
-                    'status': 'online',
+                    'status': 'offline',
                     'objectType': 'hublin:anonymous'
                   }
                 ],
