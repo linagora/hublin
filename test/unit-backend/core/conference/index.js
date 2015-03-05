@@ -569,7 +569,7 @@ describe('The conference module', function() {
       model: function() {
         return {
           update: function(a, b, c, callback) {
-            return callback(null, conf);
+            return callback(null, 1);
           }
         };
       }
@@ -684,7 +684,7 @@ describe('The conference module', function() {
       model: function() {
         return {
           update: function(value, options, upsert, callback) {
-            return callback(null, conf);
+            return callback(null, 1);
           }
         };
       }
@@ -729,7 +729,7 @@ describe('The conference module', function() {
       model: function() {
         return {
           update: function(value, options, upsert, callback) {
-            return callback(null, conf);
+            return callback(null, 1);
           }
         };
       }
