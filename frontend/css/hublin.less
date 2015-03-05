@@ -308,7 +308,7 @@ section {
       height: auto;
     }
     textarea.form-control {
-      height: 149px;
+      height: 95px;
     }
   }
   .form-control:focus {
@@ -503,20 +503,13 @@ footer {
       width:1px;
       margin-left:35px;
       background-color:@gray-darkest;
-      transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
-      /* IE 9 */
-      -webkit-transform: rotate(45deg);
-      /* Safari and Chrome */
+      .rotation(45deg);
       z-index:1051;
       .rl {
         height:75px;
         width:1px;
         background-color:@gray-darkest;
-        transform: rotate(90deg);
-        -ms-transform: rotate(90deg);
-        /* IE 9 */
-        -webkit-transform: rotate(90deg);
+        .rotation(90deg);
         /* Safari and Chrome */
         z-index:1052;
       }
@@ -551,10 +544,7 @@ footer {
   padding: 0 4px;
   margin-left: -6px;
   border-radius: 5px;
-  -webkit-transform: rotate(-20deg);
-  -moz-transform: rotate(-20deg);
-  -o-transform: rotate(-20deg);
-  -ms-transform: rotate(-20deg);
+  .rotation(-20deg);
 }
 
 @media(max-width: 768px) {
