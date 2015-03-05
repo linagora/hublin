@@ -288,7 +288,7 @@ section {
     a {
       color: @gray-lighter;
       font-size: 7em;
-      :hover{
+      &:hover{
         color: @brand-primary;
       }
     }
@@ -375,11 +375,8 @@ section {
     }
     label {
       color: @brand-primary;
-      @media (max-width: 768px) {
-        text-transform: capitalize;
-      }
       font-size: 120%;
-      margin-right: 10px;
+      margin-right: 5px;
       font-weight: 400;
       .script-font;
     }
@@ -390,7 +387,6 @@ section {
     }
     input.form-control {
       height: auto;
-      width: auto;
     }
     a {
       text-decoration: none;
@@ -576,6 +572,10 @@ footer {
 
   .conference-box {
     background: transparent;
+    .conference-input {
+      display: inline-block;
+      width: 45%;
+    }
   }
 
   .conference-box.affix {
@@ -585,16 +585,9 @@ footer {
     background: fade(@gray-darkest, 95%);
     border-bottom: 1px solid @brand-primary;
     .form-control.conference-input {
-      display: inline-block;
-      width: 45%;
       vertical-align: middle;
       padding-left: 4px;
     }
-  }
-  .conference-box .form-control {
-    display: inline-block;
-    width: 41%;
-    vertical-align: middle;
   }
   .create {
     padding-bottom: 25%;
