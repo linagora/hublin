@@ -1,13 +1,12 @@
 .row
   .col-lg-12
-    form.form-horizontal.conference-form
-      .form-group(ng-controller='usernameController')
-        label.col-lg-4.col-xs-12 #{__('Enter your name in this room')}
-        input.form-control.col-lg-4.col-xs-12(type='text', required='', ng-model='configuration.displayName')
+    p #{__('Set your name in this room')}
+    .text-center
+      form.form-inline.conference-form(name='usernameForm')
+        .form-group
+          input.form-control(type='text', trim='true', ng-model='configuration.displayName', name='displayname', id='displayname', placeholder="#{__('Your Name')}", required)
+          button.btn.btn-xl(ng-disabled="!usernameForm.$valid", type='button' ng-click='wizard.nextStep()') #{__('Next')}
 
-      br
+        br
 
-      bitrate-configuration
-
-  .pull-right
-    button.btn.btn-primary(type='button' ng-click='wizard.nextStep()') #{__('Next')}
+        bitrate-configuration
