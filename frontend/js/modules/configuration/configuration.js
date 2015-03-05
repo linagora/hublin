@@ -40,7 +40,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
     function link($scope) {
 
       $scope.configuration = {
-        displayName: userService.isAnonymous() ? '' : session.user.displayName
+        displayName: userService.getDisplayName()
       };
 
       $scope.createConference = function() {

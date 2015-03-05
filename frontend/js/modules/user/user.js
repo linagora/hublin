@@ -3,10 +3,6 @@
 angular.module('meetings.user', ['meetings.session', 'meetings.conference', 'meetings.configuration'])
   .factory('userService', ['$log', '$q', 'session', 'conferenceAPI', function($log, $q, session, conferenceAPI) {
 
-    function getDisplayName() {
-      return 'No Name';
-    }
-
     function configure(configuration) {
       $log.debug('Configuring displayname', configuration);
       return conferenceAPI.updateMemberField(session.conference._id, session.user._id, 'displayName', configuration.displayName);
@@ -16,9 +12,13 @@ angular.module('meetings.user', ['meetings.session', 'meetings.conference', 'mee
       return !session.user.displayName || session.user.displayName.match(/anonymous/gi) !== null;
     }
 
+    function getDisplayName() {
+      return isAnonymous() ? '' : session.user.displayName;
+    }
+
     return {
-      getDisplayName: getDisplayName,
       configure: configure,
+      getDisplayName: getDisplayName,
       isAnonymous: isAnonymous
     };
   }])
