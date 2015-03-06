@@ -2,6 +2,8 @@
 
 angular.module('liveConferenceApplication', [
   'ngRoute',
+  'ngSanitize',
+  'ngAnimate',
   'op.socketio',
   'op.easyrtc',
   'op.websocket',
