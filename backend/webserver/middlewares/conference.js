@@ -296,7 +296,10 @@ module.exports = function(dependencies) {
           return callback(err);
         }
         conference.getMember(conf, user, function(err, member) {
-          if (!err && member) {
+          if (err) {
+            return callback(err);
+          }
+          if (member) {
             req.user = member;
           }
           return callback(null, conf);
