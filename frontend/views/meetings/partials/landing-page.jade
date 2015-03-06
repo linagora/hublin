@@ -5,12 +5,9 @@
         a.navbar-brand.page-scroll(href='#page-top')
           span.logo-hublin Hubl
           span.gray-lighter .in
+          span.beta-overlay Beta
       #bs-example-navbar-collapse-1.collapse.navbar-collapse
         ul.nav.navbar-nav.navbar-right
-          li
-            a.page-scroll(href='#about') About
-          li
-            a.page-scroll(href='#contact') Contact
   section.create.text-center
     div.create-conference-div
       h2 An easy and free OpenPaaS video service
@@ -18,36 +15,86 @@
       conference-create-form.conference-box(bs-affix data-offset-top="200")
     #unsupported.text-center
       include ../../commons/unsupported-mini
+  section.quickstart#quickstart
+    .container
+      .row.text-center
+        .col-lg-12
+          h2 Start with Hublin!
+      .row.text-center
+        .col-md-3
+          img(src='http://open-paas.org/images/feature_contact.jpg')
+          p Choose a new room name or stay with the default. Fancy or random ? The choice is yours.
+        .col-md-3
+          img(src='http://open-paas.org/images/feature_profile.jpg')
+          p Allow your browser to use your camera and microphone. It seems that 100% of video conferences are more efficient with sound and video.
+        .col-md-3
+          img(src='http://open-paas.org/images/feature_videoconference.jpg')
+          p You're in! Invite your contacts to join the room: your contacts can invite their contacts, who can invite their contacts...
+        .col-md-3
+          img(src='http://open-paas.org/images/feature_search.jpg')
+          p That's all. Enjoy Hublin from your desktop, smartphone or tablet. It's open, free, easy to use and always available
   section.about.bg-light-gray#about
     .container
       .row
         .col-lg-12.text-center
           h2.section-heading What is hublin?
-          h3.section-subheading.text-muted An easy and free OpenPaaS video service
+          h3.section-subheading.text-muted Hublin is a free and open source video conference solution built with love and ethic. It's the best way to initiate a communication anywhere with anybody and brings real time conversation to the next level. Hublin allows free communication without additional plugins. If you can read this page, you probably can use Hublin right now. Give it a try !
       .row.text-center
         .col-md-4
-          a(href="#opensourceModal" data-toggle="modal")
+          span.fa-stack.fa-4x
+            i.fa.fa-square.fa-stack-2x.text-primary
+            i.fa.fa-sort-alpha-asc.fa-stack-1x.fa-inverse
+          h4.service-heading Complete & Sweet
+          p.text-muted Simple but full featured: temporarily disable your microphone or camera, invite easily your guests, switch camera between attendees and much more!
+        .col-md-4
+          a(href="#webRTCModal" data-toggle="modal")
             span.fa-stack.fa-4x
-              i.fa.fa-circle.fa-stack-2x.text-primary
-              i.fa.fa-code-fork.fa-stack-1x.fa-inverse
+              i.fa.fa-square.fa-stack-2x.text-primary
+              i.fa.fa-user-secret.fa-stack-1x.fa-inverse
+          h4.service-heading Safe
+          p.text-muted Based on WebRTC technologies which allows decentralized  communication between browsers. Your video conference is not streamed to  Hublin in any way.
+        .col-md-4
+          span.fa-stack.fa-4x
+            i.fa.fa-square.fa-stack-2x.text-primary
+            i.fa.fa-code.fa-stack-1x.fa-inverse
           h4.service-heading Open Source
-          p.text-muted
-            | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.
-        .col-md-4
-          a(href="#openstandardModal" data-toggle="modal")
-            span.fa-stack.fa-4x
-              i.fa.fa-circle.fa-stack-2x.text-primary
-              i.fa.fa-asterisk.fa-stack-1x.fa-inverse
-          h4.service-heading Open Standards
-          p.text-muted
-            | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.
-        .col-md-4
-          a(href="#secureModal" data-toggle="modal")
-            span.fa-stack.fa-4x
-              i.fa.fa-circle.fa-stack-2x.text-primary
-              i.fa.fa-lock.fa-stack-1x.fa-inverse
-          h4.service-heading Secure
-          p.text-muted Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.
+          p.text-muted Strongly involved in open source philosophy, Hublin is made available in the respect of its users. Feel free to consult, react or contribute to the code on #[a.fa.fa-github(href='http://github.com/hublin')  Github]
+  section.social#social
+    .container
+      .row
+        .col-lg-6.text-justify
+          h2 About us  ?
+          h4
+            a(href='http://open-paas.org')
+              img(src='../../images/oplogo.png')
+          p Hublin is a video conference service provided by #[a(href='http://open-paas.org') Open-PaaS], the open social platform. As the OpenPaaS team, we are pleased to separate this service from of our main product and let everyone enjoy it.  We are enthusiastic open source developers and we hope you will live Hublin as we do. Respectful to open source philosophy and standards, for us community contributions are like Christmas presents. Don't hesitate to get in touch.
+          h4
+            a(href='http://linagora.com')
+              img(src='../../images/linagora.png')
+          p Thanks to #[a(href='http://linagora.com') Linagora] which supports the open source world and gives us the opportunity to release several projects such as Hublin in this domain.
+        .col-lg-6.text-center
+          h2 Follow Us!
+          ul.social-buttons
+            li
+              a(href='https://www.youtube.com/user/groupelinagora')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-youtube
+            li
+              a(href='http://twitter.com/linagora')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-twitter
+            li
+              a(href='http://twitter.com/linagora')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-facebook-square
+            li
+              a(href='http://github.com/hublin')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-github-alt
   section.contact#contact
     .container
       .row
@@ -65,9 +112,6 @@
                 .form-group
                   input#email.form-control(type='email', placeholder='Your Email *', required='', data-validation-required-message='Please enter your email address.')
                   p.help-block.text-danger
-                .form-group
-                  input#phone.form-control(type='tel', placeholder='Your Phone')
-                  p.help-block.text-danger
               .col-md-6
                 .form-group
                   textarea#message.form-control(placeholder='Your Message *', required='', data-validation-required-message='Please enter a message.')
@@ -82,20 +126,13 @@
         .col-md-4
           span.copyright Copyright &copy; Linagora 2015
         .col-md-4
-          ul.list-inline.social-buttons
-            li
-              a(href='http://twitter.com/linagora')
-                i.fa.fa-twitter
-            li
-              a(href='http://github.com/hublin')
-                i.fa.fa-github-alt
         .col-md-4
           ul.list-inline.quicklinks
             li
               a(href='#') Privacy Policy
             li
               a(href='#') Terms of Use
-  #opensourceModal.full-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+  #webRTCModal.full-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
     .modal-content
       .close-modal(data-dismiss='modal')
         .lr
@@ -104,42 +141,12 @@
         .row
           .col-lg-8.col-lg-offset-2
             .modal-body
-              h2 Open Source
+              span.fa-stack.fa-4x
+                i.fa.fa-square.fa-stack-2x.text-primary
+                i.fa.fa-video-camera.fa-stack-1x.fa-inverse
+              h2 Web RTC
               p.item-intro.text-muted Lorem ipsum dolor sit amet consectetur.
-              p
-                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!
-              button.btn.btn-primary(type='button', data-dismiss='modal')
-                i.fa.fa-times
-                | Close
-  #openstandardModal.full-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
-    .modal-content
-      .close-modal(data-dismiss='modal')
-        .lr
-          .rl
-      .container
-        .row
-          .col-lg-8.col-lg-offset-2
-            .modal-body
-              h2 Open Standards
-              p.item-intro.text-muted Lorem ipsum dolor sit amet consectetur.
-              p
-                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!
-              button.btn.btn-primary(type='button', data-dismiss='modal')
-                i.fa.fa-times
-                | Close
-  #secureModal.full-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
-    .modal-content
-      .close-modal(data-dismiss='modal')
-        .lr
-          .rl
-      .container
-        .row
-          .col-lg-8.col-lg-offset-2
-            .modal-body
-              h2 Secure
-              p.item-intro.text-muted Lorem ipsum dolor sit amet consectetur.
-              p
-                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!
+              p WebRTC is a free, open project that provides browsers and mobile applications with Real-Time Communications (RTC) capabilities via simple APIs. The WebRTC components have been optimized to best serve this purpose.
               button.btn.btn-primary(type='button', data-dismiss='modal')
                 i.fa.fa-times
                 | Close

@@ -1,8 +1,6 @@
 @import "./variables.less";
 @import "./mixins.less";
 
-@import url(//fonts.googleapis.com/css?family=Merienda:700);
-
 /*
  * Add here only technologies required by the Hublin landing page.
  * We do want that browsers which do not support WebRTC see this page.
@@ -30,7 +28,6 @@ html.no-getusermedia div.meetings-landing-page #unsupported {
 
 body {
   overflow-x: hidden;
-  .body-font;
 }
 
 .script-font {
@@ -46,7 +43,7 @@ body {
 }
 
 p {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.75;
 }
 
@@ -121,7 +118,6 @@ h1, h2, h3, h4, h5, h6 {
   border-color: transparent;
   .navbar-brand {
     color: @brand-primary;
-    padding-left: 0.2%;
     margin-left: 0;
     .script-font;
     &:hover,
@@ -192,6 +188,7 @@ h1, h2, h3, h4, h5, h6 {
   }
   .navbar-default.navbar-shrink {
     background-color: fade(@gray-darkest, 95%);
+    border-bottom: 1px solid @brand-primary;
     padding: 5px 0;
     .nav li a {
       color: @gray-lighter;
@@ -267,11 +264,41 @@ section {
   }
 }
 
-.contact {
+.quickstart {
   background-color: @gray-darkest;
-  .section-heading {
-    color: white;
+  color: @gray-lighter;
+  h2 {
+    margin: 0 0 3em 0;
   }
+  img {
+    width: 200px;
+    margin: 0 0 20px 0;
+  }
+}
+
+.social{
+  background-color: @gray-darkest;
+  color: @gray-lighter;
+  h2, h3, h4 {
+    margin: 1.5em 0;
+  }
+  ul li{
+    display: inline-block;
+    margin-right: 1.5em;
+    a {
+      color: @gray-lighter;
+      font-size: 7em;
+      &:hover{
+        color: @brand-primary;
+      }
+    }
+  }
+  .linagora:hover{
+    color: darkred;
+  }
+}
+
+.contact {
   .form-group {
     margin-bottom: 25px;
     textarea {
@@ -281,7 +308,7 @@ section {
       height: auto;
     }
     textarea.form-control {
-      height: 236px;
+      height: 95px;
     }
   }
   .form-control:focus {
@@ -348,9 +375,8 @@ section {
     }
     label {
       color: @brand-primary;
-      letter-spacing: 0.12em;
       font-size: 120%;
-      margin-right: 10px;
+      margin-right: 5px;
       font-weight: 400;
       .script-font;
     }
@@ -361,7 +387,6 @@ section {
     }
     input.form-control {
       height: auto;
-      width: auto;
     }
     a {
       text-decoration: none;
@@ -402,6 +427,8 @@ section {
 footer {
   padding: 25px 0;
   text-align: center;
+  background-color: @gray-darkest;
+  color: @gray;
   span.copyright {
     line-height: 40px;
     .heading-font;
@@ -412,31 +439,6 @@ footer {
     line-height: 40px;
     .heading-font;
     text-transform: none;
-  }
-}
-
-ul.social-buttons {
-  margin-bottom: 0;
-  li {
-    a {
-      display: block;
-      background-color: @gray-darkest;
-      height: 40px;
-      width: 40px;
-      border-radius: 100%;
-      font-size: 20px;
-      line-height: 40px;
-      color: white;
-      outline: none;
-      -webkit-transition: all 0.3s;
-      -moz-transition: all 0.3s;
-      transition: all 0.3s;
-      &:hover,
-      &:focus,
-      &:active {
-        background-color: @brand-primary;
-      }
-    }
   }
 }
 
@@ -497,20 +499,13 @@ ul.social-buttons {
       width:1px;
       margin-left:35px;
       background-color:@gray-darkest;
-      transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
-      /* IE 9 */
-      -webkit-transform: rotate(45deg);
-      /* Safari and Chrome */
+      .rotation(45deg);
       z-index:1051;
       .rl {
         height:75px;
         width:1px;
         background-color:@gray-darkest;
-        transform: rotate(90deg);
-        -ms-transform: rotate(90deg);
-        /* IE 9 */
-        -webkit-transform: rotate(90deg);
+        .rotation(90deg);
         /* Safari and Chrome */
         z-index:1052;
       }
@@ -535,6 +530,17 @@ ul.social-buttons {
 
 .gray-lighter {
   color: @gray-lighter;
+}
+
+.beta-overlay {
+  display: inline-block;
+  background: fade(@brand-primary, 60%);
+  color: @gray-lighter;
+  font-size: 0.5em;
+  padding: 0 4px;
+  margin-left: -6px;
+  border-radius: 5px;
+  .rotation(-20deg);
 }
 
 @media(max-width: 768px) {
@@ -566,6 +572,10 @@ ul.social-buttons {
 
   .conference-box {
     background: transparent;
+    .conference-input {
+      display: inline-block;
+      width: 45%;
+    }
   }
 
   .conference-box.affix {
@@ -573,17 +583,11 @@ ul.social-buttons {
     top:0;
     padding: 1% 0;
     background: fade(@gray-darkest, 95%);
-    .form-control {
-      display: inline-block;
-      width: 45%;
+    border-bottom: 1px solid @brand-primary;
+    .form-control.conference-input {
       vertical-align: middle;
       padding-left: 4px;
     }
-  }
-  .conference-box .form-control {
-    display: inline-block;
-    width: 41%;
-    vertical-align: middle;
   }
   .create {
     padding-bottom: 25%;
@@ -684,7 +688,6 @@ body {
 
 .hublin-title-brand {
   color: #4f7fe5;
-  font-family: "Kaushan Script", "Helvetica Neue", Helvetica, Arial, cursive;
   font-size: 2em;
 }
 
@@ -695,5 +698,28 @@ body {
   img {
     height: 64px;
     width: auto;
+  }
+}
+
+
+ul.social-buttons {
+  li a {
+    color: @gray-darkest;
+    & i:last-child {
+      color: white;
+    }
+  }
+  .fa-square {
+    background: @gray-darkest;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+  }
+  a {
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: @brand-primary;
+    }
   }
 }
