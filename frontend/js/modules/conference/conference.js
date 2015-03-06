@@ -99,7 +99,14 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
           //removes all url associated characters : , / ? : @ & = + $ #
           result = result.replace(/[,\/\?:@&=\+\$#]+/g, '');
 
-          var blackList = ['api'];
+          var blackList = [
+            'api',
+            'components',
+            'views',
+            'js',
+            'css',
+            'images',
+            'favicon.ico'];
           if (blackList.indexOf(result) >= 0) { result = ''; }
 
           return result;

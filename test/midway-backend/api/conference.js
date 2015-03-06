@@ -151,6 +151,28 @@ describe('The conference API', function() {
           done();
         });
     });
+
+    it('should return 400 if the conference id is forbidden', function(done) {
+      var blacklist = this.helpers.requireBackend('core/conference/helpers').forbiddenIds;
+      var count = 0;
+
+      function tryCreateConferenceForName(name) {
+        request(application)
+          .put('/api/conferences/' + name)
+          .send()
+          .expect(400)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            expect(res.error).to.exist;
+            count++;
+            if (count === blacklist.length) {
+              done();
+            }
+          });
+      }
+
+      blacklist.forEach(tryCreateConferenceForName);
+    });
   });
 
   describe('GET /api/conferences/:id/members', function() {
