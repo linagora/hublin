@@ -16,7 +16,7 @@ module.exports = function(dependencies) {
   var router = express.Router();
 
   // MEET-52 Keep this order, it is important here.
-  router.get('/:id', user.load, conference.joinOrCreate, user.setUserCookie, controllers.liveconference);
+  router.get('/:id', user.load, conference.addUserOrCreate, user.setUserCookie, controllers.liveconference);
   router.get('/', user.loadFromToken, conference.loadFromMemberToken, user.setUserCookie, controllers.meetings);
 
   return router;

@@ -143,7 +143,8 @@ describe('The home API', function() {
                 {
                   'connection': {},
                   'displayName': 'anonymous',
-                  'objectType': 'hublin:anonymous'
+                  'objectType': 'hublin:anonymous',
+                  'status': 'offline'
                 }
               ],
               'schemaVersion': 1,
@@ -184,7 +185,8 @@ describe('The home API', function() {
                 {
                   'connection': {},
                   'displayName': 'aGuy',
-                  'objectType': 'hublin:anonymous'
+                  'objectType': 'hublin:anonymous',
+                  'status': 'offline'
                 }
               ],
               'schemaVersion': 1,
@@ -195,7 +197,7 @@ describe('The home API', function() {
         });
     });
 
-    it('should render the liveconference/index and join the found conference with given displayName', function(done) {
+    it('should render the liveconference/index and add user to the found conference with given displayName', function(done) {
       var members = [
         {
           displayName: 'FooBar',
@@ -237,13 +239,14 @@ describe('The home API', function() {
                   {
                     'displayName': 'FooBar',
                     'id': 'creator',
-                    'objectType': 'hublin:anonymous'
+                    'objectType': 'hublin:anonymous',
+                    'status': 'offline'
                   },
                   {
                     'connection': {
                     },
                     'displayName': 'aGuy',
-                    'status': 'online',
+                    'status': 'offline',
                     'objectType': 'hublin:anonymous'
                   }
                 ],

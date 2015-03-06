@@ -273,7 +273,7 @@ module.exports = function(dependencies) {
 
   }
 
-  function joinOrCreate(req, res, next) {
+  function addUserOrCreate(req, res, next) {
 
     function createConference(id, firstUser, callback) {
       var conf = {
@@ -290,20 +290,27 @@ module.exports = function(dependencies) {
       });
     }
 
-    function joinOrCreateConf(conf, callback) {
-      if (conf) {
-        logger.debug('A conference', conf, 'has been found, joining it.');
-        return conference.join(conf, req.user, function(err, joined) {
-          if (joined) {
-            return conference.getMember(conf, req.user, function(err, member) {
-              if (!err && member) {
-                req.user = member;
-              }
-              return callback(null, conf);
-            });
+    function addUser(conf, user, callback) {
+      conference.addUser(conf, user, function(err) {
+        if (err) {
+          return callback(err);
+        }
+        conference.getMember(conf, user, function(err, member) {
+          if (err) {
+            return callback(err);
           }
-          return callback(err, conf);
+          if (member) {
+            req.user = member;
+          }
+          return callback(null, conf);
         });
+      });
+    }
+
+    function addUserOrCreateConference(conf, callback) {
+      if (conf) {
+        logger.debug('A conference', conf, 'has been found, adding the user to it.');
+        return addUser(conf, req.user, callback);
       }
       logger.debug('Conference of id %s not found. Creating a new one.', req.params.id);
       createConference(req.params.id, req.user, callback);
@@ -311,9 +318,10 @@ module.exports = function(dependencies) {
 
     async.waterfall([
       conference.get.bind(null, req.params.id),
-      joinOrCreateConf
+      addUserOrCreateConference
     ], function(err, result) {
       if (err) {
+        logger.error('Error while initializing conference for user %e', err);
         return res.json(500, {
           error: {
             code: 500,
@@ -335,6 +343,6 @@ module.exports = function(dependencies) {
     isAdmin: isAdmin,
     canAddMember: canAddMember,
     canUpdateUser: canUpdateUser,
-    joinOrCreate: joinOrCreate
+    addUserOrCreate: addUserOrCreate
   };
 };
