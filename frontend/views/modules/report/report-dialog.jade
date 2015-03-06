@@ -1,0 +1,15 @@
+.modal.report-modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+  .modal-dialog.modal-lg
+    .modal-content.left.modal-hublin
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+        h4(class='modal-title') #{__('Report')} {{reportedAttendee}}
+      .modal-body
+        .row
+          form(name='reportForm')
+            label #{__('Description:')}
+            textarea(class='form-control', ng-required='true', rows='5', name='reportText', ng-model='reportedText', placeholder="#{__('Enter a description for the report')}")
+      .modal-footer
+        button.btn.btn-default(data-dismiss='modal') #{__('Cancel')}
+        button.btn.btn-primary(ng-click='sendReport()', ng-disabled='reportForm.reportText.$invalid') #{__('Send')}

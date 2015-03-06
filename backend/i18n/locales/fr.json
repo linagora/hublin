@@ -22,5 +22,10 @@
   "An error happened while trying to open the room": "Une erreur est survenue pendant l'ouverture de la conférence",
   "Low Rate": "Basse",
   "Medium Rate": "Moyenne",
-  "Awesome Rate": "Haute"
+  "Awesome Rate": "Haute",
+  "Report": "Signaler",
+  "Description:": "Description:",
+  "Enter a description for the report": "Entrez une description...",
+  "Cancel": "Annuler",
+  "Send": "Envoyer"
 }
