@@ -2,7 +2,8 @@
 
 var mongoose = require('mongoose'),
     tuple = require('../schemas/tuple'),
-    Tuple = tuple.Tuple;
+    Tuple = tuple.Tuple,
+    Member = require('../schemas/member').Member;
 
 var TimelineEntrySchema = new mongoose.Schema({
   verb: {type: String},
@@ -30,17 +31,6 @@ var TimelineEntrySchema = new mongoose.Schema({
   bto: {type: [Tuple], validate: [tuple.validateTuples, 'Bad to tuple']}
 });
 
-var MemberSchema = new mongoose.Schema({
-  objectType: {type: String, required: true},
-  id: {type: mongoose.Schema.Types.Mixed, required: true},
-  displayName: {type: String, required: true},
-  status: {type: String, required: true, default: 'offline'},
-  connection: {
-    ipAddress: {type: String},
-    userAgent: {type: String}
-  }
-});
-
 var ConferenceSchema = new mongoose.Schema({
   _id: {type: String, required: true},
   active: {type: Boolean, default: true},
@@ -51,7 +41,7 @@ var ConferenceSchema = new mongoose.Schema({
     closed: {type: Date}
   },
   history: [TimelineEntrySchema],
-  members: [MemberSchema],
+  members: [Member.tree],
   schemaVersion: {type: Number, default: 1}
 });
 
