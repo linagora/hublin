@@ -85,7 +85,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
         }
 
         function buildUrl(room) {
-          return URI($location.absUrl())
+          return URI('/')
           .query('')
           .fragment('')
           .segmentCoded(room);
@@ -115,6 +115,11 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
           }
         };
       }
+    };
+  }])
+  .controller('goodbyeController', ['$scope', 'session', function($scope, session) {
+    $scope.reopen = function() {
+      session.reopen();
     };
   }]).directive('usernameForm', [function() {
     return {

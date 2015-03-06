@@ -1,15 +1,17 @@
 'use strict';
 
 angular.module('meetings.session', ['ngRoute', 'ngCookies'])
-  .factory('session', ['$q', function($q) {
+  .factory('session', ['$rootScope', '$q', function($rootScope, $q) {
 
     var bootstrapDefer = $q.defer();
     var initializedDefer = $q.defer();
+    var goodbyeDefer = $q.defer();
     var session = {
       user: {},
       conference: {},
       ready: bootstrapDefer.promise,
-      initialized: initializedDefer.promise
+      initialized: initializedDefer.promise,
+      goodbye: goodbyeDefer.promise
     };
 
     var sessionIsBootstraped = false;
@@ -49,6 +51,19 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
       } else {
         initializedDefer.resolve(session.user);
       }
+    };
+
+    session.leave = function() {
+      goodbyeDefer.resolve();
+    };
+
+    session.reopen = function() {
+      initializedDefer = $q.defer();
+      goodbyeDefer = $q.defer();
+      initializedDefer.resolve();
+      session.initialized = initializedDefer.promise;
+      session.goodbye = goodbyeDefer.promise;
+      $rootScope.$broadcast('conference:init', {conference: session.conference, user: session.user});
     };
 
     return session;

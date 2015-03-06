@@ -21,8 +21,20 @@ angular.module('op.live-conference', [
       step: 'configuration'
     };
 
-    session.initialized.then(function() {
-      $scope.process.step = 'conference';
+    $scope.init = function() {
+      session.initialized.then(function() {
+        $scope.process.step = 'conference';
+      });
+
+      session.goodbye.then(function() {
+        $scope.process.step = 'goodbye';
+      });
+    };
+
+    $scope.init();
+
+    $scope.$on('conference:init', function() {
+      $scope.init();
     });
   }
 ]).controller('liveConferenceController', [
@@ -64,9 +76,11 @@ angular.module('op.live-conference', [
     $scope.showInvitation = function() {
       $('#invite').modal('show');
     };
+
     $scope.onLeave = function() {
-      $log.debug('leave conference call');
+      $log.debug('Leaving the conference');
       easyRTCService.leaveRoom($scope.conference);
+      session.leave();
     };
 
     $scope.isMainVideo = function(videoId) {
