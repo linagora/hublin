@@ -1,7 +1,8 @@
 'use strict';
 
 var TimelineEntrySchema = require('../schemas/timelineentry'),
-    MemberSchema = require('../schemas/member');
+    MemberSchema = require('../schemas/member'),
+    HostSchema = require('../schemas/host');
 
 var conferenceBaseSchema = {
   active: {type: Boolean, default: true},
@@ -13,6 +14,9 @@ var conferenceBaseSchema = {
   },
   history: [TimelineEntrySchema],
   members: [MemberSchema],
+  configuration: {
+    hosts: [HostSchema]
+  },
   schemaVersion: {type: Number, default: 1}
 };
 
