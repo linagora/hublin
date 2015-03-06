@@ -8,6 +8,7 @@ before(function() {
   var basePath = path.resolve(__dirname + '/../..');
   this.testEnv = {
     basePath: basePath,
+    fixtures: path.resolve(__dirname + '/fixtures'),
     initCore: function(callback) {
       var core = require(basePath + '/backend/core');
       core.init(function() {

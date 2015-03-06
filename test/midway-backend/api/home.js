@@ -291,6 +291,91 @@ describe('The home API', function() {
       });
     });
 
+    describe('lazyArchive', function() {
+
+      beforeEach(function(done) {
+        var self = this;
+        apiHelpers.applyDeployment('inactiveConference', this.testEnv, {}, function(err, models) {
+          if (err) {
+            return done(err);
+          }
+          self.models = models;
+          done();
+        });
+        this._checkArchivedConference = function(id, done) {
+          require('mongoose').model('ConferenceArchive').findOne({initial_id: id}, function(err, conference) {
+            if (err) {
+              return done(err);
+            }
+            if (!conference) {
+              return done(new Error('conference archive ' + id + ' not found'));
+            }
+            return done();
+          });
+        };
+
+        this._checkNoArchivedConference = function(id, done) {
+          require('mongoose').model('ConferenceArchive').findOne({initial_id: id}, function(err, conference) {
+            if (err) {
+              return done(err);
+            }
+            if (conference) {
+              return done(new Error('conference archive ' + id + ' found'));
+            }
+            return done();
+          });
+        };
+
+        this._checkConference = function(id, done) {
+          require('mongoose').model('Conference').findOne({_id: id}, function(err, conference) {
+            if (err) {
+              return done(err);
+            }
+            if (!conference) {
+              return done(new Error('conference ' + id + ' not found'));
+            }
+            return done();
+          });
+        };
+      });
+
+      it('should archive an inactive conference', function(done) {
+        var _checkArchivedConference = this._checkArchivedConference;
+        request(application)
+          .get('/inactiveConference')
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            _checkArchivedConference('inactiveConference', done);
+          });
+      });
+
+      it('should create a new conference', function(done) {
+        var _checkConference = this._checkConference;
+        request(application)
+          .get('/inactiveConference')
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            _checkConference('inactiveConference', done);
+          });
+      });
+      it('should not archive an active conference', function(done) {
+        var _checkNoArchivedConference = this._checkNoArchivedConference;
+        request(application)
+          .get('/otherConference')
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            request(application)
+              .get('/otherConference')
+              .expect(200)
+              .end(function(err, res) {
+                _checkNoArchivedConference('otherConference', done);
+              });
+          });
+      });
+    });
   });
 
 });

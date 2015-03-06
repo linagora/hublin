@@ -3,6 +3,7 @@
 var expect = require('chai').expect;
 var mockery = require('mockery');
 var logger = require('../../../fixtures/logger-noop');
+var q = require('q');
 
 describe('The conference middleware', function() {
   var dependencies;
@@ -338,6 +339,150 @@ describe('The conference middleware', function() {
         }
       };
       middleware(req, res);
+    });
+  });
+  describe('lazyArchive middleware', function() {
+    describe('initialized with loadFirst to true', function() {
+      it('should call conference.get with req.params.id', function(done) {
+        mockery.registerMock('../../core/conference', {
+          get: function(id, callback) {
+            expect(id).to.equal('conf1');
+            done();
+          }
+        });
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
+        var req = {params: {id: 'conf1'}};
+        middleware(req, {}, function() {});
+      });
+      it('should call next() if conference is not found', function(done) {
+        mockery.registerMock('../../core/conference', {
+          get: function(id, callback) {
+            callback();
+          }
+        });
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
+        var req = {params: {id: 'conf1'}};
+        middleware(req, {}, function() {done();});
+      });
+      it('should call next() if conference.get returns an error', function(done) {
+        mockery.registerMock('../../core/conference', {
+          get: function(id, callback) {
+            callback(new Error('Test'));
+          }
+        });
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
+        var req = {params: {id: 'conf1'}};
+        middleware(req, {}, function() {done();});
+      });
+      it('should call conference.isActive() if conference.get returns a conference', function(done) {
+        mockery.registerMock('../../core/conference', {
+          get: function(id, callback) {
+            callback(null, {_id: 'conf1'});
+          },
+          isActive: function(conf) { done(); return q(true); }
+        });
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
+        var req = {params: {id: 'conf1'}};
+        middleware(req, {}, function() {});
+      });
+      it('should call conference.isActive() if conference.get returns a conference', function(done) {
+        mockery.registerMock('../../core/conference', {
+          get: function(id, callback) {
+            callback(null, {_id: 'conf1'});
+          },
+          isActive: function(conf) { done(); return q(true); }
+        });
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
+        var req = {params: {id: 'conf1'}};
+        middleware(req, {}, function() {});
+      });
+      it('should call conference.archive() if conference.isActive returns false', function(done) {
+        var conf = {_id: 'conf1'};
+        mockery.registerMock('../../core/conference', {
+          get: function(id, callback) {
+            callback(null, conf);
+          },
+          isActive: function(conf) { return q(false); },
+          archive: function(conf) {
+            expect(conf).to.deep.equal(conf);
+            done();
+            return q(true);
+          }
+        });
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
+        var req = {params: {id: 'conf1'}};
+        middleware(req, {}, function() {});
+      });
+      it('should send back an error if something skrewed up in the process', function(done) {
+        var conf = {_id: 'conf1'};
+        mockery.registerMock('../../core/conference', {
+          get: function(id, callback) {
+            callback(null, conf);
+          },
+          isActive: function(conf) { return q(false); },
+          archive: function(conf) {
+            return q.reject(new Error('test error'));
+          }
+        });
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
+        var req = {params: {id: 'conf1'}};
+        var res = {
+          json: function(code, details) {
+            expect(code).to.equal(500);
+            expect(details).to.deep.equal({error: {code: 500, message: 'Server Error', details: 'test error'}});
+            done();
+          }
+        };
+        middleware(req, res, function() {});
+      });
+    });
+    describe('initialized with loadFirst to true', function() {
+      it('should call next() if req.conference is not defined', function(done) {
+        mockery.registerMock('../../core/conference', {});
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(false);
+        var req = {};
+        var res = {};
+        middleware(req, res, done);
+      });
+      it('should not delete req.conference if conference is still active', function(done) {
+        var conf = {_id: 'conf1'};
+        mockery.registerMock('../../core/conference', {
+          isActive: function(conf) { return q(true); }
+        });
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(false);
+        var req = {conference: conf};
+        var res = {};
+        middleware(req, res, function() {
+          expect(req.conference).to.deep.equal(conf);
+          done();
+        });
+      });
+      it('should delete req.conference if conference is not active', function(done) {
+        var conf = {_id: 'conf1'};
+        mockery.registerMock('../../core/conference', {
+          isActive: function(conf) { return q(false); },
+          archive: function(conf) {
+            return q(true);
+          }
+        });
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(false);
+        var req = {conference: conf};
+        var res = {};
+        middleware(req, res, function() {
+          expect(req).to.not.have.property('conference');
+          done();
+        });
+      });
     });
   });
 });

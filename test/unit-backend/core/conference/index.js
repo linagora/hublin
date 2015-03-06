@@ -975,4 +975,188 @@ describe('The conference module', function() {
       });
   });
 
+  describe('isActive() method', function() {
+    it('should return a promise', function() {
+      this.helpers.mock.models({});
+      var conf = this.helpers.requireFixture('conference').inactive();
+      var promise = this.helpers
+        .requireBackend('core/conference')
+        .isActive(conf);
+      expect(promise).to.have.property('then');
+      expect(promise).to.have.property('catch');
+    });
+
+    it('should resolve to false when ttl is over, and there is not user in online state', function(done) {
+      this.helpers.mock.models({});
+      var conf = this.helpers.requireFixture('conference').inactive();
+      this.helpers
+        .requireBackend('core/conference')
+        .isActive(conf)
+        .then(function(active) {
+          expect(active).to.be.false;
+          done();
+        }, done);
+    });
+    it('should resolve to true when ttl is not over', function(done) {
+      this.helpers.mock.models({});
+      var conf = this.helpers.requireFixture('conference').inactive();
+      conf.timestamps.created = new Date();
+      this.helpers
+        .requireBackend('core/conference')
+        .isActive(conf)
+        .then(function(active) {
+          expect(active).to.be.true;
+          done();
+        }, done);
+    });
+    it('should resolve to true when ttl is over, and at least one user is online', function(done) {
+      this.helpers.mock.models({});
+      var conf = this.helpers.requireFixture('conference').activeMember();
+      conf.timestamps.created = new Date();
+      this.helpers
+        .requireBackend('core/conference')
+        .isActive(conf)
+        .then(function(active) {
+          expect(active).to.be.true;
+          done();
+        }, done);
+    });
+  });
+
+  describe('archive() method', function() {
+    it('should return a promise', function() {
+      this.helpers.mock.models({
+        ConferenceArchive: function() {
+          return {
+            save: function() {}
+          };
+        }
+      });
+      var conf = this.helpers.requireFixture('conference').inactive();
+      conf.toObject = function() {
+        return conf;
+      };
+      var promise = this.helpers
+        .requireBackend('core/conference')
+        .archive(conf);
+      expect(promise).to.have.property('then');
+      expect(promise).to.have.property('catch');
+    });
+    it('should reject the promise when the save() call fails', function(done) {
+      this.helpers.mock.models({
+        ConferenceArchive: function() {
+          return {
+            save: function(cb) { return cb(new Error('test'));}
+          };
+        }
+      });
+      var conf = this.helpers.requireFixture('conference').inactive();
+      conf.toObject = function() {
+        return conf;
+      };
+      this.helpers
+        .requireBackend('core/conference')
+        .archive(conf)
+        .then(
+          function() {
+            return done('I should not be called');
+          },
+          function(err) {
+            done();
+          }
+        );
+    });
+    it('should call Conference.remove() if archive record succeeded', function(done) {
+      var conferenceArchive = {
+        initial_id: 'conf1'
+      };
+      this.helpers.mock.models({
+        ConferenceArchive: function() {
+          return {
+            save: function(cb) { return cb(null, conferenceArchive);}
+          };
+        },
+        Conference: {
+          remove: function() {return done();}
+        }
+      });
+      var conf = this.helpers.requireFixture('conference').inactive();
+      conf.toObject = function() {
+        return conf;
+      };
+      this.helpers
+        .requireBackend('core/conference')
+        .archive(conf)
+        .then(
+          function() {
+            return done('I should not be called');
+          },
+          function(err) {
+            return done('I should not be called');
+          }
+        );
+    });
+    it('should reject the promise when Conference.remove() fails', function(done) {
+      var conferenceArchive = {
+        initial_id: 'conf1'
+      };
+      this.helpers.mock.models({
+        ConferenceArchive: function() {
+          return {
+            save: function(cb) { return cb(null, conferenceArchive);}
+          };
+        },
+        Conference: {
+          remove: function(conf, cb) {return cb(new Error('test'));}
+        }
+      });
+      var conf = this.helpers.requireFixture('conference').inactive();
+      conf.toObject = function() {
+        return conf;
+      };
+      this.helpers
+        .requireBackend('core/conference')
+        .archive(conf)
+        .then(
+          function() {
+            return done('I should not be called');
+          },
+          function(err) {
+            done();
+          }
+        );
+    });
+    it('should resolve the promise with archivedConference', function(done) {
+      var conferenceArchive = {
+        initial_id: 'conf1'
+      };
+      this.helpers.mock.models({
+        ConferenceArchive: function() {
+          return {
+            save: function(cb) { return cb(null, conferenceArchive);}
+          };
+        },
+        Conference: {
+          remove: function(conf, cb) {return cb();}
+        }
+      });
+      var conf = this.helpers.requireFixture('conference').inactive();
+      conf.toObject = function() {
+        return conf;
+      };
+      this.helpers
+        .requireBackend('core/conference')
+        .archive(conf)
+        .then(
+          function(arch) {
+            expect(arch).to.deep.equals(conferenceArchive);
+            done();
+          },
+          function(err) {
+            return done('I should not be called');
+          }
+        );
+    });
+  });
+
 });
