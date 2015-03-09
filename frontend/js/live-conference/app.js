@@ -41,8 +41,6 @@ angular.module('liveConferenceApplication', [
     }
   });
 
-  $routeProvider.otherwise({redirectTo: '/noop'});
-
   $locationProvider.html5Mode(true);
 
   RestangularProvider.setBaseUrl('/api');

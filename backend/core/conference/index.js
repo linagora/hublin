@@ -2,10 +2,14 @@
 
 var mongoose = require('mongoose');
 var Conference = mongoose.model('Conference');
+var ConferenceArchive = mongoose.model('ConferenceArchive');
 var localpubsub = require('../pubsub').local;
 var globalpubsub = require('../pubsub').global;
 var logger = require('../logger');
 var extend = require('extend');
+var q = require('q');
+
+var TTL = 1000 * 60 * 10;
 
 var MEMBER_STATUS = {
   INVITED: 'invited',
@@ -382,7 +386,6 @@ function join(conference, user, callback) {
     if (err) {
       return callback(err);
     }
-
     Conference.update(
       {_id: conference._id, members: {$elemMatch: {id: user.id, objectType: user.objectType}}},
       {$set: {'members.$.status': MEMBER_STATUS.ONLINE}},
@@ -425,7 +428,6 @@ function leave(conference, user, callback) {
     if (!isMember) {
       return callback(new Error('User is not member of this conference'));
     }
-
     Conference.update(
       {_id: conference._id, members: {$elemMatch: {id: user.id, objectType: user.objectType}}},
       {$set: {'members.$.status': MEMBER_STATUS.OFFLINE}},
@@ -500,6 +502,87 @@ function onRoomLeave(roomId, userId, callback) {
 
     return leave(conference, user, callback);
   });
+}
+
+
+/**
+ * get time to live of a conference
+ *
+ * @return {Promise} fullfilled with the conference TTL
+ */
+function getTTL() {
+  return q(TTL);
+}
+
+
+/**
+ * tell if a conference is active.
+ *
+ * A conference is not active anymore when no member is
+ * in state MEMBER_STATUS.ONLINE , and the conference is older
+ * than ttl.
+ *
+ * @param {Conference} conference to check for active state
+ * @return {Promise} fullfilled with a boolean telling whether the conference is still active
+ */
+function isActive(conference) {
+
+  function _isActive(ttl) {
+    function memberOnline(member) {
+      return member.status === MEMBER_STATUS.ONLINE;
+    }
+    function ttlNotExpired(creationDate) {
+      var diff = Date.now() - creationDate.getTime() - ttl;
+      return diff < 0;
+    }
+
+    var active = conference.members.some(memberOnline) ||
+      ttlNotExpired(conference.timestamps.created);
+    return q(active);
+
+  }
+
+  return getTTL().then(_isActive);
+}
+
+function _buildConferenceArchive(conference) {
+  var initial_id = conference._id;
+  var jsonConference = conference.toObject();
+  delete jsonConference._id;
+  jsonConference.initial_id = initial_id;
+  jsonConference.timestamps.archived = new Date();
+
+  return new ConferenceArchive(jsonConference);
+}
+
+/**
+ * archive a conference
+ *
+ * this create a ConferenceArchive, and removes the
+ * conference.
+ *
+ * @param {Conference} conference to remove
+ * @return {Promise} fullfilled with the conferenceArchive mongoose document
+ */
+function archive(conference) {
+  var deferred = q.defer();
+  var ca = _buildConferenceArchive(conference);
+
+  ca.save(function(err, conferenceArchive) {
+    if (err) {
+      logger.error('Unable to save conference archive ' + ca + ' ' + err);
+      return deferred.reject(err);
+    }
+    Conference.remove({_id: conferenceArchive.initial_id}, function(err) {
+      if (err) {
+        logger.error('Unable to remove inactive conference ' + err);
+        return deferred.reject(err);
+      }
+      logger.debug('conference ' + conferenceArchive.initial_id + ' has been archived, archive _id=' + conferenceArchive._id);
+      return deferred.resolve(conferenceArchive);
+    });
+  });
+  return deferred.promise;
 }
 
 /**
@@ -592,3 +675,18 @@ module.exports.EVENTS = EVENTS;
  * @type {hash} The possible statuses for conference members
  */
 module.exports.MEMBER_STATUS = MEMBER_STATUS;
+
+/**
+ * @type {Function}
+ */
+module.exports.isActive = isActive;
+
+/**
+ * @type {Function}
+ */
+module.exports.archive = archive;
+
+/**
+ * @type {Function}
+ */
+module.exports.getTTL = getTTL;

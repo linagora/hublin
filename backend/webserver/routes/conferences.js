@@ -16,8 +16,8 @@ module.exports = function(dependencies) {
 
   var router = express.Router();
 
-  router.get('/api/conferences/:id', middlewares.load, controllers.get);
-  router.put('/api/conferences/:id', middlewares.checkIdForCreation, user.load, controllers.createAPI);
+  router.get('/api/conferences/:id', middlewares.load, middlewares.lazyArchive(false), controllers.get);
+  router.put('/api/conferences/:id', middlewares.checkIdForCreation, middlewares.lazyArchive(true), user.load, controllers.createAPI);
   router.get('/api/conferences/:id/members', middlewares.load, controllers.getMembers);
   router.put('/api/conferences/:id/members', middlewares.load, user.loadFromCookie, middlewares.canAddMember, controllers.addMembers);
   router.put('/api/conferences/:id/members/:mid/:field', middlewares.load, user.loadFromCookie, should.beInRequest('conference'), controllers.updateMemberField);
