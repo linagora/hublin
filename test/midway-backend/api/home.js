@@ -138,7 +138,12 @@ describe('The home API', function() {
               '_id': '123456789',
               'active': true,
               'configuration': {
-                'hosts': []
+                'hosts': [
+                  {
+                    'type': 'ws',
+                    'url': ''
+                  }
+                ]
               },
               'createdFrom': 'web',
               'history': [],
@@ -183,7 +188,12 @@ describe('The home API', function() {
               '_id': '123456789',
               'active': true,
               'configuration': {
-                'hosts': []
+                'hosts': [
+                  {
+                    'type': 'ws',
+                    'url': ''
+                  }
+                ]
               },
               'createdFrom': 'web',
               'history': [],
