@@ -17,6 +17,7 @@ module.exports = function setupServer(moduleManager) {
 
   moduleManager.setupManager();
   return moduleManager.manager.load('linagora.io.meetings.core.conference')
+    .then(moduleManager.manager.load('linagora.io.meetings.core.esn-config'))
     .then(registerModuleWrapper(moduleManager, require('../webserver').WebServer))
     .then(registerModuleWrapper(moduleManager, require('om-websocket-server')))
     .then(registerModuleWrapper(moduleManager, require('om-webrtc')))
