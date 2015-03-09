@@ -27,22 +27,22 @@ describe('The conference API', function() {
     this.mongoose.connection.db.dropDatabase();
   });
 
-  describe.skip('GET /api/conferences/:id', function() {
-    it('should send back 404 if the conference is not found', function(done) {
+  describe('GET /api/conferences/:id', function() {
+    it.skip('should send back 404 if the conference is not found', function(done) {
       request(application)
         .get('/api/conferences/54e5e86e65806d7c16764b79')
         .expect(404)
         .end(done);
     });
 
-    it('should send back 500 if there is a server error', function(done) {
+    it.skip('should send back 500 if there is a server error', function(done) {
       request(application)
         .get('/api/conferences/123456')
         .expect(500)
         .end(done);
     });
 
-    it('should send back 200 with the conference if it is found', function(done) {
+    it.skip('should send back 200 with the conference if it is found', function(done) {
       request(application)
         .get('/api/conferences/' + conferenceId)
         .expect(200)
@@ -67,6 +67,68 @@ describe('The conference API', function() {
           done();
         });
     });
+
+    describe('lazyArchive middleware', function() {
+      beforeEach(function(done) {
+        var self = this;
+        apiHelpers.applyDeployment('inactiveConference', this.testEnv, {}, function(err, models) {
+          if (err) {
+            return done(err);
+          }
+          self.models = models;
+          done();
+        });
+        this._checkArchivedConference = function(id, done) {
+          require('mongoose').model('ConferenceArchive').findOne({initial_id: id}, function(err, conference) {
+            if (err) {
+              return done(err);
+            }
+            if (!conference) {
+              return done(new Error('conference archive ' + id + ' not found'));
+            }
+            return done();
+          });
+        };
+
+        this._checkNoArchivedConference = function(id, done) {
+          require('mongoose').model('ConferenceArchive').findOne({initial_id: id}, function(err, conference) {
+            if (err) {
+              return done(err);
+            }
+            if (conference) {
+              return done(new Error('conference archive ' + id + ' found'));
+            }
+            return done();
+          });
+        };
+      });
+
+      it('should archive an inactive conference', function(done) {
+        var _checkArchivedConference = this._checkArchivedConference;
+        request(application)
+          .get('/api/conferences/inactiveConference')
+          .expect(404)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            _checkArchivedConference('inactiveConference', done);
+        });
+      });
+
+      it('should not archive an active conference', function(done) {
+        var _checkNoArchivedConference = this._checkNoArchivedConference;
+        request(application).put('/api/conferences/other').send().expect(201)
+          .end(function(err, res) {
+            request(application)
+              .get('/api/conferences/other')
+              .expect(200)
+              .end(function(err, res) {
+                expect(err).to.not.exist;
+                _checkNoArchivedConference('other', done);
+            });
+          });
+      });
+    });
+
   });
 
   describe.skip('GET /api/conferences', function() {
@@ -172,6 +234,72 @@ describe('The conference API', function() {
       }
 
       blacklist.forEach(tryCreateConferenceForName);
+    });
+
+    describe('lazyArchive middleware', function() {
+      beforeEach(function(done) {
+        var self = this;
+        apiHelpers.applyDeployment('inactiveConference', this.testEnv, {}, function(err, models) {
+          if (err) {
+            return done(err);
+          }
+          self.models = models;
+          done();
+        });
+        this._checkArchivedConference = function(id, done) {
+          require('mongoose').model('ConferenceArchive').findOne({initial_id: id}, function(err, conference) {
+            if (err) {
+              return done(err);
+            }
+            if (!conference) {
+              return done(new Error('conference archive ' + id + ' not found'));
+            }
+            return done();
+          });
+        };
+
+        this._checkNoArchivedConference = function(id, done) {
+          require('mongoose').model('ConferenceArchive').findOne({initial_id: id}, function(err, conference) {
+            if (err) {
+              return done(err);
+            }
+            if (conference) {
+              return done(new Error('conference archive ' + id + ' found'));
+            }
+            return done();
+          });
+        };
+      });
+
+      it('should archive the inactive conference', function(done) {
+        var _checkArchivedConference = this._checkArchivedConference;
+        request(application)
+          .put('/api/conferences/inactiveConference')
+          .send()
+          .expect(201)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            expect(res.body._id).to.exist;
+            expect(res.body._id).to.equal('inactiveConference');
+            expect(res.body.members).to.exist;
+            expect(res.body.members.length).to.equal(1);
+            expect(res.body.members[0].objectType).to.equal('hublin:anonymous');
+            _checkArchivedConference('inactiveConference', done);
+          });
+      });
+      it('should not archive an active conference', function(done) {
+        var _checkNoArchivedConference = this._checkNoArchivedConference;
+        request(application).put('/api/conferences/other')
+          .send().expect(201).end(function(err, res) {
+            expect(err).to.not.exist;
+            request(application).put('/api/conferences/other')
+              .send().expect(500).end(function(err, res) {
+                expect(err).to.not.exist;
+                expect(res.body.error.details).to.match(/duplicate key error index/);
+                _checkNoArchivedConference('other', done);
+              });
+          });
+      });
     });
   });
 

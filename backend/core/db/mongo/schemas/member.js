@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 
-var Member = new mongoose.Schema({
+var MemberSchema = new mongoose.Schema({
   objectType: {type: String, required: true},
   id: {type: mongoose.Schema.Types.Mixed, required: true},
   displayName: {type: String, required: true},
@@ -12,4 +12,9 @@ var Member = new mongoose.Schema({
     userAgent: {type: String}
   }
 });
-module.exports.Member = Member;
+
+/**
+ * Member mongoose Schema
+ */
+module.exports = MemberSchema;
+module.exports.Member = MemberSchema;
