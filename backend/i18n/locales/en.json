@@ -19,5 +19,8 @@
   "No additional plugin required, no advertisement, only a great experience we are pleased to share with community": "No additional plugin required, no advertisement, only a great experience we are pleased to share with community",
   "Hublin is a free and open source video conference solution built with love and ethic propelled by": "Hublin is a free and open source video conference solution built with love and ethic propelled by",
   "This room name is forbidden for technical reason:": "This room name is forbidden for technical reason:",
-  "An error happened while trying to open the room": "An error happened while trying to open the room"
+  "An error happened while trying to open the room": "An error happened while trying to open the room",
+  "Low Rate": "Low",
+  "Medium Rate": "Medium",
+  "Awesome Rate": "Awesome" 
 }

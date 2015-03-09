@@ -1,4 +1,5 @@
 @import "../components/angular-liveconference/src/css/conference.less";
+@import "./variables.less";
 
 @yellow: #eecb25;
 @light-grey: #f8f8f8;
@@ -10,6 +11,10 @@
 @screen-sm-min: 768px;
 @screen-md-min: 992px;
 @screen-lg-min: 1200px;
+
+html body.hublin-live-conference-app{
+  background: @conference-background;
+}
 
 html.no-websockets body.hublin-live-conference-app #wrap,
 html.no-getusermedia body.hublin-live-conference-app #wrap,

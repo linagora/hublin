@@ -348,7 +348,7 @@ section {
   background: url(@background-img) 20% 25% no-repeat;
   background-size: 100%;
   padding: 135px 0;
-  h2{
+  h2.tagline {
     padding: 20px 0;
     margin: 0;
     color: @gray-lighter;
@@ -372,11 +372,16 @@ section {
   .form-group {
     .conference-field {
       margin: 5px 5px 0px 10px;
+      .btn-lg {
+        background-color: @gray-lighter;
+        color: @brand-primary;
+      }
+      .btn-configuration-selected {
+        background-color: @brand-primary;
+        color: @gray-lighter;
+      }
     }
-    .btn-configuration-selected {
-      background-color: @gray-darkest !important;
-    }
-    label {
+    label.hublin-label {
       color: @brand-primary;
       font-size: 120%;
       margin-right: 5px;
@@ -609,6 +614,63 @@ footer {
   background-size: 46px;
   padding-left: 50px;
   color: @brand-primary;
+}
+
+.logo-conference{
+  position: fixed;
+  top: 0;
+  left: 15px;
+  padding: 0.2em;
+  border-radius: 0 0 15px 0;
+  z-index: 5;
+  .script-font();
+  font-size: 1.5em;
+  background: fade(@gray-darkest, 50%);
+  a {
+      text-decoration: none;
+  }
+  & .logo-hublin {
+    background-size: 30px;
+    padding-left: 32px;
+  }
+  & .beta-overlay{
+    margin-left: -12px;
+  }
+}
+
+.hublin-logo {
+  padding: 1%;
+  text-transform: capitalize;
+  border-radius: 5px;
+  margin: 0 1%;
+  .script-font();
+  & .beta-overlay{
+    margin-left: -15px;
+  }
+  & .gray-lighter{
+    text-shadow: 0 0 1px @gray-darkest;
+  }
+}
+
+.modal-hublin {
+  .modal-header, .modal-footer{
+    background: url('../images/modal-header.png')top left;
+    color: @gray-lighter;
+  }
+  .modal-header {
+    border-radius: 4px 4px 0 0;
+    button.close{
+      opacity: 0.9;
+      color: @gray-lighter;
+      font-size: 25px;
+    }
+  }
+  .modal-body{
+    padding: 10px;
+  }
+  .modal-footer {
+    border-radius: 0 0 4px 4px;
+  }
 }
 
 // Highlight Color Customization
