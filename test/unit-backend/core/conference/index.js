@@ -45,6 +45,68 @@ describe('The conference module', function() {
     });
   });
 
+  describe('the sendInvitation function', function() {
+    var member = {id: 'yo@hubl.in', objectType: 'email'};
+    var creator = {id: 'yo@hubl.in', objectType: 'email'};
+    var conf = {_id: 'MyConf'};
+    var mongoose = {
+      model: function() {
+        return {};
+      }
+    };
+
+    it('should send back error if the member retrieval returns error', function(done) {
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+      var conference = rewire('../../../../backend/core/conference');
+      var getMember = function(conference, member, callback) {return callback(new Error('Test Error'));};
+      conference.__set__('getMember', getMember);
+
+      conference.sendInvitation(conf, creator, member, function(err, m) {
+        expect(err).to.exist;
+        expect(err).to.match(/Test Error/);
+        done();
+      });
+    });
+
+    it('should send back error if the member retrieval does not return member', function(done) {
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+      var conference = rewire('../../../../backend/core/conference');
+      var getMember = function(conference, member, callback) {return callback();};
+      conference.__set__('getMember', getMember);
+
+      conference.sendInvitation(conf, creator, member, function(err) {
+        expect(err).to.exist;
+        expect(err).to.match(/No such member found/);
+        done();
+      });
+    });
+
+    it('should forward invitation into conference:invite', function(done) {
+      this.mongoose = mockery.registerMock('mongoose', mongoose);
+
+      var expected = {
+        conference: conf,
+        user: member,
+        creator: creator
+      };
+
+      var localstub = {}, globalstub = {};
+      this.helpers.mock.pubsub('../pubsub', localstub, globalstub);
+
+      var conference = rewire('../../../../backend/core/conference');
+      var getMember = function(conference, user, callback) {return callback(null, user);};
+      conference.__set__('getMember', getMember);
+
+      conference.sendInvitation(conf, creator, member, function() {
+        expect(localstub.topics['conference:invite'].data[0]).to.deep.equal(expected);
+        expect(globalstub.topics['conference:invite'].data[0]).to.deep.equal(expected);
+        done();
+      });
+    });
+  });
+
   describe('the invite function', function() {
     it('should send back error when conference is not set', function(done) {
       var mongoose = {
@@ -137,7 +199,10 @@ describe('The conference module', function() {
         }
       };
 
-      var conference = this.helpers.requireBackend('core/conference');
+      var conference = rewire('../../../../backend/core/conference');
+      var sendInvitation = function(conference, creator, user, callback) {return callback();};
+      conference.__set__('sendInvitation', sendInvitation);
+
       conference.invite(conf, {}, attendees, function(err, updated) {
         expect(err).to.not.exist;
         expect(updated).to.exist;
@@ -172,7 +237,10 @@ describe('The conference module', function() {
         }
       };
 
-      var conference = this.helpers.requireBackend('core/conference');
+      var conference = rewire('../../../../backend/core/conference');
+      var sendInvitation = function(conference, creator, user, callback) {return callback();};
+      conference.__set__('sendInvitation', sendInvitation);
+
       conference.invite(conf, {}, attendees, function(err, updated) {
         expect(err).to.not.exist;
         expect(updated).to.exist;
@@ -192,8 +260,6 @@ describe('The conference module', function() {
       var localstub = {}, globalstub = {};
       this.helpers.mock.pubsub('../pubsub', localstub, globalstub);
 
-      var conference = this.helpers.requireBackend('core/conference');
-
       var creator = {id: 'creator'};
       var newMember = { id: 'newMemberId'};
       var conf = {
@@ -203,6 +269,10 @@ describe('The conference module', function() {
           callback(null, conf);
         }
       };
+
+      var conference = rewire('../../../../backend/core/conference');
+      var getMember = function(conference, user, callback) {return callback(null, user);};
+      conference.__set__('getMember', getMember);
 
       conference.invite(conf, creator, newMember, function() {
         expect(localstub.topics['conference:invite'].data[0]).to.deep.equal({

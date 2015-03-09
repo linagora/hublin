@@ -8,6 +8,7 @@ var globalpubsub = require('../pubsub').global;
 var logger = require('../logger');
 var extend = require('extend');
 var q = require('q');
+var async = require('async');
 
 var TTL = 1000 * 60 * 10;
 
@@ -100,6 +101,61 @@ function addHistory(conference, user, status, callback) {
 }
 
 /**
+ * Get a member from a conference based on its tuple data
+ *
+ * @param {Conference} conference
+ * @param {Tuple} tuple
+ * @param {Function} callback
+ * @return {*}
+ */
+function getMember(conference, tuple, callback) {
+  Conference.findOne(
+    {_id: conference._id},
+    {members: {$elemMatch: {id: tuple.id, objectType: tuple.objectType}}}
+  ).exec(function(err, conf) {
+      if (err) {
+        return callback(err);
+      }
+
+      if (!conf || !conf.members || conf.members.length === 0) {
+        return callback(new Error('No such user'));
+      }
+      return callback(null, conf.members[0]);
+    });
+}
+
+/**
+ * Send invitation to one member
+ *
+ * @param {Conference} conference
+ * @param {Member} creator
+ * @param {Member} member
+ * @param {Function} callback
+ * @return {*}
+ */
+function sendInvitation(conference, creator, member, callback) {
+  var localtopic = localpubsub.topic(EVENTS.invite);
+
+  getMember(conference, member, function(err, m) {
+    if (err) {
+      return callback(err);
+    }
+
+    if (!m) {
+      return callback(new Error('No such member found'));
+    }
+
+    var invitation = {
+      conference: conference,
+      user: m,
+      creator: creator
+    };
+    localtopic.forward(globalpubsub, invitation);
+    return callback();
+  });
+}
+
+/**
  * Invite a list of members inside a conference
  * @param {string} conference
  * @param {string} creator - user inviting into the conference
@@ -131,22 +187,21 @@ function invite(conference, creator, members, callback) {
     conference.members.push(confMember);
   });
 
-  var localtopic = localpubsub.topic(EVENTS.invite);
-
   conference.save(function(err, updated) {
     if (err) {
       return callback(err);
     }
 
-    members.forEach(function(member) {
-      var invitation = {
-        conference: updated,
-        user: member,
-        creator: creator
-      };
-      localtopic.forward(globalpubsub, invitation);
+    async.each(members, function(member, callback) {
+      sendInvitation(updated, creator, member, function(err) {
+        if (err) {
+          logger.error('Error while sending invitation to', member, err);
+        }
+        return callback();
+      });
+    }, function() {
+      return callback(null, updated);
     });
-    return callback(null, updated);
   });
 }
 
@@ -266,38 +321,6 @@ function userIsConferenceMember(conference, user, callback) {
       return callback(err);
     }
     return callback(null, (conf && conf.members !== null && conf.members.length > 0));
-  });
-}
-
-/**
- * Get a member from a conference based on its tuple data
- *
- * @param {Conference} conference
- * @param {Tuple} tuple
- * @param {Function} callback
- * @return {*}
- */
-function getMember(conference, tuple, callback) {
-  if (!tuple) {
-    return callback(new Error('Undefined tuple'));
-  }
-
-  if (!conference) {
-    return callback(new Error('Undefined conference'));
-  }
-
-  Conference.findOne(
-    {_id: conference._id},
-    {members: {$elemMatch: {id: tuple.id, objectType: tuple.objectType}}}
-  ).exec(function(err, conf) {
-    if (err) {
-      return callback(err);
-    }
-
-    if (!conf || !conf.members || conf.members.length === 0) {
-      return callback(new Error('No such user'));
-    }
-    return callback(null, conf.members[0]);
   });
 }
 
@@ -597,6 +620,12 @@ module.exports.addHistory = addHistory;
  * @type {invite}
  */
 module.exports.invite = invite;
+
+/**
+ * @type {sendInvitation}
+ */
+module.exports.sendInvitation = sendInvitation;
+
 /**
  * @type {get}
  */
