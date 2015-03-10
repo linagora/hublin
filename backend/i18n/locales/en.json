@@ -22,5 +22,10 @@
   "An error happened while trying to open the room": "An error happened while trying to open the room",
   "Low Rate": "Low",
   "Medium Rate": "Medium",
-  "Awesome Rate": "Awesome" 
+  "Awesome Rate": "Awesome",
+  "Report": "Report",
+  "Description:": "Description:",
+  "Enter a description for the report": "Enter a description for the report",
+  "Cancel": "Cancel",
+  "Send": "Send"
 }

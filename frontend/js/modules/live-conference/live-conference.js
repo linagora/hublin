@@ -9,6 +9,7 @@ angular.module('op.live-conference', [
   'meetings.session',
   'meetings.conference',
   'meetings.invitation',
+  'meetings.report',
   'meetings.wizard'
 ]).controller('conferenceController', [
   '$scope',
@@ -49,6 +50,7 @@ angular.module('op.live-conference', [
     $scope.conference = session.conference;
     $scope.users = [];
     $scope.attendees = [];
+    $scope.reportedAttendee = null;
     $scope.mainVideoId = 'video-thumb0';
     $scope.attendeeVideoIds = [
       'video-thumb0',
@@ -74,6 +76,10 @@ angular.module('op.live-conference', [
 
     $scope.showInvitation = function() {
       $('#invite').modal('show');
+    };
+    $scope.showReport = function(attendee) {
+      $scope.reportedAttendee = attendee;
+      $('#reportModal').modal('show');
     };
 
     $scope.onLeave = function() {
