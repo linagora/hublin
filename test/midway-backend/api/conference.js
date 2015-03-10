@@ -172,6 +172,18 @@ describe('The conference API', function() {
 
   describe('PUT /api/conferences/:id?displayName=XXX', function() {
 
+    function checkUserIsConferenceMember(name, displayName, done) {
+      apiHelpers.getConference(name, function(err, conf) {
+        if (err) {
+          done(err);
+        }
+        expect(conf.members).to.exists;
+        expect(conf.members.length).to.equals(1);
+        expect(conf.members[0].displayName).to.equals(displayName);
+        done();
+      });
+    }
+
     it('should return 201 if the conference is correctly created', function(done) {
       var name = '123456789';
       var displayName = 'Yo Lo';
@@ -190,6 +202,48 @@ describe('The conference API', function() {
           expect(res.body.members[0].objectType).to.equal('hublin:anonymous');
           done();
         });
+    });
+
+    it('should return 200 if the conference already exists', function(done) {
+      var name = '123456789';
+      var displayName = 'Yo Lo';
+
+      apiHelpers.createConference(name, [], [], function(err) {
+        if (err) {
+          return done(err);
+        }
+
+        request(application)
+          .put('/api/conferences/' + name + '?displayName=' + displayName)
+          .send()
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            expect(res.body._id).to.exist;
+            expect(res.body._id).to.equal(name);
+            checkUserIsConferenceMember(name, displayName, done);
+          });
+      });
+    });
+
+    it('should return 400 if the conference already exists and the user wants to add members', function(done) {
+      var name = '123456789';
+      var displayName = 'Yo Lo';
+
+      apiHelpers.createConference(name, [], [], function(err) {
+        if (err) {
+          return done(err);
+        }
+
+        request(application)
+          .put('/api/conferences/' + name + '?displayName=' + displayName)
+          .send({members: [{id: 'yo@hubl.in', objectType: 'email'}]})
+          .expect(400)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            checkUserIsConferenceMember(name, displayName, done);
+          });
+      });
     });
 
   });
@@ -212,6 +266,54 @@ describe('The conference API', function() {
           expect(res.body.members[0].objectType).to.equal('hublin:anonymous');
           done();
         });
+    });
+
+    it('should return 200 if the conference already exists', function(done) {
+      var name = '123456789';
+
+      apiHelpers.createConference(name, [], [], function(err) {
+        if (err) {
+          return done(err);
+        }
+
+        request(application)
+          .put('/api/conferences/' + name)
+          .send()
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            expect(res.body._id).to.exist;
+            expect(res.body._id).to.equal(name);
+
+            apiHelpers.getConference(name, function(err, conf) {
+              if (err) {
+                done(err);
+              }
+              expect(conf.members).to.exists;
+              expect(conf.members.length).to.equals(1);
+              done();
+            });
+          });
+      });
+    });
+
+    it('should return 400 if the conference already exists and the user wants to add members', function(done) {
+      var name = '123456789';
+
+      apiHelpers.createConference(name, [], [], function(err) {
+        if (err) {
+          return done(err);
+        }
+
+        request(application)
+          .put('/api/conferences/' + name)
+          .send({members: [{id: 'yo@hubl.in', objectType: 'email'}]})
+          .expect(400)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            done();
+          });
+      });
     });
 
     it('should return 400 if the conference id is forbidden', function(done) {
@@ -293,9 +395,8 @@ describe('The conference API', function() {
           .send().expect(201).end(function(err, res) {
             expect(err).to.not.exist;
             request(application).put('/api/conferences/other')
-              .send().expect(500).end(function(err, res) {
+              .send().expect(200).end(function(err, res) {
                 expect(err).to.not.exist;
-                expect(res.body.error.details).to.match(/duplicate key error index/);
                 _checkNoArchivedConference('other', done);
               });
           });

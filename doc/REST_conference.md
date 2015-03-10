@@ -80,7 +80,9 @@ The created conference.
 
 **Status Codes:**
 
-- 201 Created
+- 200 OK: The conference already exists and has not been created
+- 201 Created: The conference has been created
+- 202 Accepted: The conference has been created but the server needs additional time to finalize it
 - 400 Bad request
 
 **Request:**

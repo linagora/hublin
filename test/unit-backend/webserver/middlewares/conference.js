@@ -485,4 +485,67 @@ describe('The conference middleware', function() {
       });
     });
   });
+
+  describe('addUserOrCreate function', function() {
+    describe('when conference is not created', function() {
+
+      it('should create it and fill request', function(done) {
+        var name = 'MyConf';
+        var user = {id: 'me@yubl.in', objectType: 'email'};
+
+        mockery.registerMock('../../core/conference', {
+          get: function(id, callback) {
+            return callback(null, null);
+          },
+          create: function(conf, callback) {
+            return callback(null, conf);
+          }
+        });
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUserOrCreate;
+        var req = {params: {id: name}, user: user};
+        var res = {};
+
+        middleware(req, res, function() {
+          expect(req.conference).to.exists;
+          expect(req.conference._id).to.equal(name);
+          expect(req.user).to.deep.equal(user);
+          expect(req.created).to.be.true;
+          done();
+        });
+      });
+
+    });
+
+    describe('when conference is already created', function() {
+      it('should add current user to the conference', function(done) {
+        var name = 'MyConf';
+        var conference = {_id: name, members: []};
+        var user = {id: 'me@yubl.in', objectType: 'email'};
+        var userId = 123456789;
+
+        mockery.registerMock('../../core/conference', {
+          addUser: function(conf, user, callback) {
+            return callback();
+          },
+          getMember: function(conf, user, callback) {
+            user._id = userId;
+            return callback(null, user);
+          }
+        });
+
+        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUserOrCreate;
+        var req = {conference: conference, params: {id: name}, user: user};
+        var res = {};
+
+        middleware(req, res, function() {
+          expect(req.user).to.exist;
+          expect(req.user._id).to.exist;
+          expect(req.user._id).to.equal(userId);
+          done();
+        });
+
+      });
+    });
+  });
 });

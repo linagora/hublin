@@ -23,58 +23,6 @@ function _sanitizeAndValidateMember(member) {
 module.exports = function(dependencies) {
   var logger = dependencies('logger');
 
-  function _createConference(req, callback) {
-    var conf = {
-      _id: req.params.id,
-      history: [],
-      members: []
-    };
-
-    conf.members.push(req.user);
-
-    var invitedMembers = [];
-
-    if (req.body.members && req.body.members.length) {
-      req.body.members.forEach(function(member) {
-        var sanitizedMember = _sanitizeAndValidateMember(member);
-        if (!sanitizedMember) {
-          logger.warn('member is invalid:  %j', member);
-        } else {
-          invitedMembers.push(member);
-        }
-      });
-    }
-
-    conference.create(conf, function(err, created) {
-      if (err) {
-        return callback(err);
-      }
-
-      if (created.members.length === 0) {
-        return callback(null, created);
-      }
-
-      conference.invite(created, req.user, invitedMembers, function(err) {
-        return callback(err, created);
-      });
-    });
-  }
-
-
-  function createAPI(req, res) {
-    if (!req.user) {
-      return res.json(400, {error: {code: 400, message: 'Bad request', details: 'User is required'}});
-    }
-
-    _createConference(req, function(err, created) {
-      if (err) {
-        logger.error('Error while creating conference %e', err);
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
-      }
-      return res.json(201, created);
-    });
-  }
-
   function addMembers(req, res) {
     var user = req.user;
     var conf = req.conference;
@@ -101,6 +49,45 @@ module.exports = function(dependencies) {
         return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
       }
       return res.send(202);
+    });
+  }
+
+  function createdOrUpdated(req, res) {
+
+    function isInviteRequest() {
+      return req.body.members && req.body.members.length > 0;
+    }
+
+    if (!req.created) {
+      if (isInviteRequest()) {
+        return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Can not invite members using this endpoint. Check the dev documentation'}});
+      }
+      return res.json(200, req.conference);
+    }
+
+    if (!isInviteRequest()) {
+      return res.json(201, req.conference);
+    }
+
+    var invitedMembers = [];
+
+    if (req.body.members && req.body.members.length) {
+      req.body.members.forEach(function(member) {
+        var sanitizedMember = _sanitizeAndValidateMember(member);
+        if (!sanitizedMember) {
+          logger.warn('member is invalid:  %j', member);
+        } else {
+          invitedMembers.push(member);
+        }
+      });
+    }
+
+    conference.invite(req.conference, req.user, invitedMembers, function(err) {
+      if (err) {
+        logger.error('Error while inviting members', err);
+        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
+      }
+      return res.send(202, req.conference);
     });
   }
 
@@ -156,7 +143,7 @@ module.exports = function(dependencies) {
 
   return {
     get: get,
-    createAPI: createAPI,
+    createdOrUpdated: createdOrUpdated,
     removeAttendee: removeAttendee,
     addMembers: addMembers,
     getMembers: getMembers,
