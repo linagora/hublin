@@ -34,7 +34,9 @@ describe('The conferences controller', function() {
   it('createAPI should send back HTTP 201 when conference creates resource', function(done) {
     mockery.registerMock('../../core/conference', {
       create: function(user, callback) {
-        return callback(null, {});
+        return callback(null, {
+          members: []
+        });
       }
     });
     var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);

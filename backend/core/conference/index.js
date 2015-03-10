@@ -173,7 +173,7 @@ function invite(conference, creator, members, callback) {
   }
 
   if (!Array.isArray(members)) {
-    members = [members];
+    return callback(new Error('members parameter should be an array'));
   }
 
   members.forEach(function(member) {
@@ -222,7 +222,7 @@ function get(id, callback) {
  * @param {Function} callback
  */
 function getFromMemberToken(token, callback) {
-  Conference.findOne({'members._id': token}).exec(callback);
+  Conference.findOne({'members.token': token}).exec(callback);
 }
 
 /**
@@ -238,7 +238,10 @@ function getMemberFromToken(token, callback) {
     if (!conference) {
       return callback();
     }
-    return callback(null, conference.members.id(token));
+    var member = conference.members.filter(function(member) {
+      return member.token === token;
+    });
+    return callback(null, member[0]);
   });
 }
 
@@ -257,7 +260,6 @@ function updateMemberField(conference, member, field, value, callback) {
   if (!update[field]) {
     return callback(new Error('Can not update the field', field));
   }
-
   Conference.update(
     {_id: conference._id, members: {$elemMatch: {id: member.id, objectType: member.objectType}}},
     update[field],

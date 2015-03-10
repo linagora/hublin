@@ -55,7 +55,7 @@ describe('The home API', function() {
         }
 
         request(application)
-          .get('/?token=' + conference.members[0]._id)
+          .get('/?token=' + conference.members[0].token)
           .send()
           .expect(200)
           .end(function(err, res) {
@@ -82,7 +82,7 @@ describe('The home API', function() {
         }
 
         request(application)
-          .get('/?token=' + conference.members[0]._id)
+          .get('/?token=' + conference.members[0].token)
           .send()
           .expect(200)
           .end(function(err, res) {
@@ -128,6 +128,7 @@ describe('The home API', function() {
             delete object.timestamps.created;
             delete object.members[0]._id;
             delete object.members[0].id;
+            delete object.members[0].token;
             expect(object.members).to.be.an('array');
             expect(object.members).to.have.length(1);
             expect(object.members[0].connection).to.have.property('userAgent');
@@ -170,6 +171,7 @@ describe('The home API', function() {
             delete object.timestamps.created;
             delete object.members[0]._id;
             delete object.members[0].id;
+            delete object.members[0].token;
             expect(object.members).to.be.an('array');
             expect(object.members).to.have.length(1);
             expect(object.members[0].connection).to.have.property('userAgent');
@@ -224,11 +226,14 @@ describe('The home API', function() {
               delete object.members[0]._id;
               delete object.members[1]._id;
               delete object.members[1].id;
+              delete object.members[0].token;
               expect(object.members).to.be.an('array');
               expect(object.members).to.have.length(2);
               expect(object.members[1].connection).to.have.property('userAgent');
               expect(object.members[1].connection.userAgent).to.match(/node-superagent/);
               delete(object.members[1].connection.userAgent);
+              expect(object.members[1].token).to.have.length(36);
+              delete object.members[1].token;
               expect(object).to.deep.equal({
                 '__v': 1,
                 '_id': 'MyTestConference',

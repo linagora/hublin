@@ -179,7 +179,7 @@ describe('The conference module', function() {
       });
     });
 
-    it('should send back updated conference when attendees is object', function(done) {
+    it('should return an error when attendees is object', function(done) {
       var mongoose = {
         model: function() {
           return {};
@@ -199,17 +199,8 @@ describe('The conference module', function() {
         }
       };
 
-      var conference = rewire('../../../../backend/core/conference');
-      var sendInvitation = function(conference, creator, user, callback) {return callback();};
-      conference.__set__('sendInvitation', sendInvitation);
-
-      conference.invite(conf, {}, attendees, function(err, updated) {
-        expect(err).to.not.exist;
-        expect(updated).to.exist;
-        expect(updated.members).to.exist;
-        expect(updated.members.length).to.equal(1);
-        done();
-      });
+      var conference = this.helpers.requireBackend('core/conference');
+      conference.invite(conf, {}, attendees, this.helpers.callbacks.errorWithMessage(done, 'members parameter should be an array'));
     });
 
     it('should send back updated conference when attendees is array', function(done) {
@@ -274,7 +265,7 @@ describe('The conference module', function() {
       var getMember = function(conference, user, callback) {return callback(null, user);};
       conference.__set__('getMember', getMember);
 
-      conference.invite(conf, creator, newMember, function() {
+      conference.invite(conf, creator, [newMember], function() {
         expect(localstub.topics['conference:invite'].data[0]).to.deep.equal({
           conference: conf,
           user: newMember,
