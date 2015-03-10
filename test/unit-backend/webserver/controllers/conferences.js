@@ -3,6 +3,7 @@
 var expect = require('chai').expect;
 var mockery = require('mockery');
 var logger = require('../../../fixtures/logger-noop');
+var extend = require('extend');
 
 describe('The conferences controller', function() {
   var dependencies;
@@ -13,6 +14,14 @@ describe('The conferences controller', function() {
         return logger();
       }
     };
+
+    this.addToObject = function(obj) {
+      var vanilla = extend(true, {}, obj);
+      obj.toObject = function() {
+        return vanilla;
+      };
+      return obj;
+    };
   });
 
   describe('createdOrUpdated function', function() {
@@ -20,16 +29,21 @@ describe('The conferences controller', function() {
 
       it('should send back 201 with conference', function(done) {
         mockery.registerMock('../../core/conference', {});
-        var conference = {_id: 'MyConference'};
+        var conference = {_id: 'MyConference', members: []};
         var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
         var res = {
           json: function(status, body) {
             expect(status).to.equal(201, body);
-            expect(body).to.deep.equal(conference);
+            expect(body).to.deep.equal(conference.toObject());
             done();
           }
         };
-        controller.createdOrUpdated({created: true, user: {displayName: 'foobar'}, conference: conference, body: {}}, res);
+        controller.createdOrUpdated({
+          created: true,
+          user: {displayName: 'foobar'},
+          conference: this.addToObject(conference),
+          body: {}
+        },res);
       });
 
       it('should send back 202 when members are invited', function(done) {
@@ -40,7 +54,7 @@ describe('The conferences controller', function() {
             return callback();
           }
         });
-        var conference = {_id: 'MyConference'};
+        var conference = {_id: 'MyConference', members: []};
         var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
         var res = {
           send: function(status) {
@@ -48,7 +62,12 @@ describe('The conferences controller', function() {
             done();
           }
         };
-        controller.createdOrUpdated({created: true, user: {displayName: 'foobar'}, conference: conference, body: {members: membersToInvite}}, res);
+        controller.createdOrUpdated({
+          created: true,
+          user: {displayName: 'foobar'},
+          conference: this.addToObject(conference),
+          body: {members: membersToInvite}
+        }, res);
       });
 
       it('should send back 500 when members can not be invited', function(done) {
@@ -57,7 +76,7 @@ describe('The conferences controller', function() {
             return callback(new Error());
           }
         });
-        var conference = {_id: 'MyConference'};
+        var conference = {_id: 'MyConference', members: []};
         var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
         var res = {
           json: function(status) {
@@ -87,16 +106,20 @@ describe('The conferences controller', function() {
       it('should send back 200 with conference', function(done) {
         mockery.registerMock('../../core/conference', {});
 
-        var conference = {_id: 'MyConference'};
+        var conference = {_id: 'MyConference', members: []};
         var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
         var res = {
           json: function(status, body) {
             expect(status).to.equal(200);
-            expect(body).to.deep.equal(conference);
+            expect(body).to.deep.equal(conference.toObject());
             done();
           }
         };
-        controller.createdOrUpdated({user: {displayName: 'foobar'}, conference: conference, body: {}}, res);
+        controller.createdOrUpdated({
+          user: {displayName: 'foobar'},
+          conference: this.addToObject(conference),
+          body: {}
+        }, res);
       });
     });
   });
@@ -144,17 +167,22 @@ describe('The conferences controller', function() {
       mockery.registerMock('../../core/conference', {});
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
       var members = [
-        {id: 'user1', objcetType: 'ot1'},
-        {id: 'user2', objcetType: 'ot2'}
+        {id: 'user1', objectType: 'ot1', _id: 'id1', status: 'offline', token: 'token1', displayName: 'display1'},
+        {id: 'user2', objectType: 'ot2', _id: 'id2', status: 'offline2', token: 'token2', displayName: 'display2'}
+      ];
+
+      var sanitizedMembers = [
+        {objectType: 'ot1', _id: 'id1', status: 'offline', displayName: 'display1'},
+        {objectType: 'ot2', _id: 'id2', status: 'offline2', displayName: 'display2'}
       ];
       var res = this.helpers.httpStatusCodeValidatingJsonResponse(200, function(users) {
-        expect(users).to.deep.equal(members);
+        expect(users).to.deep.equal(sanitizedMembers);
         done();
       });
       var req = {
-        conference: {
+        conference: this.addToObject({
           members: members
-        }
+        })
       };
       controller.getMembers(req, res);
     });
