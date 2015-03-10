@@ -11,11 +11,7 @@ describe('The conference module', function() {
 
   it('create should send back error when user is not set', function(done) {
     this.helpers.mock.models({});
-    var conference = this.helpers.requireBackend('core/conference');
-    conference.create(null, function(err) {
-      expect(err).to.exist;
-      done();
-    });
+    this.helpers.requireBackend('core/conference').create(null, this.helpers.callbacks.noError(done));
   });
 
   it('create should create the conference when user is object', function(done) {
@@ -31,18 +27,30 @@ describe('The conference module', function() {
       }
     };
     this.mongoose = mockery.registerMock('mongoose', mongoose);
-    var conference = this.helpers.requireBackend('core/conference');
-    var id = 123;
-    conference.create({
-      _id: id,
-      members: [{
-        id: 'myUSerId'
-      }]
-    }, function(err, saved) {
-      expect(err).to.not.exist;
-      expect(saved).to.exist;
-      done();
-    });
+
+    mockery.registerMock('./scalability', function(conference, callback) { return callback(null, conference); });
+
+    this.helpers
+      .requireBackend('core/conference')
+      .create({
+        _id: 123,
+        members: [{
+          id: 'myUSerId'
+        }]
+      }, function(err, saved) {
+        expect(err).to.not.exist;
+        expect(saved).to.exist;
+        done();
+      });
+  });
+
+  it('create should send back error when the scalability module fails', function(done) {
+    this.helpers.mock.models({});
+    mockery.registerMock('./scalability', function(conference, callback) { return callback(new Error('WTF')); });
+
+    this.helpers
+      .requireBackend('core/conference')
+      .create({}, this.helpers.callbacks.errorWithMessage(done, 'WTF'));
   });
 
   describe('the sendInvitation function', function() {
@@ -1005,6 +1013,8 @@ describe('The conference module', function() {
       done();
     });
 
+    mockery.registerMock('./scalability', function(conference, callback) { return callback(null, conference); });
+
     this.helpers
       .requireBackend('core/conference')
       .create(conference, function() {});
@@ -1025,6 +1035,8 @@ describe('The conference module', function() {
 
     var localPubSub = {};
     this.helpers.mock.pubsub('../pubsub', localPubSub);
+
+    mockery.registerMock('./scalability', function(conference, callback) { return callback(null, conference); });
 
     this.helpers
       .requireBackend('core/conference')

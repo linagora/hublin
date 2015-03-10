@@ -47,9 +47,8 @@ angular.module('liveConferenceApplication', [
   RestangularProvider.setBaseUrl('/api');
   RestangularProvider.setFullResponse(true);
 })
-  .run(['$log', 'session', 'ioConnectionManager', '$route', function($log, session, ioConnectionManager, $route) {
+  .run(['$log', 'session', '$route', function($log, session) {
     session.ready.then(function() {
-      $log.debug('Session is ready, connecting to websocket', session.user);
-      ioConnectionManager.connect();
+      $log.debug('Session is ready.');
     });
   }]);

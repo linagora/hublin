@@ -138,6 +138,14 @@ describe('The home API', function() {
               '__v': 0,
               '_id': '123456789',
               'active': true,
+              'configuration': {
+                'hosts': [
+                  {
+                    'type': 'ws',
+                    'url': ''
+                  }
+                ]
+              },
               'createdFrom': 'web',
               'history': [],
               'members': [
@@ -181,6 +189,14 @@ describe('The home API', function() {
               '__v': 0,
               '_id': '123456789',
               'active': true,
+              'configuration': {
+                'hosts': [
+                  {
+                    'type': 'ws',
+                    'url': ''
+                  }
+                ]
+              },
               'createdFrom': 'web',
               'history': [],
               'members': [
@@ -238,6 +254,9 @@ describe('The home API', function() {
                 '__v': 1,
                 '_id': 'MyTestConference',
                 'active': true,
+                'configuration': {
+                  'hosts': []
+                },
                 'createdFrom': 'web',
                 'history': [],
                 'members': [

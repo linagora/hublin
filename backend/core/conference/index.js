@@ -1,14 +1,15 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var Conference = mongoose.model('Conference');
-var ConferenceArchive = mongoose.model('ConferenceArchive');
-var localpubsub = require('../pubsub').local;
-var globalpubsub = require('../pubsub').global;
-var logger = require('../logger');
-var extend = require('extend');
-var q = require('q');
-var async = require('async');
+var mongoose = require('mongoose'),
+    Conference = mongoose.model('Conference'),
+    ConferenceArchive = mongoose.model('ConferenceArchive'),
+    localpubsub = require('../pubsub').local,
+    globalpubsub = require('../pubsub').global,
+    logger = require('../logger'),
+    extend = require('extend'),
+    q = require('q'),
+    async = require('async'),
+    scale = require('./scalability');
 
 var TTL = 1000 * 60 * 10;
 
@@ -36,19 +37,25 @@ function create(conference, callback) {
     return callback(new Error('Conference can not be null'));
   }
 
-  return new Conference(conference).save(function(err, conference) {
+  scale(conference, function(err, conference) {
     if (err) {
       return callback(err);
     }
 
-    localpubsub
-      .topic(EVENTS.create)
-      .forward(globalpubsub, {
-        conference: conference,
-        user: conference.members[0]
-      });
+    return new Conference(conference).save(function(err, conference) {
+      if (err) {
+        return callback(err);
+      }
 
-    return callback(err, conference);
+      localpubsub
+        .topic(EVENTS.create)
+        .forward(globalpubsub, {
+          conference: conference,
+          user: conference.members[0]
+        });
+
+      return callback(err, conference);
+    });
   });
 }
 
