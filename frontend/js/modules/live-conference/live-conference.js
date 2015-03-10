@@ -49,7 +49,6 @@ angular.module('op.live-conference', [
     $scope.conference = session.conference;
     $scope.users = [];
     $scope.attendees = [];
-    $scope.idToAttendeeNameMap = {};
     $scope.mainVideoId = 'video-thumb0';
     $scope.attendeeVideoIds = [
       'video-thumb0',
@@ -106,10 +105,7 @@ angular.module('op.live-conference', [
     conferenceAPI.getMembers($scope.conference._id).then(
       function(response) {
         $scope.users = response.data;
-        $scope.idToAttendeeNameMap = {};
-        $scope.users.forEach(function(user) {
-          $scope.idToAttendeeNameMap[user._id] = user.displayName || 'No name';
-        });
+        conferenceHelpers.mapUserIdToName($scope.users);
       },
       function(error) {
         $log.error('Can not get members ' + error);
@@ -127,14 +123,15 @@ angular.module('op.live-conference', [
       }
     });
   }
-]).directive('liveConferenceNotification', ['$log', 'session', 'notificationFactory', 'livenotification',
-  function($log, session, notificationFactory, livenotification) {
+]).directive('liveConferenceNotification', ['$log', 'session', 'notificationFactory', 'livenotification', 'conferenceHelpers',
+  function($log, session, notificationFactory, livenotification, conferenceHelpers) {
     return {
       restrict: 'E',
       link: function(scope, element, attrs) {
         function liveNotificationHandler(msg) {
           $log.debug('Got a live notification', msg);
           if (msg.user._id !== session.user._id) {
+            conferenceHelpers.mapUserIdToName(msg.user);
             notificationFactory.weakInfo('Conference updated!', msg.message);
           }
         }
