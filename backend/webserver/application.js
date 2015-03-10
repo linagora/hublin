@@ -47,7 +47,7 @@ application.use('/css', express.static(CSS_PATH));
 
 var bodyParser = require('body-parser');
 application.use(bodyParser.json());
-application.use(bodyParser.urlencoded());
+application.use(bodyParser.urlencoded({ extended: false }));
 
 var cookieParser = require('cookie-parser');
 application.use(cookieParser('this is the secret!'));
