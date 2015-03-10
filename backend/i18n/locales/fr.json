@@ -27,5 +27,6 @@
   "Description:": "Description:",
   "Enter a description for the report": "Entrez une description...",
   "Cancel": "Annuler",
-  "Send": "Envoyer"
+  "Send": "Envoyer",
+  "The name you chose is too long." : "Le nom que vous avez choisi est trop long."
 }
