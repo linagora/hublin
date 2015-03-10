@@ -7,7 +7,6 @@ var mongoose = require('mongoose'),
 var conferenceJSON = extend(true, {}, conferenceBaseSchema);
 conferenceJSON._id = {type: String, required: true};
 
-
 var ConferenceSchema = new mongoose.Schema(conferenceJSON);
 
 /**

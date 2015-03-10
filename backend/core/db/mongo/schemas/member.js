@@ -17,3 +17,4 @@ var MemberSchema = new mongoose.Schema({
  * Member mongoose Schema
  */
 module.exports = MemberSchema;
+module.exports.Member = MemberSchema;
