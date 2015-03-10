@@ -2,9 +2,14 @@ include ../commons/header
 
 h2 Hi there!
 
-p #{from} invites you to join a video conference on&nbsp;
-  a(href="htt://hubl.in") Hubl.in
+p
+  if (from.displayName === 'anonymous' || !from.displayName)
+    span Someone invites you to join the #{conference._id} video conference on&nbsp;
+  else
+    span #{from.displayName} invites you to join the #{conference._id} video conference on&nbsp;
 
-p: a(href='#{link}') Click on this link to join.
+  a(href="https://hubl.in") Hubl.in
+
+p: a(href='https://hubl.in/?token=#{to.token}') Click on this link to join.
 
 include ../commons/footer
