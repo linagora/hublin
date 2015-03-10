@@ -16,7 +16,26 @@ angular.module('op.live-conference', [
   '$log',
   'session',
   'conference',
-  function($scope, $log, session, conference) {
+  'ioConnectionManager',
+  function($scope, $log, session, conference, ioConnectionManager) {
+    session.ready.then(function() {
+      var wsServerURI = '';
+
+      if (conference.configuration && conference.configuration.hosts && conference.configuration.hosts.length) {
+        conference.configuration.hosts.forEach(function(host) {
+          if ('ws' === host.type) {
+            wsServerURI = host.url;
+          }
+        });
+      }
+
+      $scope.wsServerURI = wsServerURI;
+      $log.info('Using \'%s\' as the websocket backend.', wsServerURI);
+
+      $log.debug('Connecting to websocket at address \'%s\' for user %s.', $scope.wsServerURI, session.user);
+      ioConnectionManager.connect($scope.wsServerURI);
+    });
+
     $scope.conference = conference;
     $scope.process = {
       step: 'configuration'
