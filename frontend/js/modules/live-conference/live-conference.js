@@ -52,10 +52,6 @@ angular.module('op.live-conference', [
     };
 
     $scope.init();
-
-    $scope.$on('conference:init', function() {
-      $scope.init();
-    });
   }
 ]).controller('liveConferenceController', [
   '$scope',

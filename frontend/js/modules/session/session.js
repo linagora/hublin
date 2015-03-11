@@ -57,15 +57,6 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
       goodbyeDefer.resolve();
     };
 
-    session.reopen = function() {
-      initializedDefer = $q.defer();
-      goodbyeDefer = $q.defer();
-      initializedDefer.resolve();
-      session.initialized = initializedDefer.promise;
-      session.goodbye = goodbyeDefer.promise;
-      $rootScope.$broadcast('conference:init', {conference: session.conference, user: session.user});
-    };
-
     return session;
   }])
   .factory('sessionFactory', ['$log', '$cookies', 'session', function($log, $cookies, session) {
