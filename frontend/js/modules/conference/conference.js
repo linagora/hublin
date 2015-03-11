@@ -124,9 +124,9 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       }
     };
   }])
-  .controller('goodbyeController', ['$scope', 'session', function($scope, session) {
+  .controller('goodbyeController', ['$scope', '$window', 'session', function($scope, $window, session) {
     $scope.reopen = function() {
-      session.reopen();
+      $window.location.href = '/' + session.conference._id + '?displayName=' + session.user.displayName;
     };
   }]).directive('usernameForm', [function() {
     return {

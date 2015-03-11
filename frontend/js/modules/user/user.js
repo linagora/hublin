@@ -5,7 +5,10 @@ angular.module('meetings.user', ['meetings.session', 'meetings.conference', 'mee
 
     function configure(configuration) {
       $log.debug('Configuring displayname', configuration);
-      return conferenceAPI.updateMemberField(session.conference._id, session.user._id, 'displayName', configuration.displayName);
+      return conferenceAPI.updateMemberField(session.conference._id, session.user._id, 'displayName', configuration.displayName).then(function(response) {
+        session.user.displayName = configuration.displayName;
+        return response;
+      });
     }
 
     function isAnonymous() {
