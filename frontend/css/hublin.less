@@ -373,7 +373,7 @@ section {
     .conference-field {
       margin: 5px 5px 0px 10px;
       .btn-lg {
-        background-color: @gray-lighter;
+        background-color: white;
         color: @brand-primary;
       }
       .btn-configuration-selected {
@@ -399,6 +399,9 @@ section {
     a {
       text-decoration: none;
       color: inherit;
+    }
+    .conference-field .btn-lg {
+      border-color: @gray-light;
     }
   }
   ::-webkit-input-placeholder {
@@ -459,6 +462,7 @@ footer {
 
 .full-modal {
   .modal-content {
+    margin-top: 50px;
     &.left {
       text-align: left;
     }
@@ -607,6 +611,12 @@ footer {
   section {
     padding: 50px 0;
   }
+  .configuration {
+    padding-top: 45px;
+    .configuration-container {
+      margin-top: 0;
+    }
+  }
 }
 
 .logo-hublin {
@@ -619,13 +629,13 @@ footer {
 .logo-conference{
   position: fixed;
   top: 0;
-  left: 15px;
-  padding: 0.2em;
+  left: 0;
+  padding: 8px 5px 5px 18px;
   border-radius: 0 0 15px 0;
   z-index: 5;
   .script-font();
   font-size: 1.5em;
-  background: fade(@gray-darkest, 50%);
+  background: fade(@gray-darkest, 55%);
   a {
       text-decoration: none;
   }
@@ -651,11 +661,32 @@ footer {
     text-shadow: 0 0 1px @gray-darkest;
   }
 }
+.modal-dialog {
+  width: 60%;
+  .input-group {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+
+@media(max-width: 1200px) {
+  .modal-dialog{
+    width: 100%;
+    margin: 0;
+  }
+}
+
+.modal-content {
+  border-radius: 0;
+  padding-top: 2%;
+}
 
 .modal-hublin {
+  background: @gray-lighter;
   .modal-header, .modal-footer{
-    background: url('../images/modal-header.png')top left;
-    color: @gray-lighter;
+    border: none;
+    text-align: center;
+    color: @gray-dark;
   }
   .modal-header {
     border-radius: 4px 4px 0 0;
@@ -670,9 +701,6 @@ footer {
     label.hublin-label .gray-lighter{
       text-shadow: 0px 0px 2px @gray;
     }
-  }
-  .modal-footer {
-    border-radius: 0 0 4px 4px;
   }
   .whatis p {
     font-size: 12px;
