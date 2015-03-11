@@ -150,7 +150,7 @@ describe('The home API', function() {
               'history': [],
               'members': [
                 {
-                  'connection': {},
+                  'connection': { 'ipAddress': '' },
                   'displayName': 'anonymous',
                   'objectType': 'hublin:anonymous',
                   'status': 'offline'
@@ -201,7 +201,7 @@ describe('The home API', function() {
               'history': [],
               'members': [
                 {
-                  'connection': {},
+                  'connection': { 'ipAddress': '' },
                   'displayName': 'aGuy',
                   'objectType': 'hublin:anonymous',
                   'status': 'offline'
@@ -267,8 +267,7 @@ describe('The home API', function() {
                     'status': 'offline'
                   },
                   {
-                    'connection': {
-                    },
+                    'connection': { 'ipAddress': '' },
                     'displayName': 'aGuy',
                     'status': 'offline',
                     'objectType': 'hublin:anonymous'

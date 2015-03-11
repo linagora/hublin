@@ -130,6 +130,7 @@ module.exports = function(dependencies) {
         logger.error('Can not update member %e', err);
         return res.json(500, {error: {code: 500, message: 'Can not update member', details: err.message}});
       }
+      member[0][field] = data.value;
       return res.json(200, member);
     });
   }
