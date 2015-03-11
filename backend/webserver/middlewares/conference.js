@@ -2,7 +2,6 @@
 
 var conference = require('../../core/conference');
 var conferenceHelpers = require('../../core/conference/helpers');
-var async = require('async');
 
 /**
  *
@@ -285,7 +284,9 @@ module.exports = function(dependencies) {
 
       conference.create(conf, function(err, created) {
         if (created) {
+          req.created = true;
           req.user = created.members[0];
+          req.conference = created;
         }
         return callback(err, created);
       });
@@ -317,10 +318,7 @@ module.exports = function(dependencies) {
       createConference(req.params.id, req.user, callback);
     }
 
-    async.waterfall([
-      conference.get.bind(null, req.params.id),
-      addUserOrCreateConference
-    ], function(err, result) {
+    addUserOrCreateConference(req.conference, function(err) {
       if (err) {
         logger.error('Error while initializing conference for user %e', err);
         return res.json(500, {

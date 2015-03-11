@@ -1,5 +1,6 @@
 'use strict';
 
+var conference = require('../../core/conference');
 var conferenceHelpers = require('../../core/conference/helpers');
 var i18n = require('../../i18n');
 
@@ -8,6 +9,8 @@ var i18n = require('../../i18n');
  * @return {{checkIdForCreation: checkIdForCreation}}
  */
 module.exports = function(dependencies) {
+
+  var logger = dependencies('logger');
 
   function checkIdForCreation(req, res, next) {
     var confId = req.params.id;
@@ -18,8 +21,23 @@ module.exports = function(dependencies) {
     next();
   }
 
+  function load(req, res, next) {
+    conference.get(req.params.id, function(err, conf) {
+      if (err) {
+        logger.error('Error while loading conference', err);
+        return res.render('commons/error', {error: i18n.__('Error while loading conference:') + req.params.id});
+      }
+
+      if (conf) {
+        req.conference = conf;
+      }
+      return next();
+    });
+  }
+
   return {
-    checkIdForCreation: checkIdForCreation
+    checkIdForCreation: checkIdForCreation,
+    load: load
   };
 };
 

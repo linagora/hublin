@@ -15,38 +15,90 @@ describe('The conferences controller', function() {
     };
   });
 
-  it('createAPI should send back HTTP 500 when conference sends back error', function(done) {
-    mockery.registerMock('../../core/conference', {
-      create: function(user, callback) {
-        return callback(new Error());
-      }
-    });
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(status) {
-        expect(status).to.equal(500);
-        done();
-      }
-    };
-    controller.createAPI({user: {displayName: 'foobar'}, params: {id: 123}, body: {}, headers: [], query: []}, res);
-  });
+  describe('createdOrUpdated function', function() {
+    describe('if conference has been created', function() {
 
-  it('createAPI should send back HTTP 201 when conference creates resource', function(done) {
-    mockery.registerMock('../../core/conference', {
-      create: function(user, callback) {
-        return callback(null, {
-          members: []
+      it('should send back 201 with conference', function(done) {
+        mockery.registerMock('../../core/conference', {});
+        var conference = {_id: 'MyConference'};
+        var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+        var res = {
+          json: function(status, body) {
+            expect(status).to.equal(201, body);
+            expect(body).to.deep.equal(conference);
+            done();
+          }
+        };
+        controller.createdOrUpdated({created: true, user: {displayName: 'foobar'}, conference: conference, body: {}}, res);
+      });
+
+      it('should send back 202 when members are invited', function(done) {
+        var membersToInvite = [{id: 'yo@hubl.in', objectType: 'email'}];
+        mockery.registerMock('../../core/conference', {
+          invite: function(conference, user, members, callback) {
+            expect(members).to.deep.equals(membersToInvite);
+            return callback();
+          }
         });
-      }
+        var conference = {_id: 'MyConference'};
+        var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+        var res = {
+          send: function(status) {
+            expect(status).to.equal(202);
+            done();
+          }
+        };
+        controller.createdOrUpdated({created: true, user: {displayName: 'foobar'}, conference: conference, body: {members: membersToInvite}}, res);
+      });
+
+      it('should send back 500 when members can not be invited', function(done) {
+        mockery.registerMock('../../core/conference', {
+          invite: function(conference, user, members, callback) {
+            return callback(new Error());
+          }
+        });
+        var conference = {_id: 'MyConference'};
+        var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+        var res = {
+          json: function(status) {
+            expect(status).to.equal(500);
+            done();
+          }
+        };
+        controller.createdOrUpdated({created: true, user: {displayName: 'foobar'}, conference: conference, body: {members: [{id: 'yo@hubl.in', objectType: 'email'}]}}, res);
+      });
+
     });
-    var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-    var res = {
-      json: function(code) {
-        expect(code).to.equal(201);
-        done();
-      }
-    };
-    controller.createAPI({user: {displayName: 'foobar'}, params: {id: 123}, body: {}, headers: [], query: []}, res);
+
+    describe('if conference has not been created', function() {
+      it('should send back 400 when trying to add members', function(done) {
+        mockery.registerMock('../../core/conference', {});
+
+        var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+        var res = {
+          json: function(status) {
+            expect(status).to.equal(400);
+            done();
+          }
+        };
+        controller.createdOrUpdated({user: {displayName: 'foobar'}, body: {members: [{id: 'yo@hubl.in', objectType: 'email'}]}}, res);
+      });
+
+      it('should send back 200 with conference', function(done) {
+        mockery.registerMock('../../core/conference', {});
+
+        var conference = {_id: 'MyConference'};
+        var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+        var res = {
+          json: function(status, body) {
+            expect(status).to.equal(200);
+            expect(body).to.deep.equal(conference);
+            done();
+          }
+        };
+        controller.createdOrUpdated({user: {displayName: 'foobar'}, conference: conference, body: {}}, res);
+      });
+    });
   });
 
   describe('getMembers function', function() {
