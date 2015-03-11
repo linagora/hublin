@@ -17,6 +17,7 @@ module.exports = function(dependencies) {
   var router = express.Router();
 
   // MEET-52 Keep this order, it is important here.
+  router.get('/embed/button', controllers.embedButton);
   router.get('/:id', middlewares.checkIdForCreation, middlewares.load,
              conference.lazyArchive(true), user.createForConference,
              conference.addUserOrCreate, controllers.liveconference);

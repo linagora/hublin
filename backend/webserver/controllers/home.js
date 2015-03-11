@@ -18,8 +18,13 @@ module.exports = function(dependencies) {
     return res.render('live-conference/index', {id: req.params.id});
   }
 
+  function embedButton(req, res) {
+    return res.render('meetings/embed', {name: req.query.name || ''});
+  }
+
   return {
     meetings: meetings,
-    liveconference: liveconference
+    liveconference: liveconference,
+    embedButton: embedButton
   };
 };

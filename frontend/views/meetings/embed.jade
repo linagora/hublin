@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='')
+    meta(name='author', content='')
+
+    title Hubl.in, the Awesome video conference service
+
+    link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/components/font-awesome/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/css/hublin.css')
+    link(rel='stylesheet', href='//fonts.googleapis.com/css?family=Merienda:700', type='text/css')
+
+    script(src='/components/jquery/dist/jquery.min.js')
+    script(src='/components/bootstrap/dist/js/bootstrap.min.js')
+
+  body
+    div.btn-group
+      a.btn.btn-default.logo-hublin.embedded-button.script-font(href='https://hubl.in/#{name}') #{__('Chat on Hubl.in')}
+      button.btn.btn-default.dropdown-toggle(data-toggle='dropdown', aria-expanded='false')
+        span.caret
+        span.sr-only Toggle Dropdown
+      ul.dropdown-menu(role='menu')
+        li
+          a(href='https://hubl.in') #{__('Go to Hubl.in and roll your own conference!')}
