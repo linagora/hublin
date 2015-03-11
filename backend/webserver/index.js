@@ -26,6 +26,7 @@ var webserver = {
   ssl_port: null,
   ssl_key: null,
   ssl_cert: null,
+  ssl_ca: [],
 
   virtualhosts: [],
 
@@ -117,10 +118,14 @@ function start(callback) {
     process.exit(1);
   }
 
-  var sslkey, sslcert;
+  var sslkey, sslcert, sslca;
+
   if (states.ssl4 === STOPPED || states.ssl6 === STOPPED) {
     sslkey = fs.readFileSync(webserver.ssl_key);
     sslcert = fs.readFileSync(webserver.ssl_cert);
+    sslca = webserver.ssl_ca.map(function(caPath) {
+      return fs.readFileSync(caPath);
+    });
   }
 
   if (ws.ipv6 === '::' && ws.ip === '0.0.0.0' && states.http6 && states.http4) {
@@ -143,12 +148,12 @@ function start(callback) {
   }
 
   if (states.ssl4 === STOPPED) {
-    webserver.sslserver = https.createServer({key: sslkey, cert: sslcert}, webserver.application).listen(webserver.ssl_port, webserver.ssl_ip);
+    webserver.sslserver = https.createServer({key: sslkey, cert: sslcert, ca: sslca}, webserver.application).listen(webserver.ssl_port, webserver.ssl_ip);
     setupEventListeners(webserver.sslserver);
   }
 
   if (states.ssl6 === STOPPED) {
-    webserver.sslserver6 = https.createServer({key: sslkey, cert: sslcert}, webserver.application).listen(webserver.ssl_port, webserver.ssl_ipv6);
+    webserver.sslserver6 = https.createServer({key: sslkey, cert: sslcert, ca: sslca}, webserver.application).listen(webserver.ssl_port, webserver.ssl_ipv6);
     setupEventListeners(webserver.sslserver6);
   }
 }
@@ -203,6 +208,7 @@ var WebServer = new AwesomeModule('linagora.io.meetings.webserver', {
       webserver.ssl_ipv6 = config.webserver.ssl_ipv6;
       webserver.ssl_key = config.webserver.ssl_key;
       webserver.ssl_cert = config.webserver.ssl_cert;
+      webserver.ssl_ca = config.webserver.ssl_ca;
       webserver.start(function(err) {
         if (err) {
           console.error('Web server failed to start', err);
