@@ -79,7 +79,9 @@ angular.module('op.live-conference', [
       'video-thumb8'
     ];
 
-    $scope.$on('$locationChangeStart', easyRTCService.leaveRoom($scope.conference));
+    $scope.$on('$locationChangeStart', function() {
+      easyRTCService.leaveRoom($scope.conference);
+    });
 
     $scope.getMainVideoAttendeeIndex = function(mainVideoId) {
       return conferenceHelpers.getMainVideoAttendeeIndexFrom(mainVideoId);
