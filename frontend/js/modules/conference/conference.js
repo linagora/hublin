@@ -74,16 +74,12 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
   .controller('meetingsLandingPageController', ['$scope', '$q', function($scope, $q) {
     console.log('meetingsLandingPageController');
   }])
-  .directive('conferenceCreateForm', ['$window', '$log', 'uuid4', 'conferenceService', '$location', 'URI',
-    function($window, $log, uuid4, conferenceService, $location, URI) {
+  .directive('conferenceCreateForm', ['$window', '$log', 'conferenceService', '$location', 'URI', 'conferenceNameGenerator',
+    function($window, $log, conferenceService, $location, URI, conferenceNameGenerator) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/conference/conference-create-form.html',
       link: function(scope) {
-        function randomizeRoom() {
-          return uuid4.generate();
-        }
-
         function buildUrl(room) {
           return URI('/')
           .query('')
@@ -91,7 +87,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
           .segmentCoded(room);
         }
 
-        scope.room = randomizeRoom();
+        scope.room = conferenceNameGenerator.getName();
 
         function escapeRoomName(room) {
           var result = room.replace(/\s+/g, '');
@@ -115,7 +111,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
         scope.go = function() {
           var escapedName = escapeRoomName(scope.room);
           if (escapedName === '') {
-            $window.location.href = buildUrl(randomizeRoom());
+            $window.location.href = buildUrl(conferenceNameGenerator.getName());
           }
           else {
             $window.location.href = buildUrl(escapedName);
@@ -148,6 +144,29 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
           element.modal('show');
           oldGetUserMedia(constraints, successCallback, errorCallback);
         };
+      }
+    };
+  }])
+  .constant('conferenceNameGeneratorConstants', {
+    adjectives: [
+      'awesome', 'yolo', 'wooot', 'super', 'magic', 'simple', 'fast', 'open', 'free', 'great', 'cool', 'pretty',
+      'exquisite', 'stunning', 'radiant', 'amazing', 'delightful', 'dreamy', 'fine', 'hypnotic', 'marvelous', 'sublime',
+      'smoking', 'adorable', 'beautiful', 'handsome', 'lovely', 'bewitching', 'breathtaking', 'charming', 'divine',
+      'enchanting', 'fabulous', 'glamorous', 'perfect', 'spectacular', 'wonderful'
+    ],
+    nouns: [
+      'toulouse', 'paris', 'lyon', 'montpellier', 'hamburg', 'canada', 'linux', 'mail', 'security', 'store', 'share',
+      'software', 'paas', 'angular', 'agile', 'studio', 'config', 'service', 'app', 'video', 'webrtc', 'agenda',
+      'montreal', 'vietnam', 'puteaux', 'software', 'node', 'conference', 'team', 'network', 'meeting', 'website',
+      'camera', 'grenoble', 'saas', 'iaas', 'db', 'france', 'germany', 'social'
+    ]
+  })
+  .factory('conferenceNameGenerator', ['conferenceNameGeneratorConstants', function(nameGenerator) {
+    return {
+      getName: function() {
+        var adjective = nameGenerator.adjectives[Math.floor(Math.random() * nameGenerator.adjectives.length)];
+        var noun = nameGenerator.nouns[Math.floor(Math.random() * nameGenerator.nouns.length)];
+        return adjective + '-' + noun;
       }
     };
   }]);
