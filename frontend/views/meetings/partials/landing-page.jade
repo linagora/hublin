@@ -129,9 +129,9 @@
         .col-md-4
           ul.list-inline.quicklinks
             li
-              a(href='#') Privacy Policy
+              a(href="#privacyPolicy" data-toggle="modal") Privacy Policy
             li
-              a(href='#') Terms of Use
+              a(href="#useTerms" data-toggle="modal") Terms of Use
   #webRTCModal.full-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
     .modal-content
       .close-modal(data-dismiss='modal')
@@ -148,6 +148,44 @@
               p.item-intro.text-muted Web Real-Time Communication
               p WebRTC is a free, open project that provides browsers and mobile applications with Real-Time Communications (RTC) capabilities via simple APIs. The WebRTC components have been optimized to best serve this purpose.
               p Take a look to #[a(href='http://www.webrtc.org/') Web RTC website] for more information.
+              button.btn.btn-primary(type='button', data-dismiss='modal')
+                i.fa.fa-times
+                | Close
+  #privacyPolicy.full-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+    .modal-content
+      .close-modal(data-dismiss='modal')
+        .lr
+          .rl
+      .container
+        .row
+          .col-lg-8.col-lg-offset-2
+            .modal-body
+              span.fa-stack.fa-4x
+                i.fa.fa-square.fa-stack-2x.text-primary
+                i.fa.fa-user-secret.fa-stack-1x.fa-inverse
+              h2 Privacy Policy
+              p.item-intro.text-muted Hubl.in Privacy Policy
+              p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla rutrum est lectus. Donec eu mattis dui, at elementum neque. In vel dui eget lorem efficitur pellentesque. Mauris facilisis tortor sed congue convallis. Vivamus euismod felis quis feugiat mollis. Vestibulum feugiat nulla quam, lobortis vulputate turpis sodales porta. Praesent facilisis vehicula risus id viverra. Suspendisse nisi ligula, faucibus vitae nunc sed, accumsan porttitor metus. Morbi gravida ipsum vel felis interdum facilisis sed at turpis. Nullam nec turpis id nunc luctus vestibulum. Quisque et tempor lacus, vitae hendrerit lorem. Mauris vitae dui aliquet, venenatis arcu nec, varius nulla. Suspendisse quis lorem eu est convallis ultrices. Quisque vitae aliquet sapien, quis sollicitudin ligula. Morbi tellus ex, rhoncus in eleifend et, malesuada nec odio. Etiam non dignissim lorem, at molestie enim.
+                | Etiam scelerisque cursus sagittis. Ut a nunc a dolor tristique congue. Integer rhoncus, nulla et maximus malesuada, purus ante suscipit quam, vel egestas dui tellus in est. Aenean pulvinar diam condimentum, tristique urna nec, blandit turpis. Integer aliquet risus neque, in porta risus aliquam quis. Sed euismod ex magna, ut egestas nunc euismod a. Nullam tempus, dolor id dignissim porttitor, leo nulla dignissim massa, et faucibus nunc leo sed augue. Praesent egestas eu nunc at finibus. Morbi ut volutpat ligula. Ut odio purus, convallis ut imperdiet nec, euismod eu nunc. Donec tincidunt turpis sapien. Curabitur lorem massa, eleifend at ultrices id, imperdiet ac est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean pulvinar euismod enim, sit amet dapibus ligula imperdiet nec.
+              button.btn.btn-primary(type='button', data-dismiss='modal')
+                i.fa.fa-times
+                | Close
+  #useTerms.full-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+    .modal-content
+      .close-modal(data-dismiss='modal')
+        .lr
+          .rl
+      .container
+        .row
+          .col-lg-8.col-lg-offset-2
+            .modal-body
+              span.fa-stack.fa-4x
+                i.fa.fa-square.fa-stack-2x.text-primary
+                i.fa.fa-gavel.fa-stack-1x.fa-inverse
+              h2 Terms of Use
+              p.item-intro.text-muted Hubl.in Terms of Use
+              p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla rutrum est lectus. Donec eu mattis dui, at elementum neque. In vel dui eget lorem efficitur pellentesque. Mauris facilisis tortor sed congue convallis. Vivamus euismod felis quis feugiat mollis. Vestibulum feugiat nulla quam, lobortis vulputate turpis sodales porta. Praesent facilisis vehicula risus id viverra. Suspendisse nisi ligula, faucibus vitae nunc sed, accumsan porttitor metus. Morbi gravida ipsum vel felis interdum facilisis sed at turpis. Nullam nec turpis id nunc luctus vestibulum. Quisque et tempor lacus, vitae hendrerit lorem. Mauris vitae dui aliquet, venenatis arcu nec, varius nulla. Suspendisse quis lorem eu est convallis ultrices. Quisque vitae aliquet sapien, quis sollicitudin ligula. Morbi tellus ex, rhoncus in eleifend et, malesuada nec odio. Etiam non dignissim lorem, at molestie enim.
+                | Etiam scelerisque cursus sagittis. Ut a nunc a dolor tristique congue. Integer rhoncus, nulla et maximus malesuada, purus ante suscipit quam, vel egestas dui tellus in est. Aenean pulvinar diam condimentum, tristique urna nec, blandit turpis. Integer aliquet risus neque, in porta risus aliquam quis. Sed euismod ex magna, ut egestas nunc euismod a. Nullam tempus, dolor id dignissim porttitor, leo nulla dignissim massa, et faucibus nunc leo sed augue. Praesent egestas eu nunc at finibus. Morbi ut volutpat ligula. Ut odio purus, convallis ut imperdiet nec, euismod eu nunc. Donec tincidunt turpis sapien. Curabitur lorem massa, eleifend at ultrices id, imperdiet ac est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean pulvinar euismod enim, sit amet dapibus ligula imperdiet nec.
               button.btn.btn-primary(type='button', data-dismiss='modal')
                 i.fa.fa-times
                 | Close
