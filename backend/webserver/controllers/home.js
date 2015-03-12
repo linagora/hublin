@@ -9,7 +9,7 @@ module.exports = function(dependencies) {
 
   function meetings(req, res) {
     if (req.conference) {
-      return res.render('live-conference/index', {id: req.conference._id});
+      return res.redirect('/' + req.conference._id);
     }
     return res.render('meetings/index');
   }
