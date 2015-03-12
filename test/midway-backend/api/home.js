@@ -40,7 +40,7 @@ describe('The home API', function() {
         });
     });
 
-    it('should render live-conference/index if conference is found by token', function(done) {
+    it('should redirect to /:conferenceId if conference is found by token', function(done) {
       var members = [
         {
           displayName: 'FooBar',
@@ -57,10 +57,10 @@ describe('The home API', function() {
         request(application)
           .get('/?token=' + conference.members[0].token)
           .send()
-          .expect(200)
+          .expect(302)
           .end(function(err, res) {
             expect(err).to.not.exist;
-            expect(res.text).to.contain('liveConferenceApplication');
+            expect(res.headers.location).to.equal('/MyTestConference');
             done();
           });
       });
@@ -84,7 +84,7 @@ describe('The home API', function() {
         request(application)
           .get('/?token=' + conference.members[0].token)
           .send()
-          .expect(200)
+          .expect(302)
           .end(function(err, res) {
             expect(err).to.not.exist;
             var userCookie = httpHelpers.getCookie('user', res.headers['set-cookie']);
