@@ -18,11 +18,4 @@ html
     script(src='/components/bootstrap/dist/js/bootstrap.min.js')
 
   body
-    div.btn-group
-      a.btn.btn-default.logo-hublin.embedded-button.script-font(href='https://hubl.in/#{name}') #{__('Chat on Hubl.in')}
-      button.btn.btn-default.dropdown-toggle(data-toggle='dropdown', aria-expanded='false')
-        span.caret
-        span.sr-only Toggle Dropdown
-      ul.dropdown-menu(role='menu')
-        li
-          a(href='https://hubl.in') #{__('Go to Hubl.in and roll your own conference!')}
+    a.btn.btn-default.logo-hublin.embedded-button.script-font(href='https://hubl.in/#{name}', target='_blank') #{__('Chat on Hubl.in')}
