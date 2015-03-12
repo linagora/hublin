@@ -1094,6 +1094,17 @@ describe('The conference module', function() {
           done();
         }, done);
     });
+    it('should resolve to false when garbage ttl is over, and at least one user is online', function(done) {
+      this.helpers.mock.models({});
+      var conf = this.helpers.requireFixture('conference').garbage();
+      this.helpers
+        .requireBackend('core/conference')
+        .isActive(conf)
+        .then(function(active) {
+          expect(active).to.be.false;
+          done();
+        }, done);
+    });
   });
 
   describe('archive() method', function() {

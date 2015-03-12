@@ -12,6 +12,7 @@ var mongoose = require('mongoose'),
     scale = require('./scalability');
 
 var TTL = 1000 * 60 * 10;
+var GARBAGE_TTL = 1000 * 60 * 60 * 24;
 
 var MEMBER_STATUS = {
   INVITED: 'invited',
@@ -536,6 +537,14 @@ function onRoomLeave(roomId, userId, callback) {
   });
 }
 
+/**
+ * get garbage time to live of a conference
+ *
+ * @return {Promise} fullfilled with the conference GARBAGE_TTL
+ */
+function getGarbageTTL() {
+  return q(GARBAGE_TTL);
+}
 
 /**
  * get time to live of a conference
@@ -550,16 +559,18 @@ function getTTL() {
 /**
  * tell if a conference is active.
  *
- * A conference is not active anymore when no member is
- * in state MEMBER_STATUS.ONLINE , and the conference is older
- * than ttl.
+ * A conference can be not active for two reasons:
+ * - when no member is in state MEMBER_STATUS.ONLINE , and the conference is older than ttl.
+ * - when the last history entry is older than garbage ttl
  *
  * @param {Conference} conference to check for active state
  * @return {Promise} fullfilled with a boolean telling whether the conference is still active
  */
 function isActive(conference) {
 
-  function _isActive(ttl) {
+  function _isActive(ttls) {
+    var ttl = ttls[0],
+        garbageTTL = ttls[1];
     function memberOnline(member) {
       return member.status === MEMBER_STATUS.ONLINE;
     }
@@ -567,14 +578,22 @@ function isActive(conference) {
       var diff = Date.now() - creationDate.getTime() - ttl;
       return diff < 0;
     }
+    function garbageTtlNotReached(conference) {
+      if (!conference.history ||   !conference.history.length) {
+        return true;
+      }
+      var latestActivity = conference.history[(conference.history.length - 1)];
+      var diff = Date.now() - latestActivity.published.getTime() - garbageTTL;
+      return diff < 0;
+    }
 
-    var active = conference.members.some(memberOnline) ||
-      ttlNotExpired(conference.timestamps.created);
+    var active = garbageTtlNotReached(conference) &&
+        (conference.members.some(memberOnline) || ttlNotExpired(conference.timestamps.created));
     return q(active);
-
   }
 
-  return getTTL().then(_isActive);
+  return q.all([getTTL(), getGarbageTTL()])
+  .then(_isActive);
 }
 
 function _buildConferenceArchive(conference) {
