@@ -41,76 +41,60 @@ function _transformConference(conference) {
   return sanitizedConference;
 }
 
-/**
- * @param {object} dependencies
- * @return {hash}
- */
+function inviteMembers(conf, user, members, callback) {
+  var newMembers = [];
+
+  if (!Array.isArray(members)) {
+    var err = new Error('Members must be an array');
+    err.code = 1;
+    return callback(err);
+  }
+
+  members.forEach(function(member) {
+    var sanitizedMember = _sanitizeAndValidateMember(member);
+    if (sanitizedMember) {
+      newMembers.push(sanitizedMember);
+    }
+  });
+
+  if (!newMembers) {
+    var missing = new Error('Invited members missing');
+    missing.code = 2;
+    return callback(missing);
+  }
+
+  conference.invite(conf, user, newMembers, callback);
+}
+
+function errorResponse(err, res) {
+  if (err.code) {
+    return res.json(400, {error: {code: 400, message: 'Bad Request', details: err.message}});
+  } else {
+    return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
+  }
+}
+
 module.exports = function(dependencies) {
   var logger = dependencies('logger');
 
   function addMembers(req, res) {
-    var user = req.user;
-    var conf = req.conference;
-
-    var newMembers = [];
-
-    if (!Array.isArray(req.body)) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'request payload should be an array'}});
-    }
-
-    req.body.forEach(function(member) {
-      var sanitizedMember = _sanitizeAndValidateMember(member);
-      if (sanitizedMember) {
-        newMembers.push(sanitizedMember);
-      }
-    });
-
-    if (!newMembers) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Invited members missing'}});
-    }
-
-    conference.invite(conf, user, newMembers, function(err) {
+    inviteMembers(req.conference, req.user, req.body, function(err) {
       if (err) {
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
+        return errorResponse(err, res);
       }
-      return res.send(202);
+      res.send(202);
     });
   }
 
-  function createdOrUpdated(req, res) {
+  function finalizeCreation(req, res) {
 
-    function isInviteRequest() {
-      return req.body.members && req.body.members.length > 0;
+    if (!req.body.members || req.body.members.length === 0) {
+      return res.json(req.created ? 201 : 200, _transformConference(req.conference.toObject()));
     }
 
-    if (!req.created) {
-      if (isInviteRequest()) {
-        return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Can not invite members using this endpoint. Check the dev documentation'}});
-      }
-      return res.json(200, _transformConference(req.conference.toObject()));
-    }
-
-    if (!isInviteRequest()) {
-      return res.json(201, _transformConference(req.conference.toObject()));
-    }
-
-    var invitedMembers = [];
-
-    if (req.body.members && req.body.members.length) {
-      req.body.members.forEach(function(member) {
-        var sanitizedMember = _sanitizeAndValidateMember(member);
-        if (!sanitizedMember) {
-          logger.warn('member is invalid:  %j', member);
-        } else {
-          invitedMembers.push(member);
-        }
-      });
-    }
-
-    conference.invite(req.conference, req.user, invitedMembers, function(err) {
+    inviteMembers(req.conference, req.user, req.body.members, function(err) {
       if (err) {
-        logger.error('Error while inviting members', err);
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
+        return errorResponse(err, res);
       }
       return res.send(202, _transformConference(req.conference.toObject()));
     });
@@ -217,7 +201,7 @@ module.exports = function(dependencies) {
 
   return {
     get: get,
-    createdOrUpdated: createdOrUpdated,
+    finalizeCreation: finalizeCreation,
     removeAttendee: removeAttendee,
     addMembers: addMembers,
     getMembers: getMembers,

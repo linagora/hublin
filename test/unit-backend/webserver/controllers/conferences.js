@@ -2,6 +2,7 @@
 
 var expect = require('chai').expect;
 var mockery = require('mockery');
+var rewire = require('rewire');
 var logger = require('../../../fixtures/logger-noop');
 var extend = require('extend');
 
@@ -24,108 +25,119 @@ describe('The conferences controller', function() {
     };
   });
 
-  describe('createdOrUpdated function', function() {
-    describe('if conference has been created', function() {
+  describe('finalizeCreation function', function() {
 
-      it('should send back 201 with conference', function(done) {
-        mockery.registerMock('../../core/conference', {});
-        mockery.registerMock('../../core/report', {});
-        var conference = {_id: 'MyConference', members: []};
-        var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-        var res = {
-          json: function(status, body) {
-            expect(status).to.equal(201, body);
-            expect(body).to.deep.equal(conference.toObject());
-            done();
-          }
-        };
-        controller.createdOrUpdated({
-          created: true,
-          user: {displayName: 'foobar'},
-          conference: this.addToObject(conference),
-          body: {}
-        },res);
-      });
-
-      it('should send back 202 when members are invited', function(done) {
-        var membersToInvite = [{id: 'yo@hubl.in', objectType: 'email'}];
-        mockery.registerMock('../../core/conference', {
-          invite: function(conference, user, members, callback) {
-            expect(members).to.deep.equals(membersToInvite);
-            return callback();
-          }
-        });
-        mockery.registerMock('../../core/report', {});
-        var conference = {_id: 'MyConference', members: []};
-        var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-        var res = {
-          send: function(status) {
-            expect(status).to.equal(202);
-            done();
-          }
-        };
-        controller.createdOrUpdated({
-          created: true,
-          user: {displayName: 'foobar'},
-          conference: this.addToObject(conference),
-          body: {members: membersToInvite}
-        }, res);
-      });
-
-      it('should send back 500 when members can not be invited', function(done) {
-        mockery.registerMock('../../core/conference', {
-          invite: function(conference, user, members, callback) {
-            return callback(new Error());
-          }
-        });
-        mockery.registerMock('../../core/report', {});
-        var conference = {_id: 'MyConference', members: []};
-        var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-        var res = {
-          json: function(status) {
-            expect(status).to.equal(500);
-            done();
-          }
-        };
-        controller.createdOrUpdated({created: true, user: {displayName: 'foobar'}, conference: conference, body: {members: [{id: 'yo@hubl.in', objectType: 'email'}]}}, res);
-      });
-
+    it('should send back 201 with conference when created', function(done) {
+      mockery.registerMock('../../core/conference', {});
+      this.helpers.mock.models({});
+      var conference = {_id: 'MyConference', members: []};
+      var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+      var res = {
+        json: function(status, body) {
+          expect(status).to.equal(201, body);
+          expect(body).to.deep.equal(conference.toObject());
+          done();
+        }
+      };
+      controller.finalizeCreation({
+        created: true,
+        user: {displayName: 'foobar'},
+        conference: this.addToObject(conference),
+        body: {}
+      },res);
     });
 
-    describe('if conference has not been created', function() {
-      it('should send back 400 when trying to add members', function(done) {
-        mockery.registerMock('../../core/conference', {});
-        mockery.registerMock('../../core/report', {});
+    it('should send back 200 with conference when already created', function(done) {
+      mockery.registerMock('../../core/conference', {});
+      this.helpers.mock.models({});
+      var conference = {_id: 'MyConference', members: []};
+      var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+      var res = {
+        json: function(status, body) {
+          expect(status).to.equal(200, body);
+          expect(body).to.deep.equal(conference.toObject());
+          done();
+        }
+      };
+      controller.finalizeCreation({
+        created: false,
+        user: {displayName: 'foobar'},
+        conference: this.addToObject(conference),
+        body: {}
+      },res);
+    });
 
-        var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-        var res = {
-          json: function(status) {
-            expect(status).to.equal(400);
-            done();
-          }
-        };
-        controller.createdOrUpdated({user: {displayName: 'foobar'}, body: {members: [{id: 'yo@hubl.in', objectType: 'email'}]}}, res);
+    it('should send back 202 when members are invited', function(done) {
+      var membersToInvite = [{id: 'yo@hubl.in', objectType: 'email', displayName: 'yo@hubl.in'}];
+      mockery.registerMock('../../core/conference', {
+        invite: function(conference, user, members, callback) {
+          expect(members).to.deep.equals(membersToInvite);
+          return callback();
+        }
       });
+      this.helpers.mock.models({});
+      var conference = {_id: 'MyConference', members: []};
+      var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+      var res = {
+        send: function(status) {
+          expect(status).to.equal(202);
+          done();
+        }
+      };
+      controller.finalizeCreation({
+        created: true,
+        user: {displayName: 'foobar'},
+        conference: this.addToObject(conference),
+        body: {members: membersToInvite}
+      }, res);
+    });
 
-      it('should send back 200 with conference', function(done) {
-        mockery.registerMock('../../core/conference', {});
-        mockery.registerMock('../../core/report', {});
-
-        var conference = {_id: 'MyConference', members: []};
-        var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-        var res = {
-          json: function(status, body) {
-            expect(status).to.equal(200);
-            expect(body).to.deep.equal(conference.toObject());
-            done();
-          }
-        };
-        controller.createdOrUpdated({
-          user: {displayName: 'foobar'},
-          conference: this.addToObject(conference),
-          body: {}
-        }, res);
+    it('should send back 400 when members can not be invited due to bad request', function(done) {
+      mockery.registerMock('../../core/conference', {
+        invite: function(conference, user, members, callback) {
+          return callback(new Error());
+        }
       });
+      this.helpers.mock.models({});
+      var conference = {_id: 'MyConference', members: []};
+      var rewired = rewire('../../../../backend/webserver/controllers/conferences');
+      rewired.__set__('inviteMembers', function(conference, user, members, callback) {
+        var err = new Error('');
+        err.code = 1;
+        return callback(err);
+      });
+      var controller = rewired(dependencies);
+
+      var res = {
+        json: function(status) {
+          expect(status).to.equal(400);
+          done();
+        }
+      };
+      controller.finalizeCreation({created: true, user: {displayName: 'foobar'}, conference: conference, body: {members: [{id: 'yo@hubl.in', objectType: 'email'}]}}, res);
+    });
+
+    it('should send back 500 when members can not be invited due to server error', function(done) {
+      mockery.registerMock('../../core/conference', {
+        invite: function(conference, user, members, callback) {
+          return callback(new Error());
+        }
+      });
+      this.helpers.mock.models({});
+      var conference = {_id: 'MyConference', members: []};
+      var rewired = rewire('../../../../backend/webserver/controllers/conferences');
+      rewired.__set__('inviteMembers', function(conference, user, members, callback) {
+        var err = new Error('');
+        return callback(err);
+      });
+      var controller = rewired(dependencies);
+      var res = {
+        json: function(status) {
+          expect(status).to.equal(500);
+          done();
+        }
+      };
+      controller.finalizeCreation({created: true, user: {displayName: 'foobar'}, conference: conference, body: {members: [{id: 'yo@hubl.in', objectType: 'email'}]}}, res);
     });
   });
 

@@ -486,65 +486,188 @@ describe('The conference middleware', function() {
     });
   });
 
-  describe('addUserOrCreate function', function() {
-    describe('when conference is not created', function() {
+  describe('addUser function', function() {
+    it('should call next when req.conference does not exists', function(done) {
+      mockery.registerMock('../../core/conference', {});
 
-      it('should create it and fill request', function(done) {
-        var name = 'MyConf';
-        var user = {id: 'me@yubl.in', objectType: 'email'};
-
-        mockery.registerMock('../../core/conference', {
-          get: function(id, callback) {
-            return callback(null, null);
-          },
-          create: function(conf, callback) {
-            return callback(null, conf);
-          }
-        });
-
-        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUserOrCreate;
-        var req = {params: {id: name}, user: user};
-        var res = {};
-
-        middleware(req, res, function() {
-          expect(req.conference).to.exists;
-          expect(req.conference._id).to.equal(name);
-          expect(req.user).to.deep.equal(user);
-          expect(req.created).to.be.true;
-          done();
-        });
-      });
-
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUser;
+      var req = {};
+      var res = {
+        json: function() {
+          done(new Error());
+        }
+      };
+      middleware(req, res, done);
     });
 
-    describe('when conference is already created', function() {
-      it('should add current user to the conference', function(done) {
-        var name = 'MyConf';
-        var conference = {_id: name, members: []};
-        var user = {id: 'me@yubl.in', objectType: 'email'};
-        var userId = 123456789;
+    it('should send back 500 if conference#addUser fails', function(done) {
+      mockery.registerMock('../../core/conference', {
+        addUser: function(conference, user, callback) {
+          return callback(new Error());
+        }
+      });
 
-        mockery.registerMock('../../core/conference', {
-          addUser: function(conf, user, callback) {
-            return callback();
-          },
-          getMember: function(conf, user, callback) {
-            user._id = userId;
-            return callback(null, user);
-          }
-        });
-
-        var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUserOrCreate;
-        var req = {conference: conference, params: {id: name}, user: user};
-        var res = {};
-
-        middleware(req, res, function() {
-          expect(req.user).to.exist;
-          expect(req.user._id).to.exist;
-          expect(req.user._id).to.equal(userId);
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUser;
+      var req = {conference: {}};
+      var res = {
+        json: function(code) {
+          expect(code).to.equal(500);
           done();
-        });
+        }
+      };
+      middleware(req, res, function() {
+        return done(new Error());
+      });
+    });
 
+    it('should send back 500 if conference#getMember fails', function(done) {
+      mockery.registerMock('../../core/conference', {
+        addUser: function(conference, user, callback) {
+          return callback();
+        },
+        getMember: function(conference, user, callback) {
+          return callback(new Error());
+        }
+      });
+
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUser;
+      var req = {conference: {}};
+      var res = {
+        json: function(code) {
+          expect(code).to.equal(500);
+          done();
+        }
+      };
+      middleware(req, res, function() {
+        return done(new Error());
+      });
+    });
+
+    it('should set req.user if member is found', function(done) {
+      var member = {_id: 1};
+      mockery.registerMock('../../core/conference', {
+        addUser: function(conference, user, callback) {
+          return callback();
+        },
+        getMember: function(conference, user, callback) {
+          return callback(null, member);
+        }
+      });
+
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUser;
+      var req = {conference: {}};
+      var res = {
+        json: function() {
+          done(new Error());
+        }
+      };
+      middleware(req, res, function() {
+        expect(req.user).to.deep.equals(member);
+        done();
+      });
+    });
+
+    it('should call next when no errors', function(done) {
+      var member = {_id: 1};
+      mockery.registerMock('../../core/conference', {
+        addUser: function(conference, user, callback) {
+          return callback();
+        },
+        getMember: function(conference, user, callback) {
+          return callback(null, member);
+        }
+      });
+
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUser;
+      var req = {conference: {}};
+      var res = {
+        json: function() {
+          done(new Error());
+        }
+      };
+      middleware(req, res, done);
+    });
+  });
+
+  describe('createConference function', function() {
+
+    it('should call next if req.conference exists', function(done) {
+      mockery.registerMock('../../core/conference', {
+      });
+
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).createConference;
+      var req = {conference: {}, params: {id: 1}};
+      var res = {
+        json: function() {
+          done(new Error());
+        }
+      };
+      middleware(req, res, done);
+    });
+
+    it('should send back 500 when conference#create fails', function(done) {
+      mockery.registerMock('../../core/conference', {
+        create: function(conf, callback) {
+          return callback(new Error());
+        }
+      });
+
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).createConference;
+      var req = {params: {id: 1}};
+      var res = {
+        json: function(code) {
+          expect(code).to.equals(500);
+          done();
+        }
+      };
+      middleware(req, res, function() {
+        done(new Error());
+      });
+    });
+
+    it('should fill request when conference#create created conference', function(done) {
+      var result = {_id: 1};
+      mockery.registerMock('../../core/conference', {
+        create: function(conf, callback) {
+          return callback(null, result);
+        }
+      });
+
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).createConference;
+      var req = {params: {id: 1}};
+      var res = {
+        json: function() {
+          done(new Error());
+        }
+      };
+      middleware(req, res, function() {
+        expect(req.created).to.be.true;
+        expect(req.conference).to.deep.equal(result);
+        expect(req.user).to.not.exists;
+        done();
+      });
+    });
+
+    it('should set the req.user when conference#create result contains members', function(done) {
+      var member1 = {_id: 2};
+      var member2 = {_id: 3};
+      var result = {_id: 1, members: [member1, member2]};
+      mockery.registerMock('../../core/conference', {
+        create: function(conf, callback) {
+          return callback(null, result);
+        }
+      });
+
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).createConference;
+      var req = {params: {id: 1}};
+      var res = {
+        json: function() {
+          done(new Error());
+        }
+      };
+      middleware(req, res, function() {
+        expect(req.user).to.deep.equals(member1);
+        done();
       });
     });
   });

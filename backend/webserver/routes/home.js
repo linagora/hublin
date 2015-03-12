@@ -20,7 +20,7 @@ module.exports = function(dependencies) {
   router.get('/embed/button', controllers.embedButton);
   router.get('/:id', middlewares.checkIdForCreation, middlewares.load,
              conference.lazyArchive(true), user.createForConference,
-             conference.addUserOrCreate, controllers.liveconference);
+             conference.addUser, conference.createConference, controllers.liveconference);
   router.get('/', user.loadFromToken, conference.loadFromMemberToken, controllers.meetings);
 
   return router;
