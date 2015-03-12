@@ -266,6 +266,16 @@ module.exports = function(mixin, testEnv) {
     };
   };
 
+  mixin.httpStatusCodeJsonResponse = function(status, done) {
+    return {
+      json: function(s) {
+        expect(s).to.equal(status);
+
+        done();
+      }
+    };
+  };
+
   mixin.checkAPImemberAgainstMongooseDocument = checkAPImemberAgainstMongooseDocument;
 
   mixin.callbacks = {
