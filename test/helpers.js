@@ -142,6 +142,16 @@ function mockPubSub(path, localStub, globalStub) {
   mockery.registerMock(path, mockedPubSub);
 }
 
+function checkAPImemberAgainstMongooseDocument(member, mongooseDoc) {
+  var memberDoc = {
+    _id: mongooseDoc._id.toString(),
+    objectType: mongooseDoc.objectType,
+    displayName: mongooseDoc.displayName,
+    status: mongooseDoc.status
+  };
+  expect(member).to.deep.equal(memberDoc);
+}
+
 /**
  *
  * @param {object} mixin
@@ -255,6 +265,8 @@ module.exports = function(mixin, testEnv) {
       }
     };
   };
+
+  mixin.checkAPImemberAgainstMongooseDocument = checkAPImemberAgainstMongooseDocument;
 
   mixin.callbacks = {
     noError: function(done) {

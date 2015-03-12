@@ -2,6 +2,7 @@
 
 var conference = require('../../core/conference');
 var AUTHORIZED_FIELDS = ['displayName'];
+var extend = require('extend');
 
 function _sanitizeAndValidateMember(member) {
   if (!member.objectType || !member.id) {
@@ -15,6 +16,28 @@ function _sanitizeAndValidateMember(member) {
   return sanitizedMember;
 }
 
+function _transformConferenceMember(member) {
+  var sanitizedMember = {
+    objectType: member.objectType,
+    _id: member._id,
+    displayName: member.displayName,
+    status: member.status
+  };
+  return sanitizedMember;
+}
+
+function _transformConferenceMembers(members) {
+  return members.map(_transformConferenceMember);
+}
+
+function _transformConference(conference) {
+  var sanitizedConference = extend(true, {}, conference);
+  delete sanitizedConference.history;
+  if (conference.members) {
+    sanitizedConference.members = _transformConferenceMembers(sanitizedConference.members);
+  }
+  return sanitizedConference;
+}
 
 /**
  * @param {object} dependencies
@@ -62,11 +85,11 @@ module.exports = function(dependencies) {
       if (isInviteRequest()) {
         return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Can not invite members using this endpoint. Check the dev documentation'}});
       }
-      return res.json(200, req.conference);
+      return res.json(200, _transformConference(req.conference.toObject()));
     }
 
     if (!isInviteRequest()) {
-      return res.json(201, req.conference);
+      return res.json(201, _transformConference(req.conference.toObject()));
     }
 
     var invitedMembers = [];
@@ -87,7 +110,7 @@ module.exports = function(dependencies) {
         logger.error('Error while inviting members', err);
         return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
       }
-      return res.send(202, req.conference);
+      return res.send(202, _transformConference(req.conference.toObject()));
     });
   }
 
@@ -100,7 +123,8 @@ module.exports = function(dependencies) {
     if (!conf) {
       return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Conference is missing'}});
     }
-    return res.json(200, conf.members || []);
+    var sanitizedMembers = conf.members ? _transformConferenceMembers(conf.toObject().members) : [];
+    return res.json(200, sanitizedMembers);
   }
 
   function updateMemberField(req, res) {
@@ -128,10 +152,11 @@ module.exports = function(dependencies) {
     conference.updateMemberField(conf, member[0], field, data.value, function(err) {
       if (err) {
         logger.error('Can not update member %e', err);
-        return res.json(500, {error: {code: 500, message: 'Can not update member', details: err.message}});
+        return res.json(500, {error: {code: 500, message: 'Server Error', details: 'Can not update member'}});
       }
-      member[0][field] = data.value;
-      return res.json(200, member);
+      var returnedMember = member[0].toObject();
+      returnedMember[field] = data.value;
+      return res.json(200, _transformConferenceMember(returnedMember));
     });
   }
 
@@ -139,7 +164,7 @@ module.exports = function(dependencies) {
     if (!req.conference) {
       return res.json(404, {error: {code: 404, message: 'Not found', details: 'No such conference'}});
     }
-    return res.json(200, req.conference);
+    return res.json(200, _transformConference(req.conference.toObject()));
   }
 
   return {

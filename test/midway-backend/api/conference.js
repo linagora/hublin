@@ -6,8 +6,6 @@ var expect = require('chai').expect,
     apiHelpers = require('../../helpers/api-helpers.js');
 
 describe('The conference API', function() {
-  var creator, attendee, conferenceId;
-
   var application;
   var deps = {
     logger: require('../fixtures/logger-noop')()
@@ -17,6 +15,21 @@ describe('The conference API', function() {
   };
 
   beforeEach(function(done) {
+    function checkMember(member) {
+      expect(member).to.not.have.property('id');
+      expect(member).to.not.have.property('token');
+      expect(member).to.have.property('_id');
+      expect(member).to.have.property('displayName');
+      expect(member).to.have.property('status');
+    }
+    this.checkMember = checkMember;
+
+    this.checkConferenceRestSanitization = function(conference) {
+      expect(conference).to.not.have.property('history');
+      expect(conference.members).to.be.an('array');
+      conference.members.forEach(checkMember);
+
+    };
     this.testEnv.initCore(function() {
       var router = apiHelpers.getRouter('conferences', dependencies);
       application = apiHelpers.getApplication(router);
@@ -47,42 +60,34 @@ describe('The conference API', function() {
   }
 
   describe('GET /api/conferences/:id', function() {
-    it.skip('should send back 404 if the conference is not found', function(done) {
+    beforeEach(function(done) {
+      var self = this;
+      apiHelpers.applyDeployment('someMembersConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+        self.conference = models.conference[0];
+        done();
+      });
+
+    });
+
+    it('should send back 404 if the conference is not found', function(done) {
       request(application)
         .get('/api/conferences/54e5e86e65806d7c16764b79')
         .expect(404)
         .end(done);
     });
 
-    it.skip('should send back 500 if there is a server error', function(done) {
+    it('should send back 200 and the conference', function(done) {
+      var checkConferenceRestSanitization = this.checkConferenceRestSanitization;
       request(application)
-        .get('/api/conferences/123456')
-        .expect(500)
-        .end(done);
-    });
-
-    it.skip('should send back 200 with the conference if it is found', function(done) {
-      request(application)
-        .get('/api/conferences/' + conferenceId)
+        .get('/api/conferences/someMembersConference')
         .expect(200)
         .end(function(err, res) {
           expect(err).to.not.exist;
-          delete res.body.timestamps.creation;
-          expect(res.body).to.deep.equal(
-            {
-              '__v': 0,
-              '_id': conferenceId,
-              'attendees': [
-                {
-                  'status': 'online',
-                  'user': attendee._id.toString()
-                }
-              ],
-              'creator': creator._id.toString(),
-              'history': [],
-              'schemaVersion': 1,
-              'timestamps': {}
-            });
+          expect(res.body._id).to.equal('someMembersConference');
+          checkConferenceRestSanitization(res.body);
           done();
         });
     });
@@ -147,46 +152,6 @@ describe('The conference API', function() {
           });
       });
     });
-
-  });
-
-  describe.skip('GET /api/conferences', function() {
-    it('should send back 200 with the conference if it is found', function(done) {
-      request(application)
-        .get('/api/conferences')
-        .expect(200)
-        .end(function(err, res) {
-          expect(err).to.not.exist;
-          delete res.body[0].timestamps.creation;
-          delete res.body[0].creator.timestamps.creation;
-
-          expect(res.body).to.deep.equal([
-            {
-              '__v': 0,
-              '_id': conferenceId,
-              'attendees': [
-                {
-                  'status': 'online',
-                  'user': attendee._id.toString()
-                }
-              ],
-              'creator': {
-                '__v': 0,
-                '_id': creator._id.toString(),
-                'emails': [
-                  'jdoe@lng.net'
-                ],
-                'schemaVersion': 1,
-                'timestamps': {}
-              },
-              'history': [],
-              'schemaVersion': 1,
-              'timestamps': {}
-            }
-          ]);
-          done();
-        });
-    });
   });
 
   describe('PUT /api/conferences/:id?displayName=XXX', function() {
@@ -206,7 +171,7 @@ describe('The conference API', function() {
     it('should return 201 if the conference is correctly created', function(done) {
       var name = '123456789';
       var displayName = 'Yo Lo';
-
+      var checkConferenceRestSanitization = this.checkConferenceRestSanitization;
       request(application)
         .put('/api/conferences/' + name + '?displayName=' + displayName)
         .send()
@@ -215,7 +180,7 @@ describe('The conference API', function() {
           expect(err).to.not.exist;
           expect(res.body._id).to.exist;
           expect(res.body._id).to.equal(name);
-          expect(res.body.members).to.exist;
+          checkConferenceRestSanitization(res.body);
           expect(res.body.members.length).to.equal(1);
           expect(res.body.members[0].displayName).to.equal(displayName);
           expect(res.body.members[0].objectType).to.equal('hublin:anonymous');
@@ -226,7 +191,7 @@ describe('The conference API', function() {
     it('should return 200 if the conference already exists', function(done) {
       var name = '123456789';
       var displayName = 'Yo Lo';
-
+      var checkConferenceRestSanitization = this.checkConferenceRestSanitization;
       apiHelpers.createConference(name, [], [], function(err) {
         if (err) {
           return done(err);
@@ -240,6 +205,7 @@ describe('The conference API', function() {
             expect(err).to.not.exist;
             expect(res.body._id).to.exist;
             expect(res.body._id).to.equal(name);
+            checkConferenceRestSanitization(res.body);
             checkUserIsConferenceMember(name, displayName, done);
           });
       });
@@ -271,7 +237,7 @@ describe('The conference API', function() {
 
     it('should return 201 if the conference is correctly created', function(done) {
       var name = '123456789';
-
+      var checkConferenceRestSanitization = this.checkConferenceRestSanitization;
       request(application)
         .put('/api/conferences/' + name)
         .send()
@@ -280,7 +246,7 @@ describe('The conference API', function() {
           expect(err).to.not.exist;
           expect(res.body._id).to.exist;
           expect(res.body._id).to.equal(name);
-          expect(res.body.members).to.exist;
+          checkConferenceRestSanitization(res.body);
           expect(res.body.members.length).to.equal(1);
           expect(res.body.members[0].objectType).to.equal('hublin:anonymous');
           done();
@@ -289,6 +255,7 @@ describe('The conference API', function() {
 
     it('should return 200 if the conference already exists', function(done) {
       var name = '123456789';
+      var checkConferenceRestSanitization = this.checkConferenceRestSanitization;
 
       apiHelpers.createConference(name, [], [], function(err) {
         if (err) {
@@ -303,6 +270,7 @@ describe('The conference API', function() {
             expect(err).to.not.exist;
             expect(res.body._id).to.exist;
             expect(res.body._id).to.equal(name);
+            checkConferenceRestSanitization(res.body);
 
             apiHelpers.getConference(name, function(err, conf) {
               if (err) {
@@ -432,6 +400,8 @@ describe('The conference API', function() {
     });
 
     it('should send back 200 and attendees of the conference', function(done) {
+      var checkAPImemberAgainstMongooseDocument = this.helpers.checkAPImemberAgainstMongooseDocument;
+      var checkMember = this.checkMember;
       apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
         if (err) {
           return done(err);
@@ -446,11 +416,8 @@ describe('The conference API', function() {
             expect(res.body).to.be.an.array;
             expect(res.body.length).to.equal(1);
             var returnedMember = res.body[0];
-            expect(returnedMember._id).to.equal(confMember._id.toString());
-            expect(returnedMember.id).to.equal(confMember.id);
-            expect(returnedMember.objectType).to.equal(confMember.objectType);
-            expect(returnedMember.displayName).to.equal(confMember.displayName);
-
+            checkMember(returnedMember);
+            checkAPImemberAgainstMongooseDocument(returnedMember, confMember);
             done();
           });
       });
@@ -581,6 +548,7 @@ describe('The conference API', function() {
     });
 
     it('should send back 200 and have updated data', function(done) {
+      var checkMember = this.checkMember;
       apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
         if (err) {
           return done(err);
@@ -596,7 +564,8 @@ describe('The conference API', function() {
             if (err) {
               return done(err);
             }
-            expect(data.body[0].displayName).to.equal('Fred');
+            checkMember(data.body);
+            expect(data.body.displayName).to.equal('Fred');
             done();
           });
       });
