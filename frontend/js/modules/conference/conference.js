@@ -71,8 +71,43 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       updateMemberField: updateMemberField
     };
   }])
-  .controller('meetingsLandingPageController', ['$scope', '$q', function($scope, $q) {
-    console.log('meetingsLandingPageController');
+  .factory('feedbackAPI', ['Restangular', function(Restangular) {
+    function postFeedback(data) {
+      return Restangular.all('api/feedback').post(data);
+    }
+
+    return {
+      postFeedback: postFeedback
+    };
+  }])
+  .controller('meetingsLandingPageController', ['$scope', '$alert', 'feedbackAPI', function($scope, $alert, feedbackAPI) {
+    $scope.alert = function(type, message) {
+      $alert({
+        content: message,
+        container: '.feedback-form',
+        placement: 'top',
+        type: type,
+        duration: 3,
+        show: true
+      });
+    };
+
+    $scope.sendFeedback = function() {
+      if ($scope.sendingFeedbackFrom) {
+        return;
+      }
+
+      $scope.sendingFeedbackFrom = true;
+
+      feedbackAPI.postFeedback($scope.feedbackForm).then(function() {
+        $scope.alert('success', 'Your message was sent successfully. Thanks for the feedback!');
+      }, function() {
+        $scope.alert('warning', 'Oops, this is embarrassing. Please try again later!');
+      }).finally (function() {
+        $scope.feedbackForm = {};
+        $scope.sendingFeedbackFrom = false;
+      });
+    };
   }])
   .directive('conferenceCreateForm', ['$window', '$log', 'uuid4', 'conferenceService', '$location', 'URI',
     function($window, $log, uuid4, conferenceService, $location, URI) {

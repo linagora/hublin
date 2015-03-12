@@ -10,21 +10,24 @@ var Meetings = new AwesomeModule('linagora.io.meetings', {
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.core.logger', 'logger'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.webrtc', 'webrtc'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.invitation', 'invitation'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.io.mailer', 'mailer'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.emailInvitation', 'emailInvitation')
   ],
   states: {
     lib: function(dependencies, callback) {
-      var all = require('./webserver/routes/all')(dependencies);
-      var meetings = require('./webserver/routes/meetings')(dependencies);
-      var home = require('./webserver/routes/home')(dependencies);
-      var conferences = require('./webserver/routes/conferences')(dependencies);
+      var all = require('./webserver/routes/all')(dependencies),
+          meetings = require('./webserver/routes/meetings')(dependencies),
+          home = require('./webserver/routes/home')(dependencies),
+          conferences = require('./webserver/routes/conferences')(dependencies),
+          feedback = require('./webserver/routes/feedback')(dependencies);
 
       return callback(null, {
         api: {
           meetings: meetings,
           all: all,
           conferences: conferences,
-          home: home
+          home: home,
+          feedback: feedback
         }
       });
     },
@@ -33,10 +36,12 @@ var Meetings = new AwesomeModule('linagora.io.meetings', {
       require('./core/pubsub').init(dependencies);
 
       var webserver = dependencies('webserver');
+
       webserver.application.use('/', this.api.all);
       webserver.application.use('/', this.api.conferences);
       webserver.application.use('/', this.api.meetings);
       webserver.application.use('/', this.api.home);
+      webserver.application.use('/', this.api.feedback);
 
       return callback();
     },
