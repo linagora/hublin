@@ -1,10 +1,10 @@
-Meetings
-=======
+# Hubl.in
 
-This is a social video conference system for enterprises & organizations.
+[https://hubl.in](Hubl.in) is a free and open source video conference solution built with love and designed with ethics in mind.
+It's the best way to initiate a communication anywhere with anybody and brings real time conversation to the next level.
+Hubl.in allows free communication without additional plugins.
 
-Installation
-------------
+## Installation
 
 1. clone the repository
 
@@ -21,8 +21,7 @@ Installation
         cd meetings
         npm install
 
-Testing
--------
+## Testing
 
 You can check that everything works by launching the test suite:
 
@@ -43,8 +42,7 @@ Some specialized Grunt tasks are available :
     grunt test-midway-bakend # only run the midway backend tests
     grunt test # launch all the testsuite
 
-Fixtures
---------
+## Fixtures
 
 Fixtures can be configured in the fixtures folder and injected in the system using grunt:
 
@@ -52,27 +50,24 @@ Fixtures can be configured in the fixtures folder and injected in the system usi
 
 Note that this will override all the current configuration resources with the fixtures ones.
 
-Starting the server
-------------------
+## Starting the server
 
 Use npm start to start the server !
 
     npm start
 
 
-Develop into Meetings
----------------------
+## Develop into Hubl.in
 
 Running `grunt dev` will start the server in development mode. Whenever you
 make changes to server files, the server will be restarted. Make sure you have
-started the mongo, redis and elasticsearch servers beforehand.
+started the mongodb and redis servers beforehand.
 
 In addition, you can run `grunt debug` to start the node-inspector debugger
 server. Visit the displayed URL in Chrome or Opera to start the graphical
-debugging session. Note that startup takes a while, you must wait until the ESN
+debugging session. Note that startup takes a while, you must wait until the Hubl.in
 webserver starts to do anything meaningful.
 
-Licence
--------
+## License
 
 [Affero GPL v3](http://www.gnu.org/licenses/agpl-3.0.html)
