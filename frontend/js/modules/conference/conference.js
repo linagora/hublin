@@ -1,5 +1,6 @@
 'use strict';
 
+
 angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meetings.session'])
   .factory('conferenceService', ['conferenceAPI', 'session', function(conferenceAPI, session) {
     function create(conferenceName, displayName) {
@@ -168,7 +169,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       restrict: 'E',
       templateUrl: '/views/modules/live-conference/username-form.html'
     };
-  }]).directive('browserAuthorizationDialog', ['$window', function($window) {
+  }]).directive('browserAuthorizationDialog', ['$window', '$rootScope', function($window, $rootScope) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/live-conference/browser-authorization-dialog.html',
@@ -178,10 +179,17 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
           element.modal('hide');
         });
 
+        function interceptStream(callback) {
+          return function(mediaStream) {
+            $rootScope.$emit('localMediaStream', mediaStream);
+            callback(mediaStream);
+          };
+        }
+
         var oldGetUserMedia = $window.getUserMedia;
         $window.getUserMedia = function getUserMedia(constraints, successCallback, errorCallback) {
           element.modal('show');
-          oldGetUserMedia(constraints, successCallback, errorCallback);
+          oldGetUserMedia(constraints, interceptStream(successCallback), errorCallback);
         };
       }
     };
