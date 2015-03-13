@@ -10,7 +10,7 @@
         ul.nav.navbar-nav.navbar-right
   section.create.text-center
     div.create-conference-div
-      h2.tagline An easy and free OpenPaaS video service
+      h2.tagline #{__('An easy and free VideoChat service')}
     #supported
       conference-create-form.conference-box(bs-affix data-offset-top="200")
     #unsupported.text-center
@@ -19,61 +19,60 @@
     .container
       .row.text-center
         .col-lg-12
-          h2 Start with Hubl.in!
+          h2 #{__('Start with Hubl.in!')}
       .row.text-center
         .col-md-3
           img(src='http://open-paas.org/images/feature_contact.jpg')
-          p Choose a new room name or stay with the default. Fancy or random ? The choice is yours.
+          p #{__('Choose a new room name or stay with the default. Fancy or random ? The choice is yours.')}
         .col-md-3
           img(src='http://open-paas.org/images/feature_profile.jpg')
-          p Allow your browser to use your camera and microphone. It seems that 100% of video conferences are more efficient with sound and video.
+          p #{__('Allow your browser to use your camera and microphone. It seems that 100% of video conferences are more efficient with sound and video.')}
         .col-md-3
           img(src='http://open-paas.org/images/feature_videoconference.jpg')
-          p You're in! Invite your contacts to join the room: your contacts can invite their contacts, who can invite their contacts...
+          p #{__('You\'re in! Invite your contacts to join the room: your contacts can invite their own contacts, who can invite their own contacts...')}
         .col-md-3
           img(src='http://open-paas.org/images/feature_search.jpg')
-          p That's all. Enjoy Hubl.in from your desktop, smartphone or tablet. It's open, free, easy to use and always available
+          p #{__('Enjoy! Use Hubl.in from your desktop, smartphone or tablet. It\'s open, free, easy to use and always available.')}
   section.about.bg-light-gray#about
     .container
       .row
         .col-lg-12.text-center
-          h2.section-heading What is Hubl.in?
-          h3.section-subheading.text-muted Hubl.in is a free and open source video conference solution built with love and ethic. It's the best way to initiate a communication anywhere with anybody and brings real time conversation to the next level. Hubl.in allows free communication without additional plugins. If you can read this page, you probably can use Hubl.in right now. Give it a try !
+          h2.section-heading #{__('What is Hubl.in?')}
+          h3.section-subheading.text-muted #{__('Hubl.in is a free and open source video conference solution built with love and ethic. It\'s the best way to initiate a communication anywhere with anybody and brings real time conversation to the next level. Hubl.in allows free communication without additional plugins. If you can read this page, you probably can use Hubl.in right now. Give it a try!')}
       .row.text-center
         .col-md-4
           span.fa-stack.fa-4x
             i.fa.fa-square.fa-stack-2x.text-primary
             i.fa.fa-sort-alpha-asc.fa-stack-1x.fa-inverse
-          h4.service-heading Complete & Sweet
-          p.text-muted Simple but full featured: temporarily disable your microphone or camera, invite easily your guests, switch camera between attendees and much more!
+          h4.service-heading #{__('Complete')}
+          p.text-muted #{__('Simple but full featured: temporarily disable your microphone or camera, invite easily your guests, switch camera between attendees and much more!')}
         .col-md-4
-          a(href="#webRTCModal" data-toggle="modal")
-            span.fa-stack.fa-4x
-              i.fa.fa-square.fa-stack-2x.text-primary
-              i.fa.fa-user-secret.fa-stack-1x.fa-inverse
-          h4.service-heading Safe
-          p.text-muted Based on WebRTC technologies which allows decentralized  communication between browsers. Your video conference is not streamed to Hubl.in in any way.
+          span.fa-stack.fa-4x
+            i.fa.fa-square.fa-stack-2x.text-primary
+            i.fa.fa-user-secret.fa-stack-1x.fa-inverse
+          h4.service-heading #{__('Safe')}
+          p.text-muted #{__('Based on')} #[a(href='#webRTCModal', data-toggle='modal') WebRTC] #{__('which allows decentralized  communication between browsers. Your video conference is not streamed to Hubl.in in any way.')}
         .col-md-4
           span.fa-stack.fa-4x
             i.fa.fa-square.fa-stack-2x.text-primary
             i.fa.fa-code.fa-stack-1x.fa-inverse
-          h4.service-heading Open Source
-          p.text-muted Strongly involved in open source philosophy, Hubl.in is made available in the respect of its users. Feel free to consult, react or contribute to the code on #[a.fa.fa-github(href='http://github.com/linagora/hublin' target='_blank')  Github]
+          h4.service-heading #{__('Open Source')}
+          p.text-muted #{__('Strongly involved in open source philosophy, Hubl.in is made available in the respect of its users. Feel free to consult, react or contribute to the code on')} #[a.fa.fa-github(href='http://github.com/linagora/hublin' target='_blank') Github]
   section.social#social
     .container
       .row
         .col-lg-6.text-justify
-          h2 About us  ?
+          h2 #{__('About us')}
           h4
             a(href='http://open-paas.org')
               img(src='../../images/oplogo.png')
-          p Hubl.in is a video conference service provided by #[a(href='http://open-paas.org') Open-PaaS], the open social platform. As the OpenPaaS team, we are pleased to separate this service from of our main product and let everyone enjoy it.  We are enthusiastic open source developers and we hope you will live Hubl.in as we do. Respectful to open source philosophy and standards, for us community contributions are like Christmas presents. Don't hesitate to get in touch.
+          p #{__('Hubl.in is a video conference service provided by')} #[a(href='http://open-paas.org') Open-PaaS], #{__('the open social platform. As the OpenPaaS team, we are pleased to separate this service from of our main product and let everyone enjoy it.  We are enthusiastic open source developers and we hope you will love Hubl.in as we do. Respectful to open source philosophy and standards, for us community contributions are like Christmas presents. Feel free to get in touch!')}
           h4
             a(href='http://linagora.com')
               img(src='../../images/linagora.png')
-          p Thanks to #[a(href='http://linagora.com') Linagora] which supports the open source world and gives us the opportunity to release several projects such as Hubl.in in this domain.
+          p #[a(href='http://linagora.com') Linagora] #{__('being a fervent supporter of the free and open source world, offers its developers the opportunity to participate in its awesome free and open source projects, such as Hubl.in.')}
         .col-lg-6.text-center
-          h2 Follow Us!
+          h2 #{__('Follow Us!')}
           ul.social-buttons
             li
               a(href='https://www.youtube.com/channel/UCgCZPNq1-g49VfOaxjbExlg' target='_blank')
@@ -100,38 +99,38 @@
       .row
         .col-lg-12.text-center
           h2.section-heading #{__('Leave us a message')}
-          h3.section-subheading.text-muted #{__('We love feedbacks')}!
+          h3.section-subheading.text-muted #{__('We love feedback')}!
       .row
         .col-lg-12
           form.feedback-form(ng-submit='sendFeedback()')
             .row
               .col-md-6
                 .form-group
-                  input#name.form-control(type='text', ng-model='feedbackForm.name', placeholder='Your Name *', required='', data-validation-required-message='Please enter your name.')
+                  input#name.form-control(type='text', ng-model='feedbackForm.name', placeholder="#{__('Your Name')} *", required='', data-validation-required-message="#{__('Please enter your name.')}")
                   p.help-block.text-danger
                 .form-group
-                  input#email.form-control(type='email', ng-model='feedbackForm.email', placeholder='Your Email *', required='', data-validation-required-message='Please enter your email address.')
+                  input#email.form-control(type='email', ng-model='feedbackForm.email', placeholder="#{__('Your Email')} *", required='', data-validation-required-message="#{__('Please enter your email address.')}")
                   p.help-block.text-danger
               .col-md-6
                 .form-group
-                  textarea#message.form-control(placeholder='Your Message *', ng-model='feedbackForm.text', required='', data-validation-required-message='Please enter a message.')
+                  textarea#message.form-control(placeholder="#{__('Your Message')} *", ng-model='feedbackForm.text', required='', data-validation-required-message="#{__('Please enter a message.')}")
                   p.help-block.text-danger
               .clearfix
               .col-lg-12.text-center
                 #success
-                button.btn.btn-xl(type='submit', ng-disabled='sendingFeedbackFrom') Send Message
+                button.btn.btn-xl(type='submit', ng-disabled='sendingFeedbackFrom') #{__('Send Message')}
   footer
     .container
       .row
         .col-md-4
-          span.copyright Copyright &copy; Linagora 2015
+          span.copyright Copyright &copy; Linagora 2015 - #[a(href='http://open-paas.org') OpenPaaS] #{__('is powered by')} #[a(href='http://linagora.com') Linagora]
         .col-md-4
         .col-md-4
           ul.list-inline.quicklinks
             li
-              a(href="#privacyPolicy" data-toggle="modal") Privacy Policy
+              a(href="#privacyPolicy" data-toggle="modal") #{__('Privacy Policy')}
             li
-              a(href="#useTerms" data-toggle="modal") Terms of Use
+              a(href="#useTerms" data-toggle="modal") #{__('Terms of Use')}
   #webRTCModal.full-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
     .modal-content
       .close-modal(data-dismiss='modal')
@@ -146,11 +145,11 @@
                 i.fa.fa-video-camera.fa-stack-1x.fa-inverse
               h2 Web RTC
               p.item-intro.text-muted Web Real-Time Communication
-              p WebRTC is a free, open project that provides browsers and mobile applications with Real-Time Communications (RTC) capabilities via simple APIs. The WebRTC components have been optimized to best serve this purpose.
-              p Take a look to #[a(href='http://www.webrtc.org/') Web RTC website] for more information.
+              p #{__('WebRTC is a free, open project that provides browsers and mobile applications with Real-Time Communications (RTC) capabilities via simple APIs. The WebRTC components have been optimized to best serve this purpose.')}
+              p #{__('Take a look at')} #[a(href='http://www.webrtc.org/') WebRTC] #{__('for more information.')}
               button.btn.btn-primary(type='button', data-dismiss='modal')
                 i.fa.fa-times
-                | Close
+                | #{__('Close')}
   #privacyPolicy.full-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
     .modal-content
       .close-modal(data-dismiss='modal')

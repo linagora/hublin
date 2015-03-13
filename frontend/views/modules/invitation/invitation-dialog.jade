@@ -4,18 +4,18 @@
       .modal-header
         button.close(type='button', data-dismiss='modal', aria-label='Close')
           span(aria-hidden='true') &times;
-        h4.hidden-xs Invite your contacts to join the room
-        h4.visible-xs Invite your contacts
+        h4.hidden-xs #{__('Invite your contacts to join the room')}
+        h4.visible-xs #{__('Invite your contacts')}
       .modal-body
-        p Feeling lonely? Your conference could use a few more participants.
-        h5 Send invitations via email
+        p #{__('Feeling lonely? Your conference could use a few more attendees.')}
+        h5 #{__('Send invitations via email')}
         .row
           .col-xs-10.col-xs-offset-1
             form(name='inviteForm')
               div.input-group(ng-class='{ "has-error": formHasError(inviteForm) }')
-                input.form-control(type='text', name='inviteText', ng-model='inviteText', placeholder='Enter your contact\'s Email', bs-typeahead='', ng-options='item.id for item in autocomplete($viewValue)', invitation-dialog-validate='')
+                input.form-control(type='text', name='inviteText', ng-model='inviteText', placeholder="#{__('Please enter an email address')}", bs-typeahead='', ng-options='item.id for item in autocomplete($viewValue)', invitation-dialog-validate='')
                 span.input-group-btn
-                  input.btn.btn-default(type='submit', ng-disabled='inviteForm.inviteText.$invalid', ng-click='add()', value='Add')
+                  input.btn.btn-default(type='submit', ng-disabled='inviteForm.inviteText.$invalid', ng-click='add()', value="#{__('Add')}")
           .col-xs-10.col-sm-8.col-sm-offset-2.center
             ul.invitation-user-list
               li(ng-repeat='(id,contact) in contacts')
@@ -23,8 +23,8 @@
           .row
             .col-xs-10.col-xs-offset-1
               .error
-              button.btn.btn-default(type='button', ng-disabled='contactCount < 1', ng-click='sendInvitations()') Send Invitations
+              button.btn.btn-default(type='button', ng-disabled='contactCount < 1', ng-click='sendInvitations()') #{__('Send Invitations')}
       .modal-footer
         span.pull-right
-          | You can also share this link:&nbsp;
+          | #{__('You can also share this link:')}&nbsp;
           a(href='', clip-copy='conference.href' clip-click='copyLink($event)') {{conference.href}}
