@@ -59,7 +59,7 @@ module.exports = function(dependencies) {
         id: uuid.v4(),
         displayName: req.query.displayName || 'anonymous',
         connection: {
-          ipAddress: '',
+          ipAddress: req.ip,
           userAgent: req.headers['user-agent']
         }
       };
