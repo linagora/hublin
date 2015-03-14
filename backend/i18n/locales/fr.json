@@ -1,5 +1,4 @@
 {
-  "Your Name": "Votre nom",
   "Set your name in this room": "Définissez votre nom dans cette conférence",
   "Hello Meetings !": "Bonjour Meetings !",
   "%s has joined the conference": "%s a rejoint la conférence",
@@ -79,5 +78,6 @@
   "Add": "Ajouter",
   "Send Invitations": "Envoyer les invitations",
   "You can also share this link:": "Vous pouvez aussi partager ce lien :",
-  "Sorry but something bad just happened, developers have been notified": "Désolé mais quelque chose d'imprévu est survenu, les développeurs ont été prévenus"
+  "Sorry but something bad just happened, developers have been notified": "Désolé mais quelque chose d'imprévu est survenu, les développeurs ont été prévenus",
+  "Next": "Suivant"
 }
