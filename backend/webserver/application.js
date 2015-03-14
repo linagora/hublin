@@ -46,6 +46,10 @@ application.use('/images', express.static(FRONTEND_PATH + '/images'));
 application.use('/js', express.static(FRONTEND_PATH + '/js'));
 application.use('/css', express.static(CSS_PATH));
 
+// This needs to be initialized before the body parser
+var i18n = require('../i18n');
+application.use(i18n.init);
+
 var bodyParser = require('body-parser');
 application.use(bodyParser.json());
 application.use(bodyParser.urlencoded({ extended: false }));
@@ -63,9 +67,6 @@ var sessionMiddleware = cdm(session({
 }));
 application.use(sessionMiddleware);
 require('./middlewares/setup-sessions')({}).setupSession(sessionMiddleware);
-
-var i18n = require('../i18n');
-application.use(i18n.init);
 
 application.use(function(req, res, next) {
   // put the user in locals
