@@ -202,13 +202,15 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       'awesome', 'yolo', 'wooot', 'super', 'magic', 'simple', 'fast', 'open', 'free', 'great', 'cool', 'pretty',
       'exquisite', 'stunning', 'radiant', 'amazing', 'delightful', 'dreamy', 'fine', 'hypnotic', 'marvelous', 'sublime',
       'smoking', 'adorable', 'beautiful', 'handsome', 'lovely', 'bewitching', 'breathtaking', 'charming', 'divine',
-      'enchanting', 'fabulous', 'glamorous', 'perfect', 'spectacular', 'wonderful'
+      'enchanting', 'fabulous', 'glamorous', 'perfect', 'spectacular', 'wonderful', 'magnificent', 'wondrous',
+      'miraculous', 'attractive', 'galvanizing', 'remarkable', 'sensational', 'prodigious'
     ],
     nouns: [
       'toulouse', 'paris', 'lyon', 'montpellier', 'hamburg', 'canada', 'linux', 'mail', 'security', 'store', 'share',
       'software', 'paas', 'angular', 'agile', 'studio', 'config', 'service', 'app', 'video', 'webrtc', 'agenda',
       'montreal', 'vietnam', 'puteaux', 'software', 'node', 'conference', 'team', 'network', 'meeting', 'website',
-      'camera', 'grenoble', 'saas', 'iaas', 'db', 'france', 'germany', 'social'
+      'camera', 'grenoble', 'saas', 'iaas', 'db', 'france', 'germany', 'social', 'hanoi', 'barbecue', 'babyfoot',
+      'penguin', 'labs', 'tunisia', 'djerba', 'party', 'opensource', 'geeks'
     ]
   })
   .factory('conferenceNameGenerator', ['conferenceNameGeneratorConstants', function(nameGenerator) {
