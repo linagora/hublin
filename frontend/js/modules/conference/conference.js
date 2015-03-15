@@ -191,6 +191,13 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
     };
   }])
   .constant('conferenceNameGeneratorConstants', {
+    adverbs: [
+      'absentmindedly', 'adoringly', 'awkwardly', 'beautifully', 'briskly', 'brutally', 'carefully', 'cheerfully',
+      'competitively', 'eagerly', 'effortlessly', 'extravagantly', 'girlishly', 'gracefully', 'grimly', 'happily',
+      'halfheartedly', 'hungrily', 'lazily', 'lifelessly', 'loyally', 'quickly', 'quietly', 'quizzically', 'really',
+      'recklessly', 'remorsefully', 'ruthlessly', 'savagely', 'sloppily', 'so', 'stylishly', 'unabashedly',
+      'unevenly', 'urgently', 'well', 'wishfully', 'worriedly'
+    ],
     adjectives: [
       'awesome', 'yolo', 'wooot', 'super', 'magic', 'simple', 'fast', 'open', 'free', 'great', 'cool', 'pretty',
       'exquisite', 'stunning', 'radiant', 'amazing', 'delightful', 'dreamy', 'fine', 'hypnotic', 'marvelous', 'sublime',
@@ -207,9 +214,10 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
   .factory('conferenceNameGenerator', ['conferenceNameGeneratorConstants', function(nameGenerator) {
     return {
       getName: function() {
+        var adverb = nameGenerator.adverbs[Math.floor(Math.random() * nameGenerator.adverbs.length)];
         var adjective = nameGenerator.adjectives[Math.floor(Math.random() * nameGenerator.adjectives.length)];
         var noun = nameGenerator.nouns[Math.floor(Math.random() * nameGenerator.nouns.length)];
-        return adjective + '-' + noun;
+        return adverb + '-' + adjective + '-' + noun;
       }
     };
   }]);
