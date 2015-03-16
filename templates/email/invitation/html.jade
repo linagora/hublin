@@ -1,15 +1,45 @@
-include ../commons/header
+doctype html
+html.mail
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    include ../commons/font
+    style
+      include:less ../css/media.less
 
-h2 Hi there!
+  body
+    header.logo
+      include ../commons/logo
+    section.content
+      h1 Hi there!
 
-p
-  if (from.displayName === 'anonymous' || !from.displayName)
-    span Someone invites you to join the #{conference._id} video conference on&nbsp;
-  else
-    span #{from.displayName} invites you to join the #{conference._id} video conference on&nbsp;
+      p.textinvite
+        if (from.displayName === 'anonymous' || !from.displayName)
+          | Someone is inviting you to join&nbsp;
+          a.emphasize(href='https://hubl.in/?token=' + to.token) #{conference._id}
+          | , a video conference room on&nbsp;
+          a.emphasize(href="https://hubl.in") Hubl.in
+        else
+          span.emphasize #{from.displayName}
+          | &nbsp;invites you to join&nbsp;
+          a.emphasize(href='https://hubl.in/?token=' + to.token) #{conference._id}
+          | , a video conference room on&nbsp;
+          a.emphasize(href="https://hubl.in") Hubl.in
 
-  a(href="https://hubl.in") Hubl.in
+      .button
+        a.hublin-link-button(href='https://hubl.in/?token=' + to.token) Join the Room
 
-p: a(href='https://hubl.in/?token=#{to.token}') Click on this link to join.
+      p.link
+        | Or use this link:&nbsp;
+        a(href='https://hubl.in/?token=' + to.token) https://hubl.in/#{conference._id}
 
-include ../commons/footer
+      section.footer
+        h1 What is Hubl.in?
+        .explain
+          a(href="https://hubl.in") Hubl.in
+          | &nbsp;is a free and open source video conference solution built with love and ethic propelled by&nbsp;
+          a(href="http://open-paas.org") OpenPaaS
+          |. No additional plugins are required, no advertisements, only a great experience we are pleased to share with community.
+        .producer
+          | Hublin is coded with love by&nbsp;
+          a.linagora(href="http://linagora.com") Linagora

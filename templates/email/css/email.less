@@ -1,1 +1,93 @@
-@import "../../../frontend/css/hublin";
+@import "../../../frontend/css/variables.less";
+@import "../commons/logo.less";
+
+html, body {
+  font-family: 'Open Sans';
+  background-color: @gray-darkest;
+  color: @gray-dark;
+  width: 100%;
+  margin: 0;
+}
+
+.logo {
+  overflow: hidden;
+  margin: 10px;
+}
+
+.hublin-link-button {
+  display: inline-block;
+  margin-top: 0.5em;
+  padding: 0.2em 0.7em 0.3em;
+  max-width: 320px;
+  font-size: 2em;
+  background-color: @brand-primary;
+  color: @gray-lighter;
+  text-decoration: none;
+  border-radius: 4px;
+  box-shadow: 0px 1px 1px fade(@gray-dark, 10%) inset;
+}
+
+a {
+  color: @brand-primary;
+}
+
+.emphasize {
+  font-weight: bold;
+}
+
+.linagora {
+  color: @linagora-red;
+}
+
+.content {
+  border-radius: 10px;
+  width: 90%;
+  padding: 1%;
+  margin: 0 auto;
+  background-color: @gray-lighter;
+  text-align: center;
+
+  > h1 {
+    font-size: 2.2em;
+    color: @gray-dark;
+    border-bottom: 1px solid @gray-light;
+    margin: 0 0 0.5em;
+  }
+
+  .textinvite {
+    font-size: 1.2em;
+    color: @gray-dark;
+    padding: 0 0.2em;
+  }
+
+  .link {
+    margin-top: 0.5em;
+    font-size: 0.8em;
+  }
+}
+
+.footer {
+  border-top: 1px solid @gray-light;
+  font-size: 0.75em;
+  text-align: left;
+
+  > h1 {
+    color: @gray-dark;
+    font-size: 1em;
+    font-weight: normal;
+    margin: 0;
+  }
+
+  > * {
+    padding: 0 0.2em;
+  }
+
+  .producer {
+    text-align: right;
+    padding: 0 5px 2px 0;
+  }
+
+  .explain {
+    color: @gray;
+  }
+}
