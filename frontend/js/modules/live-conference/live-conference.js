@@ -61,9 +61,8 @@ angular.module('op.live-conference', [
   'session',
   'conferenceAPI',
   'easyRTCService',
-  'conferenceHelpers',
   'ConferenceState',
-  function($scope, $log, $timeout, $interval, session, conferenceAPI, easyRTCService, conferenceHelpers, ConferenceState) {
+  function($scope, $log, $timeout, $interval, session, conferenceAPI, easyRTCService, ConferenceState) {
     $scope.conference = session.conference;
     $scope.conferenceState = new ConferenceState($scope.conference);
     $scope.conferenceId = $scope.conference._id;
@@ -72,10 +71,6 @@ angular.module('op.live-conference', [
     $scope.$on('$locationChangeStart', function() {
       easyRTCService.leaveRoom($scope.conferenceState.conference);
     });
-
-    $scope.getMainVideoAttendeeIndex = function(mainVideoId) {
-      return conferenceHelpers.getMainVideoAttendeeIndexFrom(mainVideoId);
-    };
 
     $scope.showInvitation = function() {
       $('#invite').modal('show');
@@ -93,7 +88,7 @@ angular.module('op.live-conference', [
     };
 
     $scope.isMainVideo = function(videoId) {
-      return conferenceHelpers.isMainVideo($scope.conferenceState.localVideoId, videoId);
+      return $scope.conferenceState.localVideoId === videoId;
     };
 
     $scope.performCall = function(otherEasyrtcid) {
@@ -112,16 +107,6 @@ angular.module('op.live-conference', [
       );
     };
 
-    conferenceAPI.getMembers($scope.conferenceId).then(
-      function(response) {
-        $scope.users = response.data;
-        conferenceHelpers.mapUserIdToName($scope.users);
-      },
-      function(error) {
-        $log.error('Can not get members ' + error);
-      }
-    );
-
     // We must wait for the directive holding the template containing videoIds
     // to be displayed in the browser before using easyRTC.
     var unregister = $scope.$watch(function() {
@@ -133,15 +118,9 @@ angular.module('op.live-conference', [
       }
     });
 
-    function _updateConferenceScope(conference) {
-      $log.debug('Update conference to', conference);
-      conferenceHelpers.mapUserIdToName(conference.members);
-      $scope.conferenceState.conference = conference;
-    }
-
     $scope.$on('conferencestate:attendees:push', function() {
       conferenceAPI.get($scope.conferenceId).then(function(response) {
-        _updateConferenceScope(response.data);
+        $scope.conferenceState.conference = response.data;
 
         if ($scope.conferenceState.attendees.length === 2) {
           var video = $('#video-thumb1');
@@ -155,31 +134,30 @@ angular.module('op.live-conference', [
         }
       }, function(err) {
         $log.error('Cannot get conference', $scope.conferenceId, err);
-      })
+      });
     });
 
     $scope.$on('conferencestate:attendees:remove', function(event, data) {
       conferenceAPI.get($scope.conferenceId).then(function(response) {
-        _updateConferenceScope(response.data);
+        $scope.conferenceState.conference = response.data;
 
         if (data && data.videoIds === $scope.conferenceState.localVideoId) {
           $log.debug('Stream first attendee to main canvas');
-          $scope.conferenceState.updateLocalVideoIdToIndex(0)
+          $scope.conferenceState.updateLocalVideoIdToIndex(0);
         }
       }, function(err) {
         $log.error('Cannot get conference', $scope.conferenceId, err);
-      })
+      });
     });
   }
-]).directive('liveConferenceNotification', ['$log', 'session', 'notificationFactory', 'livenotification', 'conferenceHelpers',
-  function($log, session, notificationFactory, livenotification, conferenceHelpers) {
+]).directive('liveConferenceNotification', ['$log', 'session', 'notificationFactory', 'livenotification',
+  function($log, session, notificationFactory, livenotification) {
     return {
       restrict: 'E',
       link: function(scope, element, attrs) {
         function liveNotificationHandler(msg) {
           $log.debug('Got a live notification', msg);
           if (msg.user._id !== session.user._id) {
-            conferenceHelpers.mapUserIdToName(msg.user);
             notificationFactory.weakInfo('Conference updated!', msg.message);
           }
         }
