@@ -7,38 +7,40 @@ html.mail
       include:less ../css/media.less
 
   body
-    header.logo
-      include ../commons/logo
-    section.content
-      h1 Hi there!
+    div.wrapper
+      div.logo
+        img(src='cid:logo')
+      div.contentwrapper
+        div.content
+          h1 Hi there!
 
-      p.textinvite
-        if (from.displayName === 'anonymous' || !from.displayName)
-          | Someone is inviting you to join&nbsp;
-          a.emphasize(href='https://hubl.in/?token=' + to.token) #{conference._id}
-          | , a video conference room on&nbsp;
-          a.emphasize(href="https://hubl.in") Hubl.in
-        else
-          span.emphasize #{from.displayName}
-          | &nbsp;invites you to join&nbsp;
-          a.emphasize(href='https://hubl.in/?token=' + to.token) #{conference._id}
-          | , a video conference room on&nbsp;
-          a.emphasize(href="https://hubl.in") Hubl.in
+          p.textinvite
+            if (from.displayName === 'anonymous' || !from.displayName)
+              | Someone is inviting you to join&nbsp;
+              a.emphasize(href='https://hubl.in/?token=' + to.token) #{conference._id}
+              | , a video conference room on&nbsp;
+              a.emphasize(href="https://hubl.in") Hubl.in
+            else
+              span.emphasize #{from.displayName}
+              | &nbsp;invites you to join&nbsp;
+              a.emphasize(href='https://hubl.in/?token=' + to.token) #{conference._id}
+              | , a video conference room on&nbsp;
+              a.emphasize(href="https://hubl.in") Hubl.in
 
-      .button
-        a.hublin-link-button(href='https://hubl.in/?token=' + to.token) Join the Room
+          .button
+            a.hublin-link-button(href='https://hubl.in/?token=' + to.token) Join the Room
 
-      p.link
-        | Or use this link:&nbsp;
-        a(href='https://hubl.in/?token=' + to.token) https://hubl.in/#{conference._id}
+          p.link
+            | Or use this link:&nbsp;
+            a(href='https://hubl.in/?token=' + to.token) https://hubl.in/#{conference._id}
 
-      section.footer
-        h1 What is Hubl.in?
-        .explain
-          a(href="https://hubl.in") Hubl.in
-          | &nbsp;is a free and open source video conference solution built with love and ethic propelled by&nbsp;
-          a(href="http://open-paas.org") OpenPaaS
-          |. No additional plugins are required, no advertisements, only a great experience we are pleased to share with community.
-        .producer
-          | Hublin is coded with love by&nbsp;
-          a.linagora(href="http://linagora.com") Linagora
+          div.footer
+            h1 What is Hubl.in?
+            .explain
+              a(href="https://hubl.in") Hubl.in
+              | &nbsp;is a free and open source video conference solution built with love and ethic propelled by&nbsp;
+              a(href="http://open-paas.org") OpenPaaS
+              |. No additional plugins are required, no advertisements, only a great experience we are pleased to share with community.
+            .producer
+              | Hublin is coded with love by&nbsp;
+              a.linagora(href="http://linagora.com") Linagora
