@@ -1,17 +1,30 @@
 @import "../../../frontend/css/variables.less";
-@import "../commons/logo.less";
 
-html, body {
-  font-family: 'Open Sans';
-  background-color: @gray-darkest;
-  color: @gray-dark;
+
+html, body, .wrapper {
+  font-family: 'Open Sans', 'Lucida Grande', sans-serif;
   width: 100%;
   margin: 0;
+  overflow: hidden;
+  background-color: @gray-darkest;
+  color: @gray-dark;
 }
 
+.wrapper {
+  padding-bottom: 50px;
+}
+
+.contentwrapper {
+  padding: 0 5%;
+}
+
+
 .logo {
-  overflow: hidden;
-  margin: 10px;
+  background-color: @gray-darkest;
+  padding: 10px 10px 8px;
+  img {
+    height: 32px;
+  }
 }
 
 .hublin-link-button {
@@ -41,9 +54,8 @@ a {
 
 .content {
   border-radius: 10px;
-  width: 90%;
+  width: 98%;
   padding: 1%;
-  margin: 0 auto;
   background-color: @gray-lighter;
   text-align: center;
 
