@@ -221,6 +221,20 @@ module.exports = function(grunt) {
           task: ['test-unit-backend']
         },
         src: ['Gruntfile-tests.js']
+      },
+      test_frontend: {
+        options: {
+          log: true,
+          args: testArgs,
+          stdout: function(data) {
+            grunt.log.write(data);
+          },
+          stderr: function(data) {
+            grunt.log.error(data);
+          },
+          task: ['test-frontend']
+        },
+        src: ['Gruntfile-tests.js']
       }
     },
     watch: {
@@ -287,8 +301,9 @@ module.exports = function(grunt) {
   grunt.registerTask('debug', ['node-inspector:dev']);
   grunt.registerTask('setup-server', ['spawn-servers', 'continueOn']);
   grunt.registerTask('test-unit-backend', ['run_grunt:unit_backend']);
+  grunt.registerTask('test-frontend', ['run_grunt:test_frontend']);
   grunt.registerTask('test-midway-backend', ['setup-environment', 'setup-server', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
-  grunt.registerTask('test', ['linters', 'setup-environment', 'run_grunt:unit_backend', 'setup-server', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
+  grunt.registerTask('test', ['linters', 'setup-environment', 'run_grunt:unit_backend', 'setup-server', 'run_grunt:midway_backend', 'test-frontend', 'kill-servers', 'clean-environment']);
   grunt.registerTask('linters', 'Check code for lint', ['jshint:all', 'gjslint:all', 'lint_pattern:all']);
 
   /**

@@ -1,7 +1,7 @@
 'use strict';
 
 
-angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meetings.session'])
+angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meetings.session', 'restangular'])
   .factory('conferenceService', ['conferenceAPI', 'session', function(conferenceAPI, session) {
     function create(conferenceName, displayName) {
       return conferenceAPI.create(conferenceName, displayName);
@@ -152,6 +152,10 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
           else {
             $window.location.href = buildUrl(escapedName);
           }
+        };
+
+        scope.selectMe = function($event) {
+          $event.target.select();
         };
       }
     };
