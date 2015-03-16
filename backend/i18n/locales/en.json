@@ -1,5 +1,4 @@
 {
-  "Your Name": "Your Name",
   "Set your name in this room": "Set your name in this room",
   "Hello Meetings !": "Hello Meetings !",
   "%s has joined the conference": "%s has joined the conference",
@@ -79,5 +78,6 @@
   "Add": "Add",
   "Send Invitations": "Send Invitations",
   "You can also share this link:": "You can also share this link:",
-  "Sorry but something bad just happened, developers have been notified": "Sorry but something bad just happened, developers have been notified"
+  "Sorry but something bad just happened, developers have been notified": "Sorry but something bad just happened, developers have been notified",
+  "Next": "Next"
 }
