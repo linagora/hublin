@@ -2,14 +2,14 @@
   label #{__('Choose your video quality')}
   .col-xs-12
     .btn-group.conference-field
-      button.btn.btn-lg(ng-click='selectBitRate("low")', ng-class='{"btn-configuration-selected": isSelected("low")}')
+      button.btn.btn-lg(type='button', ng-click='selectBitRate("low")', ng-class='{"btn-configuration-selected": isSelected("low")}')
         i.fa.fa-fw.fa-mobile
         | #{__('Low Rate')}
     .btn-group.conference-field
-      button.btn.btn-lg(ng-click='selectBitRate("medium")', ng-class='{"btn-configuration-selected": isSelected("medium")}')
+      button.btn.btn-lg(type='button', ng-click='selectBitRate("medium")', ng-class='{"btn-configuration-selected": isSelected("medium")}')
         i.fa.fa-fw.fa-wifi
         | #{__('Medium Rate')}
     .btn-group.conference-field
-      button.btn.btn-lg(ng-click='selectBitRate("nolimit")', ng-class='{"btn-configuration-selected": isSelected("nolimit")}')
+      button.btn.btn-lg(type='button', ng-click='selectBitRate("nolimit")', ng-class='{"btn-configuration-selected": isSelected("nolimit")}')
         i.fa.fa-fw.fa-flash
         | #{__('Awesome Rate')}
