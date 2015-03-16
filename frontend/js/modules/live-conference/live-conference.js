@@ -64,6 +64,7 @@ angular.module('op.live-conference', [
   'conferenceHelpers',
   'ConferenceState',
   function($scope, $log, $timeout, $interval, session, conferenceAPI, easyRTCService, conferenceHelpers, ConferenceState) {
+    $scope.conference = session.conference;
     $scope.conferenceState = new ConferenceState($scope.conference);
     $scope.conferenceId = $scope.conference._id;
     $scope.reportedAttendee = null;
@@ -92,7 +93,7 @@ angular.module('op.live-conference', [
     };
 
     $scope.isMainVideo = function(videoId) {
-      return conferenceHelpers.isMainVideo($scope.conferenceState.mainVideoId, videoId);
+      return conferenceHelpers.isMainVideo($scope.conferenceState.localVideoId, videoId);
     };
 
     $scope.performCall = function(otherEasyrtcid) {
@@ -135,7 +136,7 @@ angular.module('op.live-conference', [
     function _updateConferenceScope(conference) {
       $log.debug('Update conference to', conference);
       conferenceHelpers.mapUserIdToName(conference.members);
-      $scope.conferenceState.updatePositions(conference);
+      $scope.conferenceState.conference = conference;
     }
 
     $scope.$on('conferencestate:attendees:push', function() {
@@ -146,7 +147,7 @@ angular.module('op.live-conference', [
           var video = $('#video-thumb1');
           var interval = $interval(function() {
             if (video[0].videoWidth) {
-              $scope.conferenceState.updateMainVideoIdToIndex(1);
+              $scope.conferenceState.updateLocalVideoIdToIndex(1);
               $scope.$apply();
               $interval.cancel(interval);
             }
@@ -161,9 +162,9 @@ angular.module('op.live-conference', [
       conferenceAPI.get($scope.conferenceId).then(function(response) {
         _updateConferenceScope(response.data);
 
-        if (data.position && data.position.videoId === $scope.conferenceState.mainVideoId) {
+        if (data && data.videoIds === $scope.conferenceState.localVideoId) {
           $log.debug('Stream first attendee to main canvas');
-          $scope.conferenceState.updateMainVideoIdToIndex(0)
+          $scope.conferenceState.updateLocalVideoIdToIndex(0)
         }
       }, function(err) {
         $log.error('Cannot get conference', $scope.conferenceId, err);
