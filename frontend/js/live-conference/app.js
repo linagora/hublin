@@ -15,6 +15,7 @@ angular.module('liveConferenceApplication', [
   'meetings.conference',
   'meetings.invitation.email',
   'meetings.configuration',
+  'meetings.language',
   'restangular',
   'uuid4',
   'mgcrea.ngStrap',
