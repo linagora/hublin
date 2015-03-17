@@ -29,6 +29,7 @@ describe('The conferences controller', function() {
 
       it('should send back 201 with conference', function(done) {
         mockery.registerMock('../../core/conference', {});
+        mockery.registerMock('../../core/report', {});
         var conference = {_id: 'MyConference', members: []};
         var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
         var res = {
@@ -54,6 +55,7 @@ describe('The conferences controller', function() {
             return callback();
           }
         });
+        mockery.registerMock('../../core/report', {});
         var conference = {_id: 'MyConference', members: []};
         var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
         var res = {
@@ -76,6 +78,7 @@ describe('The conferences controller', function() {
             return callback(new Error());
           }
         });
+        mockery.registerMock('../../core/report', {});
         var conference = {_id: 'MyConference', members: []};
         var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
         var res = {
@@ -92,6 +95,7 @@ describe('The conferences controller', function() {
     describe('if conference has not been created', function() {
       it('should send back 400 when trying to add members', function(done) {
         mockery.registerMock('../../core/conference', {});
+        mockery.registerMock('../../core/report', {});
 
         var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
         var res = {
@@ -105,6 +109,7 @@ describe('The conferences controller', function() {
 
       it('should send back 200 with conference', function(done) {
         mockery.registerMock('../../core/conference', {});
+        mockery.registerMock('../../core/report', {});
 
         var conference = {_id: 'MyConference', members: []};
         var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
@@ -127,6 +132,7 @@ describe('The conferences controller', function() {
   describe('getMembers function', function() {
     it('should send back HTTP 400 when conference is not defined in req', function(done) {
       mockery.registerMock('../../core/conference', {});
+      mockery.registerMock('../../core/report', {});
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
       var res = this.helpers.httpStatusCodeValidatingJsonResponse(400, function(data) {
         expect(data.error).to.exist;
@@ -137,6 +143,7 @@ describe('The conferences controller', function() {
 
     it('should send back HTTP 200 with empty array if conference has undefined members', function(done) {
       mockery.registerMock('../../core/conference', {});
+      mockery.registerMock('../../core/report', {});
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
       var res = this.helpers.httpStatusCodeValidatingJsonResponse(200, function(data) {
         expect(data).to.deep.equal([]);
@@ -150,6 +157,7 @@ describe('The conferences controller', function() {
 
     it('should send back HTTP 200 with empty array if conference has empty members', function(done) {
       mockery.registerMock('../../core/conference', {});
+      mockery.registerMock('../../core/report', {});
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
       var res = this.helpers.httpStatusCodeValidatingJsonResponse(200, function(data) {
         expect(data).to.deep.equal([]);
@@ -165,6 +173,7 @@ describe('The conferences controller', function() {
 
     it('should send back HTTP 200 with members array', function(done) {
       mockery.registerMock('../../core/conference', {});
+      mockery.registerMock('../../core/report', {});
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
       var members = [
         {id: 'user1', objectType: 'ot1', _id: 'id1', status: 'offline', token: 'token1', displayName: 'display1'},
