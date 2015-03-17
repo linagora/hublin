@@ -62,7 +62,9 @@ angular.module('op.live-conference', [
   'conferenceAPI',
   'easyRTCService',
   'ConferenceState',
-  function($scope, $log, $timeout, $interval, session, conferenceAPI, easyRTCService, ConferenceState) {
+  'LOCAL_VIDEO_ID',
+  'REMOTE_VIDEO_IDS',
+  function($scope, $log, $timeout, $interval, session, conferenceAPI, easyRTCService, ConferenceState, LOCAL_VIDEO_ID, REMOTE_VIDEO_IDS) {
     $scope.conference = session.conference;
     $scope.conferenceState = new ConferenceState($scope.conference);
     $scope.conferenceId = $scope.conference._id;
@@ -110,7 +112,7 @@ angular.module('op.live-conference', [
     // We must wait for the directive holding the template containing videoIds
     // to be displayed in the browser before using easyRTC.
     var unregister = $scope.$watch(function() {
-      return angular.element('#video-thumb0')[0];
+      return angular.element('#' + LOCAL_VIDEO_ID)[0];
     }, function(video) {
       if (video) {
         easyRTCService.connect($scope.conferenceState);
@@ -121,33 +123,33 @@ angular.module('op.live-conference', [
     $scope.$on('conferencestate:attendees:push', function() {
       conferenceAPI.get($scope.conferenceId).then(function(response) {
         $scope.conferenceState.conference = response.data;
-
-        if ($scope.conferenceState.attendees.length === 2) {
-          var video = $('#video-thumb1');
-          var interval = $interval(function() {
-            if (video[0].videoWidth) {
-              $scope.conferenceState.updateLocalVideoIdToIndex(1);
-              $scope.$apply();
-              $interval.cancel(interval);
-            }
-          }, 100, 30, false);
-        }
       }, function(err) {
         $log.error('Cannot get conference', $scope.conferenceId, err);
       });
+
+      if ($scope.conferenceState.attendees.length === 2) {
+        var video = $('#' + REMOTE_VIDEO_IDS[0]);
+        var interval = $interval(function() {
+          if (video[0].videoWidth) {
+            $scope.conferenceState.updateLocalVideoIdToIndex(1);
+            $scope.$apply();
+            $interval.cancel(interval);
+          }
+        }, 100, 30, false);
+      }
     });
 
     $scope.$on('conferencestate:attendees:remove', function(event, data) {
       conferenceAPI.get($scope.conferenceId).then(function(response) {
         $scope.conferenceState.conference = response.data;
-
-        if (data && data.videoIds === $scope.conferenceState.localVideoId) {
-          $log.debug('Stream first attendee to main canvas');
-          $scope.conferenceState.updateLocalVideoIdToIndex(0);
-        }
       }, function(err) {
         $log.error('Cannot get conference', $scope.conferenceId, err);
       });
+
+      if (data && data.videoIds === $scope.conferenceState.localVideoId) {
+        $log.debug('Stream first attendee to main canvas');
+        $scope.conferenceState.updateLocalVideoIdToIndex(0);
+      }
     });
   }
 ]).directive('liveConferenceNotification', ['$log', 'session', 'notificationFactory', 'livenotification',
