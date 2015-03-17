@@ -168,7 +168,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-@media(min-width:768px) {
+@media(min-width:@screen-sm-min) {
   .navbar-default {
     background-color:transparent;
     padding: 25px 0;
@@ -207,7 +207,7 @@ header {
   color: white;
 }
 
-@media(min-width:768px) {
+@media(min-width:@screen-sm-min) {
   header {
     .intro-text {
       padding-top: 300px;
@@ -369,6 +369,12 @@ section {
 }
 
 .conference-form {
+  .input-group {
+    input {
+      margin-right: 10px;
+      color: @brand-primary;
+    }
+  }
   .form-group {
     .conference-field {
       margin: 5px 5px 0px 10px;
@@ -423,6 +429,18 @@ section {
     font-weight: 700;
     text-transform: lowercase;
     color: @brand-primary;
+  }
+}
+
+@media (max-width: @screen-sm-min) {
+  .conference-form {
+    .input-group {
+      input {
+        margin-right: 10px;
+        font-size: 16px;
+        color: @brand-primary;
+      }
+    }
   }
 }
 
@@ -555,7 +573,7 @@ footer {
   .rotation(-20deg);
 }
 
-@media(max-width: 768px) {
+@media(max-width: @screen-sm-min) {
   .navbar-default{
     position: absolute;
     top: 0;
@@ -669,7 +687,7 @@ footer {
   }
 }
 
-@media(max-width: 1200px) {
+@media(max-width: @screen-lg-min) {
   .modal-dialog{
     width: 100%;
     margin: 0;
