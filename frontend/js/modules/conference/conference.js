@@ -58,6 +58,14 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       return Restangular.one('conferences', id).all('members').customPUT(members);
     }
 
+    function createReport(reported, conference, members, description) {
+      return Restangular.one('conferences', conference).all('reports').customPOST({
+        reported: reported,
+        members: members,
+        description: description
+      });
+    }
+
     function redirectTo(id, tokenUuid) {
       return Restangular.one('conferences').get({token: tokenUuid});
     }
@@ -69,7 +77,8 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       addMembers: addMembers,
       redirectTo: redirectTo,
       getMembers: getMembers,
-      updateMemberField: updateMemberField
+      updateMemberField: updateMemberField,
+      createReport: createReport
     };
   }])
   .factory('feedbackAPI', ['Restangular', function(Restangular) {
