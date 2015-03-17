@@ -64,6 +64,16 @@ module.exports = function(grunt) {
   grunt.registerTask('test-midway-backend', 'run midway tests (to be used with .only)', ['splitfiles:midway']);
   grunt.registerTask('test-backend', 'run both the unit & midway tests', ['test-unit-backend', 'test-midway-backend']);
 
-  grunt.registerTask('test', ['test-backend']);
+  grunt.registerTask('test-frontend', 'run the frontend tests', function() {
+    var done = this.async();
+
+    var child = require('child_process').spawn('karma', ['start', '--browsers', 'PhantomJS', './test/config/karma.conf.js']);
+
+    child.stdout.on('data', function(chunk) { grunt.log.write(chunk); });
+    child.stderr.on('data', function(chunk) { grunt.log.error(chunk); });
+    child.on('close', function(code) { done(code ? false : true); });
+  });
+
+  grunt.registerTask('test', ['test-backend', 'test-frontend']);
   grunt.registerTask('default', ['test']);
 };
