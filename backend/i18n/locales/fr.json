@@ -17,7 +17,7 @@
   "or create a new one": "ou en créer une autre",
   "No additional plugins are required, no advertisements are displayed, only a great videoconferencing experience we are pleased to share with the community": "Aucune extension additionnelle n'est requise et aucune publicité n'est affichée. Nous souhaitons seulement partager avec vous la meilleure expérience de videoconférence possible.",
   "Hubl.in is a free and open source video conference solution built with love, designed with ethics in mind, and propelled by": "Hubl.in est une solution de vidéoconférence gratuite et Open Source développée avec amour et éthique et propulsée par",
-  "This room name is forbidden for technical reason:" : "Ce nom de conférence n'est pas autorisé pour des raisons techniques:",
+  "The room name %s is forbidden for technical reason": "Le nom %s n'est pas autorisé pour des raisons techniques",
   "An error happened while trying to open the room": "Une erreur est survenue pendant l'ouverture de la conférence",
   "Low Rate": "Basse",
   "Medium Rate": "Moyenne",

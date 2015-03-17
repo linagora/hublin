@@ -322,6 +322,30 @@ module.exports = function(dependencies) {
     });
   }
 
+  function checkIdLength(req, res, next) {
+    var confId = req.params.id;
+
+    function returnError(errMessage) {
+      return res.json(400, {
+        error: {
+          code: 400,
+          message: 'Bad request',
+          details: errMessage
+        }
+      });
+    }
+
+    if (conferenceHelpers.isIdTooLong(confId)) {
+      return returnError('Conference id is too long');
+    }
+
+    if (conferenceHelpers.isIdTooShort(confId)) {
+      return returnError('Conference id is too short');
+    }
+
+    next();
+  }
+
   function checkIdForCreation(req, res, next) {
     var confId = req.params.id;
 
@@ -390,6 +414,7 @@ module.exports = function(dependencies) {
     canAddMember: canAddMember,
     canUpdateUser: canUpdateUser,
     checkIdForCreation: checkIdForCreation,
+    checkIdLength: checkIdLength,
     lazyArchive: lazyArchive,
     createConference: createConference,
     addUser: addUser

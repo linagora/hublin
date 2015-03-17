@@ -5,6 +5,9 @@ var expect = require('chai').expect,
   apiHelpers = require('../../helpers/api-helpers.js'),
   httpHelpers = require('../../helpers/http-helpers.js');
 
+var MAX_CONFERENCE_NAME_LENGTH = require('../../../backend/constants').MAX_CONFERENCE_NAME_LENGTH;
+var MIN_CONFERENCE_NAME_LENGTH = require('../../../backend/constants').MIN_CONFERENCE_NAME_LENGTH;
+
 describe('The home API', function() {
 
   var application;
@@ -112,6 +115,64 @@ describe('The home API', function() {
   });
 
   describe('GET /:id', function() {
+
+    describe('Check room name size', function() {
+
+      function checkConferenceExists(name, done) {
+        apiHelpers.getConference(name, function(err, saved) {
+          expect(err).to.not.exist;
+          expect(saved).to.exist;
+          done();
+        });
+      }
+
+      function checkConferenceNotExists(name, done) {
+        apiHelpers.getConference(name, function(err, saved) {
+          expect(err).to.not.exist;
+          expect(saved).to.not.exist;
+          done();
+        });
+      }
+
+      it('should render the liveconference/error when conference id is too long', function(done) {
+        var name = this.helpers.utils.generateStringWithLength(MAX_CONFERENCE_NAME_LENGTH + 1);
+        request(application)
+          .get('/' + name)
+          .send()
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            expect(res.text).to.contain('Error');
+            checkConferenceNotExists(name, done);
+          });
+      });
+
+      it('should render the liveconference/index when conference id.length at max length', function(done) {
+        var name = this.helpers.utils.generateStringWithLength(MAX_CONFERENCE_NAME_LENGTH);
+        request(application)
+          .get('/' + name)
+          .send()
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            expect(res.text).to.contain('liveConferenceApplication');
+            checkConferenceExists(name, done);
+          });
+      });
+
+      it('should render the liveconference/index when conference id.length is at min length', function(done) {
+        var name = this.helpers.utils.generateStringWithLength(MIN_CONFERENCE_NAME_LENGTH);
+        request(application)
+          .get('/' + name)
+          .send()
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            expect(res.text).to.contain('liveConferenceApplication');
+            checkConferenceExists(name, done);
+          });
+      });
+    });
 
     it('should render the liveconference/index and create a new conference if not exists', function(done) {
       var name = '123456789';

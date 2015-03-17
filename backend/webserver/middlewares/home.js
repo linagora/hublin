@@ -16,7 +16,16 @@ module.exports = function(dependencies) {
     var confId = req.params.id;
 
     if (conferenceHelpers.isIdForbidden(confId)) {
-      return res.render('commons/error', {error: i18n.__('This room name is forbidden for technical reason:') + confId});
+      return res.render('commons/error', {error: i18n.__('The room name %s is forbidden for technical reason', confId)});
+    }
+    next();
+  }
+
+  function checkIdLength(req, res, next) {
+    var confId = req.params.id;
+
+    if (conferenceHelpers.isIdTooShort(confId) || conferenceHelpers.isIdTooLong(confId)) {
+      return res.render('commons/error', {error: i18n.__('The room name %s is forbidden for technical reason', confId)});
     }
     next();
   }
@@ -37,6 +46,7 @@ module.exports = function(dependencies) {
 
   return {
     checkIdForCreation: checkIdForCreation,
+    checkIdLength: checkIdLength,
     load: load
   };
 };

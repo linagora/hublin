@@ -17,7 +17,7 @@
   "or create a new one": "or create a new one",
   "No additional plugins are required, no advertisements are displayed, only a great videoconferencing experience we are pleased to share with the community": "No additional plugins are required, no advertisements are displayed, only a great videoconferencing experience we are pleased to share with the community",
   "Hubl.in is a free and open source video conference solution built with love, designed with ethics in mind, and propelled by": "Hubl.in is a free and open source video conference solution built with love, designed with ethics in mind, and propelled by",
-  "This room name is forbidden for technical reason:": "This room name is forbidden for technical reason:",
+  "The room name %s is forbidden for technical reason": "The room name %s is forbidden for technical reason",
   "An error happened while trying to open the room": "An error happened while trying to open the room",
   "Low Rate": "Low",
   "Medium Rate": "Medium",

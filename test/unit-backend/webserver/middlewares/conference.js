@@ -5,7 +5,11 @@ var mockery = require('mockery');
 var logger = require('../../../fixtures/logger-noop');
 var q = require('q');
 
+var MAX_CONFERENCE_NAME_LENGTH = require('../../../../backend/constants').MAX_CONFERENCE_NAME_LENGTH;
+var MIN_CONFERENCE_NAME_LENGTH = require('../../../../backend/constants').MIN_CONFERENCE_NAME_LENGTH;
+
 describe('The conference middleware', function() {
+
   var dependencies;
 
   before(function() {
@@ -78,7 +82,8 @@ describe('The conference middleware', function() {
         done();
       }
     };
-    var next = function() {};
+    var next = function() {
+    };
     middleware(req, res, next);
   });
 
@@ -94,7 +99,8 @@ describe('The conference middleware', function() {
         done();
       }
     };
-    var next = function() {};
+    var next = function() {
+    };
     middleware(req, res, next);
   });
 
@@ -116,7 +122,8 @@ describe('The conference middleware', function() {
         done();
       }
     };
-    var next = function() {};
+    var next = function() {
+    };
     middleware(req, res, next);
   });
 
@@ -138,7 +145,8 @@ describe('The conference middleware', function() {
         done();
       }
     };
-    var next = function() {};
+    var next = function() {
+    };
     middleware(req, res, next);
   });
 
@@ -169,7 +177,8 @@ describe('The conference middleware', function() {
         done();
       }
     };
-    var next = function() {};
+    var next = function() {
+    };
     middleware(req, res, next);
   });
 
@@ -185,7 +194,8 @@ describe('The conference middleware', function() {
         done();
       }
     };
-    var next = function() {};
+    var next = function() {
+    };
     middleware(req, res, next);
   });
 
@@ -207,7 +217,8 @@ describe('The conference middleware', function() {
         done();
       }
     };
-    var next = function() {};
+    var next = function() {
+    };
     middleware(req, res, next);
   });
 
@@ -229,7 +240,8 @@ describe('The conference middleware', function() {
         done();
       }
     };
-    var next = function() {};
+    var next = function() {
+    };
     middleware(req, res, next);
   });
 
@@ -320,7 +332,7 @@ describe('The conference middleware', function() {
       middleware(req, res, done);
     });
 
-    it('should send back HTTP 403 when conference#userIsConferenceMember returns false ' , function(done) {
+    it('should send back HTTP 403 when conference#userIsConferenceMember returns false ', function(done) {
       mockery.registerMock('../../core/conference', {
         userIsConferenceMember: function(conference, user, callback) {
           return callback(null, false);
@@ -353,7 +365,8 @@ describe('The conference middleware', function() {
 
         var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
         var req = {params: {id: 'conf1'}};
-        middleware(req, {}, function() {});
+        middleware(req, {}, function() {
+        });
       });
       it('should call next() if conference is not found', function(done) {
         mockery.registerMock('../../core/conference', {
@@ -364,7 +377,9 @@ describe('The conference middleware', function() {
 
         var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
         var req = {params: {id: 'conf1'}};
-        middleware(req, {}, function() {done();});
+        middleware(req, {}, function() {
+          done();
+        });
       });
       it('should call next() if conference.get returns an error', function(done) {
         mockery.registerMock('../../core/conference', {
@@ -375,31 +390,41 @@ describe('The conference middleware', function() {
 
         var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
         var req = {params: {id: 'conf1'}};
-        middleware(req, {}, function() {done();});
+        middleware(req, {}, function() {
+          done();
+        });
       });
       it('should call conference.isActive() if conference.get returns a conference', function(done) {
         mockery.registerMock('../../core/conference', {
           get: function(id, callback) {
             callback(null, {_id: 'conf1'});
           },
-          isActive: function(conf) { done(); return q(true); }
+          isActive: function(conf) {
+            done();
+            return q(true);
+          }
         });
 
         var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
         var req = {params: {id: 'conf1'}};
-        middleware(req, {}, function() {});
+        middleware(req, {}, function() {
+        });
       });
       it('should call conference.isActive() if conference.get returns a conference', function(done) {
         mockery.registerMock('../../core/conference', {
           get: function(id, callback) {
             callback(null, {_id: 'conf1'});
           },
-          isActive: function(conf) { done(); return q(true); }
+          isActive: function(conf) {
+            done();
+            return q(true);
+          }
         });
 
         var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
         var req = {params: {id: 'conf1'}};
-        middleware(req, {}, function() {});
+        middleware(req, {}, function() {
+        });
       });
       it('should call conference.archive() if conference.isActive returns false', function(done) {
         var conf = {_id: 'conf1'};
@@ -407,7 +432,9 @@ describe('The conference middleware', function() {
           get: function(id, callback) {
             callback(null, conf);
           },
-          isActive: function(conf) { return q(false); },
+          isActive: function(conf) {
+            return q(false);
+          },
           archive: function(conf) {
             expect(conf).to.deep.equal(conf);
             done();
@@ -417,7 +444,8 @@ describe('The conference middleware', function() {
 
         var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
         var req = {params: {id: 'conf1'}};
-        middleware(req, {}, function() {});
+        middleware(req, {}, function() {
+        });
       });
       it('should send back an error if something skrewed up in the process', function(done) {
         var conf = {_id: 'conf1'};
@@ -425,7 +453,9 @@ describe('The conference middleware', function() {
           get: function(id, callback) {
             callback(null, conf);
           },
-          isActive: function(conf) { return q(false); },
+          isActive: function(conf) {
+            return q(false);
+          },
           archive: function(conf) {
             return q.reject(new Error('test error'));
           }
@@ -440,7 +470,8 @@ describe('The conference middleware', function() {
             done();
           }
         };
-        middleware(req, res, function() {});
+        middleware(req, res, function() {
+        });
       });
     });
     describe('initialized with loadFirst to true', function() {
@@ -455,7 +486,9 @@ describe('The conference middleware', function() {
       it('should not delete req.conference if conference is still active', function(done) {
         var conf = {_id: 'conf1'};
         mockery.registerMock('../../core/conference', {
-          isActive: function(conf) { return q(true); }
+          isActive: function(conf) {
+            return q(true);
+          }
         });
 
         var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(false);
@@ -469,7 +502,9 @@ describe('The conference middleware', function() {
       it('should delete req.conference if conference is not active', function(done) {
         var conf = {_id: 'conf1'};
         mockery.registerMock('../../core/conference', {
-          isActive: function(conf) { return q(false); },
+          isActive: function(conf) {
+            return q(false);
+          },
           archive: function(conf) {
             return q(true);
           }
@@ -669,6 +704,73 @@ describe('The conference middleware', function() {
         expect(req.user).to.deep.equals(member1);
         done();
       });
+    });
+  });
+
+  describe('checkIdLength function', function() {
+
+    var expectNotCalled = function(done) {
+      return {
+        json: function() {
+          done(new Error());
+        }
+      };
+    };
+
+    it('should send back HTTP 400 when id is too long', function(done) {
+      mockery.registerMock('../../core/conference', {});
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).checkIdLength;
+
+      var req = {
+        params: {
+          id: this.helpers.utils.generateStringWithLength(MAX_CONFERENCE_NAME_LENGTH + 1)
+        }
+      };
+
+      middleware(req, this.helpers.httpStatusCodeJsonResponse(400, done), function() {
+        return done(new Error());
+      });
+    });
+
+    it('should send back HTTP 400 when id is too short', function(done) {
+      mockery.registerMock('../../core/conference', {});
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).checkIdLength;
+
+      var req = {
+        params: {
+          id: this.helpers.utils.generateStringWithLength(MIN_CONFERENCE_NAME_LENGTH - 1)
+        }
+      };
+
+      middleware(req, this.helpers.httpStatusCodeJsonResponse(400, done), function() {
+        return done(new Error());
+      });
+    });
+
+    it('should call next when id length is at minimal length', function(done) {
+      mockery.registerMock('../../core/conference', {});
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).checkIdLength;
+
+      var req = {
+        params: {
+          id: this.helpers.utils.generateStringWithLength(MIN_CONFERENCE_NAME_LENGTH)
+        }
+      };
+
+      middleware(req, expectNotCalled(done), done);
+    });
+
+    it('should call next when id length is at maximal length', function(done) {
+      mockery.registerMock('../../core/conference', {});
+      var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).checkIdLength;
+
+      var req = {
+        params: {
+          id: this.helpers.utils.generateStringWithLength(MAX_CONFERENCE_NAME_LENGTH)
+        }
+      };
+
+      middleware(req, expectNotCalled(done), done);
     });
   });
 });
