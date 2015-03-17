@@ -151,6 +151,15 @@ angular.module('op.live-conference', [
         $scope.conferenceState.updateLocalVideoIdToIndex(0);
       }
     });
+
+    $scope.$on('localMediaReady', function() {
+      var connectedMembers = $scope.conferenceState.conference.members.some(function(member) {
+        return member.status === 'online';
+      });
+      if (!connectedMembers) {
+        $scope.showInvitation();
+      }
+    });
   }
 ]).directive('liveConferenceNotification', ['$log', 'session', 'notificationFactory', 'livenotification',
   function($log, session, notificationFactory, livenotification) {
