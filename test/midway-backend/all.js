@@ -15,7 +15,6 @@ before(function(done) {
     tmp: tmpPath,
     fixtures: path.resolve(__dirname + '/fixtures'),
     mongoUrl: 'mongodb://localhost:' + testConfig.mongodb.port + '/' + testConfig.mongodb.dbname,
-    redisUrl: 'redis://localhost:' + testConfig.redis.port,
     writeDBConfigFile: function() {
       fs.writeFileSync(tmpPath + '/db.json', JSON.stringify({connectionString: 'mongodb://localhost:' + testConfig.mongodb.port + '/' + testConfig.mongodb.dbname, connectionOptions: {auto_reconnect: false}}));
     },
@@ -35,10 +34,12 @@ before(function(done) {
       var configuration = require('mongoconfig');
       configuration.setDefaultMongoose(mongoose);
       mongoose.connect(this.mongoUrl);
-      var self = this;
 
       mongoose.connection.on('open', function() {
-        configuration('redis').store({url: self.redisUrl}, function(err) {
+        configuration('redis').store({
+          host: 'localhost',
+          port: testConfig.redis.port
+        }, function(err) {
           if (err) {
             console.log('Error while saving redis configuration', err);
             return callback(err);

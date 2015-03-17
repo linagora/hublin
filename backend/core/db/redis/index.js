@@ -1,60 +1,40 @@
 'use strict';
 
-var logger = require('../../../core/logger');
-var esnconfig = require('../../../core/esn-config');
-var pubsub = require('../../../core/pubsub').local;
+var logger = require('../../../core/logger'),
+    esnconfig = require('../../../core/esn-config'),
+    pubsub = require('../../../core/pubsub').local,
+    redis = require('redis');
 
-var initialized = false;
-var connected = false;
-var client;
+var initialized = false,
+    connected = false,
+    client;
 
 var defaultOptions = {
   host: 'localhost',
-  port: 6379
+  port: 6379,
+  client_options: {}
 };
 
-var getRedisConfiguration = function(options) {
-  var redisConfig = options || defaultOptions;
+function publishRedisConfiguration(config) {
+  pubsub.topic('redis:configurationAvailable').publish(config);
+}
 
-  if (redisConfig.url) {
-    var url = require('url').parse(redisConfig.url);
-    if (url.protocol === 'redis:') {
-      if (url.auth) {
-        var userparts = url.auth.split(':');
-        redisConfig.user = userparts[0];
-        if (userparts.length === 2) {
-          redisConfig.pass = userparts[1];
-        }
-      }
-      redisConfig.host = url.hostname;
-      redisConfig.port = url.port;
-      if (url.pathname) {
-        redisConfig.db = url.pathname.replace('/', '', 1);
-      }
-    }
+function createClient(options, callback) {
+  var config = options || defaultOptions;
+
+  if (!config.client_options) {
+    config.client_options = {};
   }
 
-  pubsub.topic('redis:configurationAvailable').publish(redisConfig);
-  return redisConfig;
-};
+  publishRedisConfiguration(config);
 
-var createClient = function(options, callback) {
-  var redisConfig = getRedisConfiguration(options);
+  var client = redis.createClient(config.port, config.host, config.client_options);
 
-  var client = redisConfig.client || new require('redis').createClient(redisConfig.port || redisConfig.socket, redisConfig.host, redisConfig);
-  if (redisConfig.pass) {
-    client.auth(redisConfig.pass, function(err) {
-      if (err) {
-        callback(err);
-      }
-    });
-  }
-
-  if (redisConfig.db) {
-    client.select(redisConfig.db);
+  if (config.db) {
+    client.select(config.db);
     client.on('connect', function() {
       client.send_anyways = true;
-      client.select(redisConfig.db);
+      client.select(config.db);
       client.send_anyways = false;
     });
   }
@@ -64,7 +44,7 @@ var createClient = function(options, callback) {
   });
 
   client.on('connect', function() {
-    logger.info('Connected to Redis', redisConfig);
+    logger.info('Connected to Redis', config);
     connected = true;
   });
 
@@ -73,30 +53,44 @@ var createClient = function(options, callback) {
   });
 
   return callback(null, client);
-};
-/**
- * @type {Function}
- */
-module.exports.createClient = createClient;
+}
 
-var init = function(callback) {
+function init(callback) {
   esnconfig('redis').get(function(err, config) {
     if (err) {
       logger.error('Error while getting the redis configuration', err);
       return callback(err);
     }
+
     createClient(config, function(err, client) {
       if (client) {
         initialized = true;
       }
+
       return callback(err, client);
     });
   });
-};
-/**
- * @type {Function}
- */
-module.exports.init = init;
+}
+
+function isInitialized() {
+  return initialized;
+}
+
+function isConnected() {
+  return connected;
+}
+
+function _getClient() {
+  return client;
+}
+
+function getClient(callback) {
+  if (isConnected() && _getClient()) {
+    return callback(null, client);
+  } else {
+    return init(callback);
+  }
+}
 
 pubsub.topic('mongodb:connectionAvailable').subscribe(function() {
   init(function(err, c) {
@@ -110,36 +104,11 @@ pubsub.topic('mongodb:connectionAvailable').subscribe(function() {
   });
 });
 
-/**
- * @return {boolean}
- */
-module.exports.isInitialized = function isInitialized() {
-  return initialized;
-};
-
-/**
- * @return {boolean}
- */
-module.exports.isConnected = function isConnected() {
-  return connected;
-};
-
-/**
- * @return {*}
- */
-module.exports._getClient = function _getClient() {
-  return client;
-};
-
-/**
- * @param {function} callback
- * @return {*}
- * @this this
- */
-module.exports.getClient = function(callback) {
-  if (this.isConnected() && this._getClient()) {
-    return callback(null, client);
-  } else {
-    return init(callback);
-  }
+module.exports = exports = {
+  init: init,
+  createClient: createClient,
+  isConnected: isConnected,
+  isInitialized: isInitialized,
+  getClient: getClient,
+  _getClient: _getClient
 };
