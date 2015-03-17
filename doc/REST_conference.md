@@ -286,3 +286,48 @@ Update a conference member field.
 
     HTTP/1.1 200 OK
 
+## POST /api/conferences/:id/reports
+
+Creates a new report associated with the conference id.
+
+**Request Headers:**
+
+- Accept: application/json
+
+**Request JSON Object:**
+
+- reported: the member to report
+- members: Array of attendees IDs in the room
+- description: text description of the report
+
+**Response Headers:**
+
+- Content-Length: Document size
+- Content-Type: application/json
+
+**Response JSON Object**
+
+No objects.
+
+**Status Codes:**
+
+- 201 Created: The report has been created
+- 400 Bad request
+
+**Request:**
+
+    POST /api/conferences/myconf/reports
+    Accept: application/json
+    Host: localhost:8080
+
+    {
+      reported: "55068fbe3834fbd00beb0183",
+      members: ["55068fbe3834fbd00beb0184","55068fbe3834fbd00beb0183","55068fbe3834fbd00beb0185"],
+      description: "description brève"
+    }
+
+**Response:**
+
+    HTTP/1.1 201 Created
+    {"id":"5506df2b7ef1d0473511bc9e"}
+

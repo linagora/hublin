@@ -587,4 +587,99 @@ describe('The conference API', function() {
       });
     });
   });
+
+  describe('POST /api/conferences/:id/reports', function() {
+
+    it('should not be able to create a report without user session', function(done) {
+      apiHelpers.applyDeployment('manyMembersConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+
+        var conference = models.conference[0]._id,
+          reported = models.conference[0].members[2]._id,
+          members = [
+            models.conference[0].members[0]._id, models.conference[0].members[1]._id,
+            models.conference[0].members[3]._id],
+          description = 'description of the report';
+
+        request(application)
+          .post('/api/conferences/' + conference + '/reports')
+          .send({
+            reported: reported,
+            members: members,
+            description: description
+          })
+          .expect(403)
+          .end(done);
+      });
+    });
+
+    it('should send back 400 if missing or wrong parameters', function(done) {
+      apiHelpers.applyDeployment('manyMembersConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+
+        request(withSessionUser(models.conference[0]))
+          .post('/api/conferences/' + models.conference[0]._id + '/reports')
+          .send({
+            reported: 'khkjhlk',
+            members: ['khkjhlk']
+          })
+          .expect(400)
+          .end(done);
+      });
+    });
+
+    it('should create the report', function(done) {
+      apiHelpers.applyDeployment('manyMembersConference', this.testEnv, {}, function(err, models) {
+        if (err) {
+          return done(err);
+        }
+
+        var conference = models.conference[0]._id,
+          reported = models.conference[0].members[2]._id,
+          reporter = models.conference[0].members[0]._id,
+          members = [
+            models.conference[0].members[0]._id, models.conference[0].members[1]._id,
+            models.conference[0].members[3]._id],
+          description = 'description of the report';
+
+        request(withSessionUser(models.conference[0]))
+          .post('/api/conferences/' + conference + '/reports')
+          .send({
+            reported: reported,
+            members: members,
+            description: description
+          })
+          .expect(201)
+          .end(function(err, data) {
+            if (err) {
+              return done(err);
+            }
+
+            require('mongoose').model('Report').findOne({_id: data.body.id}, function(err, reportFound) {
+              if (err) {
+                done(err);
+              }
+
+              expect(reportFound).to.not.equals(null);
+              expect(reportFound.timestamp).to.exist;
+              expect(reportFound.conference._id).to.deep.equals(conference);
+              expect(reportFound.reported._id).to.deep.equals(reported);
+              expect(reportFound.reporter._id).to.deep.equals(reporter);
+              expect(reportFound.members.length).to.equals(members.length);
+              expect(reportFound.members[0]._id === members[0]._id);
+              expect(reportFound.members[1]._id === members[1]._id);
+              expect(reportFound.members[2]._id === members[2]._id);
+              expect(reportFound.description).to.equals(description);
+
+              done();
+            });
+          });
+      });
+    });
+  });
+
 });
