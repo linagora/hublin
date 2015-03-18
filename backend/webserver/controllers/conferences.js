@@ -4,6 +4,8 @@ var conference = require('../../core/conference');
 var AUTHORIZED_FIELDS = ['displayName'];
 var extend = require('extend');
 
+var Report = require('../../core/report');
+
 function _sanitizeAndValidateMember(member) {
   if (!member.objectType || !member.id) {
     return false;
@@ -167,12 +169,59 @@ module.exports = function(dependencies) {
     return res.json(200, _transformConference(req.conference.toObject()));
   }
 
+  function persistReport(req, callback) {
+    var reportToSave = {
+      timestamp: {created: new Date()},
+      reporter: req.user,
+      description: req.body.description,
+      conference: req.conference
+    };
+
+    reportToSave.members = [];
+    var mapMembers = {};
+
+    for (var i = 0; i < req.conference.members.length; i++) {
+      mapMembers[req.conference.members[i]._id.toString()] = req.conference.members[i];
+    }
+    reportToSave.reported = mapMembers[req.body.reported];
+    req.body.members.forEach(function(memberId) {
+      reportToSave.members.push(mapMembers[memberId]);
+    });
+
+    return Report.create(reportToSave, callback);
+  }
+
+  function createReport(req, res) {
+
+    if (!req.body.reported) {
+      return res.json(400, {error: {code: 400, message: 'Bad request', details: 'Attendee to report is required'}});
+    }
+
+    if (!req.body.description) {
+      return res.json(400, {error: {code: 400, message: 'Bad request', details: 'Description is required'}});
+    }
+
+    if (!req.body.members) {
+      return res.json(400, {error: {code: 400, message: 'Bad request', details: 'Members of the conference are required'}});
+    }
+
+    persistReport(req, function(err, created) {
+      if (err) {
+        logger.error('Error while creating report %e', err);
+        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
+      }
+
+      return res.json(201, {id: created._id});
+    });
+  }
+
   return {
     get: get,
     createdOrUpdated: createdOrUpdated,
     removeAttendee: removeAttendee,
     addMembers: addMembers,
     getMembers: getMembers,
-    updateMemberField: updateMemberField
+    updateMemberField: updateMemberField,
+    createReport: createReport
   };
 };

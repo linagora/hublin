@@ -31,6 +31,8 @@ module.exports = function(dependencies) {
              user.loadForConference, should.beInRequest('user'),
              middlewares.canUpdateUser,
              controllers.updateMemberField);
+  router.post('/api/conferences/:id/reports', middlewares.load, should.beInRequest('conference'),
+              user.loadForConference, controllers.createReport);
 
   return router;
 };

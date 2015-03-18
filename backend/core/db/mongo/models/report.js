@@ -1,13 +1,11 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    Member = require('../schemas/member').Member,
-    tuple = require('../schemas/tuple'),
-    Tuple = tuple.Tuple;
+    Member = require('../schemas/member').Member;
 
 var ReportSchema = new mongoose.Schema({
   timestamp: {created: Date},
-  conference: {type: Tuple.tree},
+  conference: {type: mongoose.Schema.Types.Mixed},
   reporter: {type: Member.tree},
   reported: {type: Member.tree},
   members: [Member.tree],
