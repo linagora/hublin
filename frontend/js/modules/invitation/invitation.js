@@ -2,11 +2,8 @@
 
 angular.module('meetings.invitation', [
   'meetings.conference',
-  'ngClipboard',
   'mgcrea.ngStrap.typeahead'
-]).config(['ngClipProvider', 'invitationServiceProvider', function(ngClipProvider, invitationServiceProvider) {
-  ngClipProvider.setPath('/components/zeroclipboard/dist/ZeroClipboard.swf');
-}]).provider('invitationService', function($provide) {
+]).provider('invitationService', function($provide) {
   var $q;
   var contactLookups = {};
 
