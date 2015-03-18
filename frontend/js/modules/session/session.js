@@ -85,11 +85,4 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
         $scope.session.template = '/views/live-conference/partials/container.html';
       }
     });
-  }])
-  .controller('sessionInitMeetingsController', ['$scope', function($scope) {
-
-    $scope.session = {
-      template: '/views/meetings/partials/landing-page.html'
-    };
-
   }]);
