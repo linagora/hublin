@@ -169,7 +169,6 @@ module.exports = function(dependencies) {
     });
   }
 
-
   function canAddMember(req, res, next) {
     if (!req.user) {
       return res.json(400, {
@@ -273,64 +272,53 @@ module.exports = function(dependencies) {
 
   }
 
-  function addUserOrCreate(req, res, next) {
-
-    function createConference(id, firstUser, callback) {
-      var conf = {
-        _id: id,
-        history: [],
-        members: [firstUser]
-      };
-
-      conference.create(conf, function(err, created) {
-        if (created && created.members && created.members.length) {
-          req.created = true;
-          req.user = created.members[0];
-          req.conference = created;
-        }
-        return callback(err, created);
-      });
+  function createConference(req, res, next) {
+    if (req.conference) {
+      return next();
     }
 
-    function addUser(conf, user, callback) {
-      conference.addUser(conf, user, function(err) {
-        if (err) {
-          return callback(err);
-        }
-        conference.getMember(conf, user, function(err, member) {
-          if (err) {
-            return callback(err);
-          }
-          if (member) {
-            req.user = member;
-          }
-          return callback(null, conf);
-        });
-      });
-    }
+    var conf = {
+      _id: req.params.id,
+      history: [],
+      members: [req.user]
+    };
 
-    function addUserOrCreateConference(conf, callback) {
-      if (conf) {
-        logger.debug('A conference', conf, 'has been found, adding the user to it.');
-        return addUser(conf, req.user, callback);
-      }
-      logger.debug('Conference of id %s not found. Creating a new one.', req.params.id);
-      createConference(req.params.id, req.user, callback);
-    }
-
-    addUserOrCreateConference(req.conference, function(err) {
+    conference.create(conf, function(err, created) {
       if (err) {
-        logger.error('Error while initializing conference for user %e', err);
-        return res.json(500, {
-          error: {
-            code: 500,
-            message: 'Server Error',
-            details: err.message
-          }
-        });
+        return res.json(500, { error: { code: 500, message: 'Server Error', details: err.message}});
+      }
+
+      if (created) {
+        req.created = true;
+        req.conference = created;
+      }
+
+      if (created && created.members && created.members.length) {
+        req.user = created.members[0];
       }
 
       next();
+    });
+  }
+
+  function addUser(req, res, next) {
+    if (!req.conference) {
+      return next();
+    }
+
+    conference.addUser(req.conference, req.user, function(err) {
+      if (err) {
+        return res.json(500, { error: { code: 500, message: 'Server Error', details: err.message}});
+      }
+      conference.getMember(req.conference, req.user, function(err, member) {
+        if (err) {
+          return res.json(500, { error: { code: 500, message: 'Server Error', details: err.message}});
+        }
+        if (member) {
+          req.user = member;
+        }
+        next();
+      });
     });
   }
 
@@ -401,8 +389,9 @@ module.exports = function(dependencies) {
     isAdmin: isAdmin,
     canAddMember: canAddMember,
     canUpdateUser: canUpdateUser,
-    addUserOrCreate: addUserOrCreate,
     checkIdForCreation: checkIdForCreation,
-    lazyArchive: lazyArchive
+    lazyArchive: lazyArchive,
+    createConference: createConference,
+    addUser: addUser
   };
 };

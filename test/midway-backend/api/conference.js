@@ -162,8 +162,10 @@ describe('The conference API', function() {
           done(err);
         }
         expect(conf.members).to.exists;
-        expect(conf.members.length).to.equals(1);
-        expect(conf.members[0].displayName).to.equals(displayName);
+        var isIn = conf.members.some(function(member) {
+          return member.displayName === displayName;
+        });
+        expect(isIn).to.be.true;
         done();
       });
     }
@@ -211,7 +213,7 @@ describe('The conference API', function() {
       });
     });
 
-    it('should return 400 if the conference already exists and the user wants to add members', function(done) {
+    it('should return 202 if the conference already exists and the user wants to add members', function(done) {
       var name = '123456789';
       var displayName = 'Yo Lo';
 
@@ -223,7 +225,7 @@ describe('The conference API', function() {
         request(application)
           .put('/api/conferences/' + name + '?displayName=' + displayName)
           .send({members: [{id: 'yo@hubl.in', objectType: 'email'}]})
-          .expect(400)
+          .expect(202)
           .end(function(err, res) {
             expect(err).to.not.exist;
             checkUserIsConferenceMember(name, displayName, done);
@@ -284,7 +286,7 @@ describe('The conference API', function() {
       });
     });
 
-    it('should return 400 if the conference already exists and the user wants to add members', function(done) {
+    it('should return 202 if the conference already exists and the user wants to add members', function(done) {
       var name = '123456789';
 
       apiHelpers.createConference(name, [], [], function(err) {
@@ -295,7 +297,7 @@ describe('The conference API', function() {
         request(application)
           .put('/api/conferences/' + name)
           .send({members: [{id: 'yo@hubl.in', objectType: 'email'}]})
-          .expect(400)
+          .expect(202)
           .end(function(err, res) {
             expect(err).to.not.exist;
             done();
