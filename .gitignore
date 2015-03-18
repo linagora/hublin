@@ -1,3 +1,5 @@
+dist
+.tmp
 node_modules
 config/default.dev.json
 config/default.test.json

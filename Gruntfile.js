@@ -6,6 +6,7 @@ var path = require('path');
 var conf_path = './test/config/';
 var servers = require(conf_path + 'servers-conf');
 var config = require('./config/default.json');
+var dist = 'dist';
 
 /**
  *
@@ -26,8 +27,20 @@ module.exports = function(grunt) {
     return args;
   })();
 
+  // Load grunt tasks automatically, when needed
+  require('jit-grunt')(grunt, {
+    useminPrepare: 'grunt-usemin',
+    templates: 'grunt-angular-templates'
+  });
+
+  require('time-grunt')(grunt);
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    hublin: {
+      client: require('./bower.json').appPath || 'frontend',
+      dist: dist
+    },
     concat: {
       options: {
         separator: ';'
@@ -250,6 +263,91 @@ module.exports = function(grunt) {
           'no-preload': true
         }
       }
+    },
+    // Reads Jade files for usemin blocks to enable smart builds that automatically
+    // concat, minify and revision files. Creates configurations in memory so
+    // additional tasks can operate on them
+    useminPrepare: {
+      jade: ['<%= hublin.client %>/views/meetings/index.jade', '<%= hublin.client %>/views/live-conference/index.jade'],
+      options: {
+        debug: true,
+        dest: '<%= hublin.dist %>/frontend/js',
+        patterns: {
+          jade: require('usemin-patterns').jade
+        }
+      }
+    },
+
+    // Performs rewrites based on rev and the useminPrepare configuration
+    usemin: {
+      jade: ['<%= hublin.dist %>/**/index.jade'],
+      js: ['<%= hublin.dist %>/js/{,*/}*.js'],
+      options: {
+        assetsDirs: [
+          '<%= hublin.dist %>/views'
+        ],
+        patterns: {
+        },
+        blockReplacements: {
+          js: function(block) {
+            return 'script(src="/js/' + block.dest + '")';
+          }
+        }
+      }
+    },
+
+    // Allow the use of non-minsafe AngularJS files. Automatically makes it
+    // minsafe compatible so Uglify does not destroy the ng references
+    ngAnnotate: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '.tmp/concat',
+          src: '*.js',
+          dest: '.tmp/concat'
+        }]
+      }
+    },
+    // Empties folders to start fresh
+    clean: {
+      dist: {
+        files: [{
+          dot: true,
+          src: [
+            '.tmp',
+            '<%= hublin.dist %>/*',
+            '!<%= hublin.dist %>/.git*'
+          ]
+        }]
+      }
+    },
+    copy: {
+      dist: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= hublin.client %>',
+          dest: '<%= hublin.dist %>/frontend',
+          src: [
+            'css/*.less',
+            'images/*.{png,jpg}',
+            'js/thirdparty/*.js',
+            'views/**/*'
+          ]
+        }, {
+          expand: true,
+          dest: '<%= hublin.dist %>',
+          src: [
+            'backend/**/*',
+            'config/*',
+            'templates/*',
+            '.bowerrc',
+            'bower.json',
+            'package.json',
+            'server.js'
+          ]
+        }]
+      }
     }
   });
 
@@ -258,6 +356,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-gjslint');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
@@ -268,6 +368,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-lint-pattern');
 
   grunt.loadTasks('tasks');
+
+  grunt.registerTask('dist-files', 'Creates required files', function() {
+    grunt.file.write('dist/log/application.log', '');
+  });
 
   grunt.registerTask('spawn-servers', 'spawn servers', ['shell:redis', 'shell:mongo']);
   grunt.registerTask('kill-servers', 'kill servers', ['shell:redis:kill', 'shell:mongo:kill']);
@@ -297,6 +401,17 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.registerTask('dist', [
+    'clean:dist',
+    'useminPrepare',
+    'concat',
+    'ngAnnotate',
+    'copy:dist',
+    'uglify',
+    'usemin',
+    'dist-files'
+  ]);
+
   grunt.registerTask('dev', ['nodemon:dev']);
   grunt.registerTask('debug', ['node-inspector:dev']);
   grunt.registerTask('setup-server', ['spawn-servers', 'continueOn']);
@@ -305,6 +420,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test-midway-backend', ['setup-environment', 'setup-server', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
   grunt.registerTask('test', ['linters', 'setup-environment', 'run_grunt:unit_backend', 'setup-server', 'run_grunt:midway_backend', 'test-frontend', 'kill-servers', 'clean-environment']);
   grunt.registerTask('linters', 'Check code for lint', ['jshint:all', 'gjslint:all', 'lint_pattern:all']);
+  grunt.registerTask('dist-all', ['test', 'dist']);
 
   /**
    * Usage:

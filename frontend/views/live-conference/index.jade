@@ -59,6 +59,7 @@ html
 
     script(src='/components/angular-uuid4/angular-uuid4.min.js')
 
+    // <!--build:js({.tmp,frontend}) live-conference.js-->
     script(src='/components/opangular/src/easyrtc.js')
     script(src='/components/opangular/src/easyrtc/services.js')
 
@@ -78,7 +79,9 @@ html
     script(src='/components/opangular/src/websocket/services.js')
 
     script(src='/js/modules/live-conference/live-conference.js')
-    script(src='/components/angular-liveconference/dist/live-conference.all.js')
+    script(src='/components/angular-liveconference/src/js/directives.js')
+    script(src='/components/angular-liveconference/src/js/services.js')
+    script(src='/components/angular-liveconference/src/js/templates.js')
 
     script(src='/js/modules/utils/uri.js')
     script(src='/js/modules/utils/language.js')
@@ -88,6 +91,7 @@ html
     script(src='/js/modules/report/report.js')
     script(src='/js/modules/conference/conference.js')
     script(src='/js/live-conference/app.js')
+    // <!--endbuild-->
 
   body.hublin-live-conference-app.ng-cloak(ng-app='liveConferenceApplication' ng-controller="sessionInitLiveConferenceController")
     #wrap(ng-include='session.template')

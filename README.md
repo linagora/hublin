@@ -71,6 +71,49 @@ server. Visit the displayed URL in Chrome or Opera to start the graphical
 debugging session. Note that startup takes a while, you must wait until the Hubl.in
 webserver starts to do anything meaningful.
 
+### Updating files for distribution
+
+grunt plugins are used to process files and generate distribution.
+You will have to follow some rules to not break the distribution generation which are defined here.
+
+#### Frontend
+
+Any project frontend file which is under frontend/js and used in a web page must be placed between generator tags.
+For example, in frontend/views/meetings/index.jade:
+
+    // <!--build:js({.tmp,frontend}) meetings.js-->
+    script(src='/js/modules/user/user.js')
+    ...
+    script(src='/js/meetings/app.js')
+    // <!--endbuild-->
+
+The files placed between the two comment lines will be used to generate a meetings.js file (concatenate and minify all).
+
+### Backend
+
+All the files from backend are copied into the dist/backend folder without any change.
+
+### Static files
+
+These folders are pushed in the distribution:
+
+- config
+- templates
+
+If you need to add more, you will have to change the 'copy:dist' and 'dist-files' tasks in Gruntfile.js
+
+## Create a distribution
+
+To create a distribution with clean environment, minified files and install production dependencies:
+
+    grunt dist-all
+    cd dist
+    # if you do not hav bower installed globally:
+    npm install bower
+    npm install --production
+
+Then you can start the server with 'npm start', 'node server', or your favorite tool (Kudos to forever).
+
 ## License
 
 [Affero GPL v3](http://www.gnu.org/licenses/agpl-3.0.html)

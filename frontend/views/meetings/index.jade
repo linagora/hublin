@@ -30,6 +30,7 @@ html
     script(src='/components/angular-strap/dist/angular-strap.min.js')
     script(src='/components/angular-strap/dist/angular-strap.tpl.min.js')
 
+    // <!--build:js({.tmp,frontend}) meetings.js-->
     script(src='/js/modules/user/user.js')
     script(src='/js/modules/utils/uri.js')
     script(src='/js/modules/utils/wizard.js')
@@ -37,11 +38,10 @@ html
     script(src='/js/modules/session/session.js')
     script(src='/js/modules/configuration/configuration.js')
     script(src='/js/modules/conference/conference.js')
-
     script(src='/js/meetings/app.js')
-
     script(src='/js/analytics/ga.js')
     script(src='/js/thirdparty/modernizr.js')
+    // <!--endbuild-->
 
   body.hublin-app.ng-cloak#page-top.index(ng-app='meetingsApplication')
     #wrap
