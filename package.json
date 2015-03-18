@@ -85,7 +85,8 @@
     "supertest": "^0.15.0"
   },
   "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install --allow-root"
+    "postinstall": "./node_modules/bower/bin/bower install --allow-root",
+    "test": "grunt test"
   },
   "author": "Linagora Folks",
   "license": "AGPLv3"
