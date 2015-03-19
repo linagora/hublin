@@ -3,7 +3,8 @@
 var async = require('async'),
     expect = require('chai').expect,
     MongoClient = require('mongodb').MongoClient,
-    mockery = require('mockery');
+    mockery = require('mockery'),
+    crypto = require('crypto');
 
 /*
  * Mocks esnConf(<key>) object.
@@ -303,4 +304,9 @@ module.exports = function(mixin, testEnv) {
     }
   };
 
+  mixin.utils = {
+    generateStringWithLength: function(length) {
+      return crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length);
+    }
+  };
 };

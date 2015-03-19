@@ -5,6 +5,9 @@ var expect = require('chai').expect,
     express = require('express'),
     apiHelpers = require('../../helpers/api-helpers.js');
 
+var MAX_CONFERENCE_NAME_LENGTH = require('../../../backend/constants').MAX_CONFERENCE_NAME_LENGTH;
+var MIN_CONFERENCE_NAME_LENGTH = require('../../../backend/constants').MIN_CONFERENCE_NAME_LENGTH;
+
 describe('The conference API', function() {
   var application;
   var deps = {
@@ -236,6 +239,40 @@ describe('The conference API', function() {
   });
 
   describe('PUT /api/conferences/:id', function() {
+
+    describe('Check room name size', function() {
+
+      it('should return 400 if the conference id is too long', function(done) {
+        var name = this.helpers.utils.generateStringWithLength(MAX_CONFERENCE_NAME_LENGTH + 1);
+        request(application)
+          .put('/api/conferences/' + name)
+          .send()
+          .expect(400)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            expect(res.body.error.details).to.match(/Conference id is too long/);
+            done();
+          });
+      });
+
+      it('should return 201 if the conference id.length is equals to min length', function(done) {
+        var name = this.helpers.utils.generateStringWithLength(MIN_CONFERENCE_NAME_LENGTH);
+        request(application)
+          .put('/api/conferences/' + name)
+          .send()
+          .expect(201)
+          .end(this.helpers.callbacks.noError(done));
+      });
+
+      it('should return 201 if the conference id.length is equals to max length', function(done) {
+        var name = this.helpers.utils.generateStringWithLength(MAX_CONFERENCE_NAME_LENGTH);
+        request(application)
+          .put('/api/conferences/' + name)
+          .send()
+          .expect(201)
+          .end(this.helpers.callbacks.noError(done));
+      });
+    });
 
     it('should return 201 if the conference is correctly created', function(done) {
       var name = '123456789';
