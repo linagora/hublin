@@ -2,14 +2,15 @@
 
 var dependencies = require('./dependencies');
 
+var extDeps = dependencies.externalDependencies();
+var testDeps = dependencies.testDependencies();
+
 module.exports = function(config) {
-
-  var extDeps = dependencies.externalDependencies();
-  var appDeps = dependencies.applicationDependencies();
-  var testDeps = dependencies.testDependencies();
-
-  var files = extDeps.concat(testDeps).concat(appDeps).concat([
-    'frontend/views/**/*.jade',
+  var files = extDeps.map(function(dep) {
+    return 'dist/' + dep;
+  }).concat(testDeps).concat([
+    'dist/frontend/js/**/*.js',
+    'dist/frontend/views/**/*.jade',
     'test/unit-frontend/**/*.js'
   ]);
 
@@ -17,7 +18,6 @@ module.exports = function(config) {
     basePath: '../../',
     files: files,
     exclude: [
-      'frontend/js/analytics/*.js'
     ],
     frameworks: ['mocha'],
     colors: true,
@@ -25,7 +25,7 @@ module.exports = function(config) {
     browsers: ['PhantomJS'],
     reporters: ['spec'],
     preprocessors: {
-      'frontend/views/**/*.jade': ['ng-jade2module']
+      'dist/frontend/views/**/*.jade': ['ng-jade2module']
     },
 
     plugins: [
@@ -36,7 +36,7 @@ module.exports = function(config) {
     ],
 
     ngJade2ModulePreprocessor: {
-      stripPrefix: 'frontend',
+      stripPrefix: 'dist/frontend',
       jadeRenderConfig: {
         __: function(str) { return str; }
       },

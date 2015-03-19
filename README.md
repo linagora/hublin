@@ -108,8 +108,6 @@ To create a distribution with clean environment, minified files and install prod
 
     grunt dist-all
     cd dist
-    # if you do not hav bower installed globally:
-    npm install bower
     npm install --production
 
 Then you can start the server with 'npm start', 'node server', or your favorite tool (Kudos to forever).

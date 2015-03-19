@@ -329,6 +329,7 @@ module.exports = function(grunt) {
           cwd: '<%= hublin.client %>',
           dest: '<%= hublin.dist %>/frontend',
           src: [
+            'components/**/*',
             'css/*.less',
             'images/*.{png,jpg}',
             'js/thirdparty/*.js',
@@ -348,6 +349,12 @@ module.exports = function(grunt) {
           ]
         }]
       }
+    },
+    karma: {
+      dist: {
+        configFile: './test/config/karma.conf.dist.js',
+        browsers: ['PhantomJS']
+      }
     }
   });
 
@@ -366,6 +373,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-run-grunt');
   grunt.loadNpmTasks('grunt-node-inspector');
   grunt.loadNpmTasks('grunt-lint-pattern');
+  grunt.loadNpmTasks('grunt-karma');
 
   grunt.loadTasks('tasks');
 
@@ -420,7 +428,10 @@ module.exports = function(grunt) {
   grunt.registerTask('test-midway-backend', ['setup-environment', 'setup-server', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
   grunt.registerTask('test', ['linters', 'setup-environment', 'run_grunt:unit_backend', 'setup-server', 'run_grunt:midway_backend', 'test-frontend', 'kill-servers', 'clean-environment']);
   grunt.registerTask('linters', 'Check code for lint', ['jshint:all', 'gjslint:all', 'lint_pattern:all']);
-  grunt.registerTask('dist-all', ['test', 'dist']);
+
+  grunt.registerTask('test-frontend-dist', 'Run the frontend distribution tests', ['karma:dist']);
+  grunt.registerTask('test-dist', ['test-frontend-dist']);
+  grunt.registerTask('dist-all', ['test', 'dist', 'test-dist']);
 
   /**
    * Usage:

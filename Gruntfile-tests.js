@@ -6,6 +6,8 @@
  */
 module.exports = function(grunt) {
 
+  require('time-grunt')(grunt);
+
   grunt.initConfig({
     concat: {
       options: {
@@ -52,27 +54,24 @@ module.exports = function(grunt) {
           files: ['test/midway-backend/all.js', grunt.option('test') || 'test/midway-backend/**/*.js']
         }
       }
+    },
+    karma: {
+      unit: {
+        configFile: './test/config/karma.conf.js',
+        browsers: ['PhantomJS']
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-mocha-cli');
-
+  grunt.loadNpmTasks('grunt-karma');
   grunt.loadTasks('tasks');
 
   grunt.registerTask('test-unit-backend', 'run the backend unit tests (to be used with .only)', ['splitfiles:backend']);
   grunt.registerTask('test-midway-backend', 'run midway tests (to be used with .only)', ['splitfiles:midway']);
   grunt.registerTask('test-backend', 'run both the unit & midway tests', ['test-unit-backend', 'test-midway-backend']);
-
-  grunt.registerTask('test-frontend', 'run the frontend tests', function() {
-    var done = this.async();
-
-    var child = require('child_process').spawn('karma', ['start', '--browsers', 'PhantomJS', './test/config/karma.conf.js']);
-
-    child.stdout.on('data', function(chunk) { grunt.log.write(chunk); });
-    child.stderr.on('data', function(chunk) { grunt.log.error(chunk); });
-    child.on('close', function(code) { done(code ? false : true); });
-  });
+  grunt.registerTask('test-frontend', 'Run the frontend tests', ['karma:unit']);
 
   grunt.registerTask('test', ['test-backend', 'test-frontend']);
   grunt.registerTask('default', ['test']);
