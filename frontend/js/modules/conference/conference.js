@@ -177,6 +177,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       link: function(scope, element) {
         $window.easyrtc.setGotMedia(function(gotMediaCB, errorText) {
           element.modal('hide');
+          $rootScope.$broadcast('localMediaReady');
         });
 
         function interceptStream(callback) {

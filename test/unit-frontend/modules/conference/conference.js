@@ -48,4 +48,28 @@ describe('The meetings.conference module', function() {
 
   });
 
+  describe('The browserAuthorizationDialog directive', function() {
+    var element, rootScope, gotMediaCB;
+
+    beforeEach(inject(function($compile, $rootScope, $window) {
+      $window.easyrtc = {
+        setGotMedia: function(fn) {
+          gotMediaCB = fn;
+        }
+      };
+      element = $compile('<browser-authorization-dialog />')($rootScope);
+      $rootScope.$digest();
+      rootScope = $rootScope;
+    }));
+
+    it('should override window.easyrtc.SetGotMedia with a function broadcasting localMediaReadyEvent', function(done) {
+      expect(gotMediaCB).to.be.a.function;
+      rootScope.$on('localMediaReady', function() {
+        done();
+      });
+      gotMediaCB();
+    });
+
+  });
+
 });
