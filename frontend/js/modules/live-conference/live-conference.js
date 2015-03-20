@@ -61,12 +61,12 @@ angular.module('op.live-conference', [
   'session',
   'conferenceAPI',
   'easyRTCService',
-  'ConferenceState',
+  'currentConferenceState',
   'LOCAL_VIDEO_ID',
   'REMOTE_VIDEO_IDS',
-  function($scope, $log, $timeout, $interval, session, conferenceAPI, easyRTCService, ConferenceState, LOCAL_VIDEO_ID, REMOTE_VIDEO_IDS) {
+  function($scope, $log, $timeout, $interval, session, conferenceAPI, easyRTCService, currentConferenceState, LOCAL_VIDEO_ID, REMOTE_VIDEO_IDS) {
     $scope.conference = session.conference;
-    $scope.conferenceState = new ConferenceState($scope.conference);
+    $scope.conferenceState = currentConferenceState;
     $scope.conferenceId = $scope.conference._id;
     $scope.reportedAttendee = null;
 
