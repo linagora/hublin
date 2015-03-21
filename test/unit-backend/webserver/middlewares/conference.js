@@ -10,7 +10,7 @@ var MIN_CONFERENCE_NAME_LENGTH = require('../../../../backend/constants').MIN_CO
 
 describe('The conference middleware', function() {
 
-  var dependencies;
+  var dependencies, errors;
 
   before(function() {
     dependencies = function(name) {
@@ -18,6 +18,8 @@ describe('The conference middleware', function() {
         return logger();
       }
     };
+
+    errors = this.helpers.requireBackend('webserver/errors')(dependencies);
   });
 
   it('load should set req.conference when id is set', function(done) {
@@ -76,15 +78,9 @@ describe('The conference middleware', function() {
     var req = {
       conference: {}
     };
-    var res = {
-      json: function(code) {
-        expect(code).to.equal(400);
-        done();
-      }
-    };
-    var next = function() {
-    };
-    middleware(req, res, next);
+    this.helpers.expectHttpError(errors.BadRequestError, function(res, next) {
+      middleware(req, res, next);
+    }, done);
   });
 
   it('canJoin should send back HTTP 400 when conference is not set in request', function(done) {
@@ -93,15 +89,9 @@ describe('The conference middleware', function() {
     var req = {
       user: {}
     };
-    var res = {
-      json: function(code) {
-        expect(code).to.equal(400);
-        done();
-      }
-    };
-    var next = function() {
-    };
-    middleware(req, res, next);
+    this.helpers.expectHttpError(errors.BadRequestError, function(res, next) {
+      middleware(req, res, next);
+    }, done);
   });
 
   it('canJoin should send back HTTP 500 when conference module sends back error', function(done) {
@@ -116,15 +106,9 @@ describe('The conference middleware', function() {
       user: {},
       conference: {}
     };
-    var res = {
-      json: function(code) {
-        expect(code).to.equal(500);
-        done();
-      }
-    };
-    var next = function() {
-    };
-    middleware(req, res, next);
+    this.helpers.expectHttpError(errors.ServerError, function(res, next) {
+      middleware(req, res, next);
+    }, done);
   });
 
   it('canJoin should send back HTTP 403 when conference module sends back false', function(done) {
@@ -139,15 +123,9 @@ describe('The conference middleware', function() {
       user: {},
       conference: {}
     };
-    var res = {
-      json: function(code) {
-        expect(code).to.equal(403);
-        done();
-      }
-    };
-    var next = function() {
-    };
-    middleware(req, res, next);
+    this.helpers.expectHttpError(errors.ForbiddenError, function(res, next) {
+      middleware(req, res, next);
+    }, done);
   });
 
   it('canJoin should call next when user can join the conference', function(done) {
@@ -171,15 +149,9 @@ describe('The conference middleware', function() {
     var req = {
       conference: {}
     };
-    var res = {
-      json: function(code) {
-        expect(code).to.equal(400);
-        done();
-      }
-    };
-    var next = function() {
-    };
-    middleware(req, res, next);
+    this.helpers.expectHttpError(errors.BadRequestError, function(res, next) {
+      middleware(req, res, next);
+    }, done);
   });
 
   it('isAdmin should send back HTTP 400 when conference is not set in request', function(done) {
@@ -188,15 +160,9 @@ describe('The conference middleware', function() {
     var req = {
       user: {}
     };
-    var res = {
-      json: function(code) {
-        expect(code).to.equal(400);
-        done();
-      }
-    };
-    var next = function() {
-    };
-    middleware(req, res, next);
+    this.helpers.expectHttpError(errors.BadRequestError, function(res, next) {
+      middleware(req, res, next);
+    }, done);
   });
 
   it('isAdmin should send back HTTP 500 when conference module sends back error', function(done) {
@@ -211,15 +177,9 @@ describe('The conference middleware', function() {
       user: {},
       conference: {}
     };
-    var res = {
-      json: function(code) {
-        expect(code).to.equal(500);
-        done();
-      }
-    };
-    var next = function() {
-    };
-    middleware(req, res, next);
+    this.helpers.expectHttpError(errors.ServerError, function(res, next) {
+      middleware(req, res, next);
+    }, done);
   });
 
   it('isAdmin should send back HTTP 403 when conference module sends back false', function(done) {
@@ -234,15 +194,9 @@ describe('The conference middleware', function() {
       user: {},
       conference: {}
     };
-    var res = {
-      json: function(code) {
-        expect(code).to.equal(403);
-        done();
-      }
-    };
-    var next = function() {
-    };
-    middleware(req, res, next);
+    this.helpers.expectHttpError(errors.ForbiddenError, function(res, next) {
+      middleware(req, res, next);
+    }, done);
   });
 
   it('isAdmin should call next when user is admin of the conference', function(done) {
@@ -267,13 +221,9 @@ describe('The conference middleware', function() {
       var req = {
         conference: {}
       };
-      var res = {
-        json: function(code) {
-          expect(code).to.equal(400);
-          done();
-        }
-      };
-      middleware(req, res);
+      this.helpers.expectHttpError(errors.BadRequestError, function(res, next) {
+        middleware(req, res, next);
+      }, done);
     });
 
     it('should send back HTTP 400 when conference is not set in request', function(done) {
@@ -282,13 +232,9 @@ describe('The conference middleware', function() {
       var req = {
         user: {}
       };
-      var res = {
-        json: function(code) {
-          expect(code).to.equal(400);
-          done();
-        }
-      };
-      middleware(req, res);
+      this.helpers.expectHttpError(errors.BadRequestError, function(res, next) {
+        middleware(req, res, next);
+      }, done);
     });
 
     it('should send back HTTP 500 when conference#userIsConferenceMember fails', function(done) {
@@ -303,13 +249,9 @@ describe('The conference middleware', function() {
         user: {},
         conference: {}
       };
-      var res = {
-        json: function(code) {
-          expect(code).to.equal(500);
-          done();
-        }
-      };
-      middleware(req, res);
+      this.helpers.expectHttpError(errors.ServerError, function(res, next) {
+        middleware(req, res, next);
+      }, done);
     });
 
     it('should call next when conference#userIsConferenceMember returns true', function(done) {
@@ -324,12 +266,7 @@ describe('The conference middleware', function() {
         user: {},
         conference: {}
       };
-      var res = {
-        json: function() {
-          done(new Error());
-        }
-      };
-      middleware(req, res, done);
+      middleware(req, this.helpers.expectNotCalled(done), done);
     });
 
     it('should send back HTTP 403 when conference#userIsConferenceMember returns false ', function(done) {
@@ -344,13 +281,9 @@ describe('The conference middleware', function() {
         user: {},
         conference: {}
       };
-      var res = {
-        json: function(code) {
-          expect(code).to.equal(403);
-          done();
-        }
-      };
-      middleware(req, res);
+      this.helpers.expectHttpError(errors.ForbiddenError, function(res, next) {
+        middleware(req, res, next);
+      }, done);
     });
   });
   describe('lazyArchive middleware', function() {
@@ -463,15 +396,9 @@ describe('The conference middleware', function() {
 
         var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(true);
         var req = {params: {id: 'conf1'}};
-        var res = {
-          json: function(code, details) {
-            expect(code).to.equal(500);
-            expect(details).to.deep.equal({error: {code: 500, message: 'Server Error', details: 'test error'}});
-            done();
-          }
-        };
-        middleware(req, res, function() {
-        });
+        this.helpers.expectHttpError(errors.ServerError, function(res, next) {
+          middleware(req, res, next);
+        }, { details: 'test error' }, done);
       });
     });
     describe('initialized with loadFirst to true', function() {
@@ -479,9 +406,7 @@ describe('The conference middleware', function() {
         mockery.registerMock('../../core/conference', {});
 
         var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(false);
-        var req = {};
-        var res = {};
-        middleware(req, res, done);
+        middleware({}, {}, done);
       });
       it('should not delete req.conference if conference is still active', function(done) {
         var conf = {_id: 'conf1'};
@@ -493,8 +418,7 @@ describe('The conference middleware', function() {
 
         var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(false);
         var req = {conference: conf};
-        var res = {};
-        middleware(req, res, function() {
+        middleware(req, {}, function() {
           expect(req.conference).to.deep.equal(conf);
           done();
         });
@@ -512,8 +436,7 @@ describe('The conference middleware', function() {
 
         var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).lazyArchive(false);
         var req = {conference: conf};
-        var res = {};
-        middleware(req, res, function() {
+        middleware(req, {}, function() {
           expect(req).to.not.have.property('conference');
           done();
         });
@@ -526,13 +449,7 @@ describe('The conference middleware', function() {
       mockery.registerMock('../../core/conference', {});
 
       var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUser;
-      var req = {};
-      var res = {
-        json: function() {
-          done(new Error());
-        }
-      };
-      middleware(req, res, done);
+      middleware({}, this.helpers.expectNotCalled(done), done);
     });
 
     it('should send back 500 if conference#addUser fails', function(done) {
@@ -544,15 +461,9 @@ describe('The conference middleware', function() {
 
       var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUser;
       var req = {conference: {}};
-      var res = {
-        json: function(code) {
-          expect(code).to.equal(500);
-          done();
-        }
-      };
-      middleware(req, res, function() {
-        return done(new Error());
-      });
+      this.helpers.expectHttpError(errors.ServerError, function(res) {
+        middleware(req, res, function() { done(new Error()); });
+      }, done);
     });
 
     it('should send back 500 if conference#getMember fails', function(done) {
@@ -567,15 +478,9 @@ describe('The conference middleware', function() {
 
       var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUser;
       var req = {conference: {}};
-      var res = {
-        json: function(code) {
-          expect(code).to.equal(500);
-          done();
-        }
-      };
-      middleware(req, res, function() {
-        return done(new Error());
-      });
+      this.helpers.expectHttpError(errors.ServerError, function(res) {
+        middleware(req, res, function() { done(new Error()); });
+      }, done);
     });
 
     it('should set req.user if member is found', function(done) {
@@ -591,12 +496,7 @@ describe('The conference middleware', function() {
 
       var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUser;
       var req = {conference: {}};
-      var res = {
-        json: function() {
-          done(new Error());
-        }
-      };
-      middleware(req, res, function() {
+      middleware(req, this.helpers.expectNotCalled(done), function() {
         expect(req.user).to.deep.equals(member);
         done();
       });
@@ -615,12 +515,7 @@ describe('The conference middleware', function() {
 
       var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).addUser;
       var req = {conference: {}};
-      var res = {
-        json: function() {
-          done(new Error());
-        }
-      };
-      middleware(req, res, done);
+      middleware(req, this.helpers.expectNotCalled(done), done);
     });
   });
 
@@ -632,12 +527,7 @@ describe('The conference middleware', function() {
 
       var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).createConference;
       var req = {conference: {}, params: {id: 1}};
-      var res = {
-        json: function() {
-          done(new Error());
-        }
-      };
-      middleware(req, res, done);
+      middleware(req, this.helpers.expectNotCalled(done), done);
     });
 
     it('should send back 500 when conference#create fails', function(done) {
@@ -649,15 +539,9 @@ describe('The conference middleware', function() {
 
       var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).createConference;
       var req = {params: {id: 1}};
-      var res = {
-        json: function(code) {
-          expect(code).to.equals(500);
-          done();
-        }
-      };
-      middleware(req, res, function() {
-        done(new Error());
-      });
+      this.helpers.expectHttpError(errors.ServerError, function(res) {
+        middleware(req, res, function() { done(new Error()); });
+      }, done);
     });
 
     it('should fill request when conference#create created conference', function(done) {
@@ -670,12 +554,7 @@ describe('The conference middleware', function() {
 
       var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).createConference;
       var req = {params: {id: 1}};
-      var res = {
-        json: function() {
-          done(new Error());
-        }
-      };
-      middleware(req, res, function() {
+      middleware(req, this.helpers.expectNotCalled(done), function() {
         expect(req.created).to.be.true;
         expect(req.conference).to.deep.equal(result);
         expect(req.user).to.not.exists;
@@ -695,12 +574,7 @@ describe('The conference middleware', function() {
 
       var middleware = this.helpers.requireBackend('webserver/middlewares/conference')(dependencies).createConference;
       var req = {params: {id: 1}};
-      var res = {
-        json: function() {
-          done(new Error());
-        }
-      };
-      middleware(req, res, function() {
+      middleware(req, this.helpers.expectNotCalled(done), function() {
         expect(req.user).to.deep.equals(member1);
         done();
       });
@@ -727,9 +601,9 @@ describe('The conference middleware', function() {
         }
       };
 
-      middleware(req, this.helpers.httpStatusCodeJsonResponse(400, done), function() {
-        return done(new Error());
-      });
+      this.helpers.expectHttpError(errors.BadRequestError, function(res) {
+        middleware(req, res, function() { done(new Error()); });
+      }, done);
     });
 
     it('should send back HTTP 400 when id is too short', function(done) {
@@ -742,9 +616,9 @@ describe('The conference middleware', function() {
         }
       };
 
-      middleware(req, this.helpers.httpStatusCodeJsonResponse(400, done), function() {
-        return done(new Error());
-      });
+      this.helpers.expectHttpError(errors.BadRequestError, function(res) {
+        middleware(req, res, function() { done(new Error()); });
+      }, done);
     });
 
     it('should call next when id length is at minimal length', function(done) {

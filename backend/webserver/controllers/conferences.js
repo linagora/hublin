@@ -40,47 +40,35 @@ function _transformConference(conference) {
   }
   return sanitizedConference;
 }
-
-function inviteMembers(conf, user, members, callback) {
-  var newMembers = [];
-
-  if (!Array.isArray(members)) {
-    var err = new Error('Members must be an array');
-    err.code = 1;
-    return callback(err);
-  }
-
-  members.forEach(function(member) {
-    var sanitizedMember = _sanitizeAndValidateMember(member);
-    if (sanitizedMember) {
-      newMembers.push(sanitizedMember);
-    }
-  });
-
-  if (!newMembers) {
-    var missing = new Error('Invited members missing');
-    missing.code = 2;
-    return callback(missing);
-  }
-
-  conference.invite(conf, user, newMembers, callback);
-}
-
-function errorResponse(err, res) {
-  if (err.code) {
-    return res.json(400, {error: {code: 400, message: 'Bad Request', details: err.message}});
-  } else {
-    return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
-  }
-}
-
 module.exports = function(dependencies) {
   var logger = dependencies('logger');
+  var errors = require('../errors')(dependencies);
+
+  function inviteMembers(conf, user, members, callback) {
+    var newMembers = [];
+
+    if (!Array.isArray(members)) {
+      throw new errors.BadRequestError('Members must be an array');
+    }
+
+    members.forEach(function(member) {
+      var sanitizedMember = _sanitizeAndValidateMember(member);
+      if (sanitizedMember) {
+        newMembers.push(sanitizedMember);
+      }
+    });
+
+    if (!newMembers) {
+      throw new errors.BadRequestError('Invited members missing');
+    }
+
+    conference.invite(conf, user, newMembers, callback);
+  }
 
   function addMembers(req, res) {
     inviteMembers(req.conference, req.user, req.body, function(err) {
       if (err) {
-        return errorResponse(err, res);
+        throw new errors.ServerError(err);
       }
       res.send(202);
     });
@@ -94,23 +82,19 @@ module.exports = function(dependencies) {
 
     inviteMembers(req.conference, req.user, req.body.members, function(err) {
       if (err) {
-        return errorResponse(err, res);
+        throw new errors.ServerError(err);
       }
-      return res.send(202, _transformConference(req.conference.toObject()));
+      res.send(202, _transformConference(req.conference.toObject()));
     });
-  }
-
-  function removeAttendee(req, res) {
-    return res.json(500, {error: {code: 500, message: 'Server Error', details: 'Not implemented'}});
   }
 
   function getMembers(req, res) {
     var conf = req.conference;
     if (!conf) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Conference is missing'}});
+      throw new errors.BadRequestError('Conference is missing');
     }
     var sanitizedMembers = conf.members ? _transformConferenceMembers(conf.toObject().members) : [];
-    return res.json(200, sanitizedMembers);
+    res.json(200, sanitizedMembers);
   }
 
   function updateMemberField(req, res) {
@@ -118,12 +102,12 @@ module.exports = function(dependencies) {
 
     var data = req.body;
     if (!data || !data.value) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Data is missing'}});
+      throw new errors.BadRequestError('Data is missing');
     }
 
     var field = req.params.field;
     if (AUTHORIZED_FIELDS.indexOf(field) < 0) {
-      return res.json(400, {error: {code: 400, message: 'Bad Request', details: 'Can not update ' + field}});
+      throw new errors.BadRequestError('Can not update ' + field);
     }
 
     var memberId = req.params.mid;
@@ -132,25 +116,25 @@ module.exports = function(dependencies) {
     });
 
     if (!member.length) {
-      return res.json(404, {error: {code: 404, message: 'Not found', details: 'Member not found in conference'}});
+      throw new errors.NotFoundError('Member not found in conference');
     }
 
     conference.updateMemberField(conf, member[0], field, data.value, function(err) {
       if (err) {
         logger.error('Can not update member %e', err);
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: 'Can not update member'}});
+        throw new errors.ServerError('Can not update member');
       }
       var returnedMember = member[0].toObject();
       returnedMember[field] = data.value;
-      return res.json(200, _transformConferenceMember(returnedMember));
+      res.json(200, _transformConferenceMember(returnedMember));
     });
   }
 
   function get(req, res) {
     if (!req.conference) {
-      return res.json(404, {error: {code: 404, message: 'Not found', details: 'No such conference'}});
+      throw new errors.NotFoundError('No such conference');
     }
-    return res.json(200, _transformConference(req.conference.toObject()));
+    res.json(200, _transformConference(req.conference.toObject()));
   }
 
   function persistReport(req, callback) {
@@ -176,33 +160,31 @@ module.exports = function(dependencies) {
   }
 
   function createReport(req, res) {
-
     if (!req.body.reported) {
-      return res.json(400, {error: {code: 400, message: 'Bad request', details: 'Attendee to report is required'}});
+      throw new errors.BadRequestError('Attendee to report is required');
     }
 
     if (!req.body.description) {
-      return res.json(400, {error: {code: 400, message: 'Bad request', details: 'Description is required'}});
+      throw new errors.BadRequestError('Description is required');
     }
 
     if (!req.body.members) {
-      return res.json(400, {error: {code: 400, message: 'Bad request', details: 'Members of the conference are required'}});
+      throw new errors.BadRequestError('Members of the conference are required');
     }
 
     persistReport(req, function(err, created) {
       if (err) {
         logger.error('Error while creating report %e', err);
-        return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
+        throw new errors.ServerError(err);
       }
 
-      return res.json(201, {id: created._id});
+      res.json(201, {id: created._id});
     });
   }
 
   return {
     get: get,
     finalizeCreation: finalizeCreation,
-    removeAttendee: removeAttendee,
     addMembers: addMembers,
     getMembers: getMembers,
     updateMemberField: updateMemberField,

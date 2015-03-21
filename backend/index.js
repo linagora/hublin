@@ -46,6 +46,7 @@ var Meetings = new AwesomeModule('linagora.io.meetings', {
       webserver.application.use('/', this.api.feedback);
 
       webserver.application.use(this.api.errors.logErrors);
+      webserver.application.use('/api/*', this.api.errors.apiErrorHandler);
       webserver.application.use(this.api.errors.clientErrorHandler);
       webserver.application.use(this.api.errors.errorHandler);
 

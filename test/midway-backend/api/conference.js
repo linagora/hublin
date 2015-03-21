@@ -35,7 +35,7 @@ describe('The conference API', function() {
     };
     this.testEnv.initCore(function() {
       var router = apiHelpers.getRouter('conferences', dependencies);
-      application = apiHelpers.getApplication(router);
+      application = apiHelpers.getApplication(router, dependencies);
       done();
     });
   });
@@ -522,7 +522,7 @@ describe('The conference API', function() {
             if (err) {
               return done(err);
             }
-            expect(data.body.error.details).to.match(/conference is required in request/);
+            expect(data.body.error.details).to.match(/conference is required in the request/);
              done();
           });
       });

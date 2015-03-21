@@ -13,6 +13,13 @@ describe('The feedback controller', function() {
     return dependencies[name];
   };
 
+  var errors, controller;
+
+  before(function() {
+    errors = this.helpers.requireBackend('webserver/errors')(deps);
+    controller = this.helpers.requireBackend('webserver/controllers/feedback')(deps);
+  });
+
   describe('The sendFeedbackMail function', function() {
 
     it('should not send any email if it cannot retrieve the configuration', function(done) {
@@ -23,9 +30,9 @@ describe('The feedback controller', function() {
         done(new Error('This test should not call mailer.send !'));
       };
 
-      this.helpers
-        .requireBackend('webserver/controllers/feedback')(deps)
-        .sendFeedbackMail(null, this.helpers.httpStatusCodeJsonResponse(500, done));
+      this.helpers.expectHttpError(errors.ServerError, function(res) {
+        controller.sendFeedbackMail(null, res);
+      }, done);
     });
 
     it('should not send any email if the configuration does not contain a feedback object', function(done) {
@@ -36,9 +43,9 @@ describe('The feedback controller', function() {
         done(new Error('This test should not call mailer.send !'));
       };
 
-      this.helpers
-        .requireBackend('webserver/controllers/feedback')(deps)
-        .sendFeedbackMail(null, this.helpers.httpStatusCodeJsonResponse(500, done));
+      this.helpers.expectHttpError(errors.ServerError, function(res) {
+        controller.sendFeedbackMail(null, res);
+      }, done);
     });
 
     it('should not send any email if the configuration does not contain a feedback.rcpt object', function(done) {
@@ -51,9 +58,9 @@ describe('The feedback controller', function() {
         done(new Error('This test should not call mailer.send !'));
       };
 
-      this.helpers
-        .requireBackend('webserver/controllers/feedback')(deps)
-        .sendFeedbackMail(null, this.helpers.httpStatusCodeJsonResponse(500, done));
+      this.helpers.expectHttpError(errors.ServerError, function(res) {
+        controller.sendFeedbackMail(null, res);
+      }, done);
     });
 
     it('should send an email and use the configuration', function(done) {
@@ -73,20 +80,17 @@ describe('The feedback controller', function() {
         callback(null, { ok: 'ok' });
       };
 
-      this.helpers
-        .requireBackend('webserver/controllers/feedback')(deps)
-        .sendFeedbackMail({
-          body: {
-            name: 'user',
-            email: 'user@domain.com',
-            text: 'text'
-          }
-        }, this.helpers.httpStatusCodeValidatingJsonResponse(200, function(data) {
-          expect(data).to.deep.equal({ ok: 'ok' });
+      controller.sendFeedbackMail({
+        body: {
+          name: 'user',
+          email: 'user@domain.com',
+          text: 'text'
+        }
+      }, this.helpers.httpStatusCodeValidatingJsonResponse(200, function(data) {
+        expect(data).to.deep.equal({ ok: 'ok' });
 
-          done();
-        }));
+        done();
+      }));
     });
-
   });
 });

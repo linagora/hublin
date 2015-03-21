@@ -11,23 +11,34 @@ var conferenceHelpers = require('../../core/conference/helpers');
 module.exports = function(dependencies) {
 
   var logger = dependencies('logger');
+  var errors = require('../errors')(dependencies);
+
+  /**
+   * Ensures that req.user and req.conference is set, throwing a
+   * BadRequestError otherwise.
+   *
+   * @param {Request} req       The request to check
+   */
+  function ensureUserAndConference(req) {
+    if (!req.user) {
+      throw new errors.BadRequestError('User is required');
+    }
+
+    if (!req.conference) {
+      throw new errors.BadRequestError('Conference is required');
+    }
+  }
 
   function load(req, res, next) {
     conference.get(req.params.id, function(err, conf) {
       if (err) {
-        return res.json(500, {
-          error: {
-            code: 500,
-            message: 'Server Error',
-            details: err.message
-          }
-        });
+        throw new errors.ServerError(err);
       }
 
       if (conf) {
         req.conference = conf;
       }
-      return next();
+      next();
     });
   }
 
@@ -39,38 +50,26 @@ module.exports = function(dependencies) {
     conference.getFromMemberToken(req.query.token, function(err, conf) {
       if (err) {
         logger.error('Error while getting member from token %s : %e', req.query.token, err);
-        return res.send(500);
+        throw new errors.ServerError('Error retrieving member');
       }
 
       if (!conf) {
-        return res.send(404);
+        throw new errors.NotFoundError('Conference not found');
       }
 
       req.conference = conf;
-      return next();
+      next();
     });
   }
 
   function loadWithAttendees(req, res, next) {
     conference.loadWithAttendees(req.params.id, function(err, conf) {
       if (err) {
-        return res.json(500, {
-          error: {
-            code: 500,
-            message: 'Server Error',
-            details: err.message
-          }
-        });
+        throw new errors.ServerError(err);
       }
 
       if (!conf) {
-        return res.json(404, {
-          error: {
-            code: 404,
-            message: 'Bad request',
-            details: 'conference not found: ' + req.params.id
-          }
-        });
+        throw new errors.NotFoundError('Conference not found');
       }
 
       req.conference = conf;
@@ -79,195 +78,68 @@ module.exports = function(dependencies) {
   }
 
   function canJoin(req, res, next) {
-
-    if (!req.user) {
-      return res.json(400, {
-        error: {
-          code: 400,
-          message: 'Bad request',
-          details: 'User is required'
-        }
-      });
-    }
-
-    if (!req.conference) {
-      return res.json(400, {
-        error: {
-          code: 400,
-          message: 'Bad request',
-          details: 'Conference is required'
-        }
-      });
-    }
+    ensureUserAndConference(req);
 
     conference.userCanJoinConference(req.conference, req.user, function(err, status) {
       if (err) {
-        return res.json(500, {
-          error: {
-            code: 500,
-            message: 'Server error',
-            details: err.message
-          }
-        });
+        throw new errors.ServerError(err);
       }
 
       if (!status) {
-        return res.json(403, {
-          error: {
-            code: 403,
-            message: 'Forbidden',
-            details: 'User does not have access to conference'
-          }
-        });
+        throw new errors.ForbiddenError('User does not have access to conference');
       }
-      return next();
+      next();
     });
   }
 
   function isAdmin(req, res, next) {
-    if (!req.user) {
-      return res.json(400, {
-        error: {
-          code: 400,
-          message: 'Bad request',
-          details: 'User is required'
-        }
-      });
-    }
-
-    if (!req.conference) {
-      return res.json(400, {
-        error: {
-          code: 400,
-          message: 'Bad request',
-          details: 'Conference is required'
-        }
-      });
-    }
+    ensureUserAndConference(req);
 
     conference.userIsConferenceCreator(req.conference, req.user, function(err, status) {
       if (err) {
-        return res.json(500, {
-          error: {
-            code: 500,
-            message: 'Server error',
-            details: err.message
-          }
-        });
+        throw new errors.ServerError(err);
       }
 
       if (!status) {
-        return res.json(403, {
-          error: {
-            code: 403,
-            message: 'Forbidden',
-            details: 'User is not conference admin'
-          }
-        });
+        throw new errors.ForbiddenError('User is not conference admin');
       }
-      return next();
+      next();
     });
   }
 
   function canAddMember(req, res, next) {
-    if (!req.user) {
-      return res.json(400, {
-        error: {
-          code: 400,
-          message: 'Bad request',
-          details: 'User is required'
-        }
-      });
-    }
-
-    if (!req.conference) {
-      return res.json(400, {
-        error: {
-          code: 400,
-          message: 'Bad request',
-          details: 'Conference is required'
-        }
-      });
-    }
+    ensureUserAndConference(req);
 
     conference.userIsConferenceMember(req.conference, req.user, function(err, isMember) {
       if (err) {
-        return res.json(500, {
-          error: {
-            code: 500,
-            message: 'Server error',
-            details: err.message
-          }
-        });
+        throw new errors.ServerError(err);
       }
 
       if (!isMember) {
-        return res.json(403, {
-          error: {
-            code: 403,
-            message: 'Forbidden',
-            details: 'User cannot invite members into a conference in which he is not member himself.'
-          }
-        });
+        throw new errors.ForbiddenError('User cannot invite members into a conference in which he is not member himself');
       }
 
-      return next();
+      next();
     });
   }
 
   function canUpdateUser(req, res, next) {
-    if (!req.user) {
-      return res.json(400, {
-        error: {
-          code: 400,
-          message: 'Bad request',
-          details: 'User is required'
-        }
-      });
-    }
-
-    if (!req.conference) {
-      return res.json(400, {
-        error: {
-          code: 400,
-          message: 'Bad request',
-          details: 'Conference is required'
-        }
-      });
-    }
+    ensureUserAndConference(req);
 
     conference.userIsConferenceMember(req.conference, req.user, function(err, isMember) {
       if (err) {
-        return res.json(500, {
-          error: {
-            code: 500,
-            message: 'Server error',
-            details: err.message
-          }
-        });
+        throw new errors.ServerError(err);
       }
 
       if (!isMember) {
-        return res.json(403, {
-          error: {
-            code: 403,
-            message: 'Forbidden',
-            details: 'User cannot update member in a conference he is not member'
-          }
-        });
+        throw new errors.ForbiddenError('User cannot update member in a conference he is not member');
       }
 
       if (req.user._id.toString() !== req.params.mid) {
-        return res.json(403, {
-          error: {
-            code: 403,
-            message: 'Forbidden',
-            details: 'User cannot update other member.'
-          }
-        });
+        throw new errors.ForbiddenError('User cannot update other member');
       }
 
-      return next();
+      next();
     });
 
   }
@@ -285,7 +157,7 @@ module.exports = function(dependencies) {
 
     conference.create(conf, function(err, created) {
       if (err) {
-        return res.json(500, { error: { code: 500, message: 'Server Error', details: err.message}});
+        throw new errors.ServerError(err);
       }
 
       if (created) {
@@ -308,11 +180,11 @@ module.exports = function(dependencies) {
 
     conference.addUser(req.conference, req.user, function(err) {
       if (err) {
-        return res.json(500, { error: { code: 500, message: 'Server Error', details: err.message}});
+        throw new errors.ServerError(err);
       }
       conference.getMember(req.conference, req.user, function(err, member) {
         if (err) {
-          return res.json(500, { error: { code: 500, message: 'Server Error', details: err.message}});
+          throw new errors.ServerError(err);
         }
         if (member) {
           req.user = member;
@@ -325,22 +197,12 @@ module.exports = function(dependencies) {
   function checkIdLength(req, res, next) {
     var confId = req.params.id;
 
-    function returnError(errMessage) {
-      return res.json(400, {
-        error: {
-          code: 400,
-          message: 'Bad request',
-          details: errMessage
-        }
-      });
-    }
-
     if (conferenceHelpers.isIdTooLong(confId)) {
-      return returnError('Conference id is too long');
+      throw new errors.BadRequestError('Conference id is too long');
     }
 
     if (conferenceHelpers.isIdTooShort(confId)) {
-      return returnError('Conference id is too short');
+      throw new errors.BadRequestError('Conference id is too short');
     }
 
     next();
@@ -350,13 +212,7 @@ module.exports = function(dependencies) {
     var confId = req.params.id;
 
     if (conferenceHelpers.isIdForbidden(confId)) {
-      return res.json(400, {
-        error: {
-          code: 400,
-          message: 'Bad request',
-          details: 'Forbidden conference id'
-        }
-      });
+      throw new errors.BadRequestError('Forbidden conference id');
     }
     next();
   }
@@ -383,7 +239,7 @@ module.exports = function(dependencies) {
             next();
           },
           function onError(err) {
-            return res.json(500, {error: {code: 500, message: 'Server Error', details: err.message}});
+            throw new errors.ServerError(err);
           }
         )
         .done();
