@@ -9,8 +9,10 @@
         .row
           form(name='reportForm')
             label #{__('Description:')}
-            textarea(class='form-control', ng-required='true', rows='5', name='reportText', ng-model='reportedText', placeholder="#{__('Enter a description for the report')}")
+            textarea(class='form-control', ng-required='true', ng-trim='true', ng-maxlength= '5000', rows='5', name='reportText', ng-model='reportedText', placeholder="#{__('Enter a description for the report')}")
         .row
+          span.bg-danger(class="error", ng-show="reportForm.reportText.$error.maxlength")
+            i(class="fa fa-exclamation-triangle") &nbsp; #{__('Too many characters in the description')}
           #reporterror
       .modal-footer
         button.btn.btn-default(data-dismiss='modal') #{__('Cancel')}

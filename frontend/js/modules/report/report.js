@@ -8,10 +8,20 @@ angular.module('meetings.report', [])
       templateUrl: '/views/modules/report/report-dialog.html',
       link: function($scope, element, attrs) {
 
+        $scope.element = element;
+
         $scope.alertDisplayed = null;
 
+        $scope.element.on('show.bs.modal', function() {
+          $scope.reportedText = '';
+        });
+
+        $scope.element.on('shown.bs.modal', function() {
+          ($('#reportModal').find($('textarea')))[0].focus();
+        });
+
         $scope.hide = function() {
-          element.modal('hide');
+          $scope.element.modal('hide');
         };
 
         $scope.sendReport = function() {
@@ -20,14 +30,7 @@ angular.module('meetings.report', [])
           $scope.resetModal();
 
           var getArrayOfMemberId = function(arrayOfMembers) {
-            var arrayOfId = [];
-            for (var i = 0; i < arrayOfMembers.length; i++)
-            {
-              if (arrayOfMembers[i]) {
-                arrayOfId.push(arrayOfMembers[i].id);
-              }
-            }
-            return arrayOfId;
+            return arrayOfMembers.filter(Boolean).map(function(e) { return e.id; });
           };
 
           conferenceAPI.createReport($scope.reportedAttendee.id, $scope.conferenceState.conference._id, getArrayOfMemberId($scope.conferenceState.attendees), description).then(
@@ -35,12 +38,10 @@ angular.module('meetings.report', [])
               $log.info('Successfully created report with response', response);
               notificationFactory.weakInfo('Report ' + $scope.reportedAttendee.displayName, 'Report has been sent !');
               $scope.hide();
-              return response.data;
             },
             function(err) {
               $log.error('Failed to create report', err);
               $scope.displayError('Failed to create report');
-              return err;
             }
           );
         };
