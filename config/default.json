@@ -30,25 +30,32 @@
     "roomNameRegExp": "^[a-z0-9_.-]{1,64}$",
     "usernameRegExp": "^(.){1,200}$"
   },
-  "log": {
-    "file": {
+  "loggers" : [
+    {
+      "name": "File",
       "enabled": true,
-      "filename": "./log/application.log",
-      "level": "info",
-      "handleExceptions": true,
-      "json": false,
-      "prettyPrint": true,
-      "colorize": false
+      "options": {
+        "filename": "./log/application.log",
+        "level": "info",
+        "handleExceptions": true,
+        "json": false,
+        "prettyPrint": true,
+        "colorize": false
+      }
     },
-    "console": {
+    {
+      "name": "Console",
       "enabled": true,
-      "level": "info",
-      "handleExceptions": true,
-      "json": false,
-      "prettyPrint": true,
-      "colorize": true
+      "options": {
+        "enabled": true,
+        "level": "info",
+        "handleExceptions": true,
+        "json": false,
+        "prettyPrint": true,
+        "colorize": true
+      }
     }
-  },
+  ],
   "emailInvitation": {
     "templatesDir": "./templates/email"
   },
