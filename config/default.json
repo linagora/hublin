@@ -18,7 +18,22 @@
     "ssl_ca": [],
 
     "virtualhosts": [],
-    "startupBufferTimeout": 5000
+    "startupBufferTimeout": 5000,
+
+    "loggers": [
+      {
+        "name": "File",
+        "enabled": true,
+        "options": {
+          "filename": "./log/webserver.log",
+          "level": "info",
+          "handleExceptions": true,
+          "json": false,
+          "prettyPrint": true,
+          "colorize": false
+        }
+      }
+    ]
   },
   "wsserver": {
     "enabled": true,
