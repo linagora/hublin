@@ -30,18 +30,19 @@ describe('The meetings.report module', function() {
     var modalElt, textareaElt, formElt, btnSendElt, btnCancelElt, errorElt, titreElt;
     var expectedBody;
 
-    beforeEach(angular.mock.inject(function(_$rootScope_, _$compile_, conferenceAPI, notificationFactory, $httpBackend) {
+    beforeEach(angular.mock.inject(function(_$rootScope_, _$compile_, conferenceAPI, notificationFactory, $httpBackend, MAX_REPORT_DESCRIPTION_LENGTH) {
 
       this.conferenceAPI = conferenceAPI;
+      this.MAX_REPORT_DESCRIPTION_LENGTH = MAX_REPORT_DESCRIPTION_LENGTH;
 
       $rootScope = _$rootScope_;
       $compile = _$compile_;
 
-      $rootScope.reportedAttendee = {
+      $rootScope.reportedSnapshot = {
         displayName: 'yan',
         id: '550ae95bdfeedfd52d9f6a49'
       };
-      $rootScope.conferenceState = {
+      $rootScope.conferenceSnapshot = {
         conference: {
           _id: 'testFrontend'
         },
@@ -90,25 +91,25 @@ describe('The meetings.report module', function() {
       this.$httpBackend = $httpBackend;
     }));
 
-    it('The Report modal is correctly built and initiated', function(done) {
-      expect(modalElt).not.to.be.an('undefined');
-      expect(textareaElt).not.to.be.an('undefined');
-      expect(formElt).not.to.be.an('undefined');
-      expect(btnSendElt).not.to.be.an('undefined');
-      expect(btnCancelElt).not.to.be.an('undefined');
-      expect(errorElt).not.to.be.an('undefined');
+    it('should correctly build and initiate the report modal', function(done) {
+      expect(modalElt).to.exist;
+      expect(textareaElt).to.exist;
+      expect(formElt).to.exist;
+      expect(btnSendElt).to.exist;
+      expect(btnCancelElt).to.exist;
+      expect(errorElt).to.exist;
 
       $rootScope.$digest();
 
       expect(textareaElt.val()).to.be.empty;
       expect(errorElt.hasClass('ng-show')).to.be.false;
-      expect(titreElt.contents()[0].data).to.have.string($rootScope.reportedAttendee.displayName);
+      expect(titreElt.contents()[0].data).to.have.string($rootScope.reportedSnapshot.displayName);
       expect(btnSendElt.attr('disabled')).to.equal('disabled');
 
       done();
     });
 
-    it('The send button is enabled when a description is entered', function(done) {
+    it('should enable the send button when a description is entered', function(done) {
       $rootScope.reportedText = 'something';
       $rootScope.$digest();
 
@@ -116,14 +117,14 @@ describe('The meetings.report module', function() {
       done();
     });
 
-    it('The send button is disabled when too many characters are entered (~5000)', function(done) {
-      var maxDescriptionSize = 5000;
-      for ($rootScope.reportedText = ''; $rootScope.reportedText.length < maxDescriptionSize; ) {
-        $rootScope.reportedText += 'A';
-      }
+    it('should disable the send button when too many characters are entered (~5000)', function(done) {
+
+      $rootScope.reportedText = new Array(this.MAX_REPORT_DESCRIPTION_LENGTH + 1).join('A');
+
       $rootScope.$digest();
 
       expect(btnSendElt.attr('disabled')).to.be.undefined;
+
 
       $rootScope.reportedText += 'A';
       $rootScope.$digest();
@@ -132,7 +133,7 @@ describe('The meetings.report module', function() {
       done();
     });
 
-    it('The Report button launches a post call to /api/conferences/:id/reports/', function(done) {
+    it('should launch a post call to /api/conferences/:id/reports/', function(done) {
       $rootScope.reportedText = expectedBody.description;
 
       this.$httpBackend.expectPOST('/conferences/testFrontend/reports', expectedBody).respond(201);
@@ -144,7 +145,7 @@ describe('The meetings.report module', function() {
       done();
     });
 
-    it('Reset the description textfield after a new report creation', function(done) {
+    it('should reset the description textfield after a new report creation', function(done) {
       $rootScope.reportedText = expectedBody.description;
       $rootScope.$digest();
       expect(textareaElt.val()).to.equal(expectedBody.description);

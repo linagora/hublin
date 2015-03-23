@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('meetings.report', [])
-  .directive('reportDialog', ['conferenceAPI', '$alert', 'notificationFactory', '$log', function(conferenceAPI, $alert, notificationFactory, $log) {
+  .constant('MAX_REPORT_DESCRIPTION_LENGTH', 5000)
+  .directive('reportDialog', ['conferenceAPI', '$alert', 'notificationFactory', '$log', 'MAX_REPORT_DESCRIPTION_LENGTH', function(conferenceAPI, $alert, notificationFactory, $log, MAX_REPORT_DESCRIPTION_LENGTH) {
     return {
       restrict: 'E',
       replace: true,
@@ -9,11 +10,13 @@ angular.module('meetings.report', [])
       link: function($scope, element, attrs) {
 
         $scope.element = element;
-
+        $scope.MAX_REPORT_DESCRIPTION_LENGTH = MAX_REPORT_DESCRIPTION_LENGTH.toString();
         $scope.alertDisplayed = null;
 
         $scope.element.on('show.bs.modal', function() {
-          $scope.reportedText = '';
+          $scope.resetModal();
+          $scope.reportedSnapshot = angular.copy($scope.reportedAttendee);
+          $scope.conferenceSnapshot = angular.copy($scope.conferenceState);
         });
 
         $scope.element.on('shown.bs.modal', function() {
@@ -27,16 +30,17 @@ angular.module('meetings.report', [])
         $scope.sendReport = function() {
 
           var description = $scope.reportedText;
+
           $scope.resetModal();
 
           var getArrayOfMemberId = function(arrayOfMembers) {
             return arrayOfMembers.filter(Boolean).map(function(e) { return e.id; });
           };
 
-          conferenceAPI.createReport($scope.reportedAttendee.id, $scope.conferenceState.conference._id, getArrayOfMemberId($scope.conferenceState.attendees), description).then(
+          conferenceAPI.createReport($scope.reportedSnapshot.id, $scope.conferenceSnapshot.conference._id, getArrayOfMemberId($scope.conferenceSnapshot.attendees), description).then(
             function(response) {
               $log.info('Successfully created report with response', response);
-              notificationFactory.weakInfo('Report ' + $scope.reportedAttendee.displayName, 'Report has been sent !');
+              notificationFactory.weakInfo('Report ' + $scope.reportedSnapshot.displayName, 'Report has been sent !');
               $scope.hide();
             },
             function(err) {
