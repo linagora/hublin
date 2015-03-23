@@ -40,7 +40,8 @@ application.use(lessMiddleware(
 
 if (process.env.NODE_ENV !== 'test') {
   var morgan = require('morgan');
-  application.use(morgan());
+  var format = process.env.NODE_ENV && process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
+  application.use(morgan(format));
 }
 
 application.use('/components', express.static(FRONTEND_PATH + '/components'));
