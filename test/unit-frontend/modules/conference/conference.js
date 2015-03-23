@@ -7,8 +7,6 @@ var expect = chai.expect;
 describe('The meetings.conference module', function() {
 
   beforeEach(function() {
-    window.URI = function() {};
-
     module('meetings.conference');
     module('meetings.jade.templates');
   });
@@ -18,7 +16,8 @@ describe('The meetings.conference module', function() {
     var element;
 
     beforeEach(inject(function($compile, $rootScope) {
-      element = $compile('<conference-create-form />')($rootScope);
+      this.scope = $rootScope.$new();
+      element = $compile('<conference-create-form />')(this.scope);
       $rootScope.$digest();
 
       // So that focus() and probably other user interaction events fire
@@ -44,6 +43,48 @@ describe('The meetings.conference module', function() {
 
       expect(input[0].selectionStart).to.equal(0);
       expect(input[0].selectionEnd).to.equal(input.val().length);
+    });
+
+    describe('the escapeRoomName function', function() {
+
+      it('should return the same room name if no forbidden characters', function() {
+        expect(this.scope.escapeRoomName('pipo')).to.equal('pipo');
+      });
+
+      it('should remove the forbidden characters from the room name', function() {
+        var forbiddenChars = [',', '/', '?', ':', '@', '&', '=', '+', '$', '#', '<', '>', '[', ']',
+        '{', '}', '"', '%', ';', '\\', '^', '|', '~' , '\'', '`'];
+        var self = this;
+        forbiddenChars.forEach(function(char) {
+          var roomNameWithChar = 'test' + char + '  test';
+          expect(self.scope.escapeRoomName(roomNameWithChar)).to.equal('testtest');
+
+          var roomNameWithSameCharMultiple = char + 'test' + char + '  test  ' + char;
+          expect(self.scope.escapeRoomName(roomNameWithSameCharMultiple)).to.equal('testtest');
+
+          forbiddenChars.forEach(function(otherChar) {
+            var roomNameWithDifferentChars = 'test' + otherChar + char + 'test';
+            expect(self.scope.escapeRoomName(roomNameWithDifferentChars)).to.equal('testtest');
+          });
+        });
+
+        expect(this.scope.escapeRoomName(forbiddenChars.join(''))).to.equal('');
+      });
+
+      it('should return nothing if the room name is a word form the blacklist', function() {
+        var blackList = [
+          'api',
+          'components',
+          'views',
+          'js',
+          'css',
+          'images',
+          'favicon.ico'];
+        var self = this;
+        blackList.forEach(function(word) {
+          expect(self.scope.escapeRoomName(word)).to.equal('');
+        });
+      });
     });
 
   });
