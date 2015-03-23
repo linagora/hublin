@@ -23,7 +23,7 @@
     "loggers": [
       {
         "name": "File",
-        "enabled": true,
+        "enabled": false,
         "options": {
           "filename": "./log/webserver.log",
           "level": "info",
@@ -31,6 +31,18 @@
           "json": false,
           "prettyPrint": true,
           "colorize": false
+        }
+      },
+      {
+        "name": "Console",
+        "enabled": true,
+        "options": {
+          "enabled": true,
+          "level": "info",
+          "handleExceptions": true,
+          "json": false,
+          "prettyPrint": true,
+          "colorize": true
         }
       }
     ]

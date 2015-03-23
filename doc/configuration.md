@@ -7,7 +7,12 @@
 
 ### Loggers
 
-Loggers are configured in the 'loggers' array of the config/default.*.json files by following the Winston logger format.
+Loggers can be configured in the config/default.*.json file:
+
+- In the loggers array: Configure the core logger.
+- In the loggers array of the webserver: Configure the webserver layer logger.
+
+Note: Loggers are following the [Winston](https://github.com/winstonjs/winston) logger format.
 
 A logger must have a name and a hash of options to use.
 

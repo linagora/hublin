@@ -39,9 +39,7 @@ application.use(lessMiddleware(
   process.env.NODE_ENV === 'production' ? lessMiddlewareConfig.production.options : lessMiddlewareConfig.dev.options));
 
 if (process.env.NODE_ENV !== 'test') {
-  var morgan = require('morgan');
-  var format = process.env.NODE_ENV && process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
-  application.use(morgan(format));
+  application.use(require('./logger'));
 }
 
 application.use('/components', express.static(FRONTEND_PATH + '/components'));
