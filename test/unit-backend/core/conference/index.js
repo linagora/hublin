@@ -1130,7 +1130,10 @@ describe('The conference module', function() {
       this.helpers.mock.models({
         ConferenceArchive: function() {
           return {
-            save: function(cb) { return cb(new Error('test'));}
+            save: function(cb) { return cb(new Error('test'));},
+            toObject: function() {
+              return {};
+            }
           };
         }
       });

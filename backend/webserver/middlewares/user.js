@@ -117,7 +117,7 @@ module.exports = function(dependencies) {
 
     conference.getFromMemberToken(token, function(err, conference) {
       if (err) {
-        logger.error('Can not get member from token %e', err);
+        logger.error('Can not get member from token', err);
         return res.send(500);
       }
 
