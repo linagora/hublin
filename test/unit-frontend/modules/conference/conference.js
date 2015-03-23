@@ -79,7 +79,11 @@ describe('The meetings.conference module', function() {
           'js',
           'css',
           'images',
-          'favicon.ico'];
+          'favicon.ico',
+          'robots.txt',
+          'apple-touch-icon.png',
+          'apple-touch-icon-precomposed.png'
+        ];
         var self = this;
         blackList.forEach(function(word) {
           expect(self.scope.escapeRoomName(word)).to.equal('');

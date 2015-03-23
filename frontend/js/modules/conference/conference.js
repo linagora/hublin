@@ -139,7 +139,11 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
             'js',
             'css',
             'images',
-            'favicon.ico'];
+            'favicon.ico',
+            'robots.txt',
+            'apple-touch-icon.png',
+            'apple-touch-icon-precomposed.png'
+          ];
           if (blackList.indexOf(result) >= 0) { result = ''; }
 
           return result;
