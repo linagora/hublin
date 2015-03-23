@@ -67,6 +67,25 @@
         "prettyPrint": true,
         "colorize": true
       }
+    },
+    {
+      "name": "Mail",
+      "enabled": "false",
+      "module": "winston-mail",
+      "options": {
+        "to": "fail@hubl.in",
+        "host": "smtp@hubl.in",
+        "port": 587,
+        "username": "admin",
+        "password": "secret",
+        "ssl": {
+          "key": "",
+          "ca": "",
+          "cert": ""
+        },
+        "level": "error",
+        "silent": true
+      }
     }
   ],
   "emailInvitation": {

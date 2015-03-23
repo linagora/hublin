@@ -57,7 +57,11 @@ describe('The core logger module', function() {
     it('should add all the configured loggers', function() {
       var config = function() {
         return {
-          loggers: [{name: 'Console', enabled: true, options: {'A': 1}}, {name: 'Fake', enabled: true, options: {'B': 2}}]
+          loggers: [{name: 'Console', enabled: true, options: {'A': 1}}, {
+            name: 'Fake',
+            enabled: true,
+            options: {'B': 2}
+          }]
         };
       };
 
@@ -116,5 +120,71 @@ describe('The core logger module', function() {
       expect(call).to.equal(1);
     });
 
+    it('should load the external modules', function(done) {
+      var external = {
+        External: function() {
+          done();
+        }
+      };
+
+      var config = function() {
+        return {
+          loggers: [{name: 'External', module: 'external-transport', enabled: true, options: {'B': 2}}]
+        };
+      };
+
+      var winston = {
+        Logger: function() {
+          return {
+            add: function(logger, options) {
+              expect(logger).to.be.a.function;
+              expect(options).to.exist;
+              logger();
+            }
+          };
+        }
+      };
+
+      mockery.registerMock('../config', config);
+      mockery.registerMock('winston', winston);
+      mockery.registerMock('external-transport', external);
+      expect(this.helpers.requireBackend('core/logger'));
+    });
+
+    it('should not fail when loading external module fail', function() {
+      var external = {
+        External: function() {
+        }
+      };
+
+      var config = function() {
+        return {
+          loggers: [
+            {name: 'ExternalFail', module: 'external-fail-transport', enabled: true, options: {'fail': true}},
+            {name: 'External', module: 'external-transport', enabled: true, options: {'fail': false}}]
+        };
+      };
+
+      var call = 0;
+
+      var winston = {
+        Logger: function() {
+          return {
+            add: function(logger, options) {
+              expect(logger).to.be.a.function;
+              expect(options).to.exist;
+              expect(options.fail).to.be.false;
+              call++;
+            }
+          };
+        }
+      };
+
+      mockery.registerMock('../config', config);
+      mockery.registerMock('winston', winston);
+      mockery.registerMock('external-transport', external);
+      expect(this.helpers.requireBackend('core/logger'));
+      expect(call).to.equal(1);
+    });
   });
 });
