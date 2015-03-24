@@ -80,5 +80,9 @@
   "You can also share this link:": "Vous pouvez aussi partager ce lien :",
   "Sorry but something bad just happened, developers have been notified": "Désolé mais quelque chose d'imprévu est survenu, les développeurs ont été prévenus",
   "Next": "Suivant",
-  "The description is limited to %s characters.": "La description est limitée à %s caractères."
+  "The description is limited to %s characters.": "La description est limitée à %s caractères.",
+  "linkedinShareTitle": "Hubl.in, une vidéo conférence libre et gratuite",
+  "linkedinShareDescription": "Je viens juste de faire une vidéo conférence avec Hubl.in. C'est gratuit, Open Source et vraiment efficace, aussi bien pour un usage personnel que professionnel. Essayez le sur https://hubl.in !",
+  "twitterShareText": "Je viens juste de faire une vidéo conférence avec #hublin par @Awesomepaas. C'est #gratuit #OpenSource et vraiment bien ! Essayez le !",
+  "shareUrl": "https://hubl.in/"
 }

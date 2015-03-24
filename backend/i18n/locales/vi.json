@@ -79,5 +79,9 @@
   "You can also share this link:": "Bạn cũng có thể chia sẻ liên kết này:",
   "Sorry but something bad just happened, developers have been notified": "Xin lỗi, nhưng một lỗi vừa xảy ra, các nhà phát triển đã được thông báo",
   "Next": "Tiếp theo",
-  "The description is limited to %s characters.": "Các mô tả bị giới hạn %s ký tự."
+  "The description is limited to %s characters.": "Mô tả bị giới hạn %s ký tự.",
+  "linkedinShareTitle": "Hubl.in, hội nghị video miễn phí và mã nguồn mở",
+  "linkedinShareDescription": "Tôi vừa có một hội nghị video với Hubl.in. Nó miễn phí, mã nguồn mở và thực sự tuyệt vời dành cho doanh nghiệp cũng như sử dụng cá nhân. Hãy dùng thử trên https://hubl.in !",
+  "twitterShareText": "Tôi vừa có một hội nghị video với #hublin của @Awesomepaas. Nó #miễn-phí #mã-nguồn-mở và thực sự tuyệt vời ! Hãy dùng thử nó!",
+  "shareUrl": "https://hubl.in/"
 }
