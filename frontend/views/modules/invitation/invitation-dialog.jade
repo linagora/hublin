@@ -13,7 +13,9 @@
           .col-xs-10.col-xs-offset-1
             form(name='inviteForm')
               div.input-group(ng-class='{ "has-error": formHasError(inviteForm) }')
-                input.form-control(type='text', name='inviteText', ng-model='inviteText', placeholder="#{__('Please enter an email address')}", bs-typeahead='', ng-options='item.id for item in autocomplete($viewValue)', invitation-dialog-validate='')
+                input.form-control(type='text', name='inviteText', ng-model='inviteText', placeholder="#{__('Please enter an email address')}",
+                bs-typeahead='', ng-options='item.id for item in autocomplete($viewValue)', invitation-dialog-validate='',
+                autocomplete='off', autocorrect='off', autocapitalize='off', spellcheck='false')
                 span.input-group-btn
                   input.btn.btn-default(type='submit', ng-disabled='inviteForm.inviteText.$invalid', ng-click='add()', value="#{__('Add')}")
           .col-xs-10.col-sm-8.col-sm-offset-2.center
