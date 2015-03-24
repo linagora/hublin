@@ -25,7 +25,15 @@
           .row
             .col-xs-10.col-xs-offset-1
               .error
-              button.btn.btn-default(type='button', ng-disabled='contactCount < 1', ng-click='sendInvitations()') #{__('Send Invitations')}
+              button.btn.btn-primary(type='button', ng-disabled='contactCount < 1', ng-click='sendInvitations()')
+                i.fa.fa-paper-plane
+                | &nbsp;
+                | #{__('Send')}
+              &nbsp;
+              button.btn.btn-primary(type='button', data-dismiss='modal')
+                i.fa.fa-times
+                | &nbsp;
+                | #{__('Close')}
       .modal-footer
         span.pull-right
           | #{__('You can also share this link:')}&nbsp;
