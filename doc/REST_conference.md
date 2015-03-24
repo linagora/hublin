@@ -73,6 +73,7 @@ It will not accept following ids for technical reasons : 'api', 'views' and 'fav
 
 - Content-Length: Document size
 - Content-Type: application/json
+- X-Hublin-Token: the token which can be used by the user to connect to the conference
 
 **Response JSON Object**
 

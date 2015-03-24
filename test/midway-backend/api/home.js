@@ -375,6 +375,42 @@ describe('The home API', function() {
       });
     });
 
+    it('should create the X-Hublin-Token header', function(done) {
+      var displayName = 'aGuy';
+      var members = [
+        {
+          displayName: 'FooBar',
+          objectType: 'hublin:anonymous',
+          id: 'creator'
+        }
+      ];
+
+      apiHelpers.createConference('MyTestConference', members, [], function(err, conference) {
+        if (err) {
+          return done(err);
+        }
+
+        request(application)
+          .get('/' + conference._id + '?displayName=' + displayName)
+          .send()
+          .expect(200)
+          .end(function(err, res) {
+            expect(err).to.not.exist;
+            var header = res.header['x-hublin-token'];
+            apiHelpers.getConference(conference._id, function(err, conf) {
+              expect(err).to.not.exist;
+              conf.members.forEach(function(member) {
+                if (member.displayName === displayName) {
+                  expect(header).to.equal(member.token);
+                }
+              });
+            });
+
+            done();
+          });
+      });
+    });
+
     describe('lazyArchive', function() {
 
       beforeEach(function(done) {

@@ -4,7 +4,7 @@ var expect = require('chai').expect,
     logger = require('../../../fixtures/logger-noop'),
     mockery = require('mockery');
 
-describe('The user controller', function() {
+describe('The user middleware', function() {
   var dependencies = {
     'logger': logger()
   };
@@ -58,7 +58,8 @@ describe('The user controller', function() {
         },
         ip: '1.2.3.4',
         res: {
-          cookie: function() {}
+          cookie: function() {},
+          header: function() {}
         }
       };
 
@@ -68,6 +69,7 @@ describe('The user controller', function() {
           expect(req.user).to.deep.equal({
             objectType: 'hublin:anonymous',
             id: 'uuid',
+            token: 'uuid',
             displayName: 'SpongeBob',
             connection: {
               ipAddress: '1.2.3.4',
@@ -91,7 +93,8 @@ describe('The user controller', function() {
         },
         ip: '1.2.3.4',
         res: {
-          cookie: function() {}
+          cookie: function() {},
+          header: function() {}
         }
       };
 
@@ -101,6 +104,7 @@ describe('The user controller', function() {
           expect(req.user).to.deep.equal({
             objectType: 'hublin:anonymous',
             id: 'uuid',
+            token: 'uuid',
             displayName: 'anonymous',
             connection: {
               ipAddress: '1.2.3.4',
@@ -108,6 +112,36 @@ describe('The user controller', function() {
             }
           });
 
+          done();
+        });
+    });
+
+    it('should define a X-hublin-header in the response containing the user token', function(done) {
+      var headerName, headerValue;
+      var req = {
+        params: {
+          id: '123'
+        },
+        session: {},
+        query: {},
+        headers: {
+          'user-agent': 'jamesbond'
+        },
+        ip: '1.2.3.4',
+        res: {
+          cookie: function() {},
+          header: function(name, value) {
+            headerName = name;
+            headerValue = value;
+          }
+        }
+      };
+
+      this.helpers
+        .requireBackend('webserver/middlewares/user')(deps)
+        .createForConference(req, null, function() {
+          expect(headerName).to.equal('X-Hublin-Token');
+          expect(headerValue).to.equal('uuid');
           done();
         });
     });
