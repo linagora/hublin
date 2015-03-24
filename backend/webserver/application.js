@@ -31,6 +31,8 @@ var application = express();
 application.set('views', VIEW_PATH);
 application.set('view engine', 'jade');
 
+application.use(require('express-domain-middleware'));
+
 var lessMiddleware = require('less-middleware');
 application.use(lessMiddleware(
   FRONTEND_PATH,

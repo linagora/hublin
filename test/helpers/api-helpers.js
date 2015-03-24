@@ -1,7 +1,8 @@
 'use strict';
 
-var ROUTERS_PATH = __dirname + '/../../backend/webserver/routes/';
-var MAIN_APPLICATION_PATH = __dirname + '/../../backend/webserver/application';
+var WEBSERVER_PATH = __dirname + '/../../backend/webserver';
+var ROUTERS_PATH = WEBSERVER_PATH + '/routes/';
+var MAIN_APPLICATION_PATH = WEBSERVER_PATH + '/application';
 
 var async = require('async');
 
@@ -9,11 +10,15 @@ function getRouter(route, dependencies) {
   return require(ROUTERS_PATH + route)(dependencies);
 }
 
-function getApplication(router) {
+function getApplication(router, dependencies) {
   var application = require(MAIN_APPLICATION_PATH);
-  var all = getRouter('all');
+  var all = getRouter('all', dependencies);
   application.use(all);
   application.use(router);
+
+  var errors = require(WEBSERVER_PATH + '/errors')(dependencies);
+  application.use('/api/*', errors.apiErrorHandler);
+
   return application;
 }
 

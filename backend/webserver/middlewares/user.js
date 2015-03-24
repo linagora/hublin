@@ -11,6 +11,7 @@ var uuid = require('node-uuid');
 module.exports = function(dependencies) {
 
   var logger = dependencies('logger');
+  var errors = require('../errors')(dependencies);
 
   /**
    * Augment the request object to forward req.user to the session data for the
@@ -82,14 +83,12 @@ module.exports = function(dependencies) {
    */
   function loadForConference(req, res, next) {
     if (!req.params.id) {
-      res.json(404, { error: { code: 404, message: 'Not Found', details: 'Conference not found' } });
-      return;
+      throw new errors.NotFoundError('Conference not found');
     }
 
     var conferenceId = req.params.id;
     if (!req.session.conferenceToUser || !(conferenceId in req.session.conferenceToUser)) {
-      res.json(403, { error: { code: 403, message: 'Forbidden', details: 'Access to user data denied' } });
-      return;
+      throw new errors.ForbiddenError('Access to user data denied');
     }
 
     setupRequestUser(req, conferenceId);

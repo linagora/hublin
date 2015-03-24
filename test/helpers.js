@@ -1,10 +1,12 @@
 'use strict';
 
 var async = require('async'),
-    expect = require('chai').expect,
+    chai = require('chai'),
+    expect = chai.expect,
     MongoClient = require('mongodb').MongoClient,
     mockery = require('mockery'),
-    crypto = require('crypto');
+    crypto = require('crypto'),
+    domain = require('domain');
 
 /*
  * Mocks esnConf(<key>) object.
@@ -267,13 +269,121 @@ module.exports = function(mixin, testEnv) {
     };
   };
 
-  mixin.httpStatusCodeJsonResponse = function(status, done) {
-    return {
-      json: function(s) {
-        expect(s).to.equal(status);
+  /**
+   * Helper function to ensure that a HttpError is provoked, either because it
+   * was thrown directly or by comparing the result sent via res.json.
+   *
+   * The inner function is called with two parameters: res and next.  The `res`
+   * parameter is a mock for an express Result object that should be passed to
+   * the controller or middleware to ensure that the error is being sent. The
+   * `next` parameter can be passed to controller or middleware in case it
+   * should be asserted that the next function should never be called, which is
+   * usually the case when an error occurs.
+   *
+   * The `options` parameter is an optional object with properties that should
+   * be compared with the occurring error, e.g. code or details. This parameter
+   * may be left out.
+   *
+   * @param {Function} ErrorType    One of the HttpError subclasses.
+   * @param {Function} func         The inner function to call.
+   * @param {Object} options        (optional) Properties to compare the error with.
+   * @param {Function} done         (optional) The completion function to call.
+   */
+  mixin.expectHttpError = function(ErrorType, func, options, done) {
+    if (typeof options === 'function') {
+      done = options;
+      options = {};
+    }
 
+    var res = {
+      json: function(code, body) {
+        clearTimeout(timer);
+        expect(body.error).to.exist;
+        var err = body.error;
+
+        for (var key in (options || {})) {
+          var detail = 'Expected ' + key + ' to equal ' + options[key] +
+                       ', but got ' + err[key];
+          expect(err[key], detail).to.equal(options[key]);
+        }
+
+        var mockError = new ErrorType('mock');
+        if (!('code' in options)) {
+          expect(err.code).to.equal(mockError.code);
+          expect(code).to.equal(mockError.code);
+        } else {
+          expect(code).to.equal(options.code);
+        }
+
+        if (!('message' in options)) {
+          expect(err.message).to.equal(mockError.message);
+        }
+
+        httpdomain.exit();
+        if (done) {
+          done();
+        }
+      }
+    };
+
+    var timer = setTimeout(function() {
+      var detail = 'Expected ' + func + ' to cause ' + ErrorType.name;
+      if (done) {
+        httpdomain.exit();
+        done(new Error(detail));
+      } else {
+        expect(false, detail).to.be.ok;
+      }
+    }, 10000);
+
+    var next = function() {
+      clearTimeout(timer);
+      expect(false, 'Unexpectedly called next()').to.be.ok;
+    };
+
+    var errorHandler = function(e) {
+      clearTimeout(timer);
+      if (e instanceof chai.AssertionError ||
+          e instanceof ReferenceError ||
+          e instanceof TypeError) {
+        throw e;
+      }
+      expect(e.name).to.equal(ErrorType.name);
+
+      for (var key in (options || {})) {
+        var detail = 'Expected ' + key + ' to equal ' + options[key] +
+                     ', but got ' + e[key];
+        expect(e[key], detail).to.equal(options[key]);
+      }
+
+      httpdomain.exit();
+      if (done) {
         done();
       }
+    };
+
+    var httpdomain = domain.create();
+    httpdomain.on('error', errorHandler);
+    httpdomain.enter();
+    try {
+      func(res, next);
+      httpdomain.exit();
+    } catch (e) {
+      errorHandler(e);
+    }
+  };
+
+  /**
+   * Helper that retuns an express Result object mock and ensures that the
+   * given method is not called.
+   *
+   * @param {Function} done     The completion function.
+   * @param {String} method     The method that shouldn't be called, (default: json)
+   */
+  mixin.expectNotCalled = function(done, method) {
+    var obj = {};
+    obj[method || 'json'] = function() {
+      done(new Error('Unexpectedly called ' + method));
     };
   };
 

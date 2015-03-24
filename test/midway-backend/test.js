@@ -9,7 +9,7 @@ describe('Midway test', function() {
 
   before(function() {
     var router = apiHelpers.getRouter('meetings');
-    application = apiHelpers.getApplication(router);
+    application = apiHelpers.getApplication(router, function() {});
   });
 
   it('should work', function(done) {

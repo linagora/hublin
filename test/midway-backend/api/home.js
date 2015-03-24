@@ -21,7 +21,7 @@ describe('The home API', function() {
   beforeEach(function(done) {
     this.testEnv.initCore(function() {
       var router = apiHelpers.getRouter('home', dependencies);
-      application = apiHelpers.getApplication(router);
+      application = apiHelpers.getApplication(router, dependencies);
       done();
     });
   });

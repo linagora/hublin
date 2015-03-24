@@ -2,12 +2,11 @@
 
 var expect = require('chai').expect;
 var mockery = require('mockery');
-var rewire = require('rewire');
 var logger = require('../../../fixtures/logger-noop');
 var extend = require('extend');
 
 describe('The conferences controller', function() {
-  var dependencies;
+  var dependencies, errors;
 
   before(function() {
     dependencies = function(name) {
@@ -15,6 +14,8 @@ describe('The conferences controller', function() {
         return logger();
       }
     };
+
+    errors = this.helpers.requireBackend('webserver/errors')(dependencies);
 
     this.addToObject = function(obj) {
       var vanilla = extend(true, {}, obj);
@@ -100,21 +101,11 @@ describe('The conferences controller', function() {
       });
       this.helpers.mock.models({});
       var conference = {_id: 'MyConference', members: []};
-      var rewired = rewire('../../../../backend/webserver/controllers/conferences');
-      rewired.__set__('inviteMembers', function(conference, user, members, callback) {
-        var err = new Error('');
-        err.code = 1;
-        return callback(err);
-      });
-      var controller = rewired(dependencies);
+      var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
 
-      var res = {
-        json: function(status) {
-          expect(status).to.equal(400);
-          done();
-        }
-      };
-      controller.finalizeCreation({created: true, user: {displayName: 'foobar'}, conference: conference, body: {members: [{id: 'yo@hubl.in', objectType: 'email'}]}}, res);
+      this.helpers.expectHttpError(errors.BadRequestError, function(res) {
+        controller.finalizeCreation({created: true, user: {displayName: 'foobar'}, conference: conference, body: {members: 'hahaha' }}, res);
+      }, done);
     });
 
     it('should send back 500 when members can not be invited due to server error', function(done) {
@@ -124,20 +115,10 @@ describe('The conferences controller', function() {
         }
       });
       this.helpers.mock.models({});
-      var conference = {_id: 'MyConference', members: []};
-      var rewired = rewire('../../../../backend/webserver/controllers/conferences');
-      rewired.__set__('inviteMembers', function(conference, user, members, callback) {
-        var err = new Error('');
-        return callback(err);
-      });
-      var controller = rewired(dependencies);
-      var res = {
-        json: function(status) {
-          expect(status).to.equal(500);
-          done();
-        }
-      };
-      controller.finalizeCreation({created: true, user: {displayName: 'foobar'}, conference: conference, body: {members: [{id: 'yo@hubl.in', objectType: 'email'}]}}, res);
+      var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+      this.helpers.expectHttpError(errors.ServerError, function(res) {
+        controller.finalizeCreation({created: true, user: {displayName: 'foobar'}, conference: null, body: {members: [{id: 'yo@hubl.in', objectType: 'email'}]}}, res);
+      }, done);
     });
   });
 
@@ -146,11 +127,9 @@ describe('The conferences controller', function() {
       mockery.registerMock('../../core/conference', {});
       mockery.registerMock('../../core/report', {});
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-      var res = this.helpers.httpStatusCodeValidatingJsonResponse(400, function(data) {
-        expect(data.error).to.exist;
-        done();
-      });
-      controller.getMembers({user: {}}, res);
+      this.helpers.expectHttpError(errors.BadRequestError, function(res) {
+        controller.getMembers({user: {}}, res);
+      }, done);
     });
 
     it('should send back HTTP 200 with empty array if conference has undefined members', function(done) {

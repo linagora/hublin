@@ -1,22 +1,25 @@
 'use strict';
 
-/**
- * Check that an attribute is set in request
- *
- * @param {String} attribute
- * @return {Function}
- */
-module.exports.beInRequest = function(attribute) {
-  return function(req, res, next) {
-    if (!req[attribute]) {
-      return res.json(400, {
-        error: {
-          code: 400,
-          message: 'Bad request',
-          details: attribute + ' is required in request'
-        }
-      });
-    }
-    return next();
+
+module.exports = function(dependencies) {
+  var errors = require('../errors')(dependencies);
+
+  /**
+   * Check that an attribute is set in request
+   *
+   * @param {String} attribute
+   * @return {Function}
+   */
+  function beInRequest(attribute) {
+    return function(req, res, next) {
+      if (!req[attribute]) {
+        throw new errors.BadRequestError(attribute + ' is required in the request');
+      }
+      next();
+    };
+  }
+
+  return {
+    beInRequest: beInRequest
   };
 };
