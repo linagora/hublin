@@ -27,6 +27,7 @@ var webserver = {
   ssl_key: null,
   ssl_cert: null,
   ssl_ca: [],
+  ssl_ciphers: null,
 
   virtualhosts: [],
 
@@ -128,6 +129,14 @@ function start(callback) {
     });
   }
 
+  var sslopts = {
+    key: sslkey,
+    cert: sslcert,
+    ca: sslca,
+    ciphers: webserver.ssl_ciphers.join(":"),
+    honorCipherOrder: true
+  };
+
   if (ws.ipv6 === '::' && ws.ip === '0.0.0.0' && states.http6 && states.http4) {
     // Listening on :: listens on ipv4 and ipv6, we only need one server
     states.http4 = DISABLED;
@@ -148,12 +157,12 @@ function start(callback) {
   }
 
   if (states.ssl4 === STOPPED) {
-    webserver.sslserver = https.createServer({key: sslkey, cert: sslcert, ca: sslca}, webserver.application).listen(webserver.ssl_port, webserver.ssl_ip);
+    webserver.sslserver = https.createServer(sslopts, webserver.application).listen(webserver.ssl_port, webserver.ssl_ip);
     setupEventListeners(webserver.sslserver);
   }
 
   if (states.ssl6 === STOPPED) {
-    webserver.sslserver6 = https.createServer({key: sslkey, cert: sslcert, ca: sslca}, webserver.application).listen(webserver.ssl_port, webserver.ssl_ipv6);
+    webserver.sslserver6 = https.createServer(sslopts, webserver.application).listen(webserver.ssl_port, webserver.ssl_ipv6);
     setupEventListeners(webserver.sslserver6);
   }
 }
@@ -198,6 +207,13 @@ var WebServer = new AwesomeModule('linagora.io.meetings.webserver', {
         console.warn('The webserver will not start as expected by the configuration.');
         return callback();
       }
+      var default_ciphers = [
+        "ECDHE-RSA-AES256-SHA384", "DHE-RSA-AES256-SHA384",
+        "ECDHE-RSA-AES256-SHA256", "DHE-RSA-AES256-SHA256",
+        "ECDHE-RSA-AES128-SHA256", "DHE-RSA-AES128-SHA256",
+        "HIGH", "!aNULL", "!eNULL", "!EXPORT", "!DES", "!RC4",
+        "!MD5", "!PSK", "!SRP", "!CAMELLIA"
+      ];
 
       webserver.virtualhosts = config.webserver.virtualhosts;
       webserver.port = config.webserver.port;
@@ -209,6 +225,7 @@ var WebServer = new AwesomeModule('linagora.io.meetings.webserver', {
       webserver.ssl_key = config.webserver.ssl_key;
       webserver.ssl_cert = config.webserver.ssl_cert;
       webserver.ssl_ca = config.webserver.ssl_ca;
+      webserver.ssl_ciphers = config.webserver.ssl_ciphers || default_ciphers;
       webserver.start(function(err) {
         if (err) {
           console.error('Web server failed to start', err);

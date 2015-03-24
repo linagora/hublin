@@ -28,6 +28,13 @@ var lessMiddlewareConfig = {
 var express = require('express');
 var application = express();
 
+var helmet = require('helmet');
+application.use(helmet.hsts({
+  maxAge: 31536000000, // one year
+  includeSubdomains: true,
+  force: true
+}));
+
 application.set('views', VIEW_PATH);
 application.set('view engine', 'jade');
 
