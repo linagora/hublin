@@ -110,8 +110,8 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       });
     };
   }])
-  .directive('conferenceCreateForm', ['$window', '$log', 'conferenceService', '$location', 'URI', 'conferenceNameGenerator',
-    function($window, $log, conferenceService, $location, URI, conferenceNameGenerator) {
+  .directive('conferenceCreateForm', ['$window', '$log', 'conferenceService', 'URI', 'conferenceNameGenerator',
+    function($window, $log, conferenceService, URI, conferenceNameGenerator) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/conference/conference-create-form.html',
@@ -125,11 +125,12 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
 
         scope.room = conferenceNameGenerator.getName();
 
-        function escapeRoomName(room) {
+        scope.escapeRoomName = function(room) {
           var result = room.replace(/\s+/g, '');
 
           //removes all url associated characters : , / ? : @ & = + $ #
-          result = result.replace(/[,\/\?:@&=\+\$#]+/g, '');
+          //and characters needing encoding : < > [ ] { } " % ; \ ^ | ~ ' `
+          result = result.replace(/[,\/\?:@&=\+\$#<>\[\]\{\}"%;\\^|~'`]+/g, '');
 
           var blackList = [
             'api',
@@ -138,14 +139,18 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
             'js',
             'css',
             'images',
-            'favicon.ico'];
+            'favicon.ico',
+            'robots.txt',
+            'apple-touch-icon.png',
+            'apple-touch-icon-precomposed.png'
+          ];
           if (blackList.indexOf(result) >= 0) { result = ''; }
 
           return result;
-        }
+        };
 
         scope.go = function() {
-          var escapedName = escapeRoomName(scope.room);
+          var escapedName = scope.escapeRoomName(scope.room);
           if (escapedName === '') {
             $window.location.href = buildUrl(conferenceNameGenerator.getName());
           }
