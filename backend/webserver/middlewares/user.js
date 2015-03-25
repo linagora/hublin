@@ -32,6 +32,7 @@ module.exports = function(dependencies) {
           this.session.conferenceToUser = {};
         }
         this.res.cookie('user', JSON.stringify(val));
+        this.res.header('X-Hublin-Token', val.token);
         return (this.session.conferenceToUser[conferenceId] = val);
       }
     });
@@ -58,6 +59,7 @@ module.exports = function(dependencies) {
       var user = {
         objectType: 'hublin:anonymous',
         id: uuid.v4(),
+        token: uuid.v4(),
         displayName: req.query.displayName || 'anonymous',
         connection: {
           ipAddress: req.ip,
