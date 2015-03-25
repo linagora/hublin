@@ -187,4 +187,51 @@ describe('The conferences controller', function() {
       controller.getMembers(req, res);
     });
   });
+
+  describe('updateMemberField function', function() {
+    it('should update req.user when on successful field update', function(done) {
+      var name = 'Bruce Lee';
+      var field = 'displayName';
+      var mid = 'id1';
+
+      var _id = {
+        toString: function() {
+          return mid;
+        }
+      };
+
+      mockery.registerMock('../../core/conference', {
+        updateMemberField: function(conf, member, field, value, callback) {
+          return callback();
+        }
+      });
+      mockery.registerMock('../../core/report', {});
+      var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
+      var members = [
+        this.addToObject({id: 'user1', objectType: 'ot1', _id: _id, status: 'offline', token: 'token1', displayName: 'display1'})
+      ];
+
+      var req = {
+        conference: this.addToObject({
+          members: members
+        }),
+        body: {
+          value: name
+        },
+        params: {
+          field: field,
+          mid: mid
+        },
+        user: members[0]
+      };
+
+      var res = {
+        json: function() {
+          expect(req.user[field]).to.equal(name);
+          done();
+        }
+      };
+      controller.updateMemberField(req, res);
+    });
+  });
 });

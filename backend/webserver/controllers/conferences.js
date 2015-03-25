@@ -126,6 +126,9 @@ module.exports = function(dependencies) {
       }
       var returnedMember = member[0].toObject();
       returnedMember[field] = data.value;
+      var user = req.user;
+      user[field] = data.value;
+      req.user = user;
       res.json(200, _transformConferenceMember(returnedMember));
     });
   }

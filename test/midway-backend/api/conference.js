@@ -3,7 +3,8 @@
 var expect = require('chai').expect,
     request = require('supertest'),
     express = require('express'),
-    apiHelpers = require('../../helpers/api-helpers.js');
+    apiHelpers = require('../../helpers/api-helpers.js'),
+    httpHelpers = require('../../helpers/http-helpers.js');
 
 var MAX_CONFERENCE_NAME_LENGTH = require('../../../backend/constants').MAX_CONFERENCE_NAME_LENGTH;
 var MIN_CONFERENCE_NAME_LENGTH = require('../../../backend/constants').MIN_CONFERENCE_NAME_LENGTH;
@@ -588,6 +589,7 @@ describe('The conference API', function() {
 
     it('should send back 200 and have updated data', function(done) {
       var checkMember = this.checkMember;
+      var name = 'Fred';
       apiHelpers.applyDeployment('oneMemberConference', this.testEnv, {}, function(err, models) {
         if (err) {
           return done(err);
@@ -597,14 +599,18 @@ describe('The conference API', function() {
 
         request(withSessionUser(conference))
           .put('/api/conferences/' + conference._id + '/members/' + onlyMemberId + '/displayName')
-          .send({value: 'Fred'})
+          .send({value: name})
           .expect(200)
           .end(function(err, data) {
             if (err) {
               return done(err);
             }
             checkMember(data.body);
-            expect(data.body.displayName).to.equal('Fred');
+            expect(data.body.displayName).to.equal(name);
+            var userCookie = httpHelpers.getCookie('user', data.headers['set-cookie']);
+            expect(userCookie).to.not.be.null;
+            var user = JSON.parse(userCookie);
+            expect(user.displayName).to.equal(name);
             done();
           });
       });
