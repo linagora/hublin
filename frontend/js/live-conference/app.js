@@ -21,7 +21,8 @@ angular.module('liveConferenceApplication', [
   'uuid4',
   'mgcrea.ngStrap',
   'ngSocial',
-  'matchmedia-ng'
+  'matchmedia-ng',
+  'op.live-conference-devmode'
 ]).config(function($routeProvider, $locationProvider, RestangularProvider) {
 
   $routeProvider.when('/:conferenceId', {
