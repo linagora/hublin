@@ -425,7 +425,7 @@ function join(conference, user, callback) {
       {upsert: true},
       function(err, updated) {
         if (err) {
-          logger.error('Error while updating the conference %e', err);
+          logger.error('Error while updating the conference', err);
           return callback(err);
         }
 
@@ -488,7 +488,7 @@ function leave(conference, user, callback) {
 function onRoomJoin(roomId, userId, callback) {
   get(roomId, function(err, conference) {
     if (err) {
-      logger.error('Error while getting room %e', err);
+      logger.error('Error while getting room', err);
       return callback(new Error('Error while getting conference from room'));
     }
 
@@ -518,7 +518,7 @@ function onRoomJoin(roomId, userId, callback) {
 function onRoomLeave(roomId, userId, callback) {
   get(roomId, function(err, conference) {
     if (err) {
-      logger.error('Error while getting room %s : %e', roomId, err);
+      logger.error('Error while getting room %s', roomId, err);
       return callback(new Error('Error while getting conference from room', roomId));
     }
 
@@ -621,12 +621,12 @@ function archive(conference) {
 
   ca.save(function(err, conferenceArchive) {
     if (err) {
-      logger.error('Unable to save conference archive ' + ca + ' ' + err);
+      logger.error('Unable to save conference archive %s', ca.toObject(), err);
       return deferred.reject(err);
     }
     Conference.remove({_id: conferenceArchive.initial_id}, function(err) {
       if (err) {
-        logger.error('Unable to remove inactive conference ' + err);
+        logger.error('Unable to remove inactive conference', err);
         return deferred.reject(err);
       }
       logger.debug('conference ' + conferenceArchive.initial_id + ' has been archived, archive _id=' + conferenceArchive._id);

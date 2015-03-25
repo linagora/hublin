@@ -111,7 +111,7 @@ function storeConfiguration(configuration, callback) {
 
   fs.writeFile(dbConfigurationFile, JSON.stringify(finalConfiguration), function(err) {
     if (err) {
-      logger.error('Cannot write database configuration file', dbConfigurationFile, err);
+      logger.error('Cannot write database configuration file %s', dbConfigurationFile, err);
       var error = new Error('Can not write database settings in ' + dbConfigurationFile);
       return callback(error);
     }
@@ -217,7 +217,7 @@ function mongooseConnect(reinit) {
   }
 
   try {
-    logger.debug('launch mongoose.connect on ' + connectionInfos.url);
+    logger.debug('launch mongoose.connect on %s', connectionInfos.url);
     mongoose.connect(connectionInfos.url, connectionInfos.options);
   } catch (e) {
     onConnectError(e);

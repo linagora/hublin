@@ -121,7 +121,7 @@ module.exports = function(dependencies) {
 
     conference.updateMemberField(conf, member[0], field, data.value, function(err) {
       if (err) {
-        logger.error('Can not update member %e', err);
+        logger.error('Can not update member', err);
         throw new errors.ServerError('Can not update member');
       }
       var returnedMember = member[0].toObject();
@@ -174,7 +174,7 @@ module.exports = function(dependencies) {
 
     persistReport(req, function(err, created) {
       if (err) {
-        logger.error('Error while creating report %e', err);
+        logger.error('Error while creating report', err);
         throw new errors.ServerError(err);
       }
 

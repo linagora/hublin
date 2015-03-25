@@ -49,7 +49,7 @@ module.exports = function(dependencies) {
 
     conference.getFromMemberToken(req.query.token, function(err, conf) {
       if (err) {
-        logger.error('Error while getting member from token %s : %e', req.query.token, err);
+        logger.error('Error while getting member from token %s', req.query.token, err);
         throw new errors.ServerError('Error retrieving member');
       }
 

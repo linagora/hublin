@@ -13,8 +13,8 @@ module.exports = redisPubsub;
 
 localPubsub.topic('redis:configurationAvailable').subscribe(function(config) {
   config.onRedisError = function(err) {
-    logger.error('Got an error on redis pubsub : ' + err);
-    logger.debug('Redis pubsub error stack: ' + err.stack);
+    logger.error('Got an error on redis pubsub', err);
+    logger.debug('Redis pubsub error stack: %s', err.stack);
   };
   var client = new AwesomeNodeRedisPubsub(config);
   redisPubsub.setClient(client);

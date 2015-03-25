@@ -15,7 +15,7 @@ exports = module.exports = function scale(conference, callback) {
     var hosts = defaultConfiguration;
 
     if (err) {
-      logger.warn('Can not get scalability configuration; will use the defaults. ' + err);
+      logger.warn('Can not get scalability configuration; will use the defaults.', err);
     } else if (!config) {
       logger.debug('No scalability configuration; will use the defaults.');
     } else {

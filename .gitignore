@@ -16,3 +16,4 @@ gjslint.xml
 jshint.xml
 npm-debug.log
 log/application.log
+log/application.log.*

@@ -26,10 +26,10 @@ module.exports.init = function(dependencies) {
     return function(data) {
       conference.addHistory(data.conference, data.user, event, function(err, conference) {
         if (err) {
-          return logger.error('Error while pushing event %s in history of conference %s: %e', event, data.conference, err);
+          return logger.error('Error while pushing event %s in history of conference %s', event, data.conference.toObject(), err);
         }
 
-        return logger.debug('Added event %s in history of conference %s', event, data.conference);
+        return logger.debug('Added event %s in history of conference %s', event, data.conference.toObject());
       });
     };
   }

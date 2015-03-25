@@ -18,7 +18,34 @@
     "ssl_ca": [],
 
     "virtualhosts": [],
-    "startupBufferTimeout": 5000
+    "startupBufferTimeout": 5000,
+
+    "loggers": [
+      {
+        "name": "File",
+        "enabled": false,
+        "options": {
+          "filename": "./log/webserver.log",
+          "level": "info",
+          "handleExceptions": true,
+          "json": false,
+          "prettyPrint": true,
+          "colorize": false
+        }
+      },
+      {
+        "name": "Console",
+        "enabled": true,
+        "options": {
+          "enabled": true,
+          "level": "info",
+          "handleExceptions": true,
+          "json": false,
+          "prettyPrint": true,
+          "colorize": true
+        }
+      }
+    ]
   },
   "wsserver": {
     "enabled": true,
@@ -30,25 +57,64 @@
     "roomNameRegExp": "^[a-z0-9_.-]{1,64}$",
     "usernameRegExp": "^(.){1,200}$"
   },
-  "log": {
-    "file": {
+  "loggers" : [
+    {
+      "name": "File",
       "enabled": true,
-      "filename": "./log/application.log",
-      "level": "info",
-      "handleExceptions": true,
-      "json": false,
-      "prettyPrint": true,
-      "colorize": false
+      "options": {
+        "filename": "./log/application.log",
+        "level": "info",
+        "handleExceptions": true,
+        "json": false,
+        "prettyPrint": true,
+        "colorize": false
+      }
     },
-    "console": {
+    {
+      "name": "DailyRotateFile",
+      "enabled": false,
+      "options": {
+        "filename": "./log/application.log",
+        "level": "info",
+        "handleExceptions": true,
+        "json": false,
+        "prettyPrint": true,
+        "colorize": false,
+        "datePattern": ".yyyy-MM-dd"
+      }
+    },
+    {
+      "name": "Console",
       "enabled": true,
-      "level": "info",
-      "handleExceptions": true,
-      "json": false,
-      "prettyPrint": true,
-      "colorize": true
+      "options": {
+        "enabled": true,
+        "level": "info",
+        "handleExceptions": true,
+        "json": false,
+        "prettyPrint": true,
+        "colorize": true
+      }
+    },
+    {
+      "name": "Mail",
+      "enabled": "false",
+      "module": "winston-mail",
+      "options": {
+        "to": "fail@hubl.in",
+        "host": "smtp@hubl.in",
+        "port": 587,
+        "username": "admin",
+        "password": "secret",
+        "ssl": {
+          "key": "",
+          "ca": "",
+          "cert": ""
+        },
+        "level": "error",
+        "silent": true
+      }
     }
-  },
+  ],
   "emailInvitation": {
     "templatesDir": "./templates/email"
   },

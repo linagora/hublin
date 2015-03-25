@@ -1,21 +1,16 @@
 'use strict';
 
 var config = require('../config')('default');
-var Winston = require('winston');
+var logger = require('../../logger');
 
-var logger = new (Winston.Logger)({
-  exitOnError: false
-});
-
-if (config.log.console.enabled) {
-  logger.add(Winston.transports.Console, config.log.console);
-}
-
-if (config.log.file.enabled) {
-  logger.add(Winston.transports.File, config.log.file);
+var winstonLogger;
+if (!config.loggers || config.loggers.length === 0) {
+  winstonLogger = logger.getDefaultLogger();
+} else {
+  winstonLogger = logger.load(config.loggers);
 }
 
 /**
  * @return {Winston.logger} using {@link https://github.com/winstonjs/winston}
  */
-module.exports = logger;
+module.exports = winstonLogger;
