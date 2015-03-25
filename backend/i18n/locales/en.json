@@ -80,5 +80,9 @@
   "You can also share this link:": "You can also share this link:",
   "Sorry but something bad just happened, developers have been notified": "Sorry but something bad just happened, developers have been notified",
   "Next": "Next",
-  "The description is limited to %s characters.": "The description is limited to %s characters."
+  "The description is limited to %s characters.": "The description is limited to %s characters.",
+  "linkedinShareTitle": "Hubl.in, free and open source video conference",
+  "linkedinShareDescription": "I just had a nice video conference with Hubl.in. It's free, open source and really great, for professional as for personal use. Try it on https://hubl.in !",
+  "twitterShareText": "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on",
+  "shareUrl": "https://hubl.in/"
 }
