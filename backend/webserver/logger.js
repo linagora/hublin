@@ -12,7 +12,7 @@ if (config.webserver && config.webserver.loggers && config.webserver.loggers.len
   var webserverLogger = logger.load(config.webserver.loggers);
   options.stream = {
     write: function(message) {
-      webserverLogger.info(message);
+      webserverLogger.info(message.slice(0, -1));
     }
   };
 }
