@@ -9,6 +9,7 @@ angular.module('liveConferenceApplication', [
   'op.websocket',
   'op.live-conference',
   'op.notification',
+  'op.localstorage',
   'meetings.authentication',
   'meetings.session',
   'meetings.user',

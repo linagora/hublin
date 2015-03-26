@@ -86,17 +86,20 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       link: link
     };
   }])
-  .directive('bitrateConfiguration', ['easyRTCService', 'easyRTCBitRates', function(easyRTCService, easyRTCBitRates) {
+  .directive('bitrateConfiguration', ['easyRTCService', 'easyRTCBitRates', 'easyRTCDefaultBitRate', 'localStorageService', function(easyRTCService, easyRTCBitRates, easyRTCDefaultBitRate, localStorageService) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/bitrate-configuration.html',
       link: function($scope) {
         var bitRates = Object.keys(easyRTCBitRates);
+        var storage = localStorageService.getOrCreateInstance('roomConfiguration');
 
         $scope.selectBitRate = function(rate) {
           if (bitRates.indexOf(rate) >= 0) {
-            $scope.selected = rate;
-            easyRTCService.configureBandwidth(rate);
+            storage.setItem('bitRate', rate).finally (function() {
+              $scope.selected = rate;
+              easyRTCService.configureBandwidth(rate);
+            });
           }
         };
 
@@ -104,7 +107,17 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
           return $scope.selected === rate;
         };
 
-        $scope.selectBitRate('medium');
+        storage.getItem('bitRate').then(function(config) {
+          if (config) {
+            $scope.selectBitRate(config);
+          } else {
+            $scope.selectBitRate(easyRTCDefaultBitRate);
+          }
+        },
+        function() {
+          $scope.selectBitRate(easyRTCDefaultBitRate);
+        });
+
       }
     };
   }]);

@@ -7,7 +7,7 @@ var expect = chai.expect;
 
 describe('The meetings.configuration module', function() {
 
-  var easyRTCService, easyRTCBitRates, easyRTCDefaultBitRate;
+  var easyRTCService, easyRTCBitRates, easyRTCDefaultBitRate, localStorageService, instance;
 
   beforeEach(function() {
     module('meetings.configuration');
@@ -18,26 +18,51 @@ describe('The meetings.configuration module', function() {
     easyRTCBitRates = {rate1: 'config1', rate2: 'config2'};
     easyRTCDefaultBitRate = 'rate2';
     easyRTCService = {};
+    instance = {};
+    localStorageService = {
+      getOrCreateInstance: function(name) {
+        expect(name).to.equal('roomConfiguration');
+        instance.setItem = function() {
+          return {
+            finally: function(callback) {
+              callback();
+            }
+          };
+        };
+        return instance;
+      }
+    };
     $provide.value('easyRTCService', easyRTCService);
     $provide.value('easyRTCBitRates', easyRTCBitRates);
     $provide.value('easyRTCDefaultBitRate', easyRTCDefaultBitRate);
+    $provide.value('localStorageService', localStorageService);
   }));
 
   describe('The conferenceConfiguration directive', function() {
 
+    before(function() {
+      this.generateString = function(length) {
+        return new Array(length + 1).join('a');
+      };
+    });
+
     beforeEach(inject(function($compile, $rootScope) {
       this.scope = $rootScope.$new();
-      this.compile = $compile;
-      this.compile('<conference-configuration />')(this.scope);
+
+      instance.getItem = function() {
+        return {
+          then: function(successCallback, errorCallback) {
+            errorCallback();
+          }
+        };
+      };
+      easyRTCService.configureBandwidth = function() {};
+
+      $compile('<conference-configuration />')(this.scope);
       this.scope.$digest();
     }));
 
     describe('the onUsernameChange function', function() {
-      before(function() {
-        this.generateString = function(length) {
-          return new Array(length + 1).join('a');
-        };
-      });
 
       it('should do nothing if configuration.display.username is undefined', function() {
         this.scope.configuration = {};
@@ -84,6 +109,103 @@ describe('The meetings.configuration module', function() {
         this.scope.onUsernameChange();
         expect(this.scope.configuration.displayName).to.deep.equal(this.generateString(199));
         expect(this.scope.lengthError).to.be.true;
+      });
+
+    });
+  });
+
+  describe('The bitrateConfiguration directive', function() {
+
+    beforeEach(inject(function($compile, $rootScope) {
+      this.scope = $rootScope.$new();
+      this.compile = $compile;
+    }));
+
+    it('should select the bitrate from localStorage if it exists', function(done) {
+      var testRate = 'rate1';
+      instance.getItem = function() {
+        return {
+          then: function(successCallback) {
+            successCallback(testRate);
+          }
+        };
+      };
+      easyRTCService.configureBandwidth = function(rate) {
+        expect(rate).to.equal(testRate);
+        done();
+      };
+      this.compile('<bitrate-configuration />')(this.scope);
+      this.scope.$digest();
+    });
+
+    it('should select the default bitrate if nothing is in the localStorage', function(done) {
+      instance.getItem = function() {
+        return {
+          then: function(successCallback) {
+            successCallback(null);
+          }
+        };
+      };
+      easyRTCService.configureBandwidth = function(rate) {
+        expect(rate).to.equal(easyRTCDefaultBitRate);
+        done();
+      };
+      this.compile('<bitrate-configuration />')(this.scope);
+      this.scope.$digest();
+    });
+
+    it('should select the default bitrate if localStorage search fails', function(done) {
+      instance.getItem = function() {
+        return {
+          then: function(successCallback, errorCallback) {
+            errorCallback();
+          }
+        };
+      };
+      easyRTCService.configureBandwidth = function(rate) {
+        expect(rate).to.equal(easyRTCDefaultBitRate);
+        done();
+      };
+      this.compile('<bitrate-configuration />')(this.scope);
+      this.scope.$digest();
+    });
+
+    describe('the selectBitRate function', function() {
+
+      beforeEach(function() {
+        instance.getItem = function() {
+          return {
+            then: function() {}
+          };
+        };
+        this.compile('<bitrate-configuration />')(this.scope);
+        this.scope.$digest();
+      });
+
+      it('should do nothing if argumentBitRate does not exist in easyRTCBitrates constant', function(done) {
+        easyRTCService.configureBandwidth = function() {
+          done(new Error('Should not have been called'));
+        };
+        this.scope.selectBitRate('bitRateThatDoesNotExist');
+        done();
+      });
+
+      it('should store the selectBitRate and call easyRTCService#configureBandwidth with the correct rate', function(done) {
+        var testRate = 'rate1';
+        easyRTCService.configureBandwidth = function(rate) {
+          expect(rate).to.equal(testRate);
+          done();
+        };
+        instance.setItem = function(key, value) {
+          expect(key).to.equal('bitRate');
+          expect(value).to.equal(testRate);
+          return {
+            finally: function(callback) {
+              callback();
+            }
+          };
+        };
+        this.scope.selectBitRate(testRate);
       });
     });
 
