@@ -12,6 +12,6 @@
       a(href='http://www.opera.com/')
         img(src='/images/opera.png', alt='Opera')
     p #{__('Hubl.in is using WebRTC technology to provide its incredible video conference experience. Unfortunately, not all internet browsers are compatible with WebRTC technology at the moment.')}
-    p #{__('More details about compatibility:')} #[a(href='http://caniuse.com/#feat=rtcpeerconnection') caniuse]
-    p #{__('What is exactly WebRTC?')} #[a(href='http://www.webrtc.org/') webrtc]
+    p!= __j('Information on compatibility can be found on %s.', "a(href='http://caniuse.com/#feat=rtcpeerconnection') caniuse.com")
+    p!= __j('You may also want to read more about %s.', "a(href='http://www.webrtc.org/') WebRTC")
 
