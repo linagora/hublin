@@ -104,7 +104,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
           return $scope.selected === rate;
         };
 
-        $scope.selectBitRate('nolimit');
+        $scope.selectBitRate('medium');
       }
     };
   }]);
