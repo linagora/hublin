@@ -133,7 +133,7 @@ function start(callback) {
     key: sslkey,
     cert: sslcert,
     ca: sslca,
-    ciphers: webserver.ssl_ciphers.join(":"),
+    ciphers: webserver.ssl_ciphers.join(':'),
     honorCipherOrder: true
   };
 
@@ -208,11 +208,11 @@ var WebServer = new AwesomeModule('linagora.io.meetings.webserver', {
         return callback();
       }
       var default_ciphers = [
-        "ECDHE-RSA-AES256-SHA384", "DHE-RSA-AES256-SHA384",
-        "ECDHE-RSA-AES256-SHA256", "DHE-RSA-AES256-SHA256",
-        "ECDHE-RSA-AES128-SHA256", "DHE-RSA-AES128-SHA256",
-        "HIGH", "!aNULL", "!eNULL", "!EXPORT", "!DES", "!RC4",
-        "!MD5", "!PSK", "!SRP", "!CAMELLIA"
+        'ECDHE-RSA-AES256-SHA384', 'DHE-RSA-AES256-SHA384',
+        'ECDHE-RSA-AES256-SHA256', 'DHE-RSA-AES256-SHA256',
+        'ECDHE-RSA-AES128-SHA256', 'DHE-RSA-AES128-SHA256',
+        'HIGH', '!aNULL', '!eNULL', '!EXPORT', '!DES', '!RC4',
+        '!MD5', '!PSK', '!SRP', '!CAMELLIA'
       ];
 
       webserver.virtualhosts = config.webserver.virtualhosts;
