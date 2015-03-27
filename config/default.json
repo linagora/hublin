@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Linagora Meetings"
+    "name": "Hubl.in"
   },
   "webserver": {
     "enabled": true,
