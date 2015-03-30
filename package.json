@@ -34,7 +34,7 @@
     "marked": "~0.3.3",
     "mongoconfig": "^1.0.0",
     "mongodb": "^1.4.31",
-    "mongoose": "^3.8.23",
+    "mongoose": "~3.8.23",
     "morgan": "^1.5.1",
     "node-uuid": "^1.4.2",
     "om-email-invitation": "0.0.1",
