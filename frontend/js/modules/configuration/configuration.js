@@ -42,6 +42,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       $scope.configuration = {
         displayName: userService.getDisplayName()
       };
+      $scope.lengthError = false;
 
       $scope.createConference = function() {
         configurationService.configure($scope.configuration)
@@ -49,7 +50,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       };
 
       $scope.wizard = new Wizard([
-        '/views/live-conference/partials/configuration/username'
+        '/views/live-conference/partials/configuration/username.html'
       ], $scope.createConference);
 
       function onSuccess() {
@@ -61,18 +62,34 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
         $log.error('Failed to configure', err);
         session.setConfigured(false);
       }
+
+      $scope.onUsernameChange = function() {
+        if (!$scope.configuration.displayName) {
+          return;
+        }
+
+        if ($scope.configuration.displayName.length >= 200) {
+          $scope.configuration.displayName = $scope.configuration.displayName.slice(0, 199 - $scope.configuration.displayName.length);
+          $scope.lengthError = true;
+        } else if ($scope.configuration.displayName.length === 199) {
+          $scope.lengthError = true;
+        } else {
+          $scope.lengthError = false;
+        }
+      };
+
     }
 
     return {
       restrict: 'E',
-      templateUrl: '/views/modules/configuration/configuration',
+      templateUrl: '/views/modules/configuration/configuration.html',
       link: link
     };
   }])
   .directive('bitrateConfiguration', ['easyRTCService', 'easyRTCBitRates', function(easyRTCService, easyRTCBitRates) {
     return {
       restrict: 'E',
-      templateUrl: '/views/modules/configuration/bitrate-configuration',
+      templateUrl: '/views/modules/configuration/bitrate-configuration.html',
       link: function($scope) {
         var bitRates = Object.keys(easyRTCBitRates);
 
