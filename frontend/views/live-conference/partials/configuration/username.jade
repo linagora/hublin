@@ -4,9 +4,9 @@
       label #{__('Set your name in this room')}
       form.conference-form(name='usernameForm')
         .input-group
-          input.form-control(type='text', trim='true', ng-model='configuration.displayName', name='displayname', id='displayname', placeholder="#{__('Your Name')}", required, ng-maxlength='200', automatic-orientation)
+          input.form-control(type='text', trim='true', ng-model='configuration.displayName', name='displayname', id='displayname', placeholder="#{__('Your Name')}", required, automatic-orientation, ng-change='onUsernameChange()')
           .input-group-btn
-            button.btn.btn-md.btn-primary(ng-disabled="!usernameForm.$valid", type='submit' ng-click='wizard.nextStep()') #{__('Next')}
-        p.help-block.text-danger(ng-show='usernameForm.displayname.$error.maxlength') #{__('The name you chose is too long.')}
+            button.btn.btn-md.btn-primary(ng-disabled="!usernameForm.$valid || lengthError", type='submit' ng-click='wizard.nextStep()') #{__('Next')}
+        p.help-block.text-danger(ng-show='lengthError') #{__('The name you chose is too long.')}
         br
         bitrate-configuration
