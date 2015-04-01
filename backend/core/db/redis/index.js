@@ -10,8 +10,8 @@ var initialized = false,
     client;
 
 var defaultOptions = {
-  host: 'localhost',
-  port: 6379,
+  host: process.env.HUBLIN_REDIS_HOST || 'localhost',
+  port: process.env.HUBLIN_REDIS_PORT || 6379,
   client_options: {}
 };
 

@@ -112,6 +112,50 @@ To create a distribution with clean environment, minified files and install prod
 
 Then you can start the server with 'npm start', 'node server', or your favorite tool (Kudos to forever).
 
+## Docker
+
+Hubl.in is available on the Docker Hub as linagora/hublin, so you can pull it from there:
+
+    docker pull linagora/hublin
+
+Or you can build it from the current git repository
+
+    docker build -t linagora/hublin .
+
+The linagora/hublin container is configured to get the mongodb connection from mongodb://db:27017 URL. You can modify the config/db.json file and adapt to use your own instance, or continue to use Docker and use one of the solutions below.
+
+### docker-compose
+
+docker-compose allows to describe and run distributed applications (cf docker-compose.yml file).
+
+Note: A docker-compose based image is available on the Docker Hub at linagora/hublin-all.
+
+#### Launch
+
+    docker-compose up
+
+#### Build
+
+    docker-compose build
+
+### docker containers
+
+You can pull all the required containers by hand (mongodb, redis), start them, and create the links when starting Hubl.in:
+
+    # get mongo and start it as a container named 'db'
+    docker pull mongo
+    docker run -d --name db mongo
+
+    docker pull redis
+    docker run -d --name redis redis
+
+    # start hubl.in
+    docker run -p 8080:8080 --link db:db --link redis:redis linagora/hublin
+
+Once started, Hubl.in is available on http://<DOCKER_HOST>:8080.
+
+Note: If you are on OS X and/or use boot2docker, DOCKER_HOST value will be the result of the 'boot2docker ip' call.
+
 ## License
 
 [Affero GPL v3](http://www.gnu.org/licenses/agpl-3.0.html)
