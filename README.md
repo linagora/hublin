@@ -13,13 +13,31 @@ Hubl.in allows free communication without additional plugins.
 
         git clone https://ci.open-paas.org/stash/scm/meet/meetings.git
 
-2. install node.js
+2. Install and configure MongoDB
 
-3. install the npm dependencies
+You must install mongoDB. We suggest you to use mongoDB version 2.6.5.
+
+        echo 'deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list
+        apt-get install -y mongodb-org=2.6.5 mongodb-org-server=2.6.5 mongodb-org-shell=2.6.5 mongodb-org-mongos=2.6.5 mongodb-org-tools=2.6.5
+        service mongod start
+
+3. install node.js
+
+Please note that your version of node.js must be greater than version 0.10.28 but less than or equal to 0.10.36. We highly recommend that you use [nvm](https://github.com/creationix/nvm) to install a specific version of node.
+
+4. Install Redis
+
+        apt-get install redis-server
+
+5. Copy the sample db.json configuration file and adapt it to your need (especially the mongodb URL if you do not use default parameters from step 2)
+
+        cp config/db.json.sample config/db.json
+
+6. Install the npm dependencies (as an administrator)
 
         npm install -g mocha grunt-cli bower karma-cli
 
-4. Go into the project directory and install project dependencies
+7. Go into the project directory and install project dependencies
 
         cd meetings
         npm install
