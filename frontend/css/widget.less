@@ -1,0 +1,29 @@
+@import "./variables.less";
+@import "./mixins.less";
+
+@import "https://fonts.googleapis.com/css?family=Merienda";
+
+.hublin-link {
+  text-decoration: none;
+}
+
+.hublin-widget {
+  .script-font();
+
+  position: absolute;
+  background:
+    ~"url('../images/hublin_48.png') no-repeat 5px 2px / 22px 22px",
+    linear-gradient(to bottom, @gray-lighter, @gray-light);
+  border: 1px solid @gray-mediumlight;
+  border-radius: 6px;
+  line-height: 28px;
+  padding: 0 5px 0 32px;
+  font-size: 0.8em;
+  color: @brand-primary;
+}
+
+.hublin-widget:hover {
+  background:
+    ~"url('../images/hublin_48.png') no-repeat 5px 2px / 22px 22px",
+    linear-gradient(to bottom, @gray-light, @gray-mediumlight);
+}

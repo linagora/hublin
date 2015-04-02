@@ -156,6 +156,10 @@ Once started, Hubl.in is available on http://<DOCKER_HOST>:8080.
 
 Note: If you are on OS X and/or use boot2docker, DOCKER_HOST value will be the result of the 'boot2docker ip' call.
 
+## Embedding
+
+Want to embed hubl.in on your website? Read more [here](doc/embedding.md).
+
 ## License
 
 [Affero GPL v3](http://www.gnu.org/licenses/agpl-3.0.html)
