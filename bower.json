@@ -38,7 +38,9 @@
     "URIjs": "~1.14.2",
     "angular-cookies": "~1.3.14",
     "angular-social": "git+https://github.com/linagora/angular-social.git#0f395b96bac01845a9f0d97b6c3fa45c301a8018",
-    "matchmedia-ng": "~1.0.5"
+    "matchmedia-ng": "~1.0.5",
+    "angular-localforage": "1.2.2",
+    "localforage": "1.2.0"
   },
   "resolutions": {
     "angular": "1.3.15",
