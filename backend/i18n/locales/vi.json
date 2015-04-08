@@ -84,5 +84,7 @@
   "Connection lost": "Mất kết nối",
   "The connection to %s has been interrupted.": "Mất kết nối đến máy chủ %s.",
   "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.": "Điều này thường xảy ra do mạng tạm thời bị trục trặc và bạn nên tải lại trang để thử lại.",
-  "Reload the page": "Tải lại trang này"
+  "Reload the page": "Tải lại trang này",
+  "Camera enabled": "Bật camera",
+  "Camera disabled": "Tắt camera"
 }

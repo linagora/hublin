@@ -211,4 +211,36 @@ describe('The meetings.configuration module', function() {
 
   });
 
+  describe('The disableVideoConfiguration directive', function() {
+
+    beforeEach(inject(function($compile, $rootScope) {
+      this.scope = $rootScope.$new();
+      this.compile = $compile;
+    }));
+
+    beforeEach(function() {
+      instance.getItem = function() {
+        return {
+          then: function() {}
+        };
+      };
+      this.compile('<disable-video-configuration />')(this.scope);
+      this.scope.$digest();
+    });
+
+    describe('the changeVideoSetting function', function() {
+      it('should invert scope.videoEnabled value call easyRTCService.enableVideo with it', function(done) {
+        var self = this;
+        easyRTCService.enableVideo = function(enableVideo) {
+          expect(self.scope.videoEnabled).to.be.false;
+          expect(enableVideo).to.be.false;
+          done();
+        };
+        this.scope.videoEnabled = true;
+        this.scope.changeVideoSetting();
+      });
+    });
+
+  });
+
 });

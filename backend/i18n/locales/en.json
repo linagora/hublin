@@ -84,5 +84,7 @@
   "Connection lost": "Connection lost",
   "The connection to %s has been interrupted.": "The connection to %s has been interrupted.",
   "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.": "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.",
-  "Reload the page": "Reload the page"
+  "Reload the page": "Reload the page",
+  "Camera enabled": "Camera enabled",
+  "Camera disabled": "Camera disabled"
 }
