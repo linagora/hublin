@@ -5,7 +5,7 @@ var jade = require('jade');
 i18n.configure(
   {
     defaultLocale: 'en',
-    locales: ['en', 'fr', 'vi'],
+    locales: ['de', 'en', 'fr', 'vi'],
     directory: __dirname + '/locales',
     updateFiles: false,
     indent: '  ',
