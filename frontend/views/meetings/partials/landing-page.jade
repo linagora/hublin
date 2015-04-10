@@ -51,13 +51,13 @@
             i.fa.fa-square.fa-stack-2x.text-primary
             i.fa.fa-user-secret.fa-stack-1x.fa-inverse
           h4.service-heading #{__('Safe')}
-          p.text-muted #{__('Based on')} #[a(href='#webRTCModal', data-toggle='modal') WebRTC] #{__('which allows decentralized communication between browsers. Your video conference is not streamed to Hubl.in in any way.')}
+          p.text-muted!= __j('Based on %s which allows decentralized communication between browsers. Your video conference is not streamed to Hubl.in in any way.', "a(href='#webRTCModal', data-toggle='modal') WebRTC")
         .col-md-4
           span.fa-stack.fa-4x
             i.fa.fa-square.fa-stack-2x.text-primary
             i.fa.fa-code.fa-stack-1x.fa-inverse
           h4.service-heading #{__('Open Source')}
-          p.text-muted #{__('Strongly involved in open source philosophy, Hubl.in is made available in the respect of its users. Feel free to look into, react to or contribute to the code on')} #[a.fa.fa-github(href='http://github.com/linagora/hublin' target='_blank') Github]
+          p.text-muted!= __j('Strongly involved in open source philosophy, Hubl.in is made available in the respect of its users. Feel free to look into, react to or contribute to the code on %s', "#[a.fa.fa-github(href='http://github.com/linagora/hublin' target='_blank') Github]")
   section.social#social
     .container
       .row
@@ -66,11 +66,11 @@
           h4
             a(href='http://open-paas.org')
               img(src='../../images/oplogo.png')
-          p #{__('Hubl.in is a video conference service provided by')} #[a(href='http://open-paas.org') Open-PaaS], #{__('the open social platform. As the OpenPaaS team, we are pleased to separate this service from our main product and let everyone enjoy it. We are enthusiastic open source developers and we hope you will love Hubl.in as much as we do. We are respectful of free and open source philosophy and standards, for us community contributions are like Christmas presents. Feel free to get in touch with us!')}
+          p!= __j('Hubl.in is a video conference service provided by %s, the open social platform. As the OpenPaaS team, we are pleased to separate this service from our main product and let everyone enjoy it. We are enthusiastic open source developers and we hope you will love Hubl.in as much as we do. We are respectful of free and open source philosophy and standards, for us community contributions are like Christmas presents. Feel free to get in touch with us!', "a(href='http://open-paas.org') Open-PaaS")
           h4
             a(href='http://linagora.com')
               img(src='../../images/linagora.png')
-          p #[a(href='http://linagora.com') Linagora] #{__('being a fervent supporter of the free and open source world, offers its developers the opportunity to participate in its awesome free and open source projects, such as Hubl.in.')}
+          p!= __j('%s being a fervent supporter of the free and open source world, offers its developers the opportunity to participate in its awesome free and open source projects, such as Hubl.in.', "a(href='http://linagora.com') Linagora")
         .col-lg-6.text-center
           h2 #{__('Follow Us!')}
           ul.social-buttons
@@ -123,7 +123,9 @@
     .container
       .row
         .col-md-6
-          span.copyright Copyright &copy; Linagora 2015 - #[a(href='http://open-paas.org') OpenPaaS] #{__('is powered by')} #[a(href='http://linagora.com') Linagora]
+          span.copyright
+            | Copyright &copy; Linagora 2015 -&nbsp;
+            != __j('%s is powered by %s', "a(href='http://open-paas.org') OpenPaaS", "a(href='http://linagora.com') Linagora")
         .col-md-6
           ul.list-inline.quicklinks
             li
@@ -143,7 +145,7 @@
               h2 Web RTC
               p.item-intro.text-muted Web Real-Time Communication
               p #{__('WebRTC is a free, open project that provides browsers and mobile applications with Real-Time Communications (RTC) capabilities via simple APIs. The WebRTC components have been optimized to best serve this purpose.')}
-              p #{__('Take a look at')} #[a(href='http://www.webrtc.org/') WebRTC] #{__('for more information.')}
+              p!= __j('Take a look at %s for more information', "a(href='http://www.webrtc.org/') WebRTC.org")
               button.btn.btn-primary(type='button', data-dismiss='modal')
                 i.fa.fa-times
                 | #{__('Close')}

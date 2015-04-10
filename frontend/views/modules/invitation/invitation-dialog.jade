@@ -35,6 +35,4 @@
                 | &nbsp;
                 | #{__('Close')}
       .modal-footer
-        span.pull-right
-          | #{__('You can also share this link:')}&nbsp;
-          a(href='') {{conference.href}}
+        span.pull-right!= __j('You can also share this link: %s', "a(href='') {{conference.href}}")
