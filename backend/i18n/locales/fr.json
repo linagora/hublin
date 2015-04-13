@@ -80,5 +80,10 @@
   "The description is limited to %s characters.": "La description est limitée à %s caractères.",
   "Hubl.in, free and open source video conference": "Hubl.in, une vidéo conférence libre et gratuite",
   "I just had a nice video conference with Hubl.in. It's free, open source and really great, for professional as for personal use. Try it on https://hubl.in !": "Je viens juste de faire une vidéo conférence avec Hubl.in. C'est gratuit, Open Source et vraiment efficace, aussi bien pour un usage personnel que professionnel. Essayez le sur https://hubl.in !",
-  "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on": "Je viens juste de faire une vidéo conférence avec #hublin par @Awesomepaas. C'est #gratuit #OpenSource et vraiment bien ! Essayez le !"
+  "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on": "Je viens juste de faire une vidéo conférence avec #hublin par @Awesomepaas. C'est #gratuit #OpenSource et vraiment bien ! Essayez le !",
+  "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on": "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on",
+  "Connection lost": "Connexion interrompue",
+  "The connection to %s has been interrupted.": "La connexion à %s a été interrompue.",
+  "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.": "Ceci est souvent causé par un problème réseau temporaire et nous vous recommandons de recharger la page pour réessayer.",
+  "Reload the page": "Recharger la page"
 }

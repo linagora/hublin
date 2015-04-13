@@ -11,7 +11,8 @@ describe('The op.live-conference module', function() {
 
     beforeEach(inject(function($rootScope, $controller, $window) {
       $window.easyrtc = {
-        enableDataChannels: function() {}
+        enableDataChannels: function() {},
+        setDisconnectListener: function() {}
       };
 
       this.scope = $rootScope.$new();
@@ -46,6 +47,27 @@ describe('The op.live-conference module', function() {
       };
       this.scope.$emit('localMediaReady');
       done();
+    });
+
+  });
+
+  describe('The disconnect-dialog directive', function() {
+
+    var $window;
+    var element, scope;
+
+    beforeEach(inject(function($compile, $rootScope, _$window_) {
+      $window = _$window_;
+      scope = $rootScope.$new();
+      element = $compile('<disconnect-dialog />')(scope);
+
+      $rootScope.$digest();
+    }));
+
+    it('should reload the page when the button is clicked', function(done) {
+      $window.location.reload = done;
+
+      element.find('button').click();
     });
 
   });

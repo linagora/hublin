@@ -115,6 +115,10 @@ angular.module('op.live-conference', [
       return angular.element('#' + LOCAL_VIDEO_ID)[0];
     }, function(video) {
       if (video) {
+        easyRTCService.addDisconnectCallback(function() {
+          $('#disconnectModal').modal('show');
+        });
+
         easyRTCService.connect($scope.conferenceState);
         unregister();
       }
@@ -181,4 +185,16 @@ angular.module('op.live-conference', [
         });
       }
     };
-  }]);
+  }
+]).directive('disconnectDialog', ['$window', function($window) {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: '/views/live-conference/partials/disconnect-dialog.html',
+    link: function(scope) {
+      scope.reloadPage = function() {
+        $window.location.reload();
+      };
+    }
+  };
+}]);

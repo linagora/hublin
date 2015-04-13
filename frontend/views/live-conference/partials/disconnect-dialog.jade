@@ -1,0 +1,12 @@
+.modal.disconnect-modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+  .modal-dialog.modal-lg
+    .modal-content.text-center.modal-hublin
+      .modal-header
+        h4 #{__('Connection lost')}
+      .modal-body
+        p #{__('The connection to %s has been interrupted.', 'hubl.in')}
+        p #{__('This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.')}
+      .modal-footer
+        button.btn.btn-primary(type='button', ng-click='reloadPage()')
+          i.fa.fa-refresh.fa-spin
+          | #{__('Reload the page')}
