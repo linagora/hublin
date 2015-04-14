@@ -121,7 +121,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       }
     };
   }])
-  .directive('disableVideoConfiguration', ['easyRTCService', function(easyRTCService) {
+  .directive('disableVideoConfiguration', ['easyRTCService', '$alert', function(easyRTCService, $alert) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/disable-video-configuration.html',
@@ -130,6 +130,13 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
         $scope.changeVideoSetting = function() {
           $scope.videoEnabled = !$scope.videoEnabled;
           easyRTCService.enableVideo($scope.videoEnabled);
+          if (!$scope.videoEnabled) {
+            $alert({
+              container: '#disableVideo',
+              template: '/views/modules/configuration/disable-video-alert.html',
+              duration: 5
+            });
+          }
         };
       }
     };

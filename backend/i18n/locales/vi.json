@@ -86,5 +86,6 @@
   "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.": "Điều này thường xảy ra do mạng tạm thời bị trục trặc và bạn nên tải lại trang để thử lại.",
   "Reload the page": "Tải lại trang này",
   "Camera enabled": "Bật camera",
-  "Camera disabled": "Tắt camera"
+  "Camera disabled": "Tắt camera",
+  "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Bạn sắp tham gia hội nghị mà không có camera. Bạn sẽ không thể kích hoạt nó khi đang ở trong hội nghị."
 }

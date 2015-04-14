@@ -86,5 +86,6 @@
   "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.": "Ceci est souvent causé par un problème réseau temporaire et nous vous recommandons de recharger la page pour réessayer.",
   "Reload the page": "Recharger la page",
   "Camera enabled": "Caméra activée",
-  "Camera disabled": "Caméra désactivée"
+  "Camera disabled": "Caméra désactivée",
+  "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Vous allez rejoindre la conférence sans caméra. Il ne sera plus possible de l'activer lors de la conférence."
 }

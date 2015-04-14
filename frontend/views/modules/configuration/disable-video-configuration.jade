@@ -1,7 +1,7 @@
-.form-group
+.form-group.configuration-group
   label(ng-show='videoEnabled') #{__('Camera enabled')}
   label(ng-show='!videoEnabled') #{__('Camera disabled')}
-  .col-xs-12
+  .col-xs-12.configuration-field-group#disableVideo
     .btn-group.conference-field
       button.btn.btn-lg(type='button', ng-click='changeVideoSetting()', ng-class='{"btn-configuration-selected": videoEnabled}')
         i.fa.fa-fw.fa-video-camera
