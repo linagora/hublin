@@ -80,5 +80,9 @@
   "The description is limited to %s characters.": "Die Beschreibung ist auf %s Zeichen limitiert",
   "Hubl.in, free and open source video conference": "Videokonferenzen mit Hublin: Kostenlos und Open Source",
   "I just had a nice video conference with Hubl.in. It's free, open source and really great, for professional as for personal use. Try it on https://hubl.in !": "Ich hatte gerade eine tolle Videokonferenz mit Hubl.in. Es ist kostenlos, Open Source und prima sowohl für den privaten als auch für den professionellen Einsatz. Versuch es doch auch mal auf https://hubl.in",
-  "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on": "Tolle Videokonferenz mit #hublin von @AwesomePaaS. Wirklich großartig, #kostenlos und #OpenSource! Versuch es auf"
+  "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on": "Tolle Videokonferenz mit #hublin von @AwesomePaaS. Wirklich großartig, #kostenlos und #OpenSource! Versuch es auf",
+  "Connection lost": "Verbindung unterbrochen",
+  "The connection to %s has been interrupted.": "Die Verbindung zu %s wurde unterbrochen.",
+  "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.": "Häufig handelt es sich um ein vorübergehendes Netzwerkproblem, es wird empfohlen die Seite neu zu laden.",
+  "Reload the page": "Seite neu laden"
 }

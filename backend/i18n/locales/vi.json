@@ -80,5 +80,9 @@
   "The description is limited to %s characters.": "Mô tả bị giới hạn %s ký tự.",
   "Hubl.in, free and open source video conference": "Hubl.in, hội nghị video miễn phí và mã nguồn mở",
   "I just had a nice video conference with Hubl.in. It's free, open source and really great, for professional as for personal use. Try it on https://hubl.in !": "Tôi vừa có một hội nghị video với Hubl.in. Nó miễn phí, mã nguồn mở và thực sự tuyệt vời dành cho doanh nghiệp cũng như sử dụng cá nhân. Hãy dùng thử trên https://hubl.in !",
-  "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on": "Tôi vừa có một hội nghị video với #hublin của @Awesomepaas. Nó #miễn-phí #mã-nguồn-mở và thực sự tuyệt vời ! Hãy dùng thử nó!"
+  "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on": "Tôi vừa có một hội nghị video với #hublin của @Awesomepaas. Nó #miễn-phí #mã-nguồn-mở và thực sự tuyệt vời ! Hãy dùng thử nó!",
+  "Connection lost": "Mất kết nối",
+  "The connection to %s has been interrupted.": "Mất kết nối đến máy chủ %s.",
+  "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.": "Điều này thường xảy ra do mạng tạm thời bị trục trặc và bạn nên tải lại trang để thử lại.",
+  "Reload the page": "Tải lại trang này"
 }
