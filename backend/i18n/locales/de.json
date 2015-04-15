@@ -84,5 +84,8 @@
   "Connection lost": "Verbindung unterbrochen",
   "The connection to %s has been interrupted.": "Die Verbindung zu %s wurde unterbrochen.",
   "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.": "Häufig handelt es sich um ein vorübergehendes Netzwerkproblem, es wird empfohlen die Seite neu zu laden.",
-  "Reload the page": "Seite neu laden"
+  "Reload the page": "Seite neu laden",
+  "Camera enabled": "Kamera aktiviert",
+  "Camera disabled": "Kamera deaktiviert",
+  "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Du betrittst die Konferenz nun ohne Kamera. Es ist leider nicht möglich während der Konferenz die Kamera zu aktivieren."
 }

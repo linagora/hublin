@@ -7,7 +7,7 @@ var expect = chai.expect;
 
 describe('The meetings.configuration module', function() {
 
-  var easyRTCService, easyRTCBitRates, easyRTCDefaultBitRate, localStorageService, instance;
+  var easyRTCService, easyRTCBitRates, easyRTCDefaultBitRate, localStorageService, instance, alertContent;
 
   beforeEach(function() {
     module('meetings.configuration');
@@ -19,6 +19,10 @@ describe('The meetings.configuration module', function() {
     easyRTCDefaultBitRate = 'rate2';
     easyRTCService = {};
     instance = {};
+    alertContent = null;
+    var alert = function(content) {
+      alertContent = content;
+    };
     localStorageService = {
       getOrCreateInstance: function(name) {
         expect(name).to.equal('roomConfiguration');
@@ -36,6 +40,7 @@ describe('The meetings.configuration module', function() {
     $provide.value('easyRTCBitRates', easyRTCBitRates);
     $provide.value('easyRTCDefaultBitRate', easyRTCDefaultBitRate);
     $provide.value('localStorageService', localStorageService);
+    $provide.value('$alert', alert);
   }));
 
   describe('The conferenceConfiguration directive', function() {
@@ -206,6 +211,56 @@ describe('The meetings.configuration module', function() {
           };
         };
         this.scope.selectBitRate(testRate);
+      });
+    });
+
+  });
+
+  describe('The disableVideoConfiguration directive', function() {
+
+    beforeEach(inject(function($compile, $rootScope) {
+      this.scope = $rootScope.$new();
+      this.compile = $compile;
+    }));
+
+    beforeEach(function() {
+      instance.getItem = function() {
+        return {
+          then: function() {}
+        };
+      };
+      this.compile('<disable-video-configuration />')(this.scope);
+      this.scope.$digest();
+    });
+
+    describe('the changeVideoSetting function', function() {
+      it('should invert scope.videoEnabled value call easyRTCService.enableVideo with it', function(done) {
+        var self = this;
+        easyRTCService.enableVideo = function(enableVideo) {
+          expect(self.scope.videoEnabled).to.be.false;
+          expect(enableVideo).to.be.false;
+          done();
+        };
+        this.scope.videoEnabled = true;
+        this.scope.changeVideoSetting();
+      });
+
+      it('should display an alert when video is disabled', function() {
+        easyRTCService.enableVideo = function() {};
+        this.scope.videoEnabled = true;
+        this.scope.changeVideoSetting();
+        expect(alertContent).to.deep.equal({
+          container: '#disableVideo',
+          template: '/views/modules/configuration/disable-video-alert.html',
+          duration: 5
+        });
+      });
+
+      it('should not display an alert when video is enabled', function() {
+        easyRTCService.enableVideo = function() {};
+        this.scope.videoEnabled = false;
+        this.scope.changeVideoSetting();
+        expect(alertContent).to.be.null;
       });
     });
 
