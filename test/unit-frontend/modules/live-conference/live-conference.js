@@ -12,7 +12,10 @@ describe('The op.live-conference module', function() {
     beforeEach(inject(function($rootScope, $controller, $window) {
       $window.easyrtc = {
         enableDataChannels: function() {},
-        setDisconnectListener: function() {}
+        setDisconnectListener: function() {},
+        setDataChannelCloseListener: function() {},
+        setCallCancelled: function() {},
+        setOnStreamClosed: function() {}
       };
 
       this.scope = $rootScope.$new();

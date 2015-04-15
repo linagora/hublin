@@ -65,6 +65,7 @@ module.exports.applicationDependencies = function() {
     'frontend/components/opangular/src/websocket/services.js',
 
     'frontend/js/modules/live-conference/live-conference.js',
+    'frontend/js/modules/live-conference-devmode/live-conference-devmode.js',
     'frontend/components/angular-liveconference/dist/live-conference.all.js',
 
     'frontend/js/modules/utils/uri.js',
