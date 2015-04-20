@@ -83,8 +83,8 @@
   "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on": "Tolle Videokonferenz mit #hublin von @AwesomePaaS. Wirklich großartig, #kostenlos und #OpenSource! Versuch es auf",
   "Connection lost": "Verbindung unterbrochen",
   "The connection to %s has been interrupted.": "Die Verbindung zu %s wurde unterbrochen.",
-  "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.": "Häufig handelt es sich um ein vorübergehendes Netzwerkproblem, es wird empfohlen die Seite neu zu laden.",
-  "Reload the page": "Seite neu laden",
+  "Your browser is attempting to reconnect, but you may also reload the page in order to try again": "Es wird versucht die Verbindung wiederherzustellen, aber du kannst auch die Seite neu laden um es erneut zu versuchen",
+  "Reconnecting": "Vebindungsaufbau",
   "Camera enabled": "Kamera aktiviert",
   "Camera disabled": "Kamera deaktiviert",
   "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Du betrittst die Konferenz nun ohne Kamera. Es ist leider nicht möglich während der Konferenz die Kamera zu aktivieren."

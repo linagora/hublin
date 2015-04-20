@@ -83,8 +83,8 @@
   "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on": "Je viens de faire une vidéo conférence avec #hublin par @Awesomepaas. C'est #gratuit et #OpenSource ! Essayez le !",
   "Connection lost": "Connexion interrompue",
   "The connection to %s has been interrupted.": "La connexion à %s a été interrompue.",
-  "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.": "Ceci est souvent causé par un problème réseau temporaire et nous vous recommandons de recharger la page pour réessayer.",
-  "Reload the page": "Recharger la page",
+  "Your browser is attempting to reconnect, but you may also reload the page in order to try again": "Votre navigateur est en cours de reconnexion. Vous pouvez également essayer à nouveau en rechargeant la page",
+  "Reconnecting": "Reconnexion en cours",
   "Camera enabled": "Caméra activée",
   "Camera disabled": "Caméra désactivée",
   "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Vous allez rejoindre la conférence sans caméra. Il ne sera plus possible de l'activer lors de la conférence."

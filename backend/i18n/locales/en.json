@@ -83,8 +83,8 @@
   "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on": "I just had a nice video conference with #hublin by @AwesomePaaS. It's #free #OpenSource and really great! Try it on",
   "Connection lost": "Connection lost",
   "The connection to %s has been interrupted.": "The connection to %s has been interrupted.",
-  "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.": "This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.",
-  "Reload the page": "Reload the page",
+  "Your browser is attempting to reconnect, but you may also reload the page in order to try again": "Your browser is attempting to reconnect, but you may also reload the page in order to try again",
+  "Reconnecting": "Reconnecting",
   "Camera enabled": "Camera enabled",
   "Camera disabled": "Camera disabled",
   "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "You are about to join the conference without camera. You will not be able to activate it once in the conference."
