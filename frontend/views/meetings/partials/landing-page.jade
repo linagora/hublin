@@ -22,16 +22,20 @@
           h2 #{__('Start with Hubl.in!')}
       .row.text-center
         .col-md-3
-          img(src='/images/landing_roomName_thumb.png')
+          a(href='/images/landing_roomName.png', data-lightbox="quickstart", data-title="#{__('Choose a new room name or stay with the default. Fancy or random ? The choice is yours.')}")
+            img(src='/images/landing_roomName_thumb.png', data-lightbox="landing_roomName_thumb")
           p #{__('Choose a new room name or stay with the default. Fancy or random ? The choice is yours.')}
         .col-md-3
-          img(src='/images/landing_allowUserMedia_thumb.png')
+          a(href='/images/landing_allowUserMedia.png', data-lightbox="quickstart", data-title="#{__('Allow your browser to use your camera and microphone. It seems that 100% of video conferences are more efficient with sound and video.')}")
+            img(src='/images/landing_allowUserMedia_thumb.png')
           p #{__('Allow your browser to use your camera and microphone. It seems that 100% of video conferences are more efficient with sound and video.')}
         .col-md-3
-          img(src='/images/landing_inviteContacts_thumb.png')
+          a(href='/images/landing_inviteContacts.png', data-lightbox="quickstart", data-title="#{__('You\'re in! Invite your contacts to join the room: your contacts can invite their own contacts, who can invite their own contacts...')}")
+            img(src='/images/landing_inviteContacts_thumb.png', data-lightbox="landing_inviteContacts")
           p #{__('You\'re in! Invite your contacts to join the room: your contacts can invite their own contacts, who can invite their own contacts...')}
         .col-md-3
-          img(src='/images/landing_enjoy_thumb.png')
+          a(href='/images/landing_enjoy.png', data-lightbox="quickstart", data-title="#{__('Enjoy! Use Hubl.in from your desktop, smartphone or tablet. It\'s open, free, easy to use and always available.')}")
+            img(src='/images/landing_enjoy_thumb.png', data-lightbox="landing_enjoy")
           p #{__('Enjoy! Use Hubl.in from your desktop, smartphone or tablet. It\'s open, free, easy to use and always available.')}
   section.about.bg-light-gray#about
     .container
