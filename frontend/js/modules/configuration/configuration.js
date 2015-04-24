@@ -127,17 +127,22 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       templateUrl: '/views/modules/configuration/disable-video-configuration.html',
       link: function($scope) {
         $scope.videoEnabled = true;
-        $scope.changeVideoSetting = function() {
-          $scope.videoEnabled = !$scope.videoEnabled;
+        $scope.canEnumerateDevices = easyRTCService.canEnumerateDevices;
+
+        var alertElement;
+        $scope.$watch('videoEnabled', function(val) {
           easyRTCService.enableVideo($scope.videoEnabled);
           if (!$scope.videoEnabled) {
-            $alert({
-              container: '#disableVideo',
+            alertElement = $alert({
+              container: '#disableVideoWarning',
               template: '/views/modules/configuration/disable-video-alert.html',
               duration: 5
             });
+          } else if (alertElement) {
+            alertElement.hide();
+            alertElement = null;
           }
-        };
+        });
       }
     };
   }]);

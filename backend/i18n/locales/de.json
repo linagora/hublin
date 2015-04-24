@@ -85,7 +85,8 @@
   "The connection to %s has been interrupted.": "Die Verbindung zu %s wurde unterbrochen.",
   "Your browser is attempting to reconnect, but you may also reload the page in order to try again": "Es wird versucht die Verbindung wiederherzustellen, aber du kannst auch die Seite neu laden um es erneut zu versuchen",
   "Reconnecting": "Vebindungsaufbau",
-  "Camera enabled": "Kamera aktiviert",
-  "Camera disabled": "Kamera deaktiviert",
+  "Do you have a camera?": "Hast du eine Kamera?",
+  "Yes": "Ja",
+  "No": "Nein",
   "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Du betrittst die Konferenz nun ohne Kamera. Es ist leider nicht möglich während der Konferenz die Kamera zu aktivieren."
 }

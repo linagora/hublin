@@ -85,7 +85,8 @@
   "The connection to %s has been interrupted.": "Mất kết nối đến máy chủ %s.",
   "Your browser is attempting to reconnect, but you may also reload the page in order to try again": "Trình duyệt của bạn đang kết nối lại, nhưng bạn có thể tải lại trang để thử lại",
   "Reconnecting": "Đang kết nối lại",
-  "Camera enabled": "Bật camera",
-  "Camera disabled": "Tắt camera",
+  "Do you have a camera?": "Bạn có camera hay không?",
+  "Yes": "đồng ý",
+  "No": "từ chối",
   "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Bạn sắp tham gia hội nghị mà không có camera. Bạn sẽ không thể kích hoạt nó khi đang ở trong hội nghị."
 }

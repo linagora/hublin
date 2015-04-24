@@ -85,7 +85,8 @@
   "The connection to %s has been interrupted.": "The connection to %s has been interrupted.",
   "Your browser is attempting to reconnect, but you may also reload the page in order to try again": "Your browser is attempting to reconnect, but you may also reload the page in order to try again",
   "Reconnecting": "Reconnecting",
-  "Camera enabled": "Camera enabled",
-  "Camera disabled": "Camera disabled",
+  "Do you have a camera?": "Do you have a camera?",
+  "Yes": "Yes",
+  "No": "No",
   "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "You are about to join the conference without camera. You will not be able to activate it once in the conference."
 }
