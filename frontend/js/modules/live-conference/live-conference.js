@@ -167,7 +167,8 @@ angular.module('op.live-conference', [
       }
 
       function reconnect() {
-        var delay = 1000 << reconnectCount;
+        var delay = 1000 << reconnectCount; // jshint ignore:line
+
         if (delay >= MAX_RECONNECT_TIMEOUT) {
           $scope.toolong = true;
           delay = MAX_RECONNECT_TIMEOUT;
