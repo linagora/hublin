@@ -4,9 +4,11 @@
       .modal-header
         h4 #{__('Connection lost')}
       .modal-body
-        p #{__('The connection to %s has been interrupted.', 'hubl.in')}
-        p #{__('This is often caused by a temporary network glitch and you are advised to reload the page in order to try again.')}
+        p=__('The connection to %s has been interrupted.', 'hubl.in')
+        p=__('Your browser is attempting to reconnect, but you may also reload the page in order to try again')
       .modal-footer
-        button.btn.btn-primary(type='button', ng-click='reloadPage()')
-          i.fa.fa-refresh.fa-spin
-          | #{__('Reload the page')}
+        div
+          i.fa.fa-refresh.fa-spin.icon-label
+          | #{__('Reconnecting')}
+        button.toolong.btn.btn-primary(ng-show='toolong' type='button', ng-click='reloadPage()')
+          | #{__('Too long? Try reloading')}

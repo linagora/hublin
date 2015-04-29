@@ -11,7 +11,9 @@ angular.module('op.live-conference', [
   'meetings.invitation',
   'meetings.report',
   'meetings.wizard'
-]).controller('conferenceController', [
+])
+.constant('MAX_RECONNECT_TIMEOUT', 30000)
+.controller('conferenceController', [
   '$scope',
   '$log',
   'session',
@@ -62,9 +64,10 @@ angular.module('op.live-conference', [
   'conferenceAPI',
   'easyRTCService',
   'currentConferenceState',
+  'MAX_RECONNECT_TIMEOUT',
   'LOCAL_VIDEO_ID',
   'REMOTE_VIDEO_IDS',
-  function($scope, $log, $timeout, $interval, session, conferenceAPI, easyRTCService, currentConferenceState, LOCAL_VIDEO_ID, REMOTE_VIDEO_IDS) {
+  function($scope, $log, $timeout, $interval, session, conferenceAPI, easyRTCService, currentConferenceState, MAX_RECONNECT_TIMEOUT, LOCAL_VIDEO_ID, REMOTE_VIDEO_IDS) {
     $scope.conference = session.conference;
     $scope.conferenceState = currentConferenceState;
     $scope.conferenceId = $scope.conference._id;
@@ -109,21 +112,6 @@ angular.module('op.live-conference', [
       );
     };
 
-    // We must wait for the directive holding the template containing videoIds
-    // to be displayed in the browser before using easyRTC.
-    var unregister = $scope.$watch(function() {
-      return angular.element('#' + LOCAL_VIDEO_ID)[0];
-    }, function(video) {
-      if (video) {
-        easyRTCService.addDisconnectCallback(function() {
-          $('#disconnectModal').modal('show');
-        });
-
-        easyRTCService.connect($scope.conferenceState);
-        unregister();
-      }
-    });
-
     $scope.$on('conferencestate:attendees:push', function() {
       conferenceAPI.get($scope.conferenceId).then(function(response) {
         $scope.conferenceState.conference = response.data;
@@ -162,6 +150,46 @@ angular.module('op.live-conference', [
       });
       if (!connectedMembers) {
         $scope.showInvitation();
+      }
+    });
+
+    easyRTCService.addDisconnectCallback(function() {
+      function connect() {
+        easyRTCService.connect($scope.conferenceState, function(err) {
+          if (err) {
+            reconnectCount++;
+            reconnect();
+          } else {
+            reconnectCount = 0;
+            $('#disconnectModal').modal('hide');
+          }
+        });
+      }
+
+      function reconnect() {
+        var delay = 1000 << reconnectCount;
+        if (delay >= MAX_RECONNECT_TIMEOUT) {
+          $scope.toolong = true;
+          delay = MAX_RECONNECT_TIMEOUT;
+        }
+        $log.info('Reconnecting in ' + delay + 'ms');
+        $timeout(connect, delay);
+      }
+
+      var reconnectCount = 0;
+      $scope.toolong = false;
+      $('#disconnectModal').modal('show');
+      reconnect();
+    });
+
+    // We must wait for the directive holding the template containing videoIds
+    // to be displayed in the browser before using easyRTC.
+    var unregisterLocalVideoWatch = $scope.$watch(function() {
+      return angular.element('#' + LOCAL_VIDEO_ID)[0];
+    }, function(video) {
+      if (video) {
+        easyRTCService.connect($scope.conferenceState);
+        unregisterLocalVideoWatch();
       }
     });
   }

@@ -1,5 +1,8 @@
 'use strict';
 
+/* global chai: false */
+var expect = chai.expect;
+
 describe('The op.live-conference module', function() {
 
   beforeEach(function() {
@@ -8,8 +11,25 @@ describe('The op.live-conference module', function() {
   });
 
   describe('The liveConferenceController', function() {
+    var $timeout;
 
-    beforeEach(inject(function($rootScope, $controller, $window) {
+    beforeEach(function() {
+      var easyRTCService = this.easyRTCService = {
+        _disconnectCallbacks: [],
+
+        connect: function(conf, cb) { cb(null); },
+        leaveRoom: function(conf) {},
+        performCall: function(id) {},
+        addDisconnectCallback: function(cb) { this._disconnectCallbacks.push(cb); }
+      };
+
+      angular.mock.module(function($provide) {
+        $provide.value('easyRTCService', easyRTCService);
+        $provide.constant('MAX_RECONNECT_TIMEOUT', 6000);
+      });
+    });
+
+    beforeEach(inject(function($rootScope, $controller, $window, _$timeout_) {
       $window.easyrtc = {
         enableDataChannels: function() {},
         setDisconnectListener: function() {},
@@ -17,8 +37,8 @@ describe('The op.live-conference module', function() {
         setCallCancelled: function() {},
         setOnStreamClosed: function() {}
       };
-
       this.scope = $rootScope.$new();
+      $timeout = _$timeout_;
 
       $controller('liveConferenceController', {
         $scope: this.scope
@@ -52,6 +72,39 @@ describe('The op.live-conference module', function() {
       done();
     });
 
+    it('should attempt to reconnect after being disconnected', function() {
+      this.easyRTCService.connect = function(conf, callback) {
+        connected++;
+        callback(cberror);
+      };
+
+      var connected = 0;
+      var cberror = new Error('still putting on makeup');
+
+      expect(this.easyRTCService._disconnectCallbacks.length).to.equal(1);
+      var disconnectCallback = this.easyRTCService._disconnectCallbacks[0];
+
+      // Trigger disconnection
+      disconnectCallback();
+
+      // Do a few reconnection attempts
+      $timeout.flush(1000);
+      expect(connected).to.equal(1);
+      $timeout.flush(2000);
+      expect(connected).to.equal(2);
+      $timeout.flush(4000);
+      expect(connected).to.equal(3);
+
+      // Max timeout reached, should limit the timeout value
+      $timeout.flush(6000);
+      expect(connected).to.equal(4);
+
+      // Now succeed and verify there are no remaining timers
+      cberror = null;
+      $timeout.flush(6000);
+      expect(connected).to.equal(5);
+      $timeout.verifyNoPendingTasks();
+    });
   });
 
   describe('The disconnect-dialog directive', function() {
