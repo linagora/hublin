@@ -10,7 +10,7 @@ describe('The op.live-conference module', function() {
     module('meetings.jade.templates');
   });
 
-  describe('The liveConferenceController', function() {
+  describe('The liveConference directive', function() {
     var $timeout;
 
     beforeEach(function() {
@@ -29,7 +29,7 @@ describe('The op.live-conference module', function() {
       });
     });
 
-    beforeEach(inject(function($rootScope, $controller, $window, _$timeout_) {
+    beforeEach(inject(function($rootScope, $controller, $window, _$timeout_, $compile) {
       $window.easyrtc = {
         enableDataChannels: function() {},
         setDisconnectListener: function() {},
@@ -40,9 +40,8 @@ describe('The op.live-conference module', function() {
       this.scope = $rootScope.$new();
       $timeout = _$timeout_;
 
-      $controller('liveConferenceController', {
-        $scope: this.scope
-      });
+      $compile('<div live-conference></div>')(this.scope);
+      $rootScope.$digest();
     }));
 
     it('should show invitation modal on localMediaReadyEvent if no user is online', function(done) {
