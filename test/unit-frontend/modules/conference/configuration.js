@@ -237,7 +237,7 @@ describe('The meetings.configuration module', function() {
     });
 
     describe('the changeVideoSetting function', function() {
-      it.only('should display an alert when video is disabled', function() {
+      it('should display an alert when video is disabled', function() {
         this.scope.videoEnabled = false;
         this.scope.$digest();
         expect(alertContent).to.deep.equal({
