@@ -143,15 +143,6 @@ angular.module('op.live-conference', [
         }
       });
 
-      $scope.$on('localMediaReady', function() {
-        var connectedMembers = $scope.conferenceState.conference.members.some(function(member) {
-          return member.status === 'online';
-        });
-        if (!connectedMembers) {
-          $scope.showInvitation();
-        }
-      });
-
       // We must wait for the directive holding the template containing videoIds
       // to be displayed in the browser before using easyRTC.
       var unregisterLocalVideoWatch = $scope.$watch(function() {
