@@ -17,7 +17,11 @@ describe('The meetings.configuration module', function() {
   beforeEach(angular.mock.module(function($provide) {
     easyRTCBitRates = {rate1: 'config1', rate2: 'config2'};
     easyRTCDefaultBitRate = 'rate2';
-    easyRTCService = {};
+    easyRTCService = {
+      enableVideo: function() {},
+      configureBandwidth: function() {},
+      canEnumerateDevices: true
+    };
     instance = {};
     alertContent = null;
     var alert = function(content) {
@@ -61,7 +65,6 @@ describe('The meetings.configuration module', function() {
           }
         };
       };
-      easyRTCService.configureBandwidth = function() {};
 
       $compile('<conference-configuration />')(this.scope);
       this.scope.$digest();
@@ -234,32 +237,19 @@ describe('The meetings.configuration module', function() {
     });
 
     describe('the changeVideoSetting function', function() {
-      it('should invert scope.videoEnabled value call easyRTCService.enableVideo with it', function(done) {
-        var self = this;
-        easyRTCService.enableVideo = function(enableVideo) {
-          expect(self.scope.videoEnabled).to.be.false;
-          expect(enableVideo).to.be.false;
-          done();
-        };
-        this.scope.videoEnabled = true;
-        this.scope.changeVideoSetting();
-      });
-
-      it('should display an alert when video is disabled', function() {
-        easyRTCService.enableVideo = function() {};
-        this.scope.videoEnabled = true;
-        this.scope.changeVideoSetting();
+      it.only('should display an alert when video is disabled', function() {
+        this.scope.videoEnabled = false;
+        this.scope.$digest();
         expect(alertContent).to.deep.equal({
-          container: '#disableVideo',
+          container: '#disableVideoWarning',
           template: '/views/modules/configuration/disable-video-alert.html',
           duration: 5
         });
       });
 
       it('should not display an alert when video is enabled', function() {
-        easyRTCService.enableVideo = function() {};
-        this.scope.videoEnabled = false;
-        this.scope.changeVideoSetting();
+        this.scope.videoEnabled = true;
+        this.scope.$digest();
         expect(alertContent).to.be.null;
       });
     });
