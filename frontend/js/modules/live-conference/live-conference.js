@@ -63,10 +63,9 @@ angular.module('op.live-conference', [
   'conferenceAPI',
   'easyRTCService',
   'currentConferenceState',
-  'MAX_RECONNECT_TIMEOUT',
   'LOCAL_VIDEO_ID',
   'REMOTE_VIDEO_IDS',
-  function($log, $timeout, $interval, session, conferenceAPI, easyRTCService, currentConferenceState, MAX_RECONNECT_TIMEOUT, LOCAL_VIDEO_ID, REMOTE_VIDEO_IDS) {
+  function($log, $timeout, $interval, session, conferenceAPI, easyRTCService, currentConferenceState, LOCAL_VIDEO_ID, REMOTE_VIDEO_IDS) {
     function controller($scope) {
       $scope.conference = session.conference;
       $scope.conferenceState = currentConferenceState;
@@ -153,36 +152,6 @@ angular.module('op.live-conference', [
         }
       });
 
-      easyRTCService.addDisconnectCallback(function() {
-        function connect() {
-          easyRTCService.connect($scope.conferenceState, function(err) {
-            if (err) {
-              reconnectCount++;
-              reconnect();
-            } else {
-              reconnectCount = 0;
-              $('#disconnectModal').modal('hide');
-            }
-          });
-        }
-
-        function reconnect() {
-          var delay = 1000 << reconnectCount; // jshint ignore:line
-
-          if (delay >= MAX_RECONNECT_TIMEOUT) {
-            $scope.toolong = true;
-            delay = MAX_RECONNECT_TIMEOUT;
-          }
-          $log.info('Reconnecting in ' + delay + 'ms');
-          $timeout(connect, delay);
-        }
-
-        var reconnectCount = 0;
-        $scope.toolong = false;
-        $('#disconnectModal').modal('show');
-        reconnect();
-      });
-
       // We must wait for the directive holding the template containing videoIds
       // to be displayed in the browser before using easyRTC.
       var unregisterLocalVideoWatch = $scope.$watch(function() {
@@ -199,7 +168,49 @@ angular.module('op.live-conference', [
       controller: controller
     };
   }
-]).directive('liveConferenceNotification', ['$log', 'session', 'notificationFactory', 'livenotification',
+])
+.directive('liveConferenceAutoReconnect', ['easyRTCService', 'MAX_RECONNECT_TIMEOUT', '$log', '$timeout',
+function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
+  function link($scope) {
+    easyRTCService.addDisconnectCallback(function() {
+      function connect() {
+        easyRTCService.connect($scope.conferenceState, function(err) {
+          if (err) {
+            reconnectCount++;
+            reconnect();
+          } else {
+            reconnectCount = 0;
+            $('#disconnectModal').modal('hide');
+          }
+        });
+      }
+
+      function reconnect() {
+        var delay = 1000 << reconnectCount; // jshint ignore:line
+
+        if (delay >= MAX_RECONNECT_TIMEOUT) {
+          $scope.toolong = true;
+          delay = MAX_RECONNECT_TIMEOUT;
+        }
+        $log.info('Reconnecting in ' + delay + 'ms');
+        $timeout(connect, delay);
+      }
+
+      var reconnectCount = 0;
+      $scope.toolong = false;
+      $('#disconnectModal').modal('show');
+      reconnect();
+    });
+  }
+
+  return {
+    retrict: 'A',
+    require: 'liveConference',
+    link: link
+  };
+
+}])
+.directive('liveConferenceNotification', ['$log', 'session', 'notificationFactory', 'livenotification',
   function($log, session, notificationFactory, livenotification) {
     return {
       restrict: 'E',

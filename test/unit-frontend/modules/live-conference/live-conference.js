@@ -29,7 +29,7 @@ describe('The op.live-conference module', function() {
       });
     });
 
-    beforeEach(inject(function($rootScope, $controller, $window, _$timeout_, $compile) {
+    beforeEach(inject(function($rootScope, $window, _$timeout_, $compile) {
       $window.easyrtc = {
         enableDataChannels: function() {},
         setDisconnectListener: function() {},
@@ -69,6 +69,54 @@ describe('The op.live-conference module', function() {
       };
       this.scope.$emit('localMediaReady');
       done();
+    });
+  });
+
+  describe('The liveConferenceAutoReconnect directive', function() {
+    var $timeout;
+
+    beforeEach(function() {
+      var easyRTCService = this.easyRTCService = {
+        _disconnectCallbacks: [],
+
+        connect: function(conf, cb) { cb(null); },
+        leaveRoom: function(conf) {},
+        performCall: function(id) {},
+        addDisconnectCallback: function(cb) { this._disconnectCallbacks.push(cb); }
+      };
+
+      angular.mock.module(function($provide) {
+        $provide.value('easyRTCService', easyRTCService);
+        $provide.constant('MAX_RECONNECT_TIMEOUT', 6000);
+      });
+    });
+
+    beforeEach(inject(function($rootScope, $window, _$timeout_, $compile) {
+      $window.easyrtc = {
+        enableDataChannels: function() {},
+        setDisconnectListener: function() {},
+        setDataChannelCloseListener: function() {},
+        setCallCancelled: function() {},
+        setOnStreamClosed: function() {}
+      };
+      this.scope = $rootScope.$new();
+      $timeout = _$timeout_;
+
+      $compile('<div live-conference live-conference-auto-reconnect></div>')(this.scope);
+      $rootScope.$digest();
+    }));
+
+    it('should fail if the liveConference directive is not on the same element', function(done) {
+      try {
+        inject(function($rootScope, $compile) {
+          this.scope = $rootScope.$new();
+          $compile('<div live-conference-auto-reconnect></div>')(this.scope);
+          $rootScope.$digest();
+        });
+      } catch (e) {
+        return done();
+      }
+      return done(new Error('I should have thrown'));
     });
 
     it('should attempt to reconnect after being disconnected', function() {
