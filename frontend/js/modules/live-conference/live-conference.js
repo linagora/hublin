@@ -91,14 +91,6 @@ angular.module('op.live-conference', [
         session.leave();
       };
 
-      $scope.isMainVideo = function(videoId) {
-        return $scope.conferenceState.localVideoId === videoId;
-      };
-
-      $scope.performCall = function(otherEasyrtcid) {
-        easyRTCService.performCall(otherEasyrtcid);
-      };
-
       $scope.invite = function(user) {
         $log.debug('Invite user', user);
         conferenceAPI.invite($scope.conferenceId, user._id).then(
