@@ -10,7 +10,7 @@ describe('The op.live-conference module', function() {
     module('meetings.jade.templates');
   });
 
-  describe('The liveConferenceController', function() {
+  describe('The liveConferenceAutoReconnect directive', function() {
     var $timeout;
 
     beforeEach(function() {
@@ -29,7 +29,7 @@ describe('The op.live-conference module', function() {
       });
     });
 
-    beforeEach(inject(function($rootScope, $controller, $window, _$timeout_) {
+    beforeEach(inject(function($rootScope, $window, _$timeout_, $compile) {
       $window.easyrtc = {
         enableDataChannels: function() {},
         setDisconnectListener: function() {},
@@ -40,36 +40,21 @@ describe('The op.live-conference module', function() {
       this.scope = $rootScope.$new();
       $timeout = _$timeout_;
 
-      $controller('liveConferenceController', {
-        $scope: this.scope
-      });
+      $compile('<div live-conference live-conference-auto-reconnect></div>')(this.scope);
+      $rootScope.$digest();
     }));
 
-    it('should show invitation modal on localMediaReadyEvent if no user is online', function(done) {
-      this.scope.showInvitation = done;
-      this.scope.conferenceState = {
-        conference: {
-          members: [
-            {status: 'offline'}
-          ]
-        }
-      };
-      this.scope.$emit('localMediaReady');
-    });
-
-    it('should not show invitation modal on localMediaReadyEvent if some user is online', function(done) {
-      this.scope.showInvitation = function() {
-        done(new Error('Should not have been called'));
-      };
-      this.scope.conferenceState = {
-        conference: {
-          members: [
-            {status: 'online'}
-          ]
-        }
-      };
-      this.scope.$emit('localMediaReady');
-      done();
+    it('should fail if the liveConference directive is not on the same element', function(done) {
+      try {
+        inject(function($rootScope, $compile) {
+          this.scope = $rootScope.$new();
+          $compile('<div live-conference-auto-reconnect></div>')(this.scope);
+          $rootScope.$digest();
+        });
+      } catch (e) {
+        return done();
+      }
+      return done(new Error('I should have thrown'));
     });
 
     it('should attempt to reconnect after being disconnected', function() {

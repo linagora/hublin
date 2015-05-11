@@ -265,4 +265,22 @@ angular.module('meetings.invitation', [
       };
     }
   };
-}]);
+}])
+.directive('invitationDialogLauncher', function() {
+  function link($scope) {
+    $scope.$on('localMediaReady', function() {
+      var connectedMembers = $scope.conferenceState.conference.members.some(function(member) {
+        return member.status === 'online';
+      });
+      if (!connectedMembers) {
+        $scope.showInvitation();
+      }
+    });
+  }
+
+  return {
+    restrict: 'A',
+    require: 'liveConference',
+    link: link
+  };
+});
