@@ -41,6 +41,35 @@ describe('The op.live-conference-devmode module', function() {
         });
       });
     });
+
+    describe('setDevModePeerListeners', function() {
+      it('should call setPeerListener for all devmodeMsgType values', function(done) {
+        var self = this;
+        var handler = 'aHandler';
+        var count = 0;
+        this.easyRTCService.setPeerListener = function(listener, msgType) {
+          expect(listener).to.deep.equal(handler);
+          count++;
+          if (count === 1) {
+            expect(msgType).to.equal('devmode:sendData');
+          }
+          else if (count === 2) {
+            expect(msgType).to.equal('devmode:sendDataP2P');
+          }
+          else if (count === 3) {
+            expect(msgType).to.equal('devmode:sendDataWS');
+            done();
+          }
+        };
+        module(function($provide) {
+          $provide.value('currentConferenceState', self.conference);
+          $provide.value('easyRTCService', self.easyRTCService);
+        });
+        inject(function(devMode) {
+          devMode.setDevModePeerListeners(handler);
+        });
+      });
+    });
   });
   describe('disable() method', function() {
     it('should unregister $interval\'s callback', function(done) {

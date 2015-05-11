@@ -1,8 +1,13 @@
 'use strict';
 
 angular.module('op.live-conference-devmode', ['op.live-conference'])
-.factory('devMode', ['currentConferenceState', 'easyRTCService', '$interval',
-  function(conference, easyRTCService, $interval) {
+  .constant('devmodeMsgType', {
+    sendData: 'devmode:sendData',
+    sendDataP2P: 'devmode:sendDataP2P',
+    sendDataWS: 'devmode:sendDataWS'
+  })
+.factory('devMode', ['currentConferenceState', 'easyRTCService', '$interval', 'devmodeMsgType', 'notificationFactory',
+  function(conference, easyRTCService, $interval, devmodeMsgType, notificationFactory) {
     var devAttendees = [],
     intervalId = null;
 
@@ -39,17 +44,33 @@ angular.module('op.live-conference-devmode', ['op.live-conference'])
       }
     }
 
+    function sendTestMessage(msgType, easyrtcid) {
+      easyRTCService[msgType](easyrtcid, devmodeMsgType[msgType], {msg: 'Data sent using message type ' + msgType, from: easyRTCService.myEasyrtcid()},
+        function(ackmessage) {
+          notificationFactory.weakInfo('ACK received for ' + msgType, JSON.stringify(ackmessage));
+        }
+      );
+    }
+
+    function setDevModePeerListeners(handler) {
+      for (var key in devmodeMsgType) {
+        easyRTCService.setPeerListener(handler, devmodeMsgType[key]);
+      }
+    }
+
     var service = {
       enable: enable,
       disable: disable,
       attendees: devAttendees,
-      peerCount: 0
+      peerCount: 0,
+      sendTestMessage: sendTestMessage,
+      setDevModePeerListeners: setDevModePeerListeners
     };
 
     return service;
   }
 ])
-.directive('devmodeLauncher', ['devMode', function(devMode) {
+.directive('devmodeLauncher', ['devMode', 'notificationFactory', function(devMode, notificationFactory) {
   return {
     restrict: 'E',
     template: '',
@@ -57,6 +78,12 @@ angular.module('op.live-conference-devmode', ['op.live-conference'])
       function onClick() {
         devMode.enable();
         var modalElt = $('devmode-dialog');
+
+        var peerListener = function(easyrtcid, msgType, msgData) {
+          notificationFactory.weakInfo(msgType, 'Message received from ' + easyrtcid + ' : ' + JSON.parse(msgData).msg);
+        };
+        devMode.setDevModePeerListeners(peerListener);
+
         modalElt.modal('show');
         modalElt.one('hidden.bs.modal', function() {
           devMode.disable();
