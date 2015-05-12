@@ -13,10 +13,17 @@
             b {{attendee.displayName}}
             | &nbsp;({{attendee.easyrtcid}})
           div
-            span P2P connection:
+            div P2P connection:
               i.fa.fa-check(ng-show="attendee.connectionStatus", title='{{attendee.connectionStatusMessage}}')
               i.fa.fa-times(ng-hide="attendee.connectionStatus", title='{{attendee.connectionStatusMessage}}')
-            span &nbsp;DataChannel:
+              | &nbsp;
+              button(ng-click='devMode.sendTestMessage("sendDataP2P", attendee.easyrtcid)') Test SendDataP2P
+            div &nbsp;DataChannel:
               i.fa.fa-check(ng-show="attendee.dataChannelStatus")
               i.fa.fa-times(ng-hide="attendee.dataChannelStatus")
+              | &nbsp;
+              button(ng-click='devMode.sendTestMessage("sendData", attendee.easyrtcid)') Test SendData
+            div Websocket connection:&nbsp;
+              button(ng-click='devMode.sendTestMessage("sendDataWS", attendee.easyrtcid)') Test WS
+        br
     .modal-footer
