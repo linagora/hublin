@@ -20,6 +20,7 @@ describe('The meetings.configuration module', function() {
     easyRTCService = {
       enableVideo: function() {},
       configureBandwidth: function() {},
+      isVideoEnabled: function() { return false; },
       canEnumerateDevices: true
     };
     instance = {};
@@ -238,8 +239,6 @@ describe('The meetings.configuration module', function() {
 
     describe('the changeVideoSetting function', function() {
       it('should display an alert when video is disabled', function() {
-        this.scope.videoEnabled = false;
-        this.scope.$digest();
         expect(alertContent).to.deep.equal({
           container: '#disableVideoWarning',
           template: '/views/modules/configuration/disable-video-alert.html',
@@ -248,9 +247,16 @@ describe('The meetings.configuration module', function() {
       });
 
       it('should not display an alert when video is enabled', function() {
-        this.scope.videoEnabled = true;
+        alertContent = null;
+        easyRTCService.isVideoEnabled = function() { return true; };
+        this.compile('<disable-video-configuration />')(this.scope);
         this.scope.$digest();
         expect(alertContent).to.be.null;
+
+      });
+
+      it('should return default value', function() {
+        expect(this.scope.videoEnabled).to.equal(false);
       });
     });
 

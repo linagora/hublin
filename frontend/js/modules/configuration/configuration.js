@@ -126,7 +126,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       restrict: 'E',
       templateUrl: '/views/modules/configuration/disable-video-configuration.html',
       link: function($scope) {
-        $scope.videoEnabled = true;
+        $scope.videoEnabled = easyRTCService.isVideoEnabled();
         $scope.canEnumerateDevices = easyRTCService.canEnumerateDevices;
 
         var alertElement;
