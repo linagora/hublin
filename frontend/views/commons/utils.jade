@@ -1,0 +1,22 @@
+mixin injectJSFromModules(module, injections)
+  each injection, key in injections
+    - var moduleInjections = injection[module]
+    if (moduleInjections && moduleInjections.js)
+      each file in moduleInjections.js
+        script(src='/' + key + '/js/' + file)
+
+mixin injectAngularFromModules(module, injections)
+  script(type='text/javascript')
+    | var angularInjections = []
+    each injection, key in injections
+      - var moduleInjections = injection[module]
+      if (moduleInjections && moduleInjections.angular)
+        | .concat("#{moduleInjections.angular}".split(','))
+    | ;
+
+mixin injectCSSFromModules(module, injections)
+  each injection, key in injections
+    - var moduleInjections = injection[module]
+    if (moduleInjections && moduleInjections.css)
+      each file in moduleInjections.css
+        link(rel='stylesheet', href='/' + key + '/css/' + file)

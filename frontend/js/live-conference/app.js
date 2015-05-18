@@ -1,5 +1,7 @@
 'use strict';
 
+var angularInjections = angularInjections || [];
+
 angular.module('liveConferenceApplication', [
   'ngRoute',
   'ngSanitize',
@@ -23,7 +25,7 @@ angular.module('liveConferenceApplication', [
   'ngSocial',
   'matchmedia-ng',
   'op.live-conference-devmode'
-]).config(function($routeProvider, $locationProvider, RestangularProvider) {
+].concat(angularInjections)).config(function($routeProvider, $locationProvider, RestangularProvider) {
 
   $routeProvider.when('/:conferenceId', {
     templateUrl: '/views/live-conference/partials/main',

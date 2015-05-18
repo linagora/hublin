@@ -3,7 +3,7 @@ html
   head
     include ../commons/meta
     include ../commons/facebook-markup
-
+    include ../commons/utils
     include ../commons/twitter-markup
 
     base(href='/')
@@ -22,7 +22,7 @@ html
     link(rel='stylesheet', href='//fonts.googleapis.com/css?family=Merienda:700')
     link(rel='stylesheet', href='/css/hublin.css')
     link(rel='stylesheet', href='/css/live-conference.css')
-
+    +injectCSSFromModules('live-conference', injections)
     script(src='/components/jquery/dist/jquery.min.js')
     script(src='/components/underscore/underscore.js')
     script(src='/js/thirdparty/modernizr.js')
@@ -85,7 +85,8 @@ html
 
     script(src='/components/opangular/src/localstorage.js')
     script(src='/components/opangular/src/localstorage/services.js')
-
+    +injectAngularFromModules('live-conference', injections)
+    +injectJSFromModules('live-conference', injections)
     script(src='/js/modules/utils/uri.js')
     script(src='/js/modules/utils/language.js')
     script(src='/js/modules/session/session.js')
