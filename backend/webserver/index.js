@@ -34,7 +34,7 @@ var webserver = {
   started: false
 };
 
-var injections = {} ;
+var injections = {};
 var emitter = new AsyncEventEmitter();
 emitter.setMaxListeners(0);
 

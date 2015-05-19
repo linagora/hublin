@@ -31,7 +31,6 @@ function WebServerWrapper(server) {
   this.on = webserver.on.bind(webserver);
 }
 
-var server = require('./').webserver;
 var awesomeWebServerWrapper = new AwesomeModule('webserver.wrapper', {
   dependencies: [
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.webserver', 'webserver')
