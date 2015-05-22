@@ -119,6 +119,8 @@
     "templatesDir": "./templates/email"
   },
   "modules": [
-    "linagora.io.meetings"
+    "linagora.io.meetings",
+    "linagora.esn.text-editor",
+    "linagora.esn.yjs"
   ]
 }

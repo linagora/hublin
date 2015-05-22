@@ -1,5 +1,5 @@
 mixin injectJSFromModules(module, injections)
-  if injections
+  if (injections)
     each injection, key in injections
       - var moduleInjections = injection[module]
       if (moduleInjections && moduleInjections.js)
@@ -7,7 +7,7 @@ mixin injectJSFromModules(module, injections)
           script(src='/' + key + '/js/' + file)
 
 mixin injectAngularFromModules(module, injections)
-  if injections
+  if (injections)
     script(type='text/javascript')
       | var angularInjections = []
       each injection, key in injections
@@ -17,9 +17,9 @@ mixin injectAngularFromModules(module, injections)
       | ;
 
 mixin injectCSSFromModules(module, injections)
-  if injections
+  if (injections)
     each injection, key in injections
       - var moduleInjections = injection[module]
       if (moduleInjections && moduleInjections.css)
-      each file in moduleInjections.css
-        link(rel='stylesheet', href='/' + key + '/css/' + file)
+        each file in moduleInjections.css
+          link(rel='stylesheet', href='/' + key + '/css/' + file)

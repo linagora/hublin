@@ -1,4 +1,5 @@
-.hublin-live-conference-video-container(live-conference, live-conference-auto-reconnect, invitation-dialog-launcher)
+.hublin-live-conference-video-container(live-conference, live-conference-auto-reconnect,
+invitation-dialog-launcher, liveConferenceEditorController)
   conference-video
   browser-authorization-dialog
   live-conference-notification(conference-id='{{conference._id}}')
@@ -6,3 +7,4 @@
   report-dialog#reportModal
   disconnect-dialog#disconnectModal
   devmode-dialog.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+  live-conference-editor
