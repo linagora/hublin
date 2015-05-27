@@ -22,6 +22,8 @@ html
     link(rel='stylesheet', href='//fonts.googleapis.com/css?family=Merienda:700')
     link(rel='stylesheet', href='/css/hublin.css')
     link(rel='stylesheet', href='/css/live-conference.css')
+    link(rel='stylesheet', href='/components/angular-resizable/angular' +
+    '-resizable.min.css')
     +injectCSSFromModules('live-conference', injections)
     script(src='/components/jquery/dist/jquery.min.js')
     script(src='/components/jquery-resize/jquery.ba-resize.min.js')
@@ -36,7 +38,7 @@ html
     script(src='/components/pines-notify/pnotify.history.js')
     script(src='/components/pines-notify/pnotify.nonblock.js')
     script(src='/components/URIjs/src/URI.min.js')
-    script(src='/components/angular/angular.min.js')
+    script(src='/components/angular/angular.js')
     script(src='/components/angular-route/angular-route.min.js')
     script(src='/components/angular-cookies/angular-cookies.min.js')
     script(src='/components/angular-animate/angular-animate.min.js')
@@ -86,6 +88,9 @@ html
 
     script(src='/components/opangular/src/localstorage.js')
     script(src='/components/opangular/src/localstorage/services.js')
+
+    script(src='/components/angular-resizable/angular-resizable.min.js')
+
     +injectAngularFromModules('live-conference', injections)
     +injectJSFromModules('live-conference', injections)
     script(src='/js/modules/utils/uri.js')

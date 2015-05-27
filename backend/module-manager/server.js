@@ -27,6 +27,6 @@ module.exports = function setupServer(moduleManager) {
     .then(registerModuleWrapper(moduleManager, require('om-email-invitation')))
     .then(registerModuleWrapper(moduleManager, require('../').Meetings))
     .then(registerModuleWrapper(moduleManager, require('../webserver/webserver-wrapper')))
-    .then(registerModuleWrapper(moduleManager, require('../../node_modules/awesome-yjs')))
-    .then(registerModuleWrapper(moduleManager, require('../../node_modules/awesome-collaborative-editor')));
+    .then(registerModuleWrapper(moduleManager, require('awesome-yjs')))
+    .then(registerModuleWrapper(moduleManager, require('awesome-collaborative-editor')));
 };
