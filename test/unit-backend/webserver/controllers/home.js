@@ -64,13 +64,13 @@ describe('The home controller', function() {
         }, {});
     });
 
-    it('should send back empty TOS if there is a problem reading the file', function(done) {
+    it('should send back english TOS if there is a problem reading the localized file', function(done) {
       mockery.registerMock('marked', function(markdown) {
-        done(new Error('This test should not call marked()'));
+        return 'parsedTermsOfService';
       });
       mockery.registerMock('fs', {
         readFile: function(file, options, callback) {
-          callback(new Error('WTF'));
+          return /zh.md$/.test(file) ? callback(new Error('WTF')) : callback(null, 'tos');
         }
       });
 
@@ -83,7 +83,7 @@ describe('The home controller', function() {
         }, {
           render: function(template, model) {
             expect(model).to.deep.equal({
-              termsOfService: ''
+              termsOfService: 'parsedTermsOfService'
             });
 
             done();

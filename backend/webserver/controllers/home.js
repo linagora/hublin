@@ -2,7 +2,8 @@
 
 var marked = require('marked'),
     fs = require('fs'),
-    path = require('path');
+    path = require('path'),
+    Q = require('q');
 
 /**
  *
@@ -14,22 +15,26 @@ module.exports = function(dependencies) {
   var logger = dependencies('logger'),
       errors = require('../errors')(dependencies);
 
+  function tosFile(locale) {
+    return path.normalize(path.join(__dirname, '../../i18n/tos/' + locale + '.md'));
+  }
+
   function meetings(req, res) {
     if (req.conference) {
       return res.redirect('/' + req.conference._id);
     }
 
-    var tosFile = path.normalize(path.join(__dirname, '../../i18n/tos/' + req.getLocale() + '.md'));
+    Q.nfcall(fs.readFile, tosFile(req.getLocale()), {encoding: 'utf-8'})
+      .then(null, function(err) {
+        logger.warn('Could not read terms of service from the filesystem using locale %s. Falling back to english version.', req.getLocale(), err);
 
-    fs.readFile(tosFile, {encoding: 'utf-8'}, function(err, contents) {
-      if (err) {
-        logger.error('Could not read terms of service from the filesystem using file %s.', tosFile, err);
-      }
-
-      res.render('meetings/index', {
-        termsOfService: contents ? marked(contents) : ''
+        return Q.nfcall(fs.readFile, tosFile('en'), {encoding: 'utf-8'});
+      })
+      .then(function(contents) {
+        res.render('meetings/index', {
+          termsOfService: contents ? marked(contents) : ''
+        });
       });
-    });
   }
 
   function liveconference(req, res) {
