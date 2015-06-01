@@ -41,7 +41,8 @@
     "matchmedia-ng": "~1.0.5",
     "angular-localforage": "1.2.2",
     "localforage": "1.2.0",
-    "lightbox2": "~2.7.1"
+    "lightbox2": "~2.7.1",
+    "jquery-resize": "*"
   },
   "resolutions": {
     "angular": "1.3.15",
