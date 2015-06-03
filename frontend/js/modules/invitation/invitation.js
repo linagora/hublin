@@ -192,6 +192,7 @@ angular.module('meetings.invitation', [
       conference: '='
     },
     link: function($scope, element, attrs) {
+      $scope.conference.rawURI = decodeURIComponent($scope.conference.href);
       var dialogId = element.attr('id');
 
       element.on('show.bs.modal', function() {
