@@ -139,7 +139,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
 
           //removes all url associated characters : , / ? : @ & = + $ #
           //and characters needing encoding : < > [ ] { } " % ; \ ^ | ~ ' `
-          result = result.replace(/[,\/\?:@&=\+\$#<>\[\]\{\}"%;\\^|~'`]+/g, '');
+          result = result.replace(/[,\/\?:@&=\+\$#<>\[\]\{\}“"%;\\^|~'‘`]+/g, '');
 
           var blackList = [
             'api',
