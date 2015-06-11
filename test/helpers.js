@@ -392,21 +392,21 @@ module.exports = function(mixin, testEnv) {
   mixin.callbacks = {
     noError: function(done) {
       return function(err) {
-        expect(err).to.not.exists;
+        expect(err).to.not.exist;
 
         done();
       };
     },
     error: function(done) {
       return function(err) {
-        expect(err).to.exists;
+        expect(err).to.exist;
 
         done();
       };
     },
     errorWithMessage: function(done, message) {
       return function(err) {
-        expect(err).to.exists;
+        expect(err).to.exist;
         expect(err.message).to.equals(message);
 
         done();

@@ -9,9 +9,9 @@ var ObjectId = require('bson').ObjectId;
 
 describe('The conference module', function() {
 
-  it('create should send back error when user is not set', function(done) {
+  it('create should send back error when conference is not set', function(done) {
     this.helpers.mock.models({});
-    this.helpers.requireBackend('core/conference').create(null, this.helpers.callbacks.noError(done));
+    this.helpers.requireBackend('core/conference').create(null, this.helpers.callbacks.error(done));
   });
 
   it('create should create the conference when user is object', function(done) {
@@ -181,10 +181,7 @@ describe('The conference module', function() {
       };
 
       var conference = this.helpers.requireBackend('core/conference');
-      conference.invite(conf, {}, attendees, function(err) {
-        expect(err).to.exist;
-        done();
-      });
+      conference.invite(conf, {}, attendees, this.helpers.callbacks.error(done));
     });
 
     it('should return an error when attendees is object', function(done) {
@@ -299,10 +296,7 @@ describe('The conference module', function() {
       this.mongoose = mockery.registerMock('mongoose', mongoose);
 
       var conference = this.helpers.requireBackend('core/conference');
-      conference.userCanJoinConference({}, null, function(err) {
-        expect(err).to.exist;
-        done();
-      });
+      conference.userCanJoinConference({}, null, this.helpers.callbacks.error(done));
     });
 
     it('should send back error when conference is not set', function(done) {
@@ -314,10 +308,7 @@ describe('The conference module', function() {
       this.mongoose = mockery.registerMock('mongoose', mongoose);
 
       var conference = this.helpers.requireBackend('core/conference');
-      conference.userCanJoinConference(null, {}, function(err) {
-        expect(err).to.exist;
-        done();
-      });
+      conference.userCanJoinConference(null, {}, this.helpers.callbacks.error(done));
     });
 
     it('should send true when user is conference creator', function(done) {
@@ -422,10 +413,7 @@ describe('The conference module', function() {
       this.mongoose = mockery.registerMock('mongoose', mongoose);
 
       var conference = this.helpers.requireBackend('core/conference');
-      conference.userIsConferenceMember({}, null, function(err) {
-        expect(err).to.exist;
-        done();
-      });
+      conference.userIsConferenceMember({}, null, this.helpers.callbacks.error(done));
     });
 
     it('should send back error when conference is not set', function(done) {
@@ -437,10 +425,7 @@ describe('The conference module', function() {
       this.mongoose = mockery.registerMock('mongoose', mongoose);
 
       var conference = this.helpers.requireBackend('core/conference');
-      conference.userIsConferenceMember(null, {}, function(err) {
-        expect(err).to.exist;
-        done();
-      });
+      conference.userIsConferenceMember(null, {}, this.helpers.callbacks.error(done));
     });
 
     it('should send true when user is in attendee list', function(done) {
@@ -523,10 +508,7 @@ describe('The conference module', function() {
     this.mongoose = mockery.registerMock('mongoose', mongoose);
 
     var conference = this.helpers.requireBackend('core/conference');
-    conference.userIsConferenceCreator({}, null, function(err) {
-      expect(err).to.exist;
-      done();
-    });
+    conference.userIsConferenceCreator({}, null, this.helpers.callbacks.error(done));
   });
 
   it('userIsConferenceCreator should send back error when conference is not set', function(done) {
@@ -538,10 +520,7 @@ describe('The conference module', function() {
     this.mongoose = mockery.registerMock('mongoose', mongoose);
 
     var conference = this.helpers.requireBackend('core/conference');
-    conference.userIsConferenceCreator(null, {}, function(err) {
-      expect(err).to.exist;
-      done();
-    });
+    conference.userIsConferenceCreator(null, {}, this.helpers.callbacks.error(done));
   });
 
   it('userIsConferenceCreator should send true when user is conference creator', function(done) {
@@ -601,10 +580,7 @@ describe('The conference module', function() {
     this.mongoose = mockery.registerMock('mongoose', mongoose);
 
     var conference = this.helpers.requireBackend('core/conference');
-    conference.join(null, {}, function(err, status) {
-      expect(err).to.exist;
-      done();
-    });
+    conference.join(null, {}, this.helpers.callbacks.error(done));
   });
 
   it('join should send back error when user is null', function(done) {
@@ -616,10 +592,7 @@ describe('The conference module', function() {
     this.mongoose = mockery.registerMock('mongoose', mongoose);
 
     var conference = this.helpers.requireBackend('core/conference');
-    conference.join({}, null, function(err, status) {
-      expect(err).to.exist;
-      done();
-    });
+    conference.join({}, null, this.helpers.callbacks.error(done));
   });
 
   it('join call update on Conference', function(done) {
@@ -655,10 +628,7 @@ describe('The conference module', function() {
     var addUser = function(conference, user, callback) {return callback();};
     conference.__set__('addUser', addUser);
 
-    conference.join(conf, user, function(err, updated) {
-      expect(err).to.not.exist;
-      done();
-    });
+    conference.join(conf, user, this.helpers.callbacks.noError(done));
   });
 
   it('join send back error when user can not be added first', function(done) {
@@ -687,10 +657,7 @@ describe('The conference module', function() {
       }
     });
     var conference = this.helpers.requireBackend('core/conference');
-    conference.addHistory({}, null, 'hey', function(err) {
-      expect(err).to.exist;
-      done();
-    });
+    conference.addHistory({}, null, 'hey', this.helpers.callbacks.error(done));
   });
 
   it('addHistory should send back error when conference is undefined', function(done) {
@@ -700,10 +667,7 @@ describe('The conference module', function() {
       }
     });
     var conference = this.helpers.requireBackend('core/conference');
-    conference.addHistory(null, {}, 'hey', function(err) {
-      expect(err).to.exist;
-      done();
-    });
+    conference.addHistory(null, {}, 'hey', this.helpers.callbacks.error(done));
   });
 
   it('addHistory should send back error when status is undefined', function(done) {
@@ -713,10 +677,7 @@ describe('The conference module', function() {
       }
     });
     var conference = this.helpers.requireBackend('core/conference');
-    conference.addHistory({}, {}, null, function(err) {
-      expect(err).to.exist;
-      done();
-    });
+    conference.addHistory({}, {}, null, this.helpers.callbacks.error(done));
   });
 
   it('addHistory should support a Conference object', function(done) {
