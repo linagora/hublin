@@ -14,7 +14,8 @@ angular.module('op.live-conference', [
 ])
 .constant('MAX_RECONNECT_TIMEOUT', 30000)
 .constant('EVENTS', {
-    beforeunload: 'beforeunload'
+    beforeunload: 'beforeunload',
+    conferenceleft: 'conferenceleft'
 })
 .controller('conferenceController', [
   '$scope',
