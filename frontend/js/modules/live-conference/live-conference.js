@@ -290,7 +290,7 @@ function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
     }
   };
 }])
-.directive('goodbyePageReminders', ['eventCallbackRegistry', '$log', function(eventCallbackRegistry, $log) {
+.directive('goodbyePageReminders', ['eventCallbackRegistry', function(eventCallbackRegistry) {
   return {
     restrict: 'E',
     replace: true,

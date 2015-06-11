@@ -274,7 +274,7 @@ describe('The op.live-conference module', function() {
 
       scope.$digest();
     }));
-    
+
     it('should add the right number of buttons', function() {
       expect(element.find('a').length).to.equal(remindersGenerator.length * 2);
     });
