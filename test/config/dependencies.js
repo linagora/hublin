@@ -39,7 +39,9 @@ module.exports.externalDependencies = function() {
     'frontend/components/matchmedia/matchMedia.js',
     'frontend/components/matchmedia-ng/matchmedia-ng.js',
     'frontend/components/angular-uuid4/angular-uuid4.min.js',
-    'node_modules/easyrtc/api/easyrtc.js'
+    'node_modules/easyrtc/api/easyrtc.js',
+    'frontend/components/chai/chai.js',
+    'frontend/components/chai-spies/chai-spies.js'
   ];
 };
 

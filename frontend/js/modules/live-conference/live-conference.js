@@ -14,7 +14,8 @@ angular.module('op.live-conference', [
 ])
 .constant('MAX_RECONNECT_TIMEOUT', 30000)
 .constant('EVENTS', {
-    beforeunload: 'beforeunload'
+    beforeunload: 'beforeunload',
+    conferenceleft: 'conferenceleft'
 })
 .controller('conferenceController', [
   '$scope',
@@ -286,6 +287,24 @@ function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
       scope.reloadPage = function() {
         $window.location.reload();
       };
+    }
+  };
+}])
+.directive('goodbyePageReminders', ['eventCallbackRegistry', function(eventCallbackRegistry) {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: '/views/live-conference/partials/reminders.html',
+    link: function(scope) {
+      var callbacks = eventCallbackRegistry.conferenceleft;
+
+      if (callbacks && callbacks.length) {
+        scope.conferenceLeftActions = callbacks.map(function(callback) {
+          return callback();
+        }).filter(function(action) {
+          return action && action.message && action.buttons;
+        });
+      }
     }
   };
 }]);
