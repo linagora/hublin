@@ -77,6 +77,7 @@ module.exports.applicationDependencies = function() {
     'frontend/js/modules/invitation/email.js',
     'frontend/js/modules/report/report.js',
     'frontend/js/modules/conference/conference.js',
+    'frontend/js/modules/i18n/i18n.js',
     'frontend/js/live-conference/app.js'
   ];
 };
