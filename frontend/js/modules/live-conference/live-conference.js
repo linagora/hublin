@@ -290,9 +290,11 @@ function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
     }
   };
 }])
-.directive('landingPageReminder', ['eventCallbackRegistry', '$log', function(eventCallbackRegistry, $log) {
+.directive('landingPageReminders', ['eventCallbackRegistry', '$log', function(eventCallbackRegistry, $log) {
   return {
-    restrict: 'A',
+    restrict: 'E',
+    replace: true,
+    templateUrl:'/views/live-conference/partials/reminders.html',
     link: function(scope) {
       var callbacks = eventCallbackRegistry.conferenceleft;
 

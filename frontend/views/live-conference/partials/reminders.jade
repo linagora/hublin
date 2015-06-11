@@ -1,0 +1,13 @@
+div
+  .information-box(ng-repeat='action in conferenceLeftActions')
+    .left
+      i.fa.fa-4x.information(ng-class='"fa-"+action.urgency')
+    .right
+      span {{ action.message }}
+      .dropdown
+        button.btn.btn-secondary.dropdown-toggle(type='button',
+        data-toggle="dropdown") {{ action.buttonMessage }}
+          span.caret
+        ul.dropdown-menu
+          li(ng-repeat='button in action.buttons')
+            a(ng-click='button.callback()' ng-class='button.classes') {{button.text}}

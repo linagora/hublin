@@ -94,3 +94,25 @@ html.no-getusermedia body.hublin-live-conference-app #unsupported {
   }
 
 }
+
+.information-box {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-content: center;
+  .left {
+    margin-right: 10px;
+
+    i {
+      position: relative;
+    }
+  }
+  .right {
+    display: flex;
+    flex-flow: column;
+    text-align: left;
+  }
+}
+.information {
+  color: @information-color;
+}
