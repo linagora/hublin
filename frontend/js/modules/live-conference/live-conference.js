@@ -13,13 +13,20 @@ angular.module('op.live-conference', [
   'meetings.wizard'
 ])
 .constant('MAX_RECONNECT_TIMEOUT', 30000)
+.constant('EVENTS', {
+    beforeunload: 'beforeunload'
+})
 .controller('conferenceController', [
   '$scope',
   '$log',
   'session',
   'conference',
   'ioConnectionManager',
-  function($scope, $log, session, conference, ioConnectionManager) {
+  '$window',
+  'deviceDetector',
+  'eventCallbackRegistry',
+  'EVENTS',
+  function($scope, $log, session, conference, ioConnectionManager, $window, deviceDetector, eventCallbackRegistry, EVENTS) {
     session.ready.then(function() {
       var wsServerURI = '';
 
@@ -51,11 +58,67 @@ angular.module('op.live-conference', [
       session.goodbye.then(function() {
         $scope.process.step = 'goodbye';
       });
+
+      // MEET-363
+      // Firefox doesn't allow our custom message to be displayed. It only displays a
+      // generic message and the user doesn't understand why this popup is nagging him.
+      // To not confuse him/her, we decided to not display the popup on Firefox.
+      //
+      // More info:
+      //  - https://bugzilla.mozilla.org/show_bug.cgi?id=641509
+      //  - https://bugzilla.mozilla.org/show_bug.cgi?id=588292
+      //
+      if (!deviceDetector.raw.browser.firefox) {
+        angular.element($window).on(EVENTS.beforeunload, function() {
+          if ($scope.process.step === 'conference') {
+            var messages,
+                callbacks = eventCallbackRegistry[EVENTS.beforeunload];
+
+            if (callbacks && callbacks.length) {
+              messages = callbacks.map(function(callback) {
+                return callback();
+              }).filter(Boolean);
+            }
+
+            if (messages && messages.length) {
+              return messages.join('\n');
+            }
+          }
+        });
+      }
     };
 
     $scope.init();
   }
-]).directive('liveConference', [
+])
+.factory('eventCallbackRegistry', function() {
+    return {};
+  })
+.factory('eventCallbackService', ['eventCallbackRegistry', function(registry) {
+    return {
+      on: function(event, callback) {
+        if (!angular.isFunction(callback)) {
+          throw new Error('The callback parameter must be a function!');
+        }
+
+        if (!angular.isArray(registry[event])) {
+          registry[event] = [];
+        }
+
+        registry[event].push(callback);
+      },
+      off: function(event, callback) {
+        var callbacks = registry[event];
+
+        if (callbacks && callbacks.length) {
+          registry[event] = callbacks.filter(function(element) {
+            return callback !== element;
+          });
+        }
+      }
+    };
+  }])
+.directive('liveConference', [
   '$log',
   '$timeout',
   '$interval',
