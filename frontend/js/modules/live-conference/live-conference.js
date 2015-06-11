@@ -290,7 +290,7 @@ function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
     }
   };
 }])
-.directive('landingPageReminders', ['eventCallbackRegistry', '$log', function(eventCallbackRegistry, $log) {
+.directive('goodbyePageReminders', ['eventCallbackRegistry', '$log', function(eventCallbackRegistry, $log) {
   return {
     restrict: 'E',
     replace: true,
@@ -299,31 +299,10 @@ function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
       var callbacks = eventCallbackRegistry.conferenceleft;
 
       if (callbacks && callbacks.length) {
-        scope.conferenceLeftActions = [];
-        callbacks.forEach(function(callback) {
-          var action = callback();
-          if (!action) {
-            $log.error('Callback returned an empty value');
-            return;
-
-          } else if (!action.message) {
-            $log.error('The callback has no message');
-            return;
-
-          } else if (action.buttons) {
-            action.buttons.forEach(function(button) {
-              if (!button.text) {
-                $log.error('Button has no text');
-                return;
-
-              } else {
-                var trueFunction = function() { return true; };
-                button.callback = button.callback || trueFunction;
-              }
-            });
-          }
-          scope.conferenceLeftActions.push(action);
-
+        scope.conferenceLeftActions = callbacks.map(function(callback) {
+          return callback();
+        }).filter(function(action) {
+          return action && action.message && action.buttons;
         });
       }
     }

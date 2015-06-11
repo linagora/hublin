@@ -269,7 +269,7 @@ describe('The op.live-conference module', function() {
     beforeEach(inject(function($compile, $rootScope) {
       scope = $rootScope.$new();
 
-      element = angular.element('<landing-page-reminders></landing-page-reminders>');
+      element = angular.element('<goodbye-page-reminders></goodbye-page-reminders>');
       $compile(element)(scope);
 
       scope.$digest();
