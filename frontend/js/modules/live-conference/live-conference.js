@@ -294,7 +294,7 @@ function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
   return {
     restrict: 'E',
     replace: true,
-    templateUrl:'/views/live-conference/partials/reminders.html',
+    templateUrl: '/views/live-conference/partials/reminders.html',
     link: function(scope) {
       var callbacks = eventCallbackRegistry.conferenceleft;
 
@@ -327,5 +327,5 @@ function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
         });
       }
     }
-  }
+  };
 }]);

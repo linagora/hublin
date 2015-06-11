@@ -230,4 +230,63 @@ describe('The op.live-conference module', function() {
     });
 
   });
+
+  describe('The landingPageReminder directive', function() {
+    var element, scope, remindersGenerator, reminders;
+    var eventCallbackService, eventCallbackRegistry;
+
+
+    beforeEach(inject(function(_eventCallbackService_, _eventCallbackRegistry_) {
+      eventCallbackService = _eventCallbackService_;
+      eventCallbackRegistry = _eventCallbackRegistry_;
+    }));
+
+    beforeEach(function() {
+      remindersGenerator = [1, 2, 3];
+      reminders = remindersGenerator.map(function(n) {
+        return {
+          message: 'callback ' + n,
+          buttonMesage: 'callback button' + n,
+          buttons: [
+            {
+              text: 'Button 1',
+              callback: chai.spy()
+            },
+            {
+              text: 'Button 2',
+              callback: chai.spy()
+            }
+          ]
+        };
+      });
+      reminders.forEach(function(reminder) {
+        eventCallbackService.on('conferenceleft', function() {
+          return reminder;
+        });
+      });
+    });
+
+    beforeEach(inject(function($compile, $rootScope) {
+      scope = $rootScope.$new();
+
+      element = angular.element('<landing-page-reminders></landing-page-reminders>');
+      $compile(element)(scope);
+
+      scope.$digest();
+    }));
+    
+    it('should add the right number of buttons', function() {
+      expect(element.find('a').length).to.equal(remindersGenerator.length * 2);
+    });
+
+    it('the buttons generated should be clickable', function() {
+      element.find('a').click();
+
+      reminders.forEach(function(reminder) {
+        reminder.buttons.forEach(function(button) {
+          expect(button.callback).to.have.been.called.once;
+        });
+      });
+    });
+  });
 });
