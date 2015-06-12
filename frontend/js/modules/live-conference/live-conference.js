@@ -322,5 +322,5 @@ function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
   };
   $scope.getButton = function() {
     return $scope.action.buttons[buttonIndex];
-  }
+  };
 }]);

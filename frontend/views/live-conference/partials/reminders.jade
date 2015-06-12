@@ -1,5 +1,5 @@
 div
-  .information-box(ng-repeat='action in conferenceLeftActions'
+  .information-box.well(ng-repeat='action in conferenceLeftActions'
   ng-controller='dropDownController')
     .left(ng-bind-html="action.onLeft")
     .middle
