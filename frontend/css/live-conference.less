@@ -97,20 +97,27 @@ html.no-getusermedia body.hublin-live-conference-app #unsupported {
 
 .information-box {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row;
   justify-content: center;
   align-content: center;
+
+  max-width: 600px;
+  margin: auto;
+
   .left {
     margin-right: 10px;
   }
-  .right {
-    display: flex;
-    flex-flow: column;
+  .middle {
     text-align: left;
 
-    a {
-      cursor: pointer;
+    ul li {
+      a {
+        cursor: pointer;
+      }
     }
+  }
+  .right {
+    margin-left: 10px;
   }
 }
 .information {
