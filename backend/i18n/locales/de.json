@@ -88,5 +88,6 @@
   "Do you have a camera?": "Hast du eine Kamera?",
   "Yes": "Ja",
   "No": "Nein",
-  "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Du betrittst die Konferenz nun ohne Kamera. Es ist leider nicht möglich während der Konferenz die Kamera zu aktivieren."
+  "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Du betrittst die Konferenz nun ohne Kamera. Es ist leider nicht möglich während der Konferenz die Kamera zu aktivieren.",
+  "There is an unsaved document in the collaborative editor, do you want to stay in the conference and save it?": "Einige Dokumente wurden im Team-Editor nicht abgespeichert, willst du in der Konferenz bleiben um sie zu speichern?"
 }

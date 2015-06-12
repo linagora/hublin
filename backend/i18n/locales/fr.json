@@ -88,5 +88,6 @@
   "Do you have a camera?": "Avez-vous une caméra ?",
   "Yes": "Oui",
   "No": "Non",
-  "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Vous allez rejoindre la conférence sans caméra. Il ne sera plus possible de l'activer lors de la conférence."
+  "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Vous allez rejoindre la conférence sans caméra. Il ne sera plus possible de l'activer lors de la conférence.",
+  "There is an unsaved document in the collaborative editor, do you want to stay in the conference and save it?": "Il y a un document non sauvegardé dans l'éditeur collaboratif, voulez-vous rester sur cette page pour le sauvegarder?"
 }

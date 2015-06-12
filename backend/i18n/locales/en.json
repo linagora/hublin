@@ -88,5 +88,6 @@
   "Do you have a camera?": "Do you have a camera?",
   "Yes": "Yes",
   "No": "No",
-  "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "You are about to join the conference without camera. You will not be able to activate it once in the conference."
+  "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "You are about to join the conference without camera. You will not be able to activate it once in the conference.",
+  "There is an unsaved document in the collaborative editor, do you want to stay in the conference and save it?": "There is an unsaved document in the collaborative editor, do you want to stay in the conference and save it?"
 }

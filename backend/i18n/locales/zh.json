@@ -88,5 +88,6 @@
   "Do you have a camera?": "您有一个摄像头么?",
   "Yes": "是",
   "No": "否",
-  "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "您可能没有正确安装摄像头。您将不能在回忆中激活它。"
+  "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "您可能没有正确安装摄像头。您将不能在回忆中激活它。",
+  "There is an unsaved document in the collaborative editor, do you want to stay in the conference and save it?": "有一个在协同编辑器中未保存的文档，你想留在会议并保存呢？"
 }
