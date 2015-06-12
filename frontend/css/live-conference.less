@@ -97,9 +97,11 @@ html.no-getusermedia body.hublin-live-conference-app #unsupported {
 
 .information-box {
   display: flex;
-  flex-flow: row;
+  flex-flow: row wrap;
   justify-content: center;
   align-content: center;
+
+  font-size: 15px;
 
   max-width: 600px;
   margin: auto;
@@ -115,9 +117,23 @@ html.no-getusermedia body.hublin-live-conference-app #unsupported {
         cursor: pointer;
       }
     }
+
+    .before-button {
+      margin-right: 10px;
+    }
+    .after-button {
+      margin-left: 10px;
+    }
+
+    flex: 1 1 0;
   }
   .right {
     margin-left: 10px;
+  }
+
+  .left, .right {
+    width: 4em;
+    flex: 0 1 60px;
   }
 }
 .information {
