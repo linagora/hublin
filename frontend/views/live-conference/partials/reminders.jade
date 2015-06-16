@@ -1,13 +1,21 @@
 div
-  .information-box(ng-repeat='action in conferenceLeftActions')
-    .left
-      i.fa.fa-4x.information(ng-class='"fa-"+action.urgency')
-    .right
-      span {{ action.message }}
-      .dropdown
-        button.btn.btn-secondary.dropdown-toggle(type='button',
-        data-toggle="dropdown") {{ action.buttonMessage }}
+  .information-box.well(ng-repeat='action in conferenceLeftActions' ng-controller='dropDownController')
+    .left(ng-bind-html="action.onLeft")
+    .middle
+      span.before-button(ng-bind-html='action.beforeButton')
+      .btn-group
+        button.btn.btn-primary.btn-xs(type='button' ng-click='getButton().callback()')
+          span(ng-bind-html='getButton().beforeLink')
+          |  {{ getButton().text }}
+          span(ng-bind-html='getButton().afterLink')
+        button.btn.btn-primary.btn-xs.dropdown-toggle(type='button'
+        data-toggle='dropdown')
           span.caret
-        ul.dropdown-menu
+        ul.dropdown-menu(role='menu')
           li(ng-repeat='button in action.buttons')
-            a(ng-click='button.callback()' ng-class='button.classes') {{button.text}}
+            a(ng-click='setButton($index, action.buttons) && button.callback()')
+              span(ng-bind-html='button.beforeLink')
+              |  {{button.text}}
+              span(ng-bind-html='button.afterLink')
+        span.after-button(ng-bind-html='action.afterButton')
+    .right.hidden-xs(ng-bind-html='action.onRight')

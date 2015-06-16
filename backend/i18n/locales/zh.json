@@ -89,5 +89,10 @@
   "Yes": "是",
   "No": "否",
   "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "您可能没有正确安装摄像头。您将不能在回忆中激活它。",
-  "There is an unsaved document in the collaborative editor, do you want to stay in the conference and save it?": "有一个在协同编辑器中未保存的文档，你想留在会议并保存呢？"
+  "There is an unsaved document in the collaborative editor, do you want to stay in the conference and save it?": "有一个在协同编辑器中未保存的文档，你想留在会议并保存呢？",
+  "There is an unsaved document in the collaborative editor. Do you want to save it as": "有一个在协同编辑器中未保存的文档。你想保存它",
+  "PDF": "PDF",
+  "Raw text": "原始文本",
+  "Markdown": "Markdown",
+  "Unknown": "未知"
 }

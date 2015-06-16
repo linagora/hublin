@@ -302,9 +302,25 @@ function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
         scope.conferenceLeftActions = callbacks.map(function(callback) {
           return callback();
         }).filter(function(action) {
-          return action && action.message && action.buttons;
+          return action && action.buttons;
         });
       }
     }
+  };
+}])
+.controller('dropDownController', ['$scope', function($scope) {
+  var buttonIndex = 0;
+  $scope.action.buttons.forEach(function(button, index) {
+    if (button.default) {
+      buttonIndex = index;
+    }
+  });
+
+  $scope.setButton = function(n) {
+    buttonIndex = n;
+    return true;
+  };
+  $scope.getButton = function() {
+    return $scope.action.buttons[buttonIndex];
   };
 }]);

@@ -100,17 +100,45 @@ html.no-getusermedia body.hublin-live-conference-app #unsupported {
   flex-flow: row wrap;
   justify-content: center;
   align-content: center;
+
+  font-size: 15px;
+
+  max-width: 600px;
+  margin: auto;
+
   .left {
     margin-right: 10px;
   }
-  .right {
-    display: flex;
-    flex-flow: column;
+  .middle {
     text-align: left;
 
-    a {
-      cursor: pointer;
+    ul li {
+      a {
+        cursor: pointer;
+      }
     }
+
+    .before-button {
+      margin-right: 10px;
+    }
+    .after-button {
+      margin-left: 10px;
+    }
+
+    flex: 1 1 0;
+  }
+  .right {
+    margin-left: 10px;
+  }
+
+  .left, .right {
+    width: 4em;
+    flex: 0 1 60px;
+  }
+
+  .left, .right, .middle {
+    margin-top: auto;
+    margin-bottom: auto;
   }
 }
 .information {
