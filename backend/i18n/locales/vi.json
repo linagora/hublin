@@ -90,7 +90,7 @@
   "No": "từ chối",
   "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Bạn sắp tham gia hội nghị mà không có camera. Bạn sẽ không thể kích hoạt nó khi đang ở trong hội nghị.",
   "There is an unsaved document in the collaborative editor, do you want to stay in the conference and save it?": "Tài liệu trong mục chia sẻ chưa được lưu lại , bạn có muốn ở lại trong các hội nghị và lưu lại nó?",
-  "There is an unsaved document in the collaborative editor. Do you want to save it as": "Tài liệu trong mục chia sẻ chưa được lưu lại , bạn có muốn ở lại trong các hội nghị và lưu lại dưới dạng",
+  "There is an unsaved document in the collaborative editor. Save it now to prevent data loss.": "Tài liệu trong mục chia sẻ chưa được lưu lại , bạn có muốn ở lại trong các hội nghị và lưu lại dưới dạng",
   "PDF": "PDF",
   "Raw text": "Văn bản",
   "Markdown": "Văn bản Markdown",
