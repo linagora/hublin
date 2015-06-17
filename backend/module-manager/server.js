@@ -30,5 +30,6 @@ module.exports = function setupServer(moduleManager) {
     .then(registerModuleWrapper(moduleManager, require('om-email-invitation')))
     .then(registerModuleWrapper(moduleManager, require('awesome-yjs')))
     .then(registerModuleWrapper(moduleManager, require('awesome-collaborative-editor')))
+    .then(registerModuleWrapper(moduleManager, require('awesome-chat')))
     .then(registerModuleWrapper(moduleManager, require('../').Meetings));
 };
