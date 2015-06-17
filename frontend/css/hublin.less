@@ -26,7 +26,7 @@ html.no-getusermedia div.meetings-landing-page #unsupported {
   display: block;
 }
 
-body {
+body[ng-app=liveConferenceApplication] {
   overflow-x: hidden;
   position: fixed;
   top: 0;
@@ -719,6 +719,20 @@ footer {
 .modal-content {
   border-radius: 0;
   padding-top: 2%;
+}
+
+section.goodbye {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  .modal-dialog {
+    height: 100%;
+    .modal-content {
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 100%;
+    }
+  }
 }
 
 .modal-hublin {
