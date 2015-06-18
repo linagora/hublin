@@ -6,6 +6,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "async-eventemitter": "^0.2.2",
+    "awesome-chat": "git+https://ci.open-paas.org/stash/scm/om/awesome-chat.git",
     "awesome-collaborative-editor": "git+https://ci.open-paas.org/stash/scm/om/awesome-collaborative-editor.git",
     "awesome-module": "git+https://ci.open-paas.org/stash/scm/am/awesome-module.git",
     "awesome-module-manager": "1.1.1",
