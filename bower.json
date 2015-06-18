@@ -44,7 +44,8 @@
     "lightbox2": "~2.7.1",
     "jquery-resize": "*",
     "angular-resizable": "https://github.com/cphyc/angular-resizable.git#1.1.1",
-    "ng-device-detector": "~1.1.7"
+    "ng-device-detector": "~1.1.7",
+    "github-fork-ribbon-css": "~0.1.1"
   },
   "resolutions": {
     "angular": "1.3.15",
