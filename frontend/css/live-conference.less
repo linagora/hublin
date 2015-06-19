@@ -12,23 +12,21 @@ html body.hublin-live-conference-app{
   background: @conference-background;
 }
 
-html.no-websockets body.hublin-live-conference-app #wrap,
-html.no-getusermedia body.hublin-live-conference-app #wrap,
-html body.hublin-live-conference-app #unsupported {
-  display: none;
+html {
+  .hublin-live-conference-app #wrap {
+    display: none;
+  }
+  .hublin-live-conference-app .unsupported {
+    display: block;
+  }
 }
 
-html body.hublin-live-conference-app #unsupported li.no-getusermedia,
-html body.hublin-live-conference-app #unsupported li.no-websockets {
-  display: none;
-}
-
-html.no-websockets body.hublin-live-conference-app #unsupported,
-html.no-getusermedia body.hublin-live-conference-app #unsupported {
-  display: block;
-  margin-top: 5em;
-  img {
-    margin-bottom: 5em;
+html.websockets.getusermedia.peerconnection.datachannel {
+  .hublin-live-conference-app #wrap {
+    display: block;
+  }
+  .hublin-live-conference-app .unsupported {
+    display: none;
   }
 }
 
