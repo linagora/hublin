@@ -5,25 +5,22 @@
  * Add here only technologies required by the Hublin landing page.
  * We do want that browsers which do not support WebRTC see this page.
  */
-html.no-websockets body.hublin-app #wrap,
-html body.hublin-app #unsupported {
-  display: none;
-}
-
-html.no-websockets body.hublin-app #unsupported {
-  display: block;
-  margin-top: 5em;
-  img {
-    margin-bottom: 5em;
+html {
+  .hublin-app #wrap .supported {
+    display: none;
+  }
+  .meetings-landing-page .unsupported {
+    display: block;
   }
 }
 
-html.no-getusermedia div.meetings-landing-page #supported {
-  display: none;
-}
-
-html.no-getusermedia div.meetings-landing-page #unsupported {
-  display: block;
+html.websockets.getusermedia.peerconnection.datachannel {
+  .hublin-app #wrap, .hublin-app #wrap .meetings-landing-page .supported {
+    display: block;
+  }
+  .hublin-app .unsupported, .meetings-landing-page .unsupported-mini {
+    display: none;
+  }
 }
 
 body[ng-app=liveConferenceApplication] {
