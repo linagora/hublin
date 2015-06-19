@@ -90,7 +90,7 @@
   "No": "Non",
   "You are about to join the conference without camera. You will not be able to activate it once in the conference." : "Vous allez rejoindre la conférence sans caméra. Il ne sera plus possible de l'activer lors de la conférence.",
   "There is an unsaved document in the collaborative editor, do you want to stay in the conference and save it?": "Il y a un document non sauvegardé dans l'éditeur collaboratif, voulez-vous rester sur cette page pour le sauvegarder?",
-  "There is an unsaved document in the collaborative editor. Do you want to save it as": "Il y a un document non sauvegardé dans l'éditeur collaboratif. Voulez-vous l'enregistrer au format",
+  "There is an unsaved document in the collaborative editor. Save it now to prevent data loss.": "Il y a un document non sauvegardé dans l'éditeur collaboratif. Veuillez l'enregistrer.",
   "PDF": "PDF",
   "Raw text": "Texte brut",
   "Markdown": "Markdown",
