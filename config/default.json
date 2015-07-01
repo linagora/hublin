@@ -120,7 +120,7 @@
   },
   "modules": [
     "linagora.io.meetings",
-    "linagora.esn.text-editor",
+    "linagora.esn.collaborative-editor",
     "linagora.esn.yjs"
   ]
 }
