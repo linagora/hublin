@@ -57,6 +57,18 @@
     "roomNameRegExp": "^.{1,64}$",
     "usernameRegExp": "^(.){1,200}$"
   },
+  "analytics": {
+    "piwik": {
+      "enabled": false,
+      "https": false,
+      "server": "",
+      "uri": ""
+    },
+    "ga": {
+      "enabled": false,
+      "tracking-code": ""
+    }
+  },
   "loggers" : [
     {
       "name": "File",

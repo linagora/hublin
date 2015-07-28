@@ -18,6 +18,7 @@ module.exports = function(dependencies) {
 
   // MEET-52 Keep this order, it is important here.
   router.get('/embed/button', controllers.embedButton);
+  router.get('/analytics/:filename', controllers.embedAnalytics);
   router.get('/:id', middlewares.checkIdLength, middlewares.checkIdForCreation,
     middlewares.load, conference.lazyArchive(true), user.createForConference,
     conference.addUser, conference.createConference, controllers.liveconference);

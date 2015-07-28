@@ -232,7 +232,7 @@ webserver.emit = emitter.emit.bind(emitter);
 
 var WebServer = new AwesomeModule('linagora.io.meetings.webserver', {
   dependencies: [
-    new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.core.config', 'conf'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.core.config', 'config'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.core.logger', 'logger')
   ],
   states: {
@@ -241,7 +241,7 @@ var WebServer = new AwesomeModule('linagora.io.meetings.webserver', {
       return callback(null, api);
     },
     start: function(dependencies, callback) {
-      var config = dependencies('conf')('default');
+      var config = dependencies('config')('default');
 
       if (!config.webserver.enabled) {
         console.warn('The webserver will not start as expected by the configuration.');

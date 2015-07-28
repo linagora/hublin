@@ -13,7 +13,8 @@ var marked = require('marked'),
 module.exports = function(dependencies) {
 
   var logger = dependencies('logger'),
-      errors = require('../errors')(dependencies);
+      errors = require('../errors')(dependencies),
+      config = dependencies('config')('default');
 
   function tosFile(locale) {
     return path.normalize(path.join(__dirname, '../../i18n/tos/' + locale + '.md'));
@@ -63,9 +64,49 @@ module.exports = function(dependencies) {
     });
   }
 
+  function embedAnalytics(req, res) {
+
+    var filename = req.params.filename;
+
+    if (filename !== 'google.js' && filename !== 'piwik.js') {
+      throw new errors.NotFoundError();
+    }
+
+    var conf = { 'google.ua': null,
+                 'piwik.site_id': null,
+                 'piwik.server': null };
+
+    // Parsing configuration file (default.json)
+    if (config.analytics && config.analytics.google) {
+      conf['google.ua'] = config.analytics.google.ua || null;
+    }
+    if (config.analytics && config.analytics.piwik) {
+      conf['piwik.site_id'] = config.analytics.piwik.site_id || null;
+      conf['piwik.server'] = config.analytics.piwik.server || null;
+    }
+
+    var basepath = '../../../frontend/views/analytics/';
+    var fpath = path.normalize(path.join(__dirname, path.join(basepath, filename)));
+
+    fs.readFile(fpath, {encoding: 'utf-8'}, function(err, contents) {
+      if (err) {
+        throw new errors.ServerError();
+      }
+
+      res.set('Content-Type', 'application/javascript');
+
+      // Send the Javascript file contents, dynamically replacing $$(string)
+      // placeholders with the customized values from config file (default.json)
+      res.send(contents.replace(/\$\$\((.*)\)/g, function(match, group) {
+        return conf[group];
+      }));
+    });
+  }
+
   return {
     meetings: meetings,
     liveconference: liveconference,
-    embedButton: embedButton
+    embedButton: embedButton,
+    embedAnalytics: embedAnalytics
   };
 };
