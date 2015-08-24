@@ -3,6 +3,33 @@
 - Local configuration can be updated in the 'config' folder
 - Global configuration (shared between nodes), can be updated in the 'configuration' collection in the MongoDB database
 
+## Mail
+
+  To configure the mail feature, you need to create a document in the mongo collection configuration, as below:
+
+  {
+    "_id" : "mail",
+    "mail" : {
+        "noreply" : "noreply@yourserver.com"
+    },
+    "transport" : {
+        "type" : "SMTP",
+        "config" : {
+            "host" : "smtp.yourserver.com",
+            "secureConnection" : false,
+            "port" : 25
+        }
+    },
+    "feedback" : {
+        "rcpt" : [
+            "hublin@yourserver.com"
+        ]
+    }
+  }
+
+  "smtp.yourserver.com" must be replaced by an actual SMTP server that you have access to, optionally defining an authentication if required by the SMTP server.
+  hubl.in is actually using nodemailer to send emails, you'll find all possible confifuration settings on the project page at https://github.com/andris9/nodemailer-smtp-transport.
+
 ## Local configuration
 
 ### Loggers
