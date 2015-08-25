@@ -96,7 +96,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
 
         $scope.selectBitRate = function(rate) {
           if (bitRates.indexOf(rate) >= 0) {
-            storage.setItem('bitRate', rate).finally (function() {
+            storage.setItem('bitRate', rate).finally(function() {
               $scope.selected = rate;
               easyRTCService.configureBandwidth(rate);
             });

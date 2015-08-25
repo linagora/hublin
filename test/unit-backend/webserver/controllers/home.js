@@ -16,8 +16,8 @@ describe.only('The home controller', function() {
   beforeEach(function() {
     mockery.registerMock('../errors', function() {
       return {
-        ServerError: function() { this.name = 'ServerError' },
-        NotFoundError: function() { this.name = 'NotFoundError' }
+        ServerError: function() { this.name = 'ServerError'; },
+        NotFoundError: function() { this.name = 'NotFoundError'; }
       };
     });
 
@@ -236,7 +236,7 @@ describe.only('The home controller', function() {
               ua: '1234'
             }
           }
-        }
+        };
       };
     });
 
