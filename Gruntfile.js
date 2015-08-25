@@ -80,7 +80,8 @@ module.exports = function(grunt) {
         reporter: {
           name: CI ? 'gjslint_xml' : 'console',
           dest: CI ? 'gjslint.xml' : undefined
-        }
+        },
+        pythonPath: 'python2'
       },
       all: {
         src: ['<%= jshint.all.src %>']
