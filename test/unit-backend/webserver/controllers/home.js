@@ -4,7 +4,7 @@ var expect = require('chai').expect,
     logger = require('../../../fixtures/logger-noop'),
     mockery = require('mockery');
 
-describe.only('The home controller', function() {
+describe('The home controller', function() {
   var dependencies = {
     'logger': logger(),
     'config': function() {}
@@ -16,8 +16,8 @@ describe.only('The home controller', function() {
   beforeEach(function() {
     mockery.registerMock('../errors', function() {
       return {
-        ServerError: function() { this.name = 'ServerError' },
-        NotFoundError: function() { this.name = 'NotFoundError' }
+        ServerError: function() { this.name = 'ServerError'; },
+        NotFoundError: function() { this.name = 'NotFoundError'; }
       };
     });
 
@@ -236,7 +236,7 @@ describe.only('The home controller', function() {
               ua: '1234'
             }
           }
-        }
+        };
       };
     });
 

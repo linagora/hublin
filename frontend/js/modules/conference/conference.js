@@ -113,7 +113,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
         $scope.alert('success', 'Your message was sent successfully. Thanks for the feedback!');
       }, function() {
         $scope.alert('warning', 'Oops, this is embarrassing. Please try again later!');
-      }).finally (function() {
+      }).finally(function() {
         $scope.feedbackForm = {};
         $scope.sendingFeedbackFrom = false;
       });
