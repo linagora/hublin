@@ -12,7 +12,8 @@ describe('The home API', function() {
 
   var application;
   var deps = {
-    logger: require('../fixtures/logger-noop')()
+    logger: require('../fixtures/logger-noop')(),
+    'config': function() {}
   };
   var dependencies = function(name) {
     return deps[name];
