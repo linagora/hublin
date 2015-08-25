@@ -4,7 +4,7 @@ var expect = require('chai').expect,
     logger = require('../../../fixtures/logger-noop'),
     mockery = require('mockery');
 
-describe.only('The home controller', function() {
+describe('The home controller', function() {
   var dependencies = {
     'logger': logger(),
     'config': function() {}
