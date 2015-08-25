@@ -4,19 +4,27 @@ var expect = require('chai').expect,
     logger = require('../../../fixtures/logger-noop'),
     mockery = require('mockery');
 
-describe('The home controller', function() {
+describe.only('The home controller', function() {
   var dependencies = {
-    'logger': logger()
+    'logger': logger(),
+    'config': function() {}
   };
   var deps = function(name) {
     return dependencies[name];
   };
 
-  describe('The meetings function', function() {
-
-    beforeEach(function() {
-      mockery.registerMock('../errors', function() {});
+  beforeEach(function() {
+    mockery.registerMock('../errors', function() {
+      return {
+        ServerError: function() { this.name = 'ServerError' },
+        NotFoundError: function() { this.name = 'NotFoundError' }
+      };
     });
+
+    dependencies.config = function() {};
+  });
+
+  describe('The meetings function', function() {
 
     it('should parse the terms of service with marked', function(done) {
       mockery.registerMock('marked', function() {
@@ -94,14 +102,6 @@ describe('The home controller', function() {
   });
 
   describe('The embedButton function', function() {
-
-    beforeEach(function() {
-      mockery.registerMock('../errors', function() {
-        return {
-          ServerError: function() {}
-        };
-      });
-    });
 
     it('should throw a ServerError if there is a problem reading the widget file', function(done) {
       mockery.registerMock('fs', {
@@ -222,6 +222,101 @@ describe('The home controller', function() {
             done();
           }
         });
+    });
+
+  });
+
+  describe('The embedAnalytics function', function() {
+
+    beforeEach(function() {
+      dependencies.config = function() {
+        return {
+          analytics: {
+            google: {
+              ua: '1234'
+            }
+          }
+        }
+      };
+    });
+
+    it('should throw a NotFoundError if req.params.filename is != piwik.js and != google.js', function() {
+      var self = this;
+
+      expect(function() {
+        self.helpers
+          .requireBackend('webserver/controllers/home')(deps)
+          .embedAnalytics({
+            params: {
+              filename: 'yolo.js'
+            }
+          }, {});
+      }).to.throw(require('../errors').NotFoundError);
+    });
+
+    it('should throw a ServerError when the template file cannot be read', function() {
+      mockery.registerMock('fs', {
+        readFile: function(file, options, callback) {
+          callback('Error accessing non-existent file', null);
+        }
+      });
+
+      var self = this;
+      expect(function() {
+        self.helpers
+            .requireBackend('webserver/controllers/home')(deps)
+            .embedAnalytics({
+              params: {
+                filename: 'google.js'
+              }
+            }, {});
+      }).to.throw(require('../errors').ServerError);
+    });
+
+    it('should set the correct Content-Type header', function(done) {
+      mockery.registerMock('fs', {
+        readFile: function(file, options, callback) {
+          callback(null, 'js file containing $$(google.ua) at this location.');
+        }
+      });
+
+      this.helpers
+          .requireBackend('webserver/controllers/home')(deps)
+          .embedAnalytics({
+            params: {
+              filename: 'google.js'
+            }
+          }, {
+            set: function(name, content) {
+              expect(name).to.equal('Content-Type');
+              expect(content).to.equal('application/javascript');
+              done();
+            },
+            send: function(contents) {}
+          });
+    });
+
+    it('should replace placeholders in the rendered templates', function(done) {
+      mockery.registerMock('fs', {
+        readFile: function(file, options, callback) {
+          callback(null, 'js file containing $$(google.ua) at this location.');
+        }
+      });
+
+      this.helpers
+          .requireBackend('webserver/controllers/home')(deps)
+          .embedAnalytics({
+            params: {
+              filename: 'google.js'
+            }
+          }, {
+            set: function(name, content) {},
+            send: function(contents) {
+              expect(contents).to.equal('js file containing 1234 at this location.');
+
+              done();
+            }
+          });
     });
 
   });
