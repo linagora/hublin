@@ -61,6 +61,7 @@
     "grunt-contrib-jshint": "^0.11.0",
     "grunt-contrib-uglify": "^0.8.0",
     "grunt-contrib-watch": "^0.6.1",
+    "closure-linter-wrapper": "^1.0.1",
     "grunt-gjslint": "^0.2.0",
     "grunt-karma": "^0.10.1",
     "grunt-lint-pattern": "^0.1.4",
