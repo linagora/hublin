@@ -21,6 +21,7 @@ module.exports.externalDependencies = function() {
     'frontend/components/URIjs/src/URI.min.js',
     'frontend/components/angular/angular.min.js',
     'frontend/components/angular-route/angular-route.min.js',
+    'frontend/components/angular-ui-router/angular-ui-router.min.js',
     'frontend/components/angular-mocks/angular-mocks.js',
     'frontend/components/angular-cookies/angular-cookies.min.js',
     'frontend/components/angular-animate/angular-animate.min.js',

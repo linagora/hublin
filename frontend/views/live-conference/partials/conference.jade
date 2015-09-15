@@ -1,6 +1,7 @@
 .hublin-live-conference-video-container(live-conference, live-conference-auto-reconnect,
 invitation-dialog-launcher, live-conference-editor-controller)
-  conference-video
+  ui-view
+  stream-video
   browser-authorization-dialog
   live-conference-notification(conference-id='{{conference._id}}')
   invitation-dialog#invite(conference='conference')

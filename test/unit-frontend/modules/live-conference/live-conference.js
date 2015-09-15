@@ -173,7 +173,7 @@ describe('The op.live-conference module', function() {
 
   describe('The conferenceController controller', function() {
 
-    var $controller, deviceDetector = {}, eventCallbackRegistry, readyThen, initThen, goodbyeThen;
+    var $controller, deviceDetector = {}, eventCallbackRegistry, readyThen, initThen, goodbyeThen, stateValue;
 
     beforeEach(function() {
       angular.mock.module(function($provide) {
@@ -189,6 +189,11 @@ describe('The op.live-conference module', function() {
           }
         });
         $provide.value('conference', {});
+        $provide.value('$state', {
+          go: function(state) {
+            stateValue = state;
+          }
+        });
         $provide.value('deviceDetector', deviceDetector);
         $provide.constant('EVENTS', { beforeunload: 'testbeforeunload'});
       });
@@ -213,6 +218,18 @@ describe('The op.live-conference module', function() {
       initThen();
       angular.element(window).trigger('testbeforeunload');
 
+      done();
+    });
+
+    it('should go to conference state when init', function(done) {
+      deviceDetector.raw = {
+        browser: {
+          firefox: true
+        }
+      };
+      $controller('conferenceController', { $scope: {} });
+      readyThen();
+      expect(stateValue).to.equal('app.conference');
       done();
     });
 
