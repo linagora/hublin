@@ -40,6 +40,7 @@ html
     script(src='/components/URIjs/src/URI.min.js')
     script(src='/components/angular/angular.min.js')
     script(src='/components/angular-route/angular-route.min.js')
+    script(src='/components/angular-ui-router/release/angular-ui-router.min.js')
     script(src='/components/angular-cookies/angular-cookies.min.js')
     script(src='/components/angular-animate/angular-animate.min.js')
     script(src='/components/angular-sanitize/angular-sanitize.min.js')
@@ -112,6 +113,6 @@ html
 
   body.hublin-live-conference-app.ng-cloak(ng-app='liveConferenceApplication' ng-controller="sessionInitLiveConferenceController")
     #wrap(ng-include='session.template')
-
+    ui-view
     .unsupported.text-center
       include ../commons/unsupported

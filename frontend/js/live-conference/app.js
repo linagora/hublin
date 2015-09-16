@@ -27,35 +27,45 @@ angular.module('liveConferenceApplication', [
   'matchmedia-ng',
   'op.live-conference-devmode',
   'ng.deviceDetector',
-  'angularMoment'
-].concat(angularInjections)).config(function($routeProvider, $locationProvider, RestangularProvider) {
+  'angularMoment',
+  'ui.router'
+].concat(angularInjections)).config(function($locationProvider, RestangularProvider, $stateProvider) {
 
-  $routeProvider.when('/:conferenceId', {
-    templateUrl: '/views/live-conference/partials/main',
-    controller: 'conferenceController',
-    resolve: {
-      conference: function($route, $location, $log, conferenceService) {
-        var id = $route.current.params.conferenceId;
-        return conferenceService.enter(id).then(
-          function(response) {
-            $log.info('Successfully entered room', id, 'with response', response);
-            return response.data;
-          },
-          function(err) {
-            $log.info('Failed to enter room', id, err);
-            $location.path('/');
-          }
-        );
+  $stateProvider
+    .state('app', {
+      url: '/:conferenceId',
+      templateUrl: '/views/live-conference/partials/main',
+      controller: 'conferenceController',
+      resolve: {
+        conference: function($stateParams, $location, $log, conferenceService) {
+          var id = $stateParams.conferenceId;
+          return conferenceService.enter(id).then(
+            function(response) {
+              $log.info('Successfully entered room', id, 'with response', response);
+              return response.data;
+            },
+            function(err) {
+              $log.info('Failed to enter room', id, err);
+              $location.path('/');
+            }
+          );
+        }
+      },
+      data: {
+        hasVideo: false
       }
-    }
-  });
+    })
+    .state('app.editor-mobile', {
+      templateUrl: '/views/live-conference/partials/conference-mobile-video'})
+    .state('app.conference', {
+      templateUrl: '/views/live-conference/partials/conference-video'});
+
 
   $locationProvider.html5Mode(true);
-
   RestangularProvider.setBaseUrl('/api');
   RestangularProvider.setFullResponse(true);
 })
-  .run(['$log', 'session', '$route', function($log, session) {
+  .run(['$log', 'session', '$state', function($log, session) {
     session.ready.then(function() {
       $log.debug('Session is ready.');
     });

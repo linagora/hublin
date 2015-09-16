@@ -27,9 +27,11 @@ angular.module('op.live-conference', [
   'deviceDetector',
   'eventCallbackRegistry',
   'EVENTS',
-  function($scope, $log, session, conference, ioConnectionManager, $window, deviceDetector, eventCallbackRegistry, EVENTS) {
+  '$state',
+  function($scope, $log, session, conference, ioConnectionManager, $window, deviceDetector, eventCallbackRegistry, EVENTS, $state) {
     session.ready.then(function() {
       var wsServerURI = '';
+      $state.go('app.conference');
 
       if (conference.configuration && conference.configuration.hosts && conference.configuration.hosts.length) {
         conference.configuration.hosts.forEach(function(host) {
@@ -216,6 +218,16 @@ angular.module('op.live-conference', [
     };
   }
 ])
+
+  .directive('streamVideo', ['currentConferenceState', function(currentConferenceState) {
+    return {
+      restrict: 'E',
+      link: function(scope, element) {
+        currentConferenceState.videoElements.forEach(function(video) { element.append(video); });
+      }
+    };
+  }])
+
 .directive('liveConferenceAutoReconnect', ['easyRTCService', 'MAX_RECONNECT_TIMEOUT', '$log', '$timeout',
 function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
   function link($scope) {
