@@ -4,6 +4,7 @@ angular.module('meetingsApplication', [
   'restangular',
   'uuid4',
   'ngRoute',
+  'op.dynamicDirective',
   'meetings.uri',
   'meetings.session',
   'meetings.user',
