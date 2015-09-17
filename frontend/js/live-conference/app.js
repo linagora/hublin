@@ -12,6 +12,7 @@ angular.module('liveConferenceApplication', [
   'op.live-conference',
   'op.notification',
   'op.localstorage',
+  'op.dynamicDirective',
   'meetings.authentication',
   'meetings.session',
   'meetings.user',
