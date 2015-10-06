@@ -29,5 +29,8 @@
       "prettyPrint": true,
       "colorize": true
     }
+  },
+  "emailInvitation": {
+    "templatesDir": "./templates/email"
   }
 }

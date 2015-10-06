@@ -64,9 +64,9 @@
       "server": "",
       "uri": ""
     },
-    "ga": {
+    "google": {
       "enabled": false,
-      "tracking-code": ""
+      "ua": ""
     }
   },
   "loggers" : [

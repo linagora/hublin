@@ -7,6 +7,7 @@ var mockery = require('mockery'),
     testConfig = require('../config/servers-conf.js');
 
 before(function(done) {
+  process.env.NODE_ENV = 'test';
   var basePath = path.resolve(__dirname + '/../..');
   var tmpPath = path.resolve(basePath, testConfig.tmp);
   this.testEnv = {
