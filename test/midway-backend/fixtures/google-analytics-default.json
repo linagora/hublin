@@ -1,0 +1,18 @@
+{
+  "analytics": {
+    "piwik": {
+      "enabled": false,
+      "https": false,
+      "server": "",
+      "uri": ""
+    },
+    "google": {
+      "enabled": true,
+      "ua": "this-for-the-tests"
+    }
+  },
+ "modules": [
+    "linagora.io.meetings",
+    "linagora.esn.analytics-google"
+  ]
+}

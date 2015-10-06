@@ -10,6 +10,6 @@ var ganalytics = {
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
 if (ganalytics.GA_UA) {
-  ga('create', ganalytics.ua, 'auto');
+  ga('create', ganalytics.GA_UA, 'auto');
   ga('send', 'pageview');
 }
