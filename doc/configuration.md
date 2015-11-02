@@ -7,6 +7,7 @@
 
   To configure the mail feature, you need to create a document in the mongo collection configuration, as below:
 
+```javascript
   {
     "_id" : "mail",
     "mail" : {
@@ -26,9 +27,21 @@
         ]
     }
   }
+```
 
   "smtp.yourserver.com" must be replaced by an actual SMTP server that you have access to, optionally defining an authentication if required by the SMTP server.
   hubl.in is actually using nodemailer to send emails, you'll find all possible confifuration settings on the project page at https://github.com/andris9/nodemailer-smtp-transport.
+
+## i18n
+
+You can configure what default language hubl.in will use, when the client browser requests an unsupported language. To do this, create a new document in the mongo **configuration** collection, as below:
+
+```javascript
+{
+  _id: 'i18n',
+  defaultLocale: 'en'
+}
+```
 
 ## Local configuration
 
@@ -43,6 +56,7 @@ Note: Loggers are following the [Winston](https://github.com/winstonjs/winston) 
 
 A logger must have a name and a hash of options to use.
 
+```
     {
       "name": "File",
       "enabled": true,
@@ -55,6 +69,7 @@ A logger must have a name and a hash of options to use.
         "colorize": false
       }
     }
+```
 
 A logger can be enabled or not (a logger added to the array without the enabled flag will not be active).
 
@@ -67,6 +82,7 @@ Winston allows to use external 'transports'. In order to use it, you must:
 
 For example, if you want to use the [Mail Transport](https://github.com/winstonjs/winston#mail-transport), you will have to define it in the configuration like:
 
+```
     {
       "name": "Mail",
       "enabled": "true",
@@ -86,6 +102,7 @@ For example, if you want to use the [Mail Transport](https://github.com/winstonj
         "silent": true
       }
     }
+```
 
 Based on this configuration, Hubl.in will build the transport to add to Winston instance like:
 
@@ -94,4 +111,3 @@ Based on this configuration, Hubl.in will build the transport to add to Winston 
 
     # Which is equivalent to
     var Mail = require('winston-mail').Mail;
-
