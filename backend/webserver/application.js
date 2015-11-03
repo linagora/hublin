@@ -94,8 +94,6 @@ application.use(function(req, res, next) {
   next();
 });
 
-application.use(require('./middlewares/setup-settings')());
-
 /**
  * Make the appName of the configuration available to template
  */

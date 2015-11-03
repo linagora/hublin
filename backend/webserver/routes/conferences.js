@@ -11,6 +11,7 @@ module.exports = function(dependencies) {
 
   var controllers = require('../controllers/conferences')(dependencies);
   var middlewares = require('../middlewares/conference')(dependencies);
+  var setupSettingsMiddleware = require('../middlewares/setup-settings');
   var user = require('../middlewares/user')(dependencies);
   var should = require('../middlewares/should')(dependencies);
 
@@ -25,7 +26,7 @@ module.exports = function(dependencies) {
   router.put('/api/conferences/:id/members',
              middlewares.load, should.beInRequest('conference'),
              user.loadForConference, should.beInRequest('conference'),
-             middlewares.canAddMember, controllers.addMembers);
+             middlewares.canAddMember, setupSettingsMiddleware, controllers.addMembers);
   router.put('/api/conferences/:id/members/:mid/:field',
              middlewares.load, should.beInRequest('conference'),
              user.loadForConference, should.beInRequest('user'),
