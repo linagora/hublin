@@ -6,6 +6,7 @@ var CSS_PATH = FRONTEND_PATH + '/css';
 var VIEW_PATH = FRONTEND_PATH + '/views';
 var config = require('../core').config('default');
 var uuid = require('node-uuid');
+var esnconfig = require('../core')['esn-config'];
 
 var lessMiddlewareConfig = {
   production: {
@@ -24,6 +25,14 @@ var lessMiddlewareConfig = {
   }
 
 };
+
+function loadDefaultLocale(i18n) {
+  esnconfig('i18n').get(function(err, config) {
+    if (config && config.defaultLocale) {
+      i18n.setLocale(config.defaultLocale);
+    }
+  });
+}
 
 var express = require('express');
 var application = express();
@@ -57,6 +66,8 @@ application.use('/css', express.static(CSS_PATH));
 // This needs to be initialized before the body parser
 var i18n = require('../i18n');
 application.use(i18n.init);
+
+loadDefaultLocale(i18n);
 
 var bodyParser = require('body-parser');
 application.use(bodyParser.json());
