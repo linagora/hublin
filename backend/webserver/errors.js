@@ -128,6 +128,7 @@ module.exports = function(dependencies) {
     if (!(err instanceof HttpError)) {
       logger.error('API error occurred: %e', err);
       var details = i18n.__('Sorry but something bad just happened, developers have been notified');
+      details += '\n ' + err.stack;
       err = new ServerError(details);
     }
     err.send(res);
@@ -135,7 +136,9 @@ module.exports = function(dependencies) {
 
   function errorHandler(err, req, res, next) {
     res.status(500);
-    return res.render('commons/error', {error: i18n.__('Sorry but something bad just happened, developers have been notified')});
+    var details = i18n.__('Sorry but something bad just happened, developers have been notified');
+    details += '\n ' + err.stack;
+    return res.render('commons/error', {error: details});
   }
 
   return {
