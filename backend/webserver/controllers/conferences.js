@@ -44,7 +44,7 @@ module.exports = function(dependencies) {
   var logger = dependencies('logger');
   var errors = require('../errors')(dependencies);
 
-  function inviteMembers(conf, user, members, callback) {
+  function inviteMembers(conf, user, members, baseUrl, callback) {
     var newMembers = [];
 
     if (!Array.isArray(members)) {
@@ -62,11 +62,11 @@ module.exports = function(dependencies) {
       throw new errors.BadRequestError('Invited members missing');
     }
 
-    conference.invite(conf, user, newMembers, callback);
+    conference.invite(conf, user, newMembers, baseUrl, callback);
   }
 
   function addMembers(req, res) {
-    inviteMembers(req.conference, req.user, req.body, function(err) {
+    inviteMembers(req.conference, req.user, req.body, req.openpaas.getBaseURL(), function(err) {
       if (err) {
         throw new errors.ServerError(err);
       }
@@ -80,7 +80,7 @@ module.exports = function(dependencies) {
       return res.json(req.created ? 201 : 200, _transformConference(req.conference.toObject()));
     }
 
-    inviteMembers(req.conference, req.user, req.body.members, function(err) {
+    inviteMembers(req.conference, req.user, req.body.members, req.openpaas.getBaseURL(), function(err) {
       if (err) {
         throw new errors.ServerError(err);
       }

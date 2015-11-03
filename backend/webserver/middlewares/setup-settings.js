@@ -10,10 +10,10 @@ function fetchDatabaseSettings() {
     esnConf('web').get(function(err, config) {
       if (err) {
         logger.warn('Can not get web configuration', err);
-        return resolve();
+        return resolve(null);
       } else if (!config) {
         logger.debug('ESN does not have any web settings');
-        return resolve();
+        return resolve(null);
       } else {
         return resolve(config);
       }

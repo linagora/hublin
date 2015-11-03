@@ -138,10 +138,11 @@ function getMember(conference, tuple, callback) {
  * @param {Conference} conference
  * @param {Member} creator
  * @param {Member} member
+ * @param {string} baseUrl - The conference server URL
  * @param {Function} callback
  * @return {*}
  */
-function sendInvitation(conference, creator, member, callback) {
+function sendInvitation(conference, creator, member, baseUrl, callback) {
   var localtopic = localpubsub.topic(EVENTS.invite);
 
   getMember(conference, member, function(err, m) {
@@ -156,7 +157,8 @@ function sendInvitation(conference, creator, member, callback) {
     var invitation = {
       conference: conference,
       user: m,
-      creator: creator
+      creator: creator,
+      baseUrl: baseUrl
     };
     localtopic.forward(globalpubsub, invitation);
     return callback();
@@ -168,10 +170,11 @@ function sendInvitation(conference, creator, member, callback) {
  * @param {string} conference
  * @param {string} creator - user inviting into the conference
  * @param {[member]} members - an array of members
+ * @param {string} baseUrl - The conference server URL
  * @param {function} callback
  * @return {*}
  */
-function invite(conference, creator, members, callback) {
+function invite(conference, creator, members, baseUrl, callback) {
   if (!conference) {
     return callback(new Error('Can not invite to an undefined conference'));
   }
@@ -201,7 +204,7 @@ function invite(conference, creator, members, callback) {
     }
 
     async.each(members, function(member, callback) {
-      sendInvitation(updated, creator, member, function(err) {
+      sendInvitation(updated, creator, member, baseUrl, function(err) {
         if (err) {
           logger.error('Error while sending invitation to', member, err);
         }

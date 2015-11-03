@@ -21,7 +21,7 @@ module.exports = function(dependencies) {
   router.put('/api/conferences/:id', middlewares.checkIdLength, middlewares.checkIdForCreation,
              middlewares.load, middlewares.lazyArchive(true),
              user.createForConference, middlewares.addUser,
-             middlewares.createConference, controllers.finalizeCreation);
+             middlewares.createConference, setupSettingsMiddleware, controllers.finalizeCreation);
   router.get('/api/conferences/:id/members', middlewares.load, controllers.getMembers);
   router.put('/api/conferences/:id/members',
              middlewares.load, should.beInRequest('conference'),
