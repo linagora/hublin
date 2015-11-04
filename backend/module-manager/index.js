@@ -4,6 +4,7 @@ var Path = require('path');
 var fs = require('fs');
 var core = require('../core');
 var AwesomeModuleManager = require('awesome-module-manager');
+var requireLoader = require('./requireLoader');
 var AwesomeModule = require('awesome-module');
 var MEETINGS_MODULE_PREFIX = 'linagora.io.meetings.core.';
 var setupServer = require('./server');
@@ -35,6 +36,7 @@ function mockCore() {
 
 function setupManager() {
   mockCore();
+  manager.appendLoader(requireLoader(require, true));
   core.moduleManager = manager;
   return manager;
 }

@@ -27,7 +27,6 @@ module.exports = function setupServer(moduleManager) {
     .then(registerModuleWrapper(moduleManager, require('../wsserver').WsServer))
     .then(registerModuleWrapper(moduleManager, require('om-mailer')))
     .then(registerModuleWrapper(moduleManager, require('om-invitation')))
-    .then(registerModuleWrapper(moduleManager, require('om-email-invitation')))
     .then(registerModuleWrapper(moduleManager, require('awesome-yjs')))
     .then(registerModuleWrapper(moduleManager, require('awesome-collaborative-editor')))
     .then(registerModuleWrapper(moduleManager, require('awesome-chat')))

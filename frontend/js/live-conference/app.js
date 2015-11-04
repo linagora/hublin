@@ -17,7 +17,6 @@ angular.module('liveConferenceApplication', [
   'meetings.session',
   'meetings.user',
   'meetings.conference',
-  'meetings.invitation.email',
   'meetings.configuration',
   'meetings.language',
   'meetings.i18n',
