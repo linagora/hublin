@@ -17,27 +17,27 @@ html.mail
           p.textinvite
             if (from.displayName === 'anonymous' || !from.displayName)
               | Someone is inviting you to join&nbsp;
-              a.emphasize(href='https://hubl.in/?token=' + to.token) #{conference._id}
+              a.emphasize(href=baseUrl + '?token=' + to.token) #{conference._id}
               | , a video conference room on&nbsp;
-              a.emphasize(href="https://hubl.in") Hubl.in
+              a.emphasize(href=baseUrl) Hubl.in
             else
               span.emphasize #{from.displayName}
               | &nbsp;invites you to join&nbsp;
-              a.emphasize(href='https://hubl.in/?token=' + to.token) #{conference._id}
+              a.emphasize(href=baseUrl + '?token=' + to.token) #{conference._id}
               | , a video conference room on&nbsp;
-              a.emphasize(href="https://hubl.in") Hubl.in
+              a.emphasize(href=baseUrl) Hubl.in
 
           .button
-            a.hublin-link-button(href='https://hubl.in/?token=' + to.token) Join the Room
+            a.hublin-link-button(href=baseUrl + '?token=' + to.token) Join the Room
 
           p.link
             | Or use this link:&nbsp;
-            a(href='https://hubl.in/?token=' + to.token) https://hubl.in/#{conference._id}
+            a(href=baseUrl + '?token=' + to.token) #{baseUrl}#{conference._id}
 
           div.footer
             h1 What is Hubl.in?
             .explain
-              a(href="https://hubl.in") Hubl.in
+              a(href=baseUrl) Hubl.in
               | &nbsp;is a free and open source video conference solution built with love and ethic propelled by&nbsp;
               a(href="http://open-paas.org") OpenPaaS
               |. No additional plugins are required, no advertisements, only a great experience we are pleased to share with community.

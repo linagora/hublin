@@ -13,7 +13,7 @@ module.exports.init = function(dependencies) {
   var logger = dependencies('logger');
 
   function processInvitation(data) {
-    invitation.sendInvitation(data.creator, data.user, data.conference, data.user.objectType,
+    invitation.sendInvitation(data.creator, data.user, data.conference, data.baseUrl, data.user.objectType,
       function(err, response) {
         if (err) {
           return logger.error('Could not send invitation for %s in conference %s', data.user.id, data.conference.id, err);

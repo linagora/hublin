@@ -43,6 +43,17 @@ You can configure what default language hubl.in will use, when the client browse
 }
 ```
 
+## webserver URL
+
+Hubl.in allows sending invites using an email. In such cases, the system will try to detect the server URL using client HTTP headers. However, you can force the URL of your hubl.in instance by creating a web document in the configuration collection. The document looks like this:
+
+```javascript
+{
+  _id: 'web',
+  base_url: 'https://your.domain.com/'
+}
+```
+
 ## Local configuration
 
 ### Loggers
