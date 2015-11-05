@@ -57,4 +57,42 @@ describe('The conference pub/sub module', function() {
     });
   });
 
+  describe('processInvitation event handler', function() {
+    it('should call invitation.sendInvitation method', function(done) {
+      var evt = {
+        creator: 'user1',
+        user: {objectType: 'email', id: 'some@test.com'},
+        conference: 'conference1',
+        baseUrl: 'https://hubl.in/'
+      };
+
+      mockery.registerMock('./index.js', {
+        EVENTS: {
+          invite: 'conference:invite'
+        },
+        addHistory: function() {}
+      });
+
+      var depencencies = {
+        invitation: {
+          sendInvitation: function(creator, user, conference, baseUrl, objType, callback) {
+            expect(creator).to.equal(evt.creator);
+            expect(user).to.deep.equal(evt.user);
+            expect(conference).to.deep.equal(evt.conference);
+            expect(baseUrl).to.equal(evt.baseUrl);
+            expect(objType).to.equal(evt.user.objectType);
+            done();
+          }
+        }
+      };
+
+      this.helpers.requireBackend('core/conference/pubsub.js').init(function(dependency) {
+        return depencencies[dependency];
+      });
+
+      var pubsub = this.helpers.requireBackend('core').pubsub.local;
+      pubsub.topic('conference:invite').publish(evt);
+
+    });
+  });
 });

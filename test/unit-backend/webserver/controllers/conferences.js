@@ -71,7 +71,7 @@ describe('The conferences controller', function() {
     it('should send back 202 when members are invited', function(done) {
       var membersToInvite = [{id: 'yo@hubl.in', objectType: 'email', displayName: 'yo@hubl.in'}];
       mockery.registerMock('../../core/conference', {
-        invite: function(conference, user, members, callback) {
+        invite: function(conference, user, members, baseUrl, callback) {
           expect(members).to.deep.equals(membersToInvite);
           return callback();
         }
@@ -89,7 +89,12 @@ describe('The conferences controller', function() {
         created: true,
         user: {displayName: 'foobar'},
         conference: this.addToObject(conference),
-        body: {members: membersToInvite}
+        body: {members: membersToInvite},
+        openpaas: {
+          getBaseURL: function() {
+            return 'https://hubl.out';
+          }
+        }
       }, res);
     });
 
@@ -104,20 +109,40 @@ describe('The conferences controller', function() {
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
 
       this.helpers.expectHttpError(errors.BadRequestError, function(res) {
-        controller.finalizeCreation({created: true, user: {displayName: 'foobar'}, conference: conference, body: {members: 'hahaha' }}, res);
+        controller.finalizeCreation({
+          created: true,
+          user: {displayName: 'foobar'},
+          conference: conference,
+          body: {members: 'hahaha'},
+          openpaas: {
+            getBaseURL: function() {
+              return 'https://hubl.out';
+            }
+          }
+        }, res);
       }, done);
     });
 
     it('should send back 500 when members can not be invited due to server error', function(done) {
       mockery.registerMock('../../core/conference', {
-        invite: function(conference, user, members, callback) {
+        invite: function(conference, user, members, baseUrl, callback) {
           return callback(new Error());
         }
       });
       this.helpers.mock.models({});
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
       this.helpers.expectHttpError(errors.ServerError, function(res) {
-        controller.finalizeCreation({created: true, user: {displayName: 'foobar'}, conference: null, body: {members: [{id: 'yo@hubl.in', objectType: 'email'}]}}, res);
+        controller.finalizeCreation({
+          created: true,
+          user: {displayName: 'foobar'},
+          conference: null,
+          body: {members: [{id: 'yo@hubl.in', objectType: 'email'}]},
+          openpaas: {
+            getBaseURL: function() {
+              return 'https://hubl.out';
+            }
+          }
+        }, res);
       }, done);
     });
   });

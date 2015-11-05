@@ -53,9 +53,10 @@ describe('The conference module', function() {
       .create({}, this.helpers.callbacks.errorWithMessage(done, 'WTF'));
   });
 
-  describe('the sendInvitation function', function() {
+  describe('sendInvitation function', function() {
     var member = {id: 'yo@hubl.in', objectType: 'email'};
     var creator = {id: 'yo@hubl.in', objectType: 'email'};
+    var baseUrl = 'https://hubl.out';
     var conf = {_id: 'MyConf'};
     var mongoose = {
       model: function() {
@@ -70,7 +71,7 @@ describe('The conference module', function() {
       var getMember = function(conference, member, callback) {return callback(new Error('Test Error'));};
       conference.__set__('getMember', getMember);
 
-      conference.sendInvitation(conf, creator, member, function(err, m) {
+      conference.sendInvitation(conf, creator, member, baseUrl, function(err, m) {
         expect(err).to.exist;
         expect(err).to.match(/Test Error/);
         done();
@@ -84,7 +85,7 @@ describe('The conference module', function() {
       var getMember = function(conference, member, callback) {return callback();};
       conference.__set__('getMember', getMember);
 
-      conference.sendInvitation(conf, creator, member, function(err) {
+      conference.sendInvitation(conf, creator, member, baseUrl, function(err) {
         expect(err).to.exist;
         expect(err).to.match(/No such member found/);
         done();
@@ -95,6 +96,7 @@ describe('The conference module', function() {
       this.mongoose = mockery.registerMock('mongoose', mongoose);
 
       var expected = {
+        baseUrl: baseUrl,
         conference: conf,
         user: member,
         creator: creator
@@ -107,7 +109,7 @@ describe('The conference module', function() {
       var getMember = function(conference, user, callback) {return callback(null, user);};
       conference.__set__('getMember', getMember);
 
-      conference.sendInvitation(conf, creator, member, function() {
+      conference.sendInvitation(conf, creator, member, baseUrl, function() {
         expect(localstub.topics['conference:invite'].data[0]).to.deep.equal(expected);
         expect(globalstub.topics['conference:invite'].data[0]).to.deep.equal(expected);
         done();
@@ -115,7 +117,9 @@ describe('The conference module', function() {
     });
   });
 
-  describe('the invite function', function() {
+  describe('invite function', function() {
+    var baseUrl = 'https://hubl.out';
+
     it('should send back error when conference is not set', function(done) {
       var mongoose = {
         model: function() {
@@ -124,7 +128,7 @@ describe('The conference module', function() {
       };
       this.mongoose = mockery.registerMock('mongoose', mongoose);
       var conference = this.helpers.requireBackend('core/conference');
-      conference.invite(null, {}, {},function(err, saved) {
+      conference.invite(null, {}, {}, baseUrl, function(err, saved) {
         expect(err).to.exist;
         expect(saved).to.not.exist;
         done();
@@ -139,7 +143,7 @@ describe('The conference module', function() {
       };
       this.mongoose = mockery.registerMock('mongoose', mongoose);
       var conference = this.helpers.requireBackend('core/conference');
-      conference.invite({}, {}, null, function(err, saved) {
+      conference.invite({}, {}, null, baseUrl, function(err, saved) {
         expect(err).to.exist;
         expect(saved).to.not.exist;
         done();
@@ -154,7 +158,7 @@ describe('The conference module', function() {
       };
       this.mongoose = mockery.registerMock('mongoose', mongoose);
       var conference = this.helpers.requireBackend('core/conference');
-      conference.invite(null, {}, null, function(err, saved) {
+      conference.invite(null, {}, null, baseUrl, function(err, saved) {
         expect(err).to.exist;
         expect(saved).to.not.exist;
         done();
@@ -181,7 +185,7 @@ describe('The conference module', function() {
       };
 
       var conference = this.helpers.requireBackend('core/conference');
-      conference.invite(conf, {}, attendees, this.helpers.callbacks.error(done));
+      conference.invite(conf, {}, attendees, baseUrl, this.helpers.callbacks.error(done));
     });
 
     it('should return an error when attendees is object', function(done) {
@@ -205,7 +209,7 @@ describe('The conference module', function() {
       };
 
       var conference = this.helpers.requireBackend('core/conference');
-      conference.invite(conf, {}, attendees, this.helpers.callbacks.errorWithMessage(done, 'members parameter should be an array'));
+      conference.invite(conf, {}, attendees, baseUrl, this.helpers.callbacks.errorWithMessage(done, 'members parameter should be an array'));
     });
 
     it('should send back updated conference when attendees is array', function(done) {
@@ -234,10 +238,10 @@ describe('The conference module', function() {
       };
 
       var conference = rewire('../../../../backend/core/conference');
-      var sendInvitation = function(conference, creator, user, callback) {return callback();};
+      var sendInvitation = function(conference, creator, user, baseUrl, callback) {return callback();};
       conference.__set__('sendInvitation', sendInvitation);
 
-      conference.invite(conf, {}, attendees, function(err, updated) {
+      conference.invite(conf, {}, attendees, baseUrl, function(err, updated) {
         expect(err).to.not.exist;
         expect(updated).to.exist;
         expect(updated.members).to.exist;
@@ -270,13 +274,15 @@ describe('The conference module', function() {
       var getMember = function(conference, user, callback) {return callback(null, user);};
       conference.__set__('getMember', getMember);
 
-      conference.invite(conf, creator, [newMember], function() {
+      conference.invite(conf, creator, [newMember], baseUrl, function() {
         expect(localstub.topics['conference:invite'].data[0]).to.deep.equal({
+          baseUrl: baseUrl,
           conference: conf,
           user: newMember,
           creator: creator
         });
         expect(globalstub.topics['conference:invite'].data[0]).to.deep.equal({
+          baseUrl: baseUrl,
           conference: conf,
           user: newMember,
           creator: creator

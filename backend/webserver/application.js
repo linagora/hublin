@@ -94,11 +94,6 @@ application.use(function(req, res, next) {
   next();
 });
 
-application.use(require('./middlewares/setup-settings')());
-
-var flash = require('connect-flash');
-application.use(flash());
-
 /**
  * Make the appName of the configuration available to template
  */
