@@ -41,7 +41,7 @@
     "om-email-invitation": "0.0.3",
     "om-invitation": "0.0.2",
     "om-mailer": "0.0.1",
-    "om-webrtc-backend": "0.0.4",
+    "om-webrtc-backend": "0.0.5",
     "om-websocket-server": "0.0.1",
     "open": "0.0.5",
     "q": "^1.1.2",
