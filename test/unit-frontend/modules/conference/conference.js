@@ -94,7 +94,7 @@ describe('The meetings.conference module', function() {
   });
 
   describe('The browserAuthorizationDialog directive', function() {
-    var element, rootScope, gotMediaCB;
+    var element, $compile, $rootScope, gotMediaCB, $window;
     beforeEach(function() {
       var easyRTCService = {
         setGotMedia: function(cb) {
@@ -106,18 +106,42 @@ describe('The meetings.conference module', function() {
       });
     });
 
-    beforeEach(inject(function($compile, $rootScope, $window) {
-      element = $compile('<browser-authorization-dialog />')($rootScope);
-      $rootScope.$digest();
-      rootScope = $rootScope;
+    beforeEach(inject(function(_$compile_, _$rootScope_, _$window_) {
+      $compile = _$compile_;
+      $rootScope = _$rootScope_;
+      $window = _$window_;
     }));
 
+    function compileDirective() {
+      element = $compile('<browser-authorization-dialog />')($rootScope);
+      $rootScope.$digest();
+    }
+
     it('should override easyRTCService.setGotMedia with a function broadcasting localMediaReady event', function(done) {
+      compileDirective();
       expect(gotMediaCB).to.be.a.function;
-      rootScope.$on('localMediaReady', function() {
+      $rootScope.$on('localMediaReady', function() {
         done();
       });
       gotMediaCB();
+    });
+
+    it('should override window.getUserMedia to use fallback constraints on constraints error', function() {
+      var oldGetUserMedia = $window.getUserMedia;
+      var callCount = 0;
+      $window.getUserMedia = function(constraints, onSuccess, onError) {
+        callCount++;
+        if (callCount === 1) {
+          onError();
+        } else {
+          expect(constraints).to.eql({ audio: true, video: true });
+        }
+      };
+      compileDirective();
+      $window.getUserMedia({}, angular.noop, angular.noop);
+      expect(callCount).to.equal(2);
+
+      $window.getUserMedia = oldGetUserMedia;
     });
 
   });

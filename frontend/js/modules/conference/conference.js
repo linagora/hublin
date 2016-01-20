@@ -204,7 +204,10 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
         var oldGetUserMedia = $window.getUserMedia;
         $window.getUserMedia = function getUserMedia(constraints, successCallback, errorCallback) {
           element.modal('show');
-          oldGetUserMedia(constraints, interceptStream(successCallback), errorCallback);
+          oldGetUserMedia(constraints, interceptStream(successCallback), function() {
+            // try fallback constraints
+            oldGetUserMedia({ audio: true, video: true }, interceptStream(successCallback), errorCallback);
+          });
         };
       }
     };
