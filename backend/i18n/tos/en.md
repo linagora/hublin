@@ -5,7 +5,7 @@ HUBL.IN LEGAL INFORMATION, TERMS OF USE AND PRIVACY POLICY
 
 The HUBL.IN website is published & hosted by:
 
-LINAGORA SA, a Limited Company with capital of € 2 257 140
+LINAGORA SA, a Limited Company with capital of € 1 841 200
 Registered office :  74-80 rue Roque de Fillol, 92800 Puteaux, France
 SIRET : 431 473 669 00098
 APE Code : 6202 A
@@ -133,7 +133,7 @@ Temporary cookies (such as user interface and session cookies) may be stored on 
 
 ### Reporting by Receiving Users
 
-Receiving Users may report abusive, infringing, or illicit by clicking on the "Report" button. Clicking the "Report" button will save the conference state data of both the reporting and reported users. Conference state data will include conference name, User IP, User nickname as provided, User e-mail address as provided.
+Receiving Users may report abusive, infringing, or illicit User Content by clicking on the "Report" button. Clicking the "Report" button will save the conference state data of both the reporting and reported users. Conference state data will include conference name, User IP, User nickname as provided, User e-mail address as provided.
 
 LINAGORA will store said conference state report for one (1) year in the aim of enabling any proper legal authorities to request disclosure of said conference state, after which the conference state will be destroyed.
 
