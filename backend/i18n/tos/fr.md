@@ -5,7 +5,7 @@ MENTIONS LÉGALES, CONDITIONS D'UTILISATION ET POLITIQUE DE CONFIDENTIALITÉ HUB
 
 Le site de HUBL.IN est publié et hébergé par:
 
-LINAGORA SA, une société anonyme au capital de 2 257 140 €
+LINAGORA SA, une société anonyme au capital de 1 841 200 €
 Siège social: 74-80 rue Roque de Fillol, 92800 Puteaux, France
 SIRET: 431 473 669 00098
 Code APE: 6202 A
