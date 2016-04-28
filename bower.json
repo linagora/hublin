@@ -42,7 +42,7 @@
     "matchmedia-ng": "~1.0.5",
     "angular-localforage": "1.2.2",
     "localforage": "1.2.0",
-    "lightbox2": "~2.7.1",
+    "lightbox2": "2.7.1",
     "jquery-resize": "*",
     "angular-resizable": "https://github.com/cphyc/angular-resizable.git#1.1.1",
     "ng-device-detector": "~1.1.7",
