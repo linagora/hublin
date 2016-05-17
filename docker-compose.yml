@@ -1,15 +1,20 @@
-app:
-  build: .
-  links:
-   - db:db
-   - redis:redis
-  ports:
-   - "8080:8080"
-db:
-  image: mongo
-  ports:
-    - "27017:27017"
-redis:
-  image: redis
-  ports:
-    - "6379:6379"
+version: '2'
+services:
+  app:
+    build:
+      context: .
+    depends_on:
+      - db
+      - redis
+    restart: always
+    network_mode: "host"
+  db:
+    hostname: db
+    image: mongo
+    restart: always
+    network_mode: "host"
+  redis:
+    hostname: redis
+    image: redis
+    restart: always
+    network_mode: "host"

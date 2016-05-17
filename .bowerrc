@@ -1,4 +1,5 @@
 {
   "directory": "frontend/components",
-  "analytics": false
+  "analytics": false,
+  "allow_root": true
 }
