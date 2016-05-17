@@ -12,9 +12,11 @@ services:
     hostname: db
     image: mongo
     restart: always
-    network_mode: "host"
+    ports:
+      - 127.0.0.1:27017:27017
   redis:
     hostname: redis
     image: redis
     restart: always
-    network_mode: "host"
+    ports:
+      - 127.0.0.1:6379:6379
