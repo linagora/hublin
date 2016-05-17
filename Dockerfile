@@ -23,6 +23,8 @@ ADD package.json /src/package.json
 ADD bower.json /src/bower.json
 ADD .bowerrc /src/.bowerrc
 
+RUN echo '{ "allow_root": true }' > /root/.bowerrc
+
 RUN cd /src && npm install bower
 RUN cd /src && npm install --production --unsafe-perm
 
