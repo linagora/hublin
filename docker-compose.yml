@@ -1,14 +1,13 @@
 version: '2'
 services:
   app:
+    hostname: app
     build:
       context: .
     depends_on:
       - db
       - redis
     restart: always
-    ports:
-      - 8080:8080
     networks:
       - hublin-net
   db:
@@ -20,6 +19,20 @@ services:
   redis:
     hostname: redis
     image: redis
+    restart: always
+    networks:
+      - hublin-net
+  haproxy:
+    image: haproxy
+    hostname: haproxy
+    ports:
+      - 80:8080
+      - 81:8081
+      - 443:8443
+    volumes:
+      - /dev/log
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+      - ./hublin-combined.pem:/usr/local/etc/haproxy/hublin-combined.pem
     restart: always
     networks:
       - hublin-net
