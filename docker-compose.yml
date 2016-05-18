@@ -7,16 +7,22 @@ services:
       - db
       - redis
     restart: always
-    network_mode: "host"
+    ports:
+      - 8080:8080
+    networks:
+      - hublin-net
   db:
     hostname: db
     image: mongo
     restart: always
-    ports:
-      - 127.0.0.1:27017:27017
+    networks:
+      - hublin-net
   redis:
     hostname: redis
     image: redis
     restart: always
-    ports:
-      - 127.0.0.1:6379:6379
+    networks:
+      - hublin-net
+
+networks:
+  hublin-net:
