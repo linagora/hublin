@@ -34,6 +34,8 @@ services:
       - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
       - ./hublin-combined.pem:/usr/local/etc/haproxy/hublin-combined.pem
     restart: always
+    depends_on:
+      - app
     networks:
       - hublin-net
 
