@@ -14,7 +14,7 @@ describe('The op.live-conference module', function() {
     var $timeout;
 
     beforeEach(function() {
-      var easyRTCService = this.easyRTCService = {
+      var webRTCService = this.webRTCService = {
         _disconnectCallbacks: [],
 
         connect: function(conf, cb) { cb(null); },
@@ -24,7 +24,7 @@ describe('The op.live-conference module', function() {
       };
 
       angular.mock.module(function($provide) {
-        $provide.value('easyRTCService', easyRTCService);
+        $provide.value('webRTCService', webRTCService);
         $provide.constant('MAX_RECONNECT_TIMEOUT', 6000);
       });
     });
@@ -58,7 +58,7 @@ describe('The op.live-conference module', function() {
     });
 
     it('should attempt to reconnect after being disconnected', function() {
-      this.easyRTCService.connect = function(conf, callback) {
+      this.webRTCService.connect = function(conf, callback) {
         connected++;
         callback(cberror);
       };
@@ -66,8 +66,8 @@ describe('The op.live-conference module', function() {
       var connected = 0;
       var cberror = new Error('still putting on makeup');
 
-      expect(this.easyRTCService._disconnectCallbacks.length).to.equal(1);
-      var disconnectCallback = this.easyRTCService._disconnectCallbacks[0];
+      expect(this.webRTCService._disconnectCallbacks.length).to.equal(1);
+      var disconnectCallback = this.webRTCService._disconnectCallbacks[0];
 
       // Trigger disconnection
       disconnectCallback();

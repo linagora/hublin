@@ -7,7 +7,7 @@ var expect = chai.expect;
 
 describe('The meetings.configuration module', function() {
 
-  var easyRTCService, easyRTCBitRates, easyRTCDefaultBitRate, localStorageService, instance, alertContent;
+  var webRTCService, easyRTCBitRates, easyRTCDefaultBitRate, localStorageService, instance, alertContent;
 
   beforeEach(function() {
     module('meetings.configuration');
@@ -17,7 +17,7 @@ describe('The meetings.configuration module', function() {
   beforeEach(angular.mock.module(function($provide) {
     easyRTCBitRates = {rate1: 'config1', rate2: 'config2'};
     easyRTCDefaultBitRate = 'rate2';
-    easyRTCService = {
+    webRTCService = {
       enableVideo: function() {},
       configureBandwidth: function() {},
       isVideoEnabled: function() { return false; },
@@ -41,7 +41,7 @@ describe('The meetings.configuration module', function() {
         return instance;
       }
     };
-    $provide.value('easyRTCService', easyRTCService);
+    $provide.value('webRTCService', webRTCService);
     $provide.value('easyRTCBitRates', easyRTCBitRates);
     $provide.value('easyRTCDefaultBitRate', easyRTCDefaultBitRate);
     $provide.value('localStorageService', localStorageService);
@@ -139,7 +139,7 @@ describe('The meetings.configuration module', function() {
           }
         };
       };
-      easyRTCService.configureBandwidth = function(rate) {
+      webRTCService.configureBandwidth = function(rate) {
         expect(rate).to.equal(testRate);
         done();
       };
@@ -155,7 +155,7 @@ describe('The meetings.configuration module', function() {
           }
         };
       };
-      easyRTCService.configureBandwidth = function(rate) {
+      webRTCService.configureBandwidth = function(rate) {
         expect(rate).to.equal(easyRTCDefaultBitRate);
         done();
       };
@@ -171,7 +171,7 @@ describe('The meetings.configuration module', function() {
           }
         };
       };
-      easyRTCService.configureBandwidth = function(rate) {
+      webRTCService.configureBandwidth = function(rate) {
         expect(rate).to.equal(easyRTCDefaultBitRate);
         done();
       };
@@ -192,16 +192,16 @@ describe('The meetings.configuration module', function() {
       });
 
       it('should do nothing if argumentBitRate does not exist in easyRTCBitrates constant', function(done) {
-        easyRTCService.configureBandwidth = function() {
+        webRTCService.configureBandwidth = function() {
           done(new Error('Should not have been called'));
         };
         this.scope.selectBitRate('bitRateThatDoesNotExist');
         done();
       });
 
-      it('should store the selectBitRate and call easyRTCService#configureBandwidth with the correct rate', function(done) {
+      it('should store the selectBitRate and call webRTCService#configureBandwidth with the correct rate', function(done) {
         var testRate = 'rate1';
-        easyRTCService.configureBandwidth = function(rate) {
+        webRTCService.configureBandwidth = function(rate) {
           expect(rate).to.equal(testRate);
           done();
         };
@@ -248,7 +248,7 @@ describe('The meetings.configuration module', function() {
 
       it('should not display an alert when video is enabled', function() {
         alertContent = null;
-        easyRTCService.isVideoEnabled = function() { return true; };
+        webRTCService.isVideoEnabled = function() { return true; };
         this.compile('<disable-video-configuration />')(this.scope);
         this.scope.$digest();
         expect(alertContent).to.be.null;
