@@ -28,7 +28,8 @@ angular.module('liveConferenceApplication', [
   'op.live-conference-devmode',
   'ng.deviceDetector',
   'angularMoment',
-  'ui.router'
+  'ui.router',
+  'hublin.easyrtc.connector'
 ].concat(angularInjections)).config(function($locationProvider, RestangularProvider, $stateProvider) {
 
   $stateProvider

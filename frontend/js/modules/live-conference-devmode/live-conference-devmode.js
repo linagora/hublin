@@ -6,8 +6,8 @@ angular.module('op.live-conference-devmode', ['op.live-conference'])
     sendDataP2P: 'devmode:sendDataP2P',
     sendDataWS: 'devmode:sendDataWS'
   })
-.factory('devMode', ['currentConferenceState', 'easyRTCService', '$interval', 'devmodeMsgType', 'notificationFactory',
-  function(conference, easyRTCService, $interval, devmodeMsgType, notificationFactory) {
+.factory('devMode', ['currentConferenceState', 'webRTCService', '$interval', 'devmodeMsgType', 'notificationFactory',
+  function(conference, webRTCService, $interval, devmodeMsgType, notificationFactory) {
     var devAttendees = [],
     intervalId = null;
 
@@ -15,12 +15,12 @@ angular.module('op.live-conference-devmode', ['op.live-conference'])
       service.peerCount = 0;
       conference.getAttendees().forEach(function(attendee, index) {
         devAttendees[index] = devAttendees[index] || {};
-        if (attendee && attendee.easyrtcid && attendee.easyrtcid !== easyRTCService.myEasyrtcid()) {
+        if (attendee && attendee.easyrtcid && attendee.easyrtcid !== webRTCService.myEasyrtcid()) {
           devAttendees[index].easyrtcid = attendee.easyrtcid;
           devAttendees[index].displayName = attendee.displayName;
-          devAttendees[index].connectionStatusMessage = easyRTCService.getP2PConnectionStatus(attendee.easyrtcid);
-          devAttendees[index].connectionStatus = devAttendees[index].connectionStatusMessage === easyRTCService.IS_CONNECTED;
-          devAttendees[index].dataChannelStatus = easyRTCService.doesDataChannelWork(attendee.easyrtcid);
+          devAttendees[index].connectionStatusMessage = webRTCService.getP2PConnectionStatus(attendee.easyrtcid);
+          devAttendees[index].connectionStatus = devAttendees[index].connectionStatusMessage === webRTCService.IS_CONNECTED;
+          devAttendees[index].dataChannelStatus = webRTCService.doesDataChannelWork(attendee.easyrtcid);
           service.peerCount++;
         } else {
           delete devAttendees[index].easyrtcid;
@@ -45,7 +45,7 @@ angular.module('op.live-conference-devmode', ['op.live-conference'])
     }
 
     function sendTestMessage(msgType, easyrtcid) {
-      easyRTCService[msgType](easyrtcid, devmodeMsgType[msgType], {msg: 'Data sent using message type ' + msgType, from: easyRTCService.myEasyrtcid()},
+      webRTCService[msgType](easyrtcid, devmodeMsgType[msgType], {msg: 'Data sent using message type ' + msgType, from: webRTCService.myEasyrtcid()},
         function(ackmessage) {
           notificationFactory.weakInfo('ACK received for ' + msgType, JSON.stringify(ackmessage));
         }
@@ -54,7 +54,7 @@ angular.module('op.live-conference-devmode', ['op.live-conference'])
 
     function setDevModePeerListeners(handler) {
       for (var key in devmodeMsgType) {
-        easyRTCService.setPeerListener(handler, devmodeMsgType[key]);
+        webRTCService.setPeerListener(handler, devmodeMsgType[key]);
       }
     }
 

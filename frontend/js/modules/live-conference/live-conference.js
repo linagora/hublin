@@ -127,11 +127,11 @@ angular.module('op.live-conference', [
   '$interval',
   'session',
   'conferenceAPI',
-  'easyRTCService',
+  'webRTCService',
   'currentConferenceState',
   'LOCAL_VIDEO_ID',
   'REMOTE_VIDEO_IDS',
-  function($log, $timeout, $interval, session, conferenceAPI, easyRTCService, currentConferenceState, LOCAL_VIDEO_ID, REMOTE_VIDEO_IDS) {
+  function($log, $timeout, $interval, session, conferenceAPI, webRTCService, currentConferenceState, LOCAL_VIDEO_ID, REMOTE_VIDEO_IDS) {
     function controller($scope) {
       $scope.conference = session.conference;
       $scope.conferenceState = currentConferenceState;
@@ -139,7 +139,7 @@ angular.module('op.live-conference', [
       $scope.reportedAttendee = null;
 
       $scope.$on('$locationChangeStart', function() {
-        easyRTCService.leaveRoom($scope.conferenceState.conference);
+        webRTCService.leaveRoom($scope.conferenceState.conference);
       });
 
       $scope.showInvitation = function() {
@@ -153,7 +153,7 @@ angular.module('op.live-conference', [
 
       $scope.onLeave = function() {
         $log.debug('Leaving the conference');
-        easyRTCService.leaveRoom($scope.conferenceState.conference);
+        webRTCService.leaveRoom($scope.conferenceState.conference);
         session.leave();
       };
 
@@ -207,7 +207,7 @@ angular.module('op.live-conference', [
         return angular.element('#' + LOCAL_VIDEO_ID)[0];
       }, function(video) {
         if (video) {
-          easyRTCService.connect($scope.conferenceState);
+          webRTCService.connect($scope.conferenceState);
           unregisterLocalVideoWatch();
         }
       });
@@ -228,12 +228,12 @@ angular.module('op.live-conference', [
     };
   }])
 
-.directive('liveConferenceAutoReconnect', ['easyRTCService', 'MAX_RECONNECT_TIMEOUT', '$log', '$timeout',
-function(easyRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
+.directive('liveConferenceAutoReconnect', ['webRTCService', 'MAX_RECONNECT_TIMEOUT', '$log', '$timeout',
+function(webRTCService, MAX_RECONNECT_TIMEOUT, $log, $timeout) {
   function link($scope) {
-    easyRTCService.addDisconnectCallback(function() {
+    webRTCService.addDisconnectCallback(function() {
       function connect() {
-        easyRTCService.connect($scope.conferenceState, function(err) {
+        webRTCService.connect($scope.conferenceState, function(err) {
           if (err) {
             reconnectCount++;
             reconnect();

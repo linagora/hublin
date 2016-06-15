@@ -183,13 +183,13 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       restrict: 'E',
       templateUrl: '/views/modules/live-conference/username-form.html'
     };
-  }]).directive('browserAuthorizationDialog', ['$window', 'easyRTCService', '$rootScope', function($window, easyRTCService, $rootScope) {
+  }]).directive('browserAuthorizationDialog', ['$window', 'webRTCService', '$rootScope', function($window, webRTCService, $rootScope) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/live-conference/browser-authorization-dialog.html',
       replace: true,
       link: function(scope, element) {
-        easyRTCService.setGotMedia(function(gotMediaCB, errorText) {
+        webRTCService.setGotMedia(function(gotMediaCB, errorText) {
           element.modal('hide');
           $rootScope.$broadcast('localMediaReady');
         });

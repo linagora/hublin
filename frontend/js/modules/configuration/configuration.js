@@ -86,7 +86,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       link: link
     };
   }])
-  .directive('bitrateConfiguration', ['easyRTCService', 'easyRTCBitRates', 'easyRTCDefaultBitRate', 'localStorageService', function(easyRTCService, easyRTCBitRates, easyRTCDefaultBitRate, localStorageService) {
+  .directive('bitrateConfiguration', ['webRTCService', 'easyRTCBitRates', 'easyRTCDefaultBitRate', 'localStorageService', function(webRTCService, easyRTCBitRates, easyRTCDefaultBitRate, localStorageService) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/bitrate-configuration.html',
@@ -98,7 +98,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
           if (bitRates.indexOf(rate) >= 0) {
             storage.setItem('bitRate', rate).finally(function() {
               $scope.selected = rate;
-              easyRTCService.configureBandwidth(rate);
+              webRTCService.configureBandwidth(rate);
             });
           }
         };
@@ -121,17 +121,17 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       }
     };
   }])
-  .directive('disableVideoConfiguration', ['easyRTCService', '$alert', function(easyRTCService, $alert) {
+  .directive('disableVideoConfiguration', ['webRTCService', '$alert', function(webRTCService, $alert) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/disable-video-configuration.html',
       link: function($scope) {
-        $scope.videoEnabled = easyRTCService.isVideoEnabled();
-        $scope.canEnumerateDevices = easyRTCService.canEnumerateDevices;
+        $scope.videoEnabled = webRTCService.isVideoEnabled();
+        $scope.canEnumerateDevices = webRTCService.canEnumerateDevices;
 
         var alertElement;
         $scope.$watch('videoEnabled', function(val) {
-          easyRTCService.enableVideo($scope.videoEnabled);
+          webRTCService.enableVideo($scope.videoEnabled);
           if (!$scope.videoEnabled) {
             alertElement = $alert({
               container: '#disableVideoWarning',

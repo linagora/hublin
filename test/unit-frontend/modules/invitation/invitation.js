@@ -12,7 +12,7 @@ describe('The meetings.invitation module', function() {
     var $timeout;
 
     beforeEach(function() {
-      var easyRTCService = this.easyRTCService = {
+      var webRTCService = this.webRTCService = {
         _disconnectCallbacks: [],
 
         connect: function(conf, cb) { cb(null); },
@@ -22,7 +22,7 @@ describe('The meetings.invitation module', function() {
       };
 
       angular.mock.module(function($provide) {
-        $provide.value('easyRTCService', easyRTCService);
+        $provide.value('webRTCService', webRTCService);
         $provide.constant('MAX_RECONNECT_TIMEOUT', 6000);
       });
     });

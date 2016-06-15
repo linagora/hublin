@@ -96,13 +96,13 @@ describe('The meetings.conference module', function() {
   describe('The browserAuthorizationDialog directive', function() {
     var element, $compile, $rootScope, gotMediaCB, $window;
     beforeEach(function() {
-      var easyRTCService = {
+      var webRTCService = {
         setGotMedia: function(cb) {
           gotMediaCB = cb;
         }
       };
       module(function($provide) {
-        $provide.value('easyRTCService', easyRTCService);
+        $provide.value('webRTCService', webRTCService);
       });
     });
 
@@ -117,7 +117,7 @@ describe('The meetings.conference module', function() {
       $rootScope.$digest();
     }
 
-    it('should override easyRTCService.setGotMedia with a function broadcasting localMediaReady event', function(done) {
+    it('should override webRTCService.setGotMedia with a function broadcasting localMediaReady event', function(done) {
       compileDirective();
       expect(gotMediaCB).to.be.a.function;
       $rootScope.$on('localMediaReady', function() {

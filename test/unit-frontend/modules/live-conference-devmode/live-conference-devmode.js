@@ -15,7 +15,7 @@ describe('The op.live-conference-devmode module', function() {
       this.conference = {
         getAttendees: function() { return []; }
       };
-      this.easyRTCService = {
+      this.webRTCService = {
         myEasyrtcid: function() {},
         getP2PConnectionStatus: function() {},
         doesDataChannelWork: function() { return true; }
@@ -33,7 +33,7 @@ describe('The op.live-conference-devmode module', function() {
         };
         module(function($provide) {
           $provide.value('currentConferenceState', self.conference);
-          $provide.value('easyRTCService', self.easyRTCService);
+          $provide.value('webRTCService', self.webRTCService);
           $provide.value('$interval', $interval);
         });
         inject(function(devMode) {
@@ -47,7 +47,7 @@ describe('The op.live-conference-devmode module', function() {
         var self = this;
         var handler = 'aHandler';
         var count = 0;
-        this.easyRTCService.setPeerListener = function(listener, msgType) {
+        this.webRTCService.setPeerListener = function(listener, msgType) {
           expect(listener).to.deep.equal(handler);
           count++;
           if (count === 1) {
@@ -63,7 +63,7 @@ describe('The op.live-conference-devmode module', function() {
         };
         module(function($provide) {
           $provide.value('currentConferenceState', self.conference);
-          $provide.value('easyRTCService', self.easyRTCService);
+          $provide.value('webRTCService', self.webRTCService);
         });
         inject(function(devMode) {
           devMode.setDevModePeerListeners(handler);
@@ -83,7 +83,7 @@ describe('The op.live-conference-devmode module', function() {
       };
       module(function($provide) {
         $provide.value('currentConferenceState', self.conference);
-        $provide.value('easyRTCService', self.easyRTCService);
+        $provide.value('webRTCService', self.webRTCService);
         $provide.value('$interval', $interval);
       });
       inject(function(devMode) {
@@ -97,7 +97,7 @@ describe('The op.live-conference-devmode module', function() {
       var self = this;
       module(function($provide) {
         $provide.value('currentConferenceState', self.conference);
-        $provide.value('easyRTCService', self.easyRTCService);
+        $provide.value('webRTCService', self.webRTCService);
       });
       inject(function($interval, devMode) {
         self.$interval = $interval;
@@ -105,7 +105,7 @@ describe('The op.live-conference-devmode module', function() {
       });
     });
     it('should expose an attendees array', function() {
-      this.easyRTCService.myEasyrtcid = function() {
+      this.webRTCService.myEasyrtcid = function() {
         return 'local';
       };
       this.conference.getAttendees = function() {
@@ -124,7 +124,7 @@ describe('The op.live-conference-devmode module', function() {
       ]);
     });
     it('should expose the number of peers', function() {
-      this.easyRTCService.myEasyrtcid = function() {
+      this.webRTCService.myEasyrtcid = function() {
         return 'local';
       };
       this.conference.getAttendees = function() {
