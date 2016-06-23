@@ -13,7 +13,7 @@ Hubl.in allows free communication without additional plugins.
 
 1. clone the repository
 
-        git clone https://ci.open-paas.org/stash/scm/meet/meetings.git
+        git clone --recursive https://ci.open-paas.org/stash/scm/meet/meetings.git
 
 2. Install and configure MongoDB
 
@@ -39,7 +39,12 @@ Please note that your version of node.js must be greater than version 0.10.28 bu
 
         npm install -g mocha grunt-cli bower karma-cli
 
-7. Go into the project directory and install project dependencies
+7. Go into the modules directory and install easyrtc connector module dependecies
+
+        cd modules/hublin-easyrtc-connector
+        npm install
+
+8. Go into the project directory and install project dependencies
 
         cd meetings
         npm install
