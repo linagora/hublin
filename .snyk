@@ -1,0 +1,220 @@
+version: v1.5.0
+ignore:
+  'npm:engine.io-client:20160426':
+    - om-websocket-server > socket.io > socket.io-client > engine.io-client:
+        reason: None given
+        expires: '2016-09-25T11:40:07.072Z'
+  'npm:express:20140912':
+    - express:
+        reason: None given
+        expires: '2016-09-25T11:40:07.072Z'
+    - om-websocket-server > express:
+        reason: None given
+        expires: '2016-09-25T11:40:07.072Z'
+  'npm:hawk:20160119':
+    - less > request > hawk:
+        reason: None given
+        expires: '2016-09-25T11:40:07.072Z'
+    - om-mailer > less > request > hawk:
+        reason: None given
+        expires: '2016-09-25T11:40:07.072Z'
+    - om-email-invitation > om-mailer > less > request > hawk:
+        reason: None given
+        expires: '2016-09-25T11:40:07.073Z'
+    - less-middleware > less > request > hawk:
+        reason: None given
+        expires: '2016-09-25T11:40:07.073Z'
+  'npm:moment:20160126':
+    - winston-mail > emailjs > moment:
+        reason: None given
+        expires: '2016-09-25T11:40:07.073Z'
+  'npm:ms:20151024':
+    - mongoose > ms:
+        reason: None given
+        expires: '2016-09-25T11:40:07.073Z'
+    - mongoconfig > mongoose > ms:
+        reason: None given
+        expires: '2016-09-25T11:40:07.073Z'
+    - helmet > connect > debug > ms:
+        reason: None given
+        expires: '2016-09-25T11:40:07.074Z'
+    - helmet > connect > finalhandler > debug > ms:
+        reason: None given
+        expires: '2016-09-25T11:40:07.130Z'
+    - om-websocket-server > socket.io > engine.io > debug > ms:
+        reason: None given
+        expires: '2016-09-25T11:40:07.130Z'
+    - om-websocket-server > socket.io > socket.io-adapter > debug > ms:
+        reason: None given
+        expires: '2016-09-25T11:40:07.130Z'
+    - om-websocket-server > socket.io > socket.io-client > engine.io-client > debug > ms:
+        reason: None given
+        expires: '2016-09-25T11:40:07.131Z'
+  'npm:send:20140912':
+    - express > send:
+        reason: None given
+        expires: '2016-09-25T11:40:07.131Z'
+    - om-websocket-server > express > send:
+        reason: None given
+        expires: '2016-09-25T11:40:07.131Z'
+    - express > serve-static > send:
+        reason: None given
+        expires: '2016-09-25T11:40:07.131Z'
+    - om-websocket-server > express > serve-static > send:
+        reason: None given
+        expires: '2016-09-25T11:40:07.131Z'
+  'npm:send:20151103':
+    - express > send:
+        reason: None given
+        expires: '2016-09-25T11:40:07.132Z'
+    - om-websocket-server > express > send:
+        reason: None given
+        expires: '2016-09-25T11:40:07.132Z'
+    - express > serve-static > send:
+        reason: None given
+        expires: '2016-09-25T11:40:07.132Z'
+    - om-websocket-server > express > serve-static > send:
+        reason: None given
+        expires: '2016-09-25T11:40:07.132Z'
+  'npm:serve-static:20150113':
+    - express > serve-static:
+        reason: None given
+        expires: '2016-09-25T11:40:07.133Z'
+    - om-websocket-server > express > serve-static:
+        reason: None given
+        expires: '2016-09-25T11:40:07.133Z'
+  'npm:serve-static:20150120':
+    - express > serve-static:
+        reason: None given
+        expires: '2016-09-25T11:40:07.133Z'
+    - om-websocket-server > express > serve-static:
+        reason: None given
+        expires: '2016-09-25T11:40:07.133Z'
+  'npm:uglify-js:20151024':
+    - jade > transformers > uglify-js:
+        reason: None given
+        expires: '2016-09-25T11:40:07.133Z'
+    - om-mailer > jade > transformers > uglify-js:
+        reason: None given
+        expires: '2016-09-25T11:40:07.133Z'
+    - om-email-invitation > om-mailer > jade > transformers > uglify-js:
+        reason: None given
+        expires: '2016-09-25T11:40:07.133Z'
+  'npm:ws:20160624':
+    - om-websocket-server > socket.io > engine.io > ws:
+        reason: None given
+        expires: '2016-09-25T11:40:07.134Z'
+    - om-websocket-server > socket.io > socket.io-client > engine.io-client > ws:
+        reason: None given
+        expires: '2016-09-25T11:40:07.190Z'
+patch:
+  'npm:minimatch:20160620':
+    - om-email-invitation > om-invitation > awesome-module-manager > grunt-contrib-jshint > jshint > cli > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - awesome-module-manager > grunt > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-invitation > awesome-module-manager > grunt > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-invitation > awesome-module-manager > grunt > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-mailer > awesome-module-manager > grunt > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-mailer > awesome-module-manager > grunt > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-websocket-server > awesome-module-manager > grunt > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-webrtc-backend > awesome-module-manager > grunt > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - awesome-module-manager > grunt-contrib-jshint > jshint > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > awesome-module-manager > grunt-contrib-jshint > jshint > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-invitation > awesome-module-manager > grunt-contrib-jshint > jshint > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-invitation > awesome-module-manager > grunt-contrib-jshint > jshint > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-mailer > awesome-module-manager > grunt-contrib-jshint > jshint > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-mailer > awesome-module-manager > grunt-contrib-jshint > jshint > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-websocket-server > awesome-module-manager > grunt-contrib-jshint > jshint > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-webrtc-backend > awesome-module-manager > grunt-contrib-jshint > jshint > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - awesome-module-manager > grunt > findup-sync > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > awesome-module-manager > grunt > findup-sync > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-invitation > awesome-module-manager > grunt > findup-sync > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-invitation > awesome-module-manager > grunt > findup-sync > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-mailer > awesome-module-manager > grunt > findup-sync > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-mailer > awesome-module-manager > grunt > findup-sync > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-websocket-server > awesome-module-manager > grunt > findup-sync > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-webrtc-backend > awesome-module-manager > grunt > findup-sync > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - awesome-module-manager > grunt-contrib-jshint > jshint > cli > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > awesome-module-manager > grunt-contrib-jshint > jshint > cli > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > awesome-module-manager > grunt > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-invitation > awesome-module-manager > grunt-contrib-jshint > jshint > cli > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-mailer > awesome-module-manager > grunt-contrib-jshint > jshint > cli > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-mailer > awesome-module-manager > grunt-contrib-jshint > jshint > cli > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-websocket-server > awesome-module-manager > grunt-contrib-jshint > jshint > cli > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-webrtc-backend > awesome-module-manager > grunt-contrib-jshint > jshint > cli > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - awesome-module-manager > grunt > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > awesome-module-manager > grunt > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-invitation > awesome-module-manager > grunt > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-invitation > awesome-module-manager > grunt > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-mailer > awesome-module-manager > grunt > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-mailer > awesome-module-manager > grunt > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-websocket-server > awesome-module-manager > grunt > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-webrtc-backend > awesome-module-manager > grunt > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-mailer > node-email-templates > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-mailer > node-email-templates > glob > minimatch:
+        patched: '2016-08-26T11:40:07.932Z'
+  'npm:negotiator:20160616':
+    - om-websocket-server > express > accepts > negotiator:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > express > accepts > negotiator:
+        patched: '2016-08-26T11:40:07.932Z'
+  'npm:qs:20140806-1':
+    - om-websocket-server > express > qs:
+        patched: '2016-08-26T11:40:07.932Z'
+  'npm:request:20160119':
+    - om-mailer > less > request:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-mailer > less > request:
+        patched: '2016-08-26T11:40:07.932Z'
+  'npm:uglify-js:20150824':
+    - jade > transformers > uglify-js:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-mailer > jade > transformers > uglify-js:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-email-invitation > om-mailer > jade > transformers > uglify-js:
+        patched: '2016-08-26T11:40:07.932Z'
+  'npm:ws:20160104':
+    - om-websocket-server > socket.io > engine.io > ws:
+        patched: '2016-08-26T11:40:07.932Z'
+    - om-websocket-server > socket.io > socket.io-client > engine.io-client > ws:
+        patched: '2016-08-26T11:40:07.932Z'
