@@ -1,0 +1,13 @@
+.hublin-browser-error-dialog.modal.error-modal.fade(tabindex='-1', role='dialog', aria-hidden='true',data-backdrop='static')
+  .modal-dialog.modal-lg
+    .modal-content.text-center.modal-hublin
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+        i.fa.fa-exclamation-circle.fa-4x
+      .modal-body
+        p.item-intro #{__('Oops, hublin failed to start a conference.')}
+        p.text-danger #{__('Error:')} {{errorMessage}}
+      .modal-footer
+        button.btn.btn-primary(type='button', ng-click='reloadPage()')
+          | #{__('Retry')}
