@@ -191,6 +191,11 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       link: function(scope, element) {
         webRTCService.setGotMedia(function(gotMediaCB, errorText) {
           element.modal('hide');
+          if (errorText) {
+            $rootScope.$broadcast('localMediaError', errorText);
+
+            return;
+          }
           $rootScope.$broadcast('localMediaReady');
         });
 
@@ -209,6 +214,19 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
             oldGetUserMedia({ audio: true, video: true }, interceptStream(successCallback), errorCallback);
           });
         };
+      }
+    };
+  }]).directive('browserErrorDialog', ['$window', '$rootScope', '$log', '$timeout', function($window, $rootScope, $log, $timeout) {
+    return {
+      restrict: 'E',
+      templateUrl: '/views/modules/live-conference/browser-error-dialog.html',
+      replace: true,
+      link: function(scope, element) {
+        scope.$on('localMediaError', function(event, errorText) {
+          $log.error(errorText);
+          $timeout(function() {scope.errorMessage = errorText;});
+          element.modal('show');
+        });
       }
     };
   }])
