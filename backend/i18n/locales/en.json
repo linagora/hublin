@@ -63,7 +63,7 @@
   "WebRTC is a free, open project that provides browsers and mobile applications with Real-Time Communications (RTC) capabilities via simple APIs. The WebRTC components have been optimized to best serve this purpose.": "WebRTC is a free, open project that provides browsers and mobile applications with Real-Time Communications (RTC) capabilities via simple APIs. The WebRTC components have been optimized to best serve this purpose.",
   "Take a look at %s for more information": "Take a look at %s for more information",
   "Warning": "Warning",
-  "Please allow your browser to use your camera and microphone": "Please allow your browser to use your camera and microphone",
+  "Please enable your browser to access camera and microphone": "Please enable your browser to access camera and microphone",
   "You may disallow sharing your devices, but in that case other members will not be able to see or hear you.": "You may disallow sharing your devices, but in that case other members will not be able to see or hear you.",
   "%s is powered by %s": "%s is powered by %s",
   "Welcome to %s": "Welcome to %s",
@@ -94,5 +94,6 @@
   "PDF": "PDF",
   "Raw text": "Raw text",
   "Markdown": "Markdown",
-  "Unknown": "Unknown"
+  "Unknown": "Unknown",
+  "Local media cannot be found": "Local media cannot be found"
 }

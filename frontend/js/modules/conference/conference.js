@@ -189,10 +189,13 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       templateUrl: '/views/modules/live-conference/browser-authorization-dialog.html',
       replace: true,
       link: function(scope, element) {
+        scope.isMediaReady = true;
         webRTCService.setGotMedia(function(gotMediaCB, errorText) {
           element.modal('hide');
           if (errorText) {
             $rootScope.$broadcast('localMediaError', errorText);
+            scope.isMediaReady = false;
+            element.modal('show');
 
             return;
           }
