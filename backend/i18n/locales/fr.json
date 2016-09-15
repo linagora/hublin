@@ -63,7 +63,7 @@
   "WebRTC is a free, open project that provides browsers and mobile applications with Real-Time Communications (RTC) capabilities via simple APIs. The WebRTC components have been optimized to best serve this purpose.": "WebRTC est un projet libre fournissant aux navigateurs et aux applications mobiles des capacités de communication en temps réel (RTC) via des API simples. Les composants WebRTC ont été optimisés afin de mieux servir cette objectif.",
   "Take a look at %s for more information": "Rendez-vous sur %s pour plus d'informations.",
   "Warning": "Attention",
-  "Please allow your browser to use your camera and microphone": "Veuillez autoriser votre navigateur à utiliser votre webcam et votre micro",
+  "Please enable your browser to access camera and microphone": "Veuillez autoriser votre navigateur à utiliser votre webcam et votre micro",
   "You may disallow sharing your devices, but in that case other members will not be able to see or hear you.": "Vous pouvez refuser d'utiliser votre webcam et/ou votre micro, mais dans ce cas les autres participants ne pourront pas vous voir ou vous entendre",
   "landing.openpaasPowerwedBy": "%s est propulsé par %s",
   "Welcome to %s": "Bienvenue sur %s",
@@ -94,5 +94,6 @@
   "PDF": "PDF",
   "Raw text": "Texte brut",
   "Markdown": "Markdown",
-  "Unknown": "Inconnu"
+  "Unknown": "Inconnu",
+  "Local media cannot be found": "Local media introuvable"
 }

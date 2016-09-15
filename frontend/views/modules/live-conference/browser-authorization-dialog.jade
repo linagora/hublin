@@ -9,18 +9,23 @@
           .modal-body
 
             i.fa.fa-long-arrow-up.fa-5x.hidden-xs
-            h2.hidden-xs #{__('Warning')}
-
-            .top
-              p.item-intro.text-muted #{__('Please allow your browser to use your camera and microphone')}
-              p
+            i(ng-if="isMediaReady")
+              .top
+                h2.hidden-xs #{__('Warning')}
+              .top
+                p.item-intro.text-muted #{__('Please enable your browser to access camera and microphone')}
                 | #{__('You may disallow sharing your devices, but in that case other members will not be able to see or hear you.')}
+            i(ng-if="!isMediaReady")
+              .top
+                h1.hidden-xs #{__('Error')}
+              .top
+                p.item-intro.text-muted #{__('Local media cannot be found')}
             button.hidden-xs.btn.btn-primary(type='button', data-dismiss='modal')
               i.fa.fa-times
               | &nbsp;
               | #{__('Close')}
 
         .bottom.visible-xs
-          p.item-intro.text-muted #{__('Please allow your browser to use your camera and microphone')}
+          p.item-intro.text-muted #{__('Please enable your browser to access camera and microphone')}
           p
             | #{__('You may disallow sharing your devices, but in that case other members will not be able to see or hear you.')}
