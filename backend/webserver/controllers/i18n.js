@@ -13,7 +13,7 @@ module.exports = function(dependencies) {
     }
 
     res.header('Content-Type', 'application/json; charset=utf-8');
-    res.json(200, catalog);
+    res.status(200).json(catalog);
   }
 
   return {

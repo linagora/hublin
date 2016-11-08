@@ -44,7 +44,7 @@ util.inherits(HttpError, Error);
  */
 HttpError.prototype.send = function(res) {
   'use strict';
-  res.json(this.code, {
+  res.status(this.code).json({
     error: {
       code: this.code,
       message: this.message,
