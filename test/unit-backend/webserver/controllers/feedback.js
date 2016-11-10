@@ -86,11 +86,12 @@ describe('The feedback controller', function() {
           email: 'user@domain.com',
           text: 'text'
         }
-      }, this.helpers.httpStatusCodeValidatingJsonResponse(200, function(data) {
-        expect(data).to.deep.equal({ ok: 'ok' });
-
-        done();
-      }));
+      }, this.helpers.express.jsonResponse(
+        function(status, data) {
+          expect(data).to.deep.equal({ ok: 'ok' });
+          done();
+        }
+      ));
     });
   });
 });

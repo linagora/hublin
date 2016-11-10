@@ -55,18 +55,16 @@ describe('The i18n controller', function() {
           locale: 'zz'
         },
         getCatalog: function() { return { a: 'b' }; }
-      }, {
-        header: function(header, value) {
-          expect(header).to.equal('Content-Type');
-          expect(value).to.equal('application/json; charset=utf-8');
-        },
-        json: function(code, data) {
+      },
+      this.helpers.express.jsonResponse(
+        function(code, data, header) {
+          expect(header).to.deep.equal({ 'Content-Type': 'application/json; charset=utf-8' });
           expect(code).to.equal(200);
           expect(data).to.deep.equal({ a: 'b' });
 
           done();
         }
-      });
+      ));
     });
 
   });
