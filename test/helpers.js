@@ -252,6 +252,37 @@ module.exports = function(mixin, testEnv) {
     esnConfig: mockEsnConfig
   };
 
+  mixin.express = {
+    response: function(callback) {
+      return {
+        status: function(code) {
+          callback && callback(code);
+
+          return {
+            end: function() {},
+            send: function() {}
+          };
+        }
+      };
+    },
+    jsonResponse: function(callback) {
+      var _headers = {};
+
+      return {
+        header: function(key, value) {
+          _headers[key] = value;
+        },
+        status: function(code) {
+          return {
+            json: function(data) {
+              return callback && callback(code, data, _headers);
+            }
+          };
+        }
+      };
+    }
+  };
+
   mixin.requireBackend = function(path) {
     return require(testEnv.basePath + '/backend/' + path);
   };

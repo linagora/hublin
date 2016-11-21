@@ -33,13 +33,13 @@ describe('The conferences controller', function() {
       this.helpers.mock.models({});
       var conference = {_id: 'MyConference', members: []};
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-      var res = {
-        json: function(status, body) {
+      var res = this.helpers.express.jsonResponse(
+        function(status, body) {
           expect(status).to.equal(201, body);
           expect(body).to.deep.equal(conference.toObject());
           done();
         }
-      };
+      );
       controller.finalizeCreation({
         created: true,
         user: {displayName: 'foobar'},
@@ -53,13 +53,13 @@ describe('The conferences controller', function() {
       this.helpers.mock.models({});
       var conference = {_id: 'MyConference', members: []};
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-      var res = {
-        json: function(status, body) {
+      var res = this.helpers.express.jsonResponse(
+        function(status, body) {
           expect(status).to.equal(200, body);
           expect(body).to.deep.equal(conference.toObject());
           done();
         }
-      };
+      );
       controller.finalizeCreation({
         created: false,
         user: {displayName: 'foobar'},
@@ -79,12 +79,12 @@ describe('The conferences controller', function() {
       this.helpers.mock.models({});
       var conference = {_id: 'MyConference', members: []};
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-      var res = {
-        send: function(status) {
+      var res = this.helpers.express.response(
+        function(status, body) {
           expect(status).to.equal(202);
           done();
         }
-      };
+      );
       controller.finalizeCreation({
         created: true,
         user: {displayName: 'foobar'},
@@ -161,10 +161,13 @@ describe('The conferences controller', function() {
       mockery.registerMock('../../core/conference', {});
       mockery.registerMock('../../core/report', {});
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-      var res = this.helpers.httpStatusCodeValidatingJsonResponse(200, function(data) {
-        expect(data).to.deep.equal([]);
-        done();
-      });
+      var res = this.helpers.express.jsonResponse(
+        function(status, data) {
+          expect(status).to.equal(200);
+          expect(data).to.deep.equal([]);
+          done();
+        }
+      );
       var req = {
         conference: {}
       };
@@ -175,10 +178,13 @@ describe('The conferences controller', function() {
       mockery.registerMock('../../core/conference', {});
       mockery.registerMock('../../core/report', {});
       var controller = this.helpers.requireBackend('webserver/controllers/conferences')(dependencies);
-      var res = this.helpers.httpStatusCodeValidatingJsonResponse(200, function(data) {
-        expect(data).to.deep.equal([]);
-        done();
-      });
+      var res = this.helpers.express.jsonResponse(
+        function(status, data) {
+          expect(status).to.equal(200);
+          expect(data).to.deep.equal([]);
+          done();
+        }
+      );
       var req = {
         conference: {
           attendees: []
@@ -200,10 +206,13 @@ describe('The conferences controller', function() {
         {objectType: 'ot1', _id: 'id1', status: 'offline', displayName: 'display1'},
         {objectType: 'ot2', _id: 'id2', status: 'offline2', displayName: 'display2'}
       ];
-      var res = this.helpers.httpStatusCodeValidatingJsonResponse(200, function(users) {
-        expect(users).to.deep.equal(sanitizedMembers);
-        done();
-      });
+      var res = this.helpers.express.jsonResponse(
+        function(status, users) {
+          expect(status).to.equal(200);
+          expect(users).to.deep.equal(sanitizedMembers);
+          done();
+        }
+      );
       var req = {
         conference: this.addToObject({
           members: members
@@ -250,12 +259,12 @@ describe('The conferences controller', function() {
         user: members[0]
       };
 
-      var res = {
-        json: function() {
+      var res = this.helpers.express.jsonResponse(
+        function() {
           expect(req.user[field]).to.equal(name);
           done();
         }
-      };
+      );
       controller.updateMemberField(req, res);
     });
   });

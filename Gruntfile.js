@@ -50,8 +50,8 @@ module.exports = function(grunt) {
       options: {
         jshintrc: '.jshintrc',
         ignores: ['test/frontend/karma-include/*', 'frontend/js/thirdparty/*', 'frontend/js/analytics/*'],
-        reporter: CI && 'checkstyle',
-        reporterOutput: CI && 'jshint.xml'
+        reporter: CI ? CI : 'checkstyle',
+        reporterOutput: CI ? CI : 'jshint.xml'
       },
       all: {
         src: [

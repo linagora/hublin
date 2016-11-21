@@ -20,7 +20,7 @@ module.exports = function(dependencies) {
           throw new errors.ServerError(err);
         }
 
-        return res.json(200, response);
+        return res.status(200).json(response);
       });
     });
   }
@@ -29,4 +29,3 @@ module.exports = function(dependencies) {
     sendFeedbackMail: sendFeedbackMail
   };
 };
-

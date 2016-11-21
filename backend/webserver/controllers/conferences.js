@@ -70,21 +70,21 @@ module.exports = function(dependencies) {
       if (err) {
         throw new errors.ServerError(err);
       }
-      res.send(202);
+      res.status(202).end();
     });
   }
 
   function finalizeCreation(req, res) {
 
     if (!req.body.members || req.body.members.length === 0) {
-      return res.json(req.created ? 201 : 200, _transformConference(req.conference.toObject()));
+      return res.status(req.created ? 201 : 200).json(_transformConference(req.conference.toObject()));
     }
 
     inviteMembers(req.conference, req.user, req.body.members, req.openpaas.getBaseURL(), function(err) {
       if (err) {
         throw new errors.ServerError(err);
       }
-      res.send(202, _transformConference(req.conference.toObject()));
+      res.status(202).send(_transformConference(req.conference.toObject()));
     });
   }
 
@@ -94,7 +94,7 @@ module.exports = function(dependencies) {
       throw new errors.BadRequestError('Conference is missing');
     }
     var sanitizedMembers = conf.members ? _transformConferenceMembers(conf.toObject().members) : [];
-    res.json(200, sanitizedMembers);
+    res.status(200).json(sanitizedMembers);
   }
 
   function updateMemberField(req, res) {
@@ -129,7 +129,7 @@ module.exports = function(dependencies) {
       var user = req.user;
       user[field] = data.value;
       req.user = user;
-      res.json(200, _transformConferenceMember(returnedMember));
+      res.status(200).json(_transformConferenceMember(returnedMember));
     });
   }
 
@@ -137,7 +137,7 @@ module.exports = function(dependencies) {
     if (!req.conference) {
       throw new errors.NotFoundError('No such conference');
     }
-    res.json(200, _transformConference(req.conference.toObject()));
+    res.status(200).json(_transformConference(req.conference.toObject()));
   }
 
   function persistReport(req, callback) {
@@ -181,7 +181,7 @@ module.exports = function(dependencies) {
         throw new errors.ServerError(err);
       }
 
-      res.json(201, {id: created._id});
+      res.status(201).json({ id: created._id });
     });
   }
 

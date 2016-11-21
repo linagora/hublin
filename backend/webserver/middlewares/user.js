@@ -120,11 +120,11 @@ module.exports = function(dependencies) {
     conference.getFromMemberToken(token, function(err, conference) {
       if (err) {
         logger.error('Can not get member from token', err);
-        return res.send(500);
+        return res.send(500).end();
       }
 
       if (!conference) {
-        return res.send(404);
+        return res.send(404).end();
       }
 
       var members = conference.members.filter(function(member) {
@@ -132,7 +132,7 @@ module.exports = function(dependencies) {
       });
 
       if (!members.length) {
-        return res.send(404);
+        return res.send(404).end();
       }
 
       setupRequestUser(req, conference._id);
