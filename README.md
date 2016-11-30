@@ -25,7 +25,7 @@ You must install mongoDB. We suggest you to use mongoDB version 2.6.5.
 
 3. install node.js
 
-Please note that your version of node.js must be greater than version 0.10.28 but less than or equal to 0.10.36. We highly recommend that you use [nvm](https://github.com/creationix/nvm) to install a specific version of node.
+We are currently using Node 6. It is highly recommended that you use [nvm](https://github.com/creationix/nvm) to install a specific version of node.
 
 4. Install Redis
 
