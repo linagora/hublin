@@ -11,7 +11,7 @@
 #    docker run -i -t openpaas/hublin /bin/bash
 #
 
-FROM node:0.10.36
+FROM node:6
 
 MAINTAINER Linagora Folks <hublin@linagora.com>
 
