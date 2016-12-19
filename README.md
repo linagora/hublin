@@ -17,7 +17,7 @@ Hubl.in allows free communication without additional plugins.
 
 2. Install and configure MongoDB
 
-You must install mongoDB. We suggest you to use mongoDB version 2.6.5.
+  You must install mongoDB. We suggest you to use mongoDB version 2.6.5.
 
         echo 'deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list
         apt-get install -y mongodb-org=2.6.5 mongodb-org-server=2.6.5 mongodb-org-shell=2.6.5 mongodb-org-mongos=2.6.5 mongodb-org-tools=2.6.5
@@ -25,7 +25,7 @@ You must install mongoDB. We suggest you to use mongoDB version 2.6.5.
 
 3. install node.js
 
-We are currently using Node 6. It is highly recommended that you use [nvm](https://github.com/creationix/nvm) to install a specific version of node.
+  We are currently using Node 6. It is highly recommended that you use [nvm](https://github.com/creationix/nvm) to install a specific version of node.
 
 4. Install Redis
 
