@@ -28,6 +28,8 @@ RUN cd /src && npm install --production --unsafe-perm
 
 ADD . /src
 
+RUN cd /src/modules/hublin-easyrtc-connector && npm install
+
 ADD config/db.json.docker /src/config/db.json
 
 ENV HUBLIN_REDIS_HOST redis
