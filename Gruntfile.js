@@ -382,8 +382,8 @@ module.exports = function(grunt) {
     grunt.file.write('dist/log/application.log', '');
   });
 
-  grunt.registerTask('spawn-servers', 'spawn servers', ['shell:redis', 'shell:mongo']);
-  grunt.registerTask('kill-servers', 'kill servers', ['shell:redis:kill', 'shell:mongo:kill']);
+  grunt.registerTask('spawn-servers', 'spawn servers', ['continue:on', 'shell:redis', 'shell:mongo']);
+  grunt.registerTask('kill-servers', 'kill servers', ['shell:redis:kill', 'shell:mongo:kill', 'continue:off', 'continue:fail-on-warning']);
 
   grunt.registerTask('setup-environment', 'create temp folders and files for tests', function() {
     try {
@@ -423,11 +423,10 @@ module.exports = function(grunt) {
 
   grunt.registerTask('dev', ['nodemon:dev']);
   grunt.registerTask('debug', ['node-inspector:dev']);
-  grunt.registerTask('setup-server', ['spawn-servers', 'continueOn']);
   grunt.registerTask('test-unit-backend', ['run_grunt:unit_backend']);
   grunt.registerTask('test-frontend', ['run_grunt:test_frontend']);
-  grunt.registerTask('test-midway-backend', ['setup-environment', 'setup-server', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
-  grunt.registerTask('test', ['linters', 'setup-environment', 'run_grunt:unit_backend', 'setup-server', 'run_grunt:midway_backend', 'test-frontend', 'kill-servers', 'clean-environment']);
+  grunt.registerTask('test-midway-backend', ['setup-environment', 'spawn-servers', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
+  grunt.registerTask('test', ['linters', 'setup-environment', 'test-frontend', 'run_grunt:unit_backend', 'spawn-servers', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
   grunt.registerTask('linters', 'Check code for lint', ['jshint:all', 'gjslint:all', 'lint_pattern:all']);
 
   grunt.registerTask('test-frontend-dist', 'Run the frontend distribution tests', ['karma:dist']);
