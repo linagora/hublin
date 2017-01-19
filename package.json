@@ -102,7 +102,7 @@
   },
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install --allow-root",
-    "test": "grunt test"
+    "test": "grunt test --chunk=1"
   },
   "author": "Linagora Folks",
   "license": "AGPLv3"
