@@ -85,7 +85,7 @@
     "karma-html2js-preprocessor": "1.0.0",
     "karma-jasmine": "1.0.2",
     "karma-mocha": "1.1.1",
-    "karma-ng-jade2module-preprocessor": "git+https://ci.open-paas.org/stash/scm/or/karma-ng-jade2module-preprocessor.git",
+    "karma-ng-jade2module-preprocessor": "git+https://ci.open-paas.org/stash/scm/or/karma-ng-jade2module-preprocessor.git#720383b1411",
     "karma-phantomjs-launcher": "1.0.2",
     "karma-rawfixtures-preprocessor": "git+https://ci.open-paas.org/stash/scm/or/karma-rawfixtures-preprocessor.git",
     "karma-requirejs": "1.1.0",
@@ -102,7 +102,7 @@
   },
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install --allow-root",
-    "test": "grunt test"
+    "test": "grunt test --chunk=1"
   },
   "author": "Linagora Folks",
   "license": "AGPLv3"
