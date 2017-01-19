@@ -28,7 +28,7 @@ RUN cd /src && npm install --production --unsafe-perm
 
 ADD . /src
 
-RUN cd /src/modules/hublin-easyrtc-connector && npm install
+RUN cd /src/modules/hublin-easyrtc-connector && npm install --production
 
 ADD config/db.json.docker /src/config/db.json
 
