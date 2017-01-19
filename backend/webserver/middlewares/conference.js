@@ -136,7 +136,14 @@ module.exports = function(dependencies) {
       }
 
       if (req.user._id.toString() !== req.params.mid) {
-        throw new errors.ForbiddenError('User cannot update other member');
+        // because mongoose 4.6.0 query catches UncaughtException
+        return res.status(403).json({
+          error: {
+            code: 403,
+            message: 'Forbidden',
+            details: 'User cannot update other member'
+          }
+        });
       }
 
       next();

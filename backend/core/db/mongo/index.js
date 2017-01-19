@@ -12,6 +12,9 @@ var configurationWatcher = require('./file-watcher');
 var initialized = false;
 var connected = false;
 
+//Note that you **must** use `require('q').Promise`.
+mongoose.Promise = require('q').Promise;
+
 function onConnectError(err) {
   logger.error('Failed to connect to MongoDB:', err.message);
 }

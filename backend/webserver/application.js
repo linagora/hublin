@@ -29,6 +29,7 @@ var lessMiddlewareConfig = {
 function loadDefaultLocale(i18n) {
   esnconfig('i18n').get(function(err, config) {
     if (config && config.defaultLocale) {
+      // This does not work, see https://github.com/mashpie/i18n-node/issues/292
       i18n.setLocale(config.defaultLocale);
     }
   });

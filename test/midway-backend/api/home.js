@@ -212,7 +212,7 @@ describe('The home API', function() {
               'history': [],
               'members': [
                 {
-                  'connection': { 'ipAddress': '127.0.0.1' },
+                  'connection': { 'ipAddress': '::ffff:127.0.0.1' },
                   'displayName': 'anonymous',
                   'objectType': 'hublin:anonymous',
                   'status': 'offline'
@@ -263,7 +263,7 @@ describe('The home API', function() {
               'history': [],
               'members': [
                 {
-                  'connection': { 'ipAddress': '127.0.0.1' },
+                  'connection': { 'ipAddress': '::ffff:127.0.0.1' },
                   'displayName': 'aGuy',
                   'objectType': 'hublin:anonymous',
                   'status': 'offline'
@@ -329,7 +329,7 @@ describe('The home API', function() {
                     'status': 'offline'
                   },
                   {
-                    'connection': { 'ipAddress': '127.0.0.1' },
+                    'connection': { 'ipAddress': '::ffff:127.0.0.1' },
                     'displayName': 'aGuy',
                     'status': 'offline',
                     'objectType': 'hublin:anonymous'
