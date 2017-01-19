@@ -70,7 +70,8 @@ describe('The application', function() {
     });
   });
 
-  it('should render the page using the defaultLocale', function(done) {
+  // See https://github.com/mashpie/i18n-node/issues/292
+  it.skip('should render the page using the defaultLocale', function(done) {
 
     function launchTest() {
       request(application)
