@@ -37,7 +37,7 @@ module.exports = function(config) {
 
     ngJade2ModulePreprocessor: {
       stripPrefix: 'frontend',
-      jadeRenderConfig: {
+      jadeRenderLocals: {
         __: function(str) { return str; },
         __j: function(str) { return str; }
       },

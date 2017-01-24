@@ -37,7 +37,7 @@ module.exports = function(config) {
 
     ngJade2ModulePreprocessor: {
       stripPrefix: 'dist/frontend',
-      jadeRenderConfig: {
+      jadeRenderLocals: {
         __: function(str) { return str; }
       },
       moduleName: 'meetings.jade.templates'
