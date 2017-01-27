@@ -38,7 +38,7 @@
     "mongoose": "4.6.0",
     "morgan": "1.7.0",
     "node-uuid": "1.4.7",
-    "om-email-invitation": "0.0.3",
+    "om-email-invitation": "0.0.4",
     "om-invitation": "0.0.2",
     "om-mailer": "0.2.5",
     "om-webrtc-backend": "0.0.8",
