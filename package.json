@@ -30,7 +30,7 @@
     "i18n": "0.8.3",
     "jade": "1.11.0",
     "konphyg": "1.4.0",
-    "less": "2.7.1",
+    "jstransformer-less": "2.2.0",
     "less-middleware": "2.2.0",
     "marked": "0.3.6",
     "mongoconfig": "1.1.0",
