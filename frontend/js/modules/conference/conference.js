@@ -2,6 +2,28 @@
 
 
 angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meetings.session', 'restangular'])
+  .run(function(conferenceUserMediaInterceptorService) {
+    conferenceUserMediaInterceptorService();
+  })
+  .factory('conferenceUserMediaInterceptorService', ['$rootScope', '$window', function($rootScope, $window) {
+    return function() {
+      var getUserMedia = $window.navigator.getUserMedia;
+
+      function interceptStream(callback) {
+        return function(mediaStream) {
+          $rootScope.$emit('localMediaStream', mediaStream);
+
+          callback(mediaStream);
+        };
+      }
+
+      $window.navigator.getUserMedia = function(constraints, successCallback, errorCallback) {
+        getUserMedia(constraints, interceptStream(successCallback), function(err) {
+          getUserMedia({audio: true, video: true}, interceptStream(successCallback), errorCallback);
+        });
+      };
+    };
+  }])
   .factory('conferenceService', ['conferenceAPI', 'session', function(conferenceAPI, session) {
     function create(conferenceName, displayName) {
       return conferenceAPI.create(conferenceName, displayName);
@@ -189,6 +211,7 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
       templateUrl: '/views/modules/live-conference/browser-authorization-dialog.html',
       replace: true,
       link: function(scope, element) {
+        element.modal('show');
         scope.isMediaReady = true;
         webRTCService.setGotMedia(function(gotMediaCB, errorText) {
           element.modal('hide');
@@ -201,22 +224,6 @@ angular.module('meetings.conference', ['meetings.user', 'meetings.uri', 'meeting
           }
           $rootScope.$broadcast('localMediaReady');
         });
-
-        function interceptStream(callback) {
-          return function(mediaStream) {
-            $rootScope.$emit('localMediaStream', mediaStream);
-            callback(mediaStream);
-          };
-        }
-
-        var oldGetUserMedia = $window.getUserMedia;
-        $window.getUserMedia = function getUserMedia(constraints, successCallback, errorCallback) {
-          element.modal('show');
-          oldGetUserMedia(constraints, interceptStream(successCallback), function() {
-            // try fallback constraints
-            oldGetUserMedia({ audio: true, video: true }, interceptStream(successCallback), errorCallback);
-          });
-        };
       }
     };
   }]).directive('browserErrorDialog', ['$window', '$rootScope', '$log', '$timeout', function($window, $rootScope, $log, $timeout) {
