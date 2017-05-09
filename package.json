@@ -27,7 +27,7 @@
     "fs-extra": "0.30.0",
     "hash_file": "0.1.1",
     "helmet": "2.2.0",
-    "i18n": "0.8.3",
+    "i18n": "git+https://github.com/linagora/i18n-node.git#multiDirectories",
     "jade": "1.11.0",
     "konphyg": "1.4.0",
     "jstransformer-less": "2.2.0",
