@@ -1,3 +1,5 @@
+'use strict';
+
 const i18n = require('../core/i18n');
 const jade = require('jade');
 
