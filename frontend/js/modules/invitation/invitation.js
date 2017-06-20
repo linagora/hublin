@@ -2,7 +2,8 @@
 
 angular.module('meetings.invitation', [
   'meetings.conference',
-  'mgcrea.ngStrap.typeahead'
+  'mgcrea.ngStrap.typeahead',
+  'ui.router'
 ]).provider('invitationService', function($provide) {
   var $q;
   var contactLookups = {};
@@ -267,8 +268,14 @@ angular.module('meetings.invitation', [
     }
   };
 }])
-.directive('invitationDialogLauncher', function() {
+.directive('invitationDialogLauncher', function($log, $stateParams) {
   function link($scope) {
+    if ($stateParams.noAutoInvite) {
+      $log.debug('Not launching invitation dialog as requested.');
+
+      return;
+    }
+
     $scope.$on('localMediaReady', function() {
       var connectedMembers = $scope.conferenceState.conference.members.some(function(member) {
         return member.status === 'online';

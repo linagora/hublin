@@ -1,5 +1,9 @@
 'use strict';
 
+/* global chai: false, sinon: false */
+
+var expect = chai.expect;
+
 describe('The meetings.invitation module', function() {
 
   beforeEach(function() {
@@ -9,7 +13,7 @@ describe('The meetings.invitation module', function() {
   });
 
   describe('The invitationDialogLauncher directive', function() {
-    var $timeout;
+    var $rootScope, $timeout, $compile, $scope, $stateParams;
 
     beforeEach(function() {
       var webRTCService = this.webRTCService = {
@@ -24,10 +28,11 @@ describe('The meetings.invitation module', function() {
       angular.mock.module(function($provide) {
         $provide.value('webRTCService', webRTCService);
         $provide.constant('MAX_RECONNECT_TIMEOUT', 6000);
+        $provide.value('$stateParams', $stateParams = {});
       });
     });
 
-    beforeEach(inject(function($rootScope, $window, _$timeout_, $compile) {
+    beforeEach(inject(function($window, _$rootScope_, _$timeout_, _$compile_) {
       $window.easyrtc = {
         enableDataChannels: function() {},
         setDisconnectListener: function() {},
@@ -35,38 +40,63 @@ describe('The meetings.invitation module', function() {
         setCallCancelled: function() {},
         setOnStreamClosed: function() {}
       };
-      this.scope = $rootScope.$new();
-      $timeout = _$timeout_;
 
-      $compile('<div live-conference invitation-dialog-launcher></div>')(this.scope);
-      $rootScope.$digest();
+      $rootScope = _$rootScope_;
+      $timeout = _$timeout_;
+      $compile = _$compile_;
+
+      $scope = $rootScope.$new();
     }));
 
-    it('should show invitation modal on localMediaReadyEvent if no user is online', function(done) {
-      this.scope.showInvitation = done;
-      this.scope.conferenceState = {
+    function compile() {
+      $compile('<div live-conference invitation-dialog-launcher></div>')($scope);
+      $rootScope.$digest();
+    }
+
+    it('should show invitation modal on localMediaReadyEvent if no user is online', function() {
+      compile();
+
+      $scope.showInvitation = sinon.spy();
+      $scope.conferenceState = {
         conference: {
           members: [
             {status: 'offline'}
           ]
         }
       };
-      this.scope.$emit('localMediaReady');
+      $scope.$emit('localMediaReady');
+
+      expect($scope.showInvitation).to.have.been.calledWith();
     });
 
-    it('should not show invitation modal on localMediaReadyEvent if some user is online', function(done) {
-      this.scope.showInvitation = function() {
-        done(new Error('Should not have been called'));
-      };
-      this.scope.conferenceState = {
+    it('should not show invitation modal on localMediaReadyEvent if some user is online', function() {
+      compile();
+
+      $scope.showInvitation = sinon.spy();
+      $scope.conferenceState = {
         conference: {
-          members: [
-            {status: 'online'}
-          ]
+          members: [{ status: 'online' }]
         }
       };
-      this.scope.$emit('localMediaReady');
-      done();
+      $scope.$emit('localMediaReady');
+
+      expect($scope.showInvitation).to.have.not.been.calledWith();
+    });
+
+    it('should not show invitation modal on localMediaReadyEvent if behavior is disabled through URL', function() {
+      $stateParams.noAutoInvite = true;
+
+      compile();
+
+      $scope.showInvitation = sinon.spy();
+      $scope.conferenceState = {
+        conference: {
+          members: [{ status: 'online' }]
+        }
+      };
+      $scope.$emit('localMediaReady');
+
+      expect($scope.showInvitation).to.have.not.been.calledWith();
     });
   });
 });
