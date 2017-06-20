@@ -42,7 +42,9 @@ module.exports.externalDependencies = function() {
     'frontend/components/angular-uuid4/angular-uuid4.min.js',
     'node_modules/easyrtc/api/easyrtc.js',
     'frontend/components/chai/chai.js',
-    'frontend/components/chai-spies/chai-spies.js'
+    'frontend/components/chai-spies/chai-spies.js',
+    'frontend/components/sinon-chai/lib/sinon-chai.js',
+    'frontend/components/sinon-browser-only/sinon.js'
   ];
 };
 

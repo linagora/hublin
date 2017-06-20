@@ -60,6 +60,8 @@
     "angular-moment": "~0.10.1"
   },
   "devDependencies": {
-    "chai-spies": "chaijs/chai-spies#~0.6.0"
+    "chai-spies": "chaijs/chai-spies#~0.6.0",
+    "sinon-chai": "2.11.0",
+    "sinon-browser-only": "1.17.1"
   }
 }
