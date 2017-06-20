@@ -34,7 +34,7 @@ angular.module('liveConferenceApplication', [
 
   $stateProvider
     .state('app', {
-      url: '/:conferenceId',
+      url: '/:conferenceId?displayName&autostart&noAutoInvite',
       templateUrl: '/views/live-conference/partials/main',
       controller: 'conferenceController',
       resolve: {

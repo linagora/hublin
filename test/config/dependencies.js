@@ -21,7 +21,7 @@ module.exports.externalDependencies = function() {
     'frontend/components/URIjs/src/URI.min.js',
     'frontend/components/angular/angular.min.js',
     'frontend/components/angular-route/angular-route.min.js',
-    'frontend/components/angular-ui-router/angular-ui-router.min.js',
+    'frontend/components/angular-ui-router/release/angular-ui-router.js',
     'frontend/components/angular-mocks/angular-mocks.js',
     'frontend/components/angular-cookies/angular-cookies.min.js',
     'frontend/components/angular-animate/angular-animate.min.js',
@@ -42,7 +42,9 @@ module.exports.externalDependencies = function() {
     'frontend/components/angular-uuid4/angular-uuid4.min.js',
     'node_modules/easyrtc/api/easyrtc.js',
     'frontend/components/chai/chai.js',
-    'frontend/components/chai-spies/chai-spies.js'
+    'frontend/components/chai-spies/chai-spies.js',
+    'frontend/components/sinon-chai/lib/sinon-chai.js',
+    'frontend/components/sinon-browser-only/sinon.js'
   ];
 };
 

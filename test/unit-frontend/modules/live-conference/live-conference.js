@@ -1,6 +1,7 @@
 'use strict';
 
-/* global chai: false */
+/* global chai: false, sinon: false */
+
 var expect = chai.expect;
 
 describe('The op.live-conference module', function() {
@@ -173,11 +174,11 @@ describe('The op.live-conference module', function() {
 
   describe('The conferenceController controller', function() {
 
-    var $controller, deviceDetector = {}, eventCallbackRegistry, readyThen, initThen, goodbyeThen, stateValue;
+    var $q, $rootScope, $stateParams, session, $controller, deviceDetector = {}, eventCallbackRegistry, readyThen, initThen, goodbyeThen, stateValue, configurationService;
 
     beforeEach(function() {
       angular.mock.module(function($provide) {
-        $provide.value('session', {
+        $provide.value('session', session = {
           ready: {
             then: function(callback) { readyThen = callback; }
           },
@@ -186,7 +187,10 @@ describe('The op.live-conference module', function() {
           },
           goodbye: {
             then: function(callback) { goodbyeThen = callback; }
-          }
+          },
+          user: {},
+          conference: {},
+          setConfigured: sinon.spy()
         });
         $provide.value('conference', {});
         $provide.value('$state', {
@@ -196,10 +200,18 @@ describe('The op.live-conference module', function() {
         });
         $provide.value('deviceDetector', deviceDetector);
         $provide.constant('EVENTS', { beforeunload: 'testbeforeunload'});
+        $provide.value('configurationService', configurationService = {
+          configure: sinon.spy(function() {
+            return $q.when();
+          })
+        });
+        $provide.constant('$stateParams', $stateParams = {});
       });
     });
 
-    beforeEach(inject(function(_$controller_, _eventCallbackRegistry_) {
+    beforeEach(inject(function(_$rootScope_, _$q_, _$controller_, _eventCallbackRegistry_) {
+      $rootScope = _$rootScope_;
+      $q = _$q_;
       $controller = _$controller_;
       eventCallbackRegistry = _eventCallbackRegistry_;
     }));
@@ -246,6 +258,34 @@ describe('The op.live-conference module', function() {
       angular.element(window).trigger('testbeforeunload');
     });
 
+    it('should not directly go to conference step when autostart=true if there is no displayName', function() {
+      var $scope = {};
+
+      $stateParams.autostart = true;
+
+      $controller('conferenceController', {
+        $scope: $scope
+      });
+
+      expect($scope.process.step).to.equal('configuration');
+    });
+
+    it('should directly go to conference step when autostart=true and there is a displayName', function() {
+      var $scope = {};
+
+      $stateParams.autostart = true;
+      $stateParams.displayName = 'myName';
+
+      $controller('conferenceController', {
+        $scope: $scope
+      });
+      $rootScope.$digest();
+
+      expect($scope.process.step).to.equal('conference');
+      expect(configurationService.configure).to.have.been.calledWith({ displayName: 'myName' });
+      expect(session.setConfigured).to.have.been.calledWith(true);
+    });
+
   });
 
   describe('The landingPageReminder directive', function() {
@@ -267,11 +307,11 @@ describe('The op.live-conference module', function() {
           buttons: [
             {
               text: 'Button 1',
-              callback: chai.spy()
+              callback: sinon.spy()
             },
             {
               text: 'Button 2',
-              callback: chai.spy()
+              callback: sinon.spy()
             }
           ]
         };
@@ -301,7 +341,7 @@ describe('The op.live-conference module', function() {
 
       reminders.forEach(function(reminder) {
         reminder.buttons.forEach(function(button) {
-          expect(button.callback).to.have.been.called.once;
+          expect(button.callback).to.have.been.calledOnce;
         });
       });
     });

@@ -20,6 +20,7 @@ angular.module('op.live-conference', [
 .controller('conferenceController', [
   '$scope',
   '$log',
+  '$stateParams',
   'session',
   'conference',
   'ioConnectionManager',
@@ -28,7 +29,10 @@ angular.module('op.live-conference', [
   'eventCallbackRegistry',
   'EVENTS',
   '$state',
-  function($scope, $log, session, conference, ioConnectionManager, $window, deviceDetector, eventCallbackRegistry, EVENTS, $state) {
+  'configurationService',
+  'userService',
+  function($scope, $log, $stateParams, session, conference, ioConnectionManager, $window, deviceDetector, eventCallbackRegistry,
+           EVENTS, $state, configurationService, userService) {
     session.ready.then(function() {
       var wsServerURI = '';
       $state.go('app.conference');
@@ -48,9 +52,11 @@ angular.module('op.live-conference', [
       ioConnectionManager.connect($scope.wsServerURI);
     });
 
+    var shouldAutostart = $stateParams.autostart && $stateParams.displayName;
+
     $scope.conference = conference;
     $scope.process = {
-      step: 'configuration'
+      step: shouldAutostart ? 'conference' : 'configuration'
     };
 
     $scope.init = function() {
@@ -92,6 +98,16 @@ angular.module('op.live-conference', [
     };
 
     $scope.init();
+
+    if (shouldAutostart) {
+      var displayName = userService.getDisplayName();
+
+      $log.info('Automatically joining conference ', $stateParams.conferenceId, ' with displayName ', displayName);
+
+      configurationService
+        .configure({ displayName: displayName })
+        .then(session.setConfigured.bind(session, true), session.setConfigured.bind(session, false));
+    }
   }
 ])
 .factory('eventCallbackRegistry', function() {
