@@ -86,7 +86,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       link: link
     };
   }])
-  .directive('bitrateConfiguration', ['webRTCService', 'easyRTCBitRates', 'easyRTCDefaultBitRate', 'localStorageService', function(webRTCService, easyRTCBitRates, easyRTCDefaultBitRate, localStorageService) {
+  .directive('bitrateConfiguration', ['webRTCService', 'easyRTCBitRates', 'RTCDefaultBitRate', 'localStorageService', function(webRTCService, easyRTCBitRates, RTCDefaultBitRate, localStorageService) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/bitrate-configuration.html',
@@ -111,11 +111,11 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
           if (config) {
             $scope.selectBitRate(config);
           } else {
-            $scope.selectBitRate(easyRTCDefaultBitRate);
+            $scope.selectBitRate(RTCDefaultBitRate);
           }
         },
         function() {
-          $scope.selectBitRate(easyRTCDefaultBitRate);
+          $scope.selectBitRate(RTCDefaultBitRate);
         });
 
       }
