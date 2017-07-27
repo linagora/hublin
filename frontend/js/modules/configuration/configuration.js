@@ -86,12 +86,12 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       link: link
     };
   }])
-  .directive('bitrateConfiguration', ['webRTCService', 'easyRTCBitRates', 'RTCDefaultBitRate', 'localStorageService', function(webRTCService, easyRTCBitRates, RTCDefaultBitRate, localStorageService) {
+  .directive('bitrateConfiguration', ['webRTCService', 'RTCBitRates', 'RTCDefaultBitRate', 'localStorageService', function(webRTCService, RTCBitRates, RTCDefaultBitRate, localStorageService) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/bitrate-configuration.html',
       link: function($scope) {
-        var bitRates = Object.keys(easyRTCBitRates);
+        var bitRates = Object.keys(RTCBitRates);
         var storage = localStorageService.getOrCreateInstance('roomConfiguration');
 
         $scope.selectBitRate = function(rate) {
