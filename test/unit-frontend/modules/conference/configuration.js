@@ -7,7 +7,7 @@ var expect = chai.expect;
 
 describe('The meetings.configuration module', function() {
 
-  var webRTCService, easyRTCBitRates, RTCDefaultBitRate, localStorageService, instance, alertContent;
+  var webRTCService, RTCBitRates, RTCDefaultBitRate, localStorageService, instance, alertContent;
 
   beforeEach(function() {
     module('meetings.configuration');
@@ -15,7 +15,7 @@ describe('The meetings.configuration module', function() {
   });
 
   beforeEach(angular.mock.module(function($provide) {
-    easyRTCBitRates = {rate1: 'config1', rate2: 'config2'};
+    RTCBitRates = {rate1: null, rate2: null};
     RTCDefaultBitRate = 'rate2';
     webRTCService = {
       enableVideo: function() {},
@@ -42,7 +42,7 @@ describe('The meetings.configuration module', function() {
       }
     };
     $provide.value('webRTCService', webRTCService);
-    $provide.value('easyRTCBitRates', easyRTCBitRates);
+    $provide.value('RTCBitRates', RTCBitRates);
     $provide.value('RTCDefaultBitRate', RTCDefaultBitRate);
     $provide.value('localStorageService', localStorageService);
     $provide.value('$alert', alert);
