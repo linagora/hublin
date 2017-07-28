@@ -7,7 +7,7 @@ var expect = chai.expect;
 
 describe('The meetings.configuration module', function() {
 
-  var webRTCService, RTCBITRATES, RTCDEFAULTBITRATE, localStorageService, instance, alertContent;
+  var webRTCService, RTC_BITRATES, RTC_DEFAULT_BITRATE, localStorageService, instance, alertContent;
 
   beforeEach(function() {
     module('meetings.configuration');
@@ -15,8 +15,8 @@ describe('The meetings.configuration module', function() {
   });
 
   beforeEach(angular.mock.module(function($provide) {
-    RTCBITRATES = {rate1: null, rate2: null};
-    RTCDEFAULTBITRATE = 'rate2';
+    RTC_BITRATES = {rate1: null, rate2: null};
+    RTC_DEFAULT_BITRATE = 'rate2';
     webRTCService = {
       enableVideo: function() {},
       configureBandwidth: function() {},
@@ -42,8 +42,8 @@ describe('The meetings.configuration module', function() {
       }
     };
     $provide.value('webRTCService', webRTCService);
-    $provide.value('RTCBITRATES', RTCBITRATES);
-    $provide.value('RTCDEFAULTBITRATE', RTCDEFAULTBITRATE);
+    $provide.value('RTC_BITRATES', RTC_BITRATES);
+    $provide.value('RTC_DEFAULT_BITRATE', RTC_DEFAULT_BITRATE);
     $provide.value('localStorageService', localStorageService);
     $provide.value('$alert', alert);
   }));
@@ -156,7 +156,7 @@ describe('The meetings.configuration module', function() {
         };
       };
       webRTCService.configureBandwidth = function(rate) {
-        expect(rate).to.equal(RTCDEFAULTBITRATE);
+        expect(rate).to.equal(RTC_DEFAULT_BITRATE);
         done();
       };
       this.compile('<bitrate-configuration />')(this.scope);
@@ -172,7 +172,7 @@ describe('The meetings.configuration module', function() {
         };
       };
       webRTCService.configureBandwidth = function(rate) {
-        expect(rate).to.equal(RTCDEFAULTBITRATE);
+        expect(rate).to.equal(RTC_DEFAULT_BITRATE);
         done();
       };
       this.compile('<bitrate-configuration />')(this.scope);
