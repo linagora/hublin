@@ -86,12 +86,12 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       link: link
     };
   }])
-  .directive('bitrateConfiguration', ['webRTCService', 'RTCBITRATES', 'RTCDEFAULTBITRATE', 'localStorageService', function(webRTCService, RTCBITRATES, RTCDEFAULTBITRATE, localStorageService) {
+  .directive('bitrateConfiguration', ['webRTCService', 'RTC_BITRATES', 'RTC_DEFAULT_BITRATE', 'localStorageService', function(webRTCService, RTC_BITRATES, RTC_DEFAULT_BITRATE, localStorageService) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/bitrate-configuration.html',
       link: function($scope) {
-        var bitRates = Object.keys(RTCBITRATES);
+        var bitRates = Object.keys(RTC_BITRATES);
         var storage = localStorageService.getOrCreateInstance('roomConfiguration');
 
         $scope.selectBitRate = function(rate) {
@@ -111,11 +111,11 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
           if (config) {
             $scope.selectBitRate(config);
           } else {
-            $scope.selectBitRate(RTCDEFAULTBITRATE);
+            $scope.selectBitRate(RTC_DEFAULT_BITRATE);
           }
         },
         function() {
-          $scope.selectBitRate(RTCDEFAULTBITRATE);
+          $scope.selectBitRate(RTC_DEFAULT_BITRATE);
         });
 
       }
