@@ -18,7 +18,7 @@ Hubl.in allows free communication without additional plugins.
 2. Install and configure MongoDB
 
   You must install mongoDB. We suggest you to use mongoDB version 2.6.5.
-
+        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
         echo 'deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list
         apt-get install -y mongodb-org=2.6.5 mongodb-org-server=2.6.5 mongodb-org-shell=2.6.5 mongodb-org-mongos=2.6.5 mongodb-org-tools=2.6.5
         service mongod start
