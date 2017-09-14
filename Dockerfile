@@ -23,14 +23,13 @@ ADD package.json /src/package.json
 ADD bower.json /src/bower.json
 ADD .bowerrc /src/.bowerrc
 
-RUN cd /src && npm install bower
-RUN cd /src && npm install --production --unsafe-perm
-
 ADD . /src
 
 RUN cd /src/modules/hublin-easyrtc-connector && npm install --production
 
 ADD config/db.json.docker /src/config/db.json
+
+RUN npm install -g mocha grunt-cli bower karma-cli && cd /src && npm install --unsafe-perm
 
 ENV HUBLIN_REDIS_HOST redis
 ENV HUBLIN_REDIS_PORT 6379
