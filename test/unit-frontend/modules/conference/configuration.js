@@ -260,6 +260,47 @@ describe('The meetings.configuration module', function() {
       });
     });
 
+    describe('the canEnumerateDevices property', function() {
+      var $scope, navigator, savedNavigator, $q;
+
+      beforeEach(inject(function($rootScope, $window, _$q_) {
+        savedNavigator = $window.navigator;
+        navigator = $window.navigator;
+        navigator.mediaDevices = {};
+        $q = _$q_;
+      }));
+
+      afterEach(inject(function($window) {
+        $window.navigator = savedNavigator;
+      }));
+
+      it('should should be true when getUserMedia is accepted and enumerateDevices exists', function() {
+        navigator.mediaDevices.getUserMedia = function() {
+          return $q.when(true);
+        };
+        navigator.mediaDevices.enumerateDevices = function() {};
+        $scope.$apply();
+        expect(this.scope.canEnumerateDevices).to.be.true;
+      });
+
+      it('should should be false when getUserMedia is accepted and enumerateDevices does not exist', function() {
+        navigator.mediaDevices.getUserMedia = function() {
+          return $q.when(true);
+        };
+        navigator.mediaDevices.enumerateDevices = undefined;
+        $scope.$apply();
+        expect(this.scope.canEnumerateDevices).to.be.false;
+      });
+
+      it('should should be false when getUserMedia is not accepted', function() {
+        navigator.mediaDevices.getUserMedia = function() {
+          return $q.reject();
+        };
+        $scope.$apply();
+        expect(this.scope.canEnumerateDevices).to.be.false;
+      });
+    });
+
   });
 
 });

@@ -121,13 +121,21 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       }
     };
   }])
-  .directive('disableVideoConfiguration', ['webRTCService', '$alert', function(webRTCService, $alert) {
+  .directive('disableVideoConfiguration', ['$alert', '$window', 'webRTCService', function($alert, $window, webRTCService) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/disable-video-configuration.html',
       link: function($scope) {
+        var navigator = $window.navigator;
+
         $scope.videoEnabled = webRTCService.isVideoEnabled();
-        $scope.canEnumerateDevices = webRTCService.canEnumerateDevices;
+
+        $scope.canEnumerateDevices = false;
+        navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+          .then(function(stream) {
+            $scope.canEnumerateDevices = navigator.mediaDevices && angular.isDefined(navigator.mediaDevices.enumerateDevices);
+            $scope.$applyAsync();
+          });
 
         var alertElement;
         $scope.$watch('videoEnabled', function(val) {
