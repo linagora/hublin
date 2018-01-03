@@ -86,12 +86,12 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       link: link
     };
   }])
-  .directive('bitrateConfiguration', ['webRTCService', 'easyRTCBitRates', 'easyRTCDefaultBitRate', 'localStorageService', function(webRTCService, easyRTCBitRates, easyRTCDefaultBitRate, localStorageService) {
+  .directive('bitrateConfiguration', ['webRTCService', 'RTC_BITRATES', 'RTC_DEFAULT_BITRATE', 'localStorageService', function(webRTCService, RTC_BITRATES, RTC_DEFAULT_BITRATE, localStorageService) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/bitrate-configuration.html',
       link: function($scope) {
-        var bitRates = Object.keys(easyRTCBitRates);
+        var bitRates = Object.keys(RTC_BITRATES);
         var storage = localStorageService.getOrCreateInstance('roomConfiguration');
 
         $scope.selectBitRate = function(rate) {
@@ -111,23 +111,31 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
           if (config) {
             $scope.selectBitRate(config);
           } else {
-            $scope.selectBitRate(easyRTCDefaultBitRate);
+            $scope.selectBitRate(RTC_DEFAULT_BITRATE);
           }
         },
         function() {
-          $scope.selectBitRate(easyRTCDefaultBitRate);
+          $scope.selectBitRate(RTC_DEFAULT_BITRATE);
         });
 
       }
     };
   }])
-  .directive('disableVideoConfiguration', ['webRTCService', '$alert', function(webRTCService, $alert) {
+  .directive('disableVideoConfiguration', ['$alert', '$window', 'webRTCService', function($alert, $window, webRTCService) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/disable-video-configuration.html',
       link: function($scope) {
+        var navigator = $window.navigator;
+
         $scope.videoEnabled = webRTCService.isVideoEnabled();
-        $scope.canEnumerateDevices = webRTCService.canEnumerateDevices;
+
+        $scope.canEnumerateDevices = false;
+        navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+          .then(function(stream) {
+            $scope.canEnumerateDevices = navigator.mediaDevices && angular.isDefined(navigator.mediaDevices.enumerateDevices);
+            $scope.$applyAsync();
+          });
 
         var alertElement;
         $scope.$watch('videoEnabled', function(val) {
