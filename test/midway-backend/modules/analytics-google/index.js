@@ -16,7 +16,7 @@ describe('The google-analytics module', function() {
     moduleManager = require(this.testEnv.basePath + '/backend/module-manager');
     moduleManager.setupServerEnvironment()
     .then(function() {
-      return moduleManager.manager.load(['linagora.io.meetings.webserver', 'linagora.io.meetings.wsserver', 'linagora.io.webrtc']);
+      return moduleManager.manager.load(['linagora.io.meetings.webserver', 'linagora.io.meetings.wsserver', 'linagora.esn.webrtc']);
     }).then(function() {
       return moduleManager.manager.fire('deploy', config.modules);
     }).then(function() {

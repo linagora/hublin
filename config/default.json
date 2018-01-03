@@ -132,9 +132,9 @@
   },
   "modules": [
     "linagora.io.meetings",
-    "linagora.esn.chat",
+    "linagora.esn.yjs-chat",
     "linagora.esn.yjs",
-    "om-email-invitation",
+    "linagora.esn.conference.email-invitation",
     "hublin-easyrtc-connector",
     "hublin.janus.connector"
   ]
