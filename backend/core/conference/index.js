@@ -481,7 +481,7 @@ function leave(conference, user, callback) {
 }
 
 /**
- * Hook for room join event called from om-webrtc module
+ * Hook for room join event called from linagora.esn.webrtc module
  *
  * @param {String} roomId
  * @param {String} userId
@@ -511,7 +511,7 @@ function onRoomJoin(roomId, userId, callback) {
 }
 
 /**
- * Hook for room leave event called from om-webrtc module
+ * Hook for room leave event called from linagora.esn.webrtc module
  *
  * @param {String} roomId
  * @param {String} userId

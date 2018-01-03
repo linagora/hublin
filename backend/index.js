@@ -8,10 +8,10 @@ var Meetings = new AwesomeModule('linagora.io.meetings', {
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.webserver', 'webserver'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.wsserver', 'wsserver'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.core.logger', 'logger'),
-    new Dependency(Dependency.TYPE_NAME, 'linagora.io.webrtc', 'webrtc'),
-    new Dependency(Dependency.TYPE_NAME, 'linagora.io.invitation', 'invitation'),
-    new Dependency(Dependency.TYPE_NAME, 'linagora.io.mailer', 'mailer'),
-    new Dependency(Dependency.TYPE_NAME, 'om-email-invitation', 'emailInvitation'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.esn.webrtc', 'webrtc'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.esn.conference.invitation', 'invitation'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.esn.mailer', 'mailer'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.esn.conference.email-invitation', 'emailInvitation'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.core.config', 'config')
   ],
   states: {
