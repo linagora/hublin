@@ -51,11 +51,11 @@ module.exports.externalDependencies = function() {
 module.exports.applicationDependencies = function() {
   return [
 
-    'frontend/components/opangular/src/easyrtc.js',
-    'frontend/components/opangular/src/easyrtc/services.js',
+    'frontend/js/modules/easyrtc/module.js',
+    'frontend/js/modules/easyrtc/services.js',
 
-    'frontend/components/opangular/src/socketio.js',
-    'frontend/components/opangular/src/socketio/services.js',
+    'frontend/js/modules/socket.io/module.js',
+    'frontend/js/modules/socket.io/services.js',
 
     'frontend/js/modules/utils/wizard.js',
     'frontend/js/modules/configuration/configuration.js',
@@ -63,11 +63,11 @@ module.exports.applicationDependencies = function() {
     'frontend/js/modules/authentication/authentication.js',
 
     'frontend/js/modules/user/user.js',
-    'frontend/components/opangular/src/notification.js',
-    'frontend/components/opangular/src/notification/services.js',
+    'frontend/js/modules/notification/module.js',
+    'frontend/js/modules/notification/services.js',
 
-    'frontend/js/modules/websocket/websocket.js',
-    'frontend/components/opangular/src/websocket/services.js',
+    'frontend/js/modules/websocket/module.js',
+    'frontend/js/modules/websocket/services.js',
 
     'frontend/js/modules/live-conference/live-conference.js',
     'frontend/js/modules/live-conference-devmode/live-conference-devmode.js',
