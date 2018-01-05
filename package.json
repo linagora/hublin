@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "Hubl.in is a free and open source video conference solution built with love and designed with ethics in mind. It's the best way to initiate a communication anywhere with anybody and brings real time conversation to the next level. Hubl.in allows free communication without additional plugins.",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linagora/hublin.git"
+  },
   "dependencies": {
     "async": "2.0.1",
     "async-eventemitter": "0.2.2",

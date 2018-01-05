@@ -135,7 +135,7 @@
     "linagora.esn.yjs-chat",
     "linagora.esn.yjs",
     "linagora.esn.conference.email-invitation",
-    "hublin-easyrtc-connector",
+    "hublin.easyrtc.connector",
     "hublin.janus.connector"
   ]
 }
