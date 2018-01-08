@@ -24,7 +24,6 @@
     "tests"
   ],
   "dependencies": {
-    "opangular": "https://ci.open-paas.org/stash/scm/opangmod/opangular.git",
     "angular-liveconference": "https://ci.open-paas.org/stash/scm/opangmod/angular-liveconference.git#janus",
     "jquery": "2.1.1",
     "angular": "1.3.15",
