@@ -1,0 +1,7 @@
+{
+  "extends": "linagora-esn",
+  "rules": {
+    "arrow-parens": ["error", "as-needed"],
+    "consistent-this": ["warn", "self"]
+  }
+}

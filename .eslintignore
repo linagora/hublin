@@ -1,0 +1,6 @@
+frontend/js/modules/modernizr.js
+test/frontend/karma-include/*
+frontend/components/*
+tmp/
+test/conf/**
+frontend/js/thirdparty/*.js
