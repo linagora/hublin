@@ -1,10 +1,10 @@
 doctype html
 html
   head
-    include ../commons/meta
-    include ../commons/facebook-markup
-    include ../commons/utils
-    include ../commons/twitter-markup
+    include ../commons/meta.jade
+    include ../commons/facebook-markup.jade
+    include ../commons/utils.jade
+    include ../commons/twitter-markup.jade
 
     base(href='/')
 
@@ -116,4 +116,4 @@ html
     #wrap(ng-include='session.template')
     ui-view
     .unsupported.text-center
-      include ../commons/unsupported
+      include ../commons/unsupported.jade
