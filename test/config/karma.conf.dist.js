@@ -32,7 +32,7 @@ module.exports = function(config) {
       'karma-phantomjs-launcher',
       'karma-mocha',
       'karma-spec-reporter',
-      'karma-ng-jade2module-preprocessor'
+      '@linagora/karma-ng-jade2module-preprocessor'
     ],
 
     ngJade2ModulePreprocessor: {
