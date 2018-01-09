@@ -32,14 +32,28 @@ module.exports = function(config) {
       'karma-phantomjs-launcher',
       'karma-mocha',
       'karma-spec-reporter',
-      'karma-ng-jade2module-preprocessor'
+      '@linagora/karma-ng-jade2module-preprocessor'
     ],
 
     ngJade2ModulePreprocessor: {
+      cacheIdFromPath: function(filepath) {
+        var cacheId = '';
+
+        if (filepath.match(/^frontend\/js*/)) {
+          cacheId = '/views' + filepath.substr(11).replace('.jade', '.html');
+        } else if (filepath.match(/^frontend*/)) {
+          cacheId = filepath.substr(8).replace('.jade', '.html');
+        }
+
+        return cacheId;
+      },
       stripPrefix: 'frontend',
       jadeRenderLocals: {
         __: function(str) { return str; },
         __j: function(str) { return str; }
+      },
+      jadeRenderOptions: {
+        basedir: require('path').resolve(__dirname, '../../frontend/views')
       },
       moduleName: 'meetings.jade.templates'
     }

@@ -69,27 +69,6 @@ module.exports = function(grunt) {
         src: []
       }
     },
-    gjslint: {
-      options: {
-        flags: [
-          '--disable 0110',
-          '--nojsdoc',
-          '-e test/frontend/karma-include',
-          '-e frontend/js/analytics,frontend/js/thirdparty'
-        ],
-        reporter: {
-          name: CI ? 'gjslint_xml' : 'console',
-          dest: CI ? 'gjslint.xml' : undefined
-        },
-        pythonPath: 'python2'
-      },
-      all: {
-        src: ['<%= jshint.all.src %>']
-      },
-      quick: {
-        src: ['<%= jshint.quick.src %>']
-      }
-    },
     lint_pattern: {
       options: {
         rules: [
@@ -255,16 +234,6 @@ module.exports = function(grunt) {
       files: ['<%= jshint.files %>'],
       tasks: ['jshint']
     },
-    'node-inspector': {
-      dev: {
-        options: {
-          'web-host': 'localhost',
-          'web-port': config.webserver.debugPort || 8081,
-          'save-live-edit': true,
-          'no-preload': true
-        }
-      }
-    },
     // Reads Jade files for usemin blocks to enable smart builds that automatically
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
@@ -371,9 +340,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-shell-spawn');
   grunt.loadNpmTasks('grunt-continue');
-  grunt.loadNpmTasks('grunt-run-grunt');
-  grunt.loadNpmTasks('grunt-node-inspector');
-  grunt.loadNpmTasks('grunt-lint-pattern');
+  grunt.loadNpmTasks('@linagora/grunt-run-grunt');
+  grunt.loadNpmTasks('@linagora/grunt-lint-pattern');
   grunt.loadNpmTasks('grunt-karma');
 
   grunt.loadTasks('tasks');
@@ -422,12 +390,11 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('dev', ['nodemon:dev']);
-  grunt.registerTask('debug', ['node-inspector:dev']);
   grunt.registerTask('test-unit-backend', ['run_grunt:unit_backend']);
   grunt.registerTask('test-frontend', ['run_grunt:test_frontend']);
   grunt.registerTask('test-midway-backend', ['setup-environment', 'spawn-servers', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
   grunt.registerTask('test', ['linters', 'setup-environment', 'test-frontend', 'run_grunt:unit_backend', 'spawn-servers', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
-  grunt.registerTask('linters', 'Check code for lint', ['jshint:all', 'gjslint:all', 'lint_pattern:all']);
+  grunt.registerTask('linters', 'Check code for lint', ['jshint:all', 'lint_pattern:all']);
 
   grunt.registerTask('test-frontend-dist', 'Run the frontend distribution tests', ['karma:dist']);
   grunt.registerTask('test-dist', ['test-frontend-dist']);
@@ -438,7 +405,7 @@ module.exports = function(grunt) {
    *   grunt linters-dev              # Run linters against files changed in git
    *   grunt linters-dev -r 51c1b6f   # Run linters against a specific changeset
    */
-  grunt.registerTask('linters-dev', 'Check changed files for lint', ['prepare-quick-lint', 'jshint:quick', 'gjslint:quick', 'lint_pattern:quick']);
+  grunt.registerTask('linters-dev', 'Check changed files for lint', ['prepare-quick-lint', 'jshint:quick', 'lint_pattern:quick']);
 
   grunt.registerTask('default', ['test']);
   grunt.registerTask('fixtures', 'Launch the fixtures injection', function() {
