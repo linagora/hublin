@@ -381,7 +381,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test-unit-backend', ['run_grunt:unit_backend']);
   grunt.registerTask('test-frontend', ['run_grunt:test_frontend']);
   grunt.registerTask('test-midway-backend', ['setup-environment', 'spawn-servers', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
-  grunt.registerTask('test', ['linters', 'setup-environment', 'test-frontend', 'run_grunt:unit_backend', 'spawn-servers', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
+  grunt.registerTask('test', ['setup-environment', 'test-frontend', 'run_grunt:unit_backend', 'spawn-servers', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
   grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all']);
 
   grunt.registerTask('test-frontend-dist', 'Run the frontend distribution tests', ['karma:dist']);
