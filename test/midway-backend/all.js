@@ -15,12 +15,14 @@ before(function(done) {
     basePath: basePath,
     tmp: tmpPath,
     fixtures: path.resolve(__dirname + '/fixtures'),
-    mongoUrl: 'mongodb://localhost:' + testConfig.mongodb.port + '/' + testConfig.mongodb.dbname,
+    mongoUrl: testConfig.mongodb.connectionString,
     writeDBConfigFile: function() {
-      fs.writeFileSync(tmpPath + '/db.json', JSON.stringify({connectionString: 'mongodb://localhost:' + testConfig.mongodb.port + '/' + testConfig.mongodb.dbname, connectionOptions: {auto_reconnect: false}}));
+      fs.writeFileSync(tmpPath + '/db.json', JSON.stringify({connectionString: testConfig.mongodb.connectionString, connectionOptions: {auto_reconnect: false}}));
     },
     removeDBConfigFile: function() {
+      this.mongoose.connection.db.dropDatabase();
       fs.unlinkSync(tmpPath + '/db.json');
+
     },
     initCore: function(callback) {
       var core = require(basePath + '/backend/core');
@@ -38,7 +40,7 @@ before(function(done) {
 
       mongoose.connection.on('open', function() {
         configuration('redis').store({
-          host: 'localhost',
+          host: testConfig.redis.host,
           port: testConfig.redis.port
         }, function(err) {
           if (err) {

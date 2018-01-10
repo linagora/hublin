@@ -1,4 +1,4 @@
-image: linagora/node-test-base:6
+image: linagora/node-test-base:8
 
 stages:
   - test
@@ -11,9 +11,9 @@ test:
   tags:
     - docker
   services:
-    - mongo:3.4
+    - mongo:2.6.5
     - redis:3
   script:
     - npm i
     - bower i --allow-root
-    - grunt
+    - grunt --chunck=1
