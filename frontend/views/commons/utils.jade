@@ -6,6 +6,14 @@ mixin injectJSFromModules(module, injections)
         each file in moduleInjections.js
           script(src='/' + key + '/js/' + file)
 
+mixin injectJSAssetFromModules(module, injections)
+  if (injections)
+    each injection, key in injections
+      - var moduleInjections = injection[module]
+      if (moduleInjections && moduleInjections.jsasset)
+        each file in moduleInjections.jsasset
+          script(src='/' + file)
+
 mixin injectAngularFromModules(module, injections)
   if (injections)
     script(type='text/javascript')

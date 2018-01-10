@@ -62,13 +62,11 @@ html
     script(src='/components/angular-localforage/dist/angular-localForage.min.js')
     script(src='/components/dynamic-directive/dist/dynamic-directive.min.js')
     script(src='/socket.io/socket.io.js')
-    script(src='/easyrtc/easyrtc.js')
-    script(src='/easyrtc/labs/easyrtc_rates.js')
-    script(src='/connectorjanus/js/janus.js')
-
     script(src='/components/angular-uuid4/angular-uuid4.min.js')
     script(src='/components/re-tree/re-tree.min.js')
     script(src='/components/ng-device-detector/ng-device-detector.min.js')
+
+    +injectJSAssetFromModules('connector', injections)
 
     //- <!--build:js({.tmp,frontend}) live-conference.js-->
     script(src='/js/modules/easyrtc/module.js')
