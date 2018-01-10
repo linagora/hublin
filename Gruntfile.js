@@ -71,48 +71,6 @@ module.exports = function(grunt) {
         src: ['<%= jshint.quick.src %>']
       }
     },
-    shell: {
-      redis: {
-        command: servers.redis.cmd + ' --port ' +
-        (servers.redis.port ? servers.redis.port : '23457') +
-        (servers.redis.pwd ? ' --requirepass ' + servers.redis.pwd : '') +
-        (servers.redis.conf_file ? ' ' + servers.redis.conf_file : ''),
-        options: {
-          async: false,
-          stdout: function(chunk) {
-            var done = grunt.task.current.async();
-            var out = '' + chunk;
-            var started = /on port/;
-            if (started.test(out)) {
-              grunt.log.write('Redis server is started.');
-              done(true);
-            }
-          },
-          stderr: function(chunk) {
-            grunt.log.error(chunk);
-          }
-        }
-      },
-      mongo: {
-        command: servers.mongodb.cmd + ' --dbpath ' + servers.mongodb.dbpath + ' --port ' +
-        (servers.mongodb.port ? servers.mongodb.port : '23456') + ' --nojournal',
-        options: {
-          async: false,
-          stdout: function(chunk) {
-            var done = grunt.task.current.async();
-            var out = '' + chunk;
-            var started = new RegExp('connections on port ' + servers.mongodb.port);
-            if (started.test(out)) {
-              grunt.log.write('MongoDB server is started.');
-              done(true);
-            }
-          },
-          stderr: function(chunk) {
-            grunt.log.error(chunk);
-          }
-        }
-      }
-    },
     nodemon: {
       dev: {
         script: 'server.js',
@@ -338,18 +296,6 @@ module.exports = function(grunt) {
     grunt.file.write('dist/log/application.log', '');
   });
 
-  grunt.registerTask('spawn-servers', 'spawn servers', ['continue:on', 'shell:redis', 'shell:mongo']);
-  grunt.registerTask('kill-servers', 'kill servers', ['shell:redis:kill', 'shell:mongo:kill', 'continue:off', 'continue:fail-on-warning']);
-
-  grunt.registerTask('setup-environment', 'create temp folders and files for tests', function() {
-    try {
-      fs.mkdirsSync(servers.mongodb.dbpath);
-      fs.mkdirsSync(servers.tmp);
-    } catch (err) {
-      throw err;
-    }
-  });
-
   grunt.registerTask('clean-environment', 'remove temp folder for tests', function() {
 
     var testsFailed = !grunt.config.get('esn.tests.success');
@@ -380,8 +326,8 @@ module.exports = function(grunt) {
   grunt.registerTask('dev', ['nodemon:dev']);
   grunt.registerTask('test-unit-backend', ['run_grunt:unit_backend']);
   grunt.registerTask('test-frontend', ['run_grunt:test_frontend']);
-  grunt.registerTask('test-midway-backend', ['setup-environment', 'spawn-servers', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
-  grunt.registerTask('test', ['setup-environment', 'test-frontend', 'run_grunt:unit_backend', 'spawn-servers', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
+  grunt.registerTask('test-midway-backend', ['run_grunt:midway_backend', 'clean-environment']);
+  grunt.registerTask('test', ['test-frontend', 'run_grunt:unit_backend', 'run_grunt:midway_backend', 'clean-environment']);
   grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all']);
 
   grunt.registerTask('test-frontend-dist', 'Run the frontend distribution tests', ['karma:dist']);

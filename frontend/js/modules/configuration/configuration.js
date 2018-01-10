@@ -131,7 +131,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
         $scope.videoEnabled = webRTCService.isVideoEnabled();
 
         $scope.canEnumerateDevices = false;
-        navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+        navigator.mediaDevices && navigator.mediaDevices.getUserMedia({ audio: false, video: true })
           .then(function(stream) {
             $scope.canEnumerateDevices = navigator.mediaDevices && angular.isDefined(navigator.mediaDevices.enumerateDevices);
             $scope.$applyAsync();
