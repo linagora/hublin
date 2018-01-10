@@ -62,8 +62,8 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
   .factory('sessionFactory', ['$log', '$cookies', 'session', function($log, $cookies, session) {
     return {
       fetchUser: function(callback) {
-        if ($cookies.user) {
-          var user = JSON.parse($cookies.user);
+        if ($cookies.get('user')) {
+          var user = JSON.parse($cookies.get('user'));
           $log.debug('Got the user from cookie', user);
           session.setUser(user);
         }

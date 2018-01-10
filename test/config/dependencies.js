@@ -9,7 +9,7 @@ module.exports.testDependencies = function() {
 module.exports.externalDependencies = function() {
   return [
     'frontend/components/jquery/dist/jquery.min.js',
-    'frontend/components/underscore/underscore.js',
+    'frontend/components/lodash/dist/lodash.min.js',
     'frontend/components/bootstrap/dist/js/bootstrap.min.js',
     'frontend/components/pines-notify/pnotify.core.js',
     'frontend/components/pines-notify/pnotify.buttons.js',
@@ -29,6 +29,7 @@ module.exports.externalDependencies = function() {
     'frontend/components/restangular/dist/restangular.min.js',
     'frontend/components/angular-strap/dist/angular-strap.min.js',
     'frontend/components/angular-strap/dist/angular-strap.tpl.min.js',
+    'frontend/components/moment/min/moment.min.js',
     'frontend/components/angular-moment/angular-moment.min.js',
     'frontend/components/angular-pines-notify/src/pnotify.js',
     'frontend/components/angular-social/src/scripts/00-directive.js',
