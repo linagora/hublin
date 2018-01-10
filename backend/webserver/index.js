@@ -183,6 +183,17 @@ function addJSInjection(moduleName, files, innerApps) {
 
 webserver.addJSInjection = addJSInjection;
 
+function addJSAssetInjection(moduleName, files, innerApps) {
+  injections[moduleName] = injections[moduleName] || {};
+  innerApps.forEach(function(innerApp) {
+    injections[moduleName][innerApp] = injections[moduleName][innerApp] || {};
+    injections[moduleName][innerApp].jsasset = injections[moduleName][innerApp].jsasset || [];
+    injections[moduleName][innerApp].jsasset = injections[moduleName][innerApp].jsasset.concat(files);
+  });
+}
+
+webserver.addJSAssetInjection = addJSAssetInjection;
+
 function addCSSInjection(moduleName, files, innerApps) {
   injections[moduleName] = injections[moduleName] || {};
   innerApps.forEach(function(innerApp) {
