@@ -55,7 +55,8 @@
     "enabled": true,
     "level": "debug",
     "roomNameRegExp": "^.{1,64}$",
-    "usernameRegExp": "^(.){1,200}$"
+    "usernameRegExp": "^(.){1,200}$",
+    "adapter": "hublin.easyrtc.connector"
   },
   "analytics": {
     "piwik": {
