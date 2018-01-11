@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM ubuntu:16.04
 
 LABEL maintainer="Linagora Folks <lgs-openpaas-dev@linagora.com>"
 LABEL description="Provides an image with Janus Gateway"
