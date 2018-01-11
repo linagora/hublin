@@ -7,7 +7,6 @@ angular.module('liveConferenceApplication', [
   'ngSanitize',
   'ngAnimate',
   'op.socketio',
-  'op.easyrtc',
   'op.websocket',
   'op.live-conference',
   'op.notification',
@@ -28,8 +27,7 @@ angular.module('liveConferenceApplication', [
   'op.live-conference-devmode',
   'ng.deviceDetector',
   'angularMoment',
-  'ui.router',
-  'hublin.janus.connector'
+  'ui.router'
 ].concat(angularInjections)).config(function($locationProvider, RestangularProvider, $stateProvider) {
 
   $stateProvider
