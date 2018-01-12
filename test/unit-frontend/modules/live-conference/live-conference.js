@@ -106,10 +106,11 @@ describe('The op.live-conference module', function() {
       $rootScope.$digest();
     }));
 
-    it('should reload the page when the button is clicked', function(done) {
-      $window.location.reload = done;
-
+    it('should reload the page when the button is clicked', function() {
+      scope.reloadPage = sinon.spy();
       element.find('button').click();
+
+      expect(scope.reloadPage).to.has.been.calledWith();
     });
 
   });

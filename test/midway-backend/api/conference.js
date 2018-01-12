@@ -42,7 +42,9 @@ describe('The conference API', function() {
   });
 
   afterEach(function() {
-    this.mongoose.connection.db.dropDatabase();
+    try {
+      this.mongoose.connection.db.dropDatabase();
+    } catch (e) {}
   });
 
   function withSession(data) {

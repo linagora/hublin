@@ -1,0 +1,19 @@
+image: linagora/node-test-base:8
+
+stages:
+  - test
+test:
+  stage: test
+  except:
+    - triggers
+  variables:
+    TZ: America/New_York
+  tags:
+    - docker
+  services:
+    - mongo:2.6.5
+    - redis:3
+  script:
+    - npm i
+    - bower i --allow-root
+    - grunt --chunck=1
