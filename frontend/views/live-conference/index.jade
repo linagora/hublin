@@ -69,9 +69,6 @@ html
     +injectJSAssetFromModules('connector', injections)
 
     //- <!--build:js({.tmp,frontend}) live-conference.js-->
-    script(src='/js/modules/easyrtc/module.js')
-    script(src='/js/modules/easyrtc/services.js')
-
     script(src='/js/modules/socket.io/module.js')
     script(src='/js/modules/socket.io/services.js')
 
@@ -108,6 +105,8 @@ html
     script(src='/js/modules/live-conference-devmode/live-conference-devmode.js')
     script(src='/js/modules/i18n/i18n.js')
     script(src='/js/live-conference/app.js')
+    script(src='/js/live-conference/routes.js')
+    script(src='/js/live-conference/run.js')
     //- <!--endbuild-->
 
   body.hublin-live-conference-app.ng-cloak(ng-app='liveConferenceApplication' ng-controller="sessionInitLiveConferenceController")
