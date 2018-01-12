@@ -6,7 +6,6 @@ var rewire = require('rewire');
 var expect = chai.expect;
 var ObjectId = require('bson').ObjectId;
 
-
 describe('The conference module', function() {
 
   it('create should send back error when conference is not set', function(done) {
@@ -29,6 +28,7 @@ describe('The conference module', function() {
     this.mongoose = mockery.registerMock('mongoose', mongoose);
 
     mockery.registerMock('./scalability', function(conference, callback) { return callback(null, conference); });
+    mockery.registerMock('./janus', (conference, callback) => callback(null, conference));
 
     this.helpers
       .requireBackend('core/conference')
@@ -36,7 +36,10 @@ describe('The conference module', function() {
         _id: 123,
         members: [{
           id: 'myUSerId'
-        }]
+        }],
+        configuration: {
+          hosts: []
+        }
       }, function(err, saved) {
         expect(err).to.not.exist;
         expect(saved).to.exist;
@@ -955,7 +958,10 @@ describe('The conference module', function() {
       _id: 'myConferenceId',
       members: [{
         id: 'myUserId'
-      }]
+      }],
+      configuration: {
+        hosts: []
+      }
     };
 
     this.mongoose = mockery.registerMock('mongoose', {
@@ -981,6 +987,7 @@ describe('The conference module', function() {
     });
 
     mockery.registerMock('./scalability', function(conference, callback) { return callback(null, conference); });
+    mockery.registerMock('./janus', (conference, callback) => callback(null, conference));
 
     this.helpers
       .requireBackend('core/conference')
@@ -1004,6 +1011,7 @@ describe('The conference module', function() {
     this.helpers.mock.pubsub('../pubsub', localPubSub);
 
     mockery.registerMock('./scalability', function(conference, callback) { return callback(null, conference); });
+    mockery.registerMock('./janus', (conference, callback) => callback(null, conference));
 
     this.helpers
       .requireBackend('core/conference')
