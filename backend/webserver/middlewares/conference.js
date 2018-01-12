@@ -1,17 +1,16 @@
 'use strict';
 
-var conference = require('../../core/conference');
-var conferenceHelpers = require('../../core/conference/helpers');
+const conference = require('../../core/conference');
+const conferenceHelpers = require('../../core/conference/helpers');
 
 /**
  *
  * @param {object} dependencies
  * @return {{load: load, loadWithAttendees: loadWithAttendees, canJoin: canJoin, isAdmin: isAdmin, canAddMember: function}}
  */
-module.exports = function(dependencies) {
-
-  var logger = dependencies('logger');
-  var errors = require('../errors')(dependencies);
+module.exports = dependencies => {
+  const logger = dependencies('logger');
+  const errors = require('../errors')(dependencies);
 
   /**
    * Ensures that req.user and req.conference is set, throwing a
@@ -30,7 +29,7 @@ module.exports = function(dependencies) {
   }
 
   function load(req, res, next) {
-    conference.get(req.params.id, function(err, conf) {
+    conference.get(req.params.id, (err, conf) => {
       if (err) {
         throw new errors.ServerError(err);
       }
@@ -38,7 +37,8 @@ module.exports = function(dependencies) {
       if (conf) {
         req.conference = conf;
       }
-      next();
+
+      return next();
     });
   }
 
@@ -47,7 +47,7 @@ module.exports = function(dependencies) {
       return next();
     }
 
-    conference.getFromMemberToken(req.query.token, function(err, conf) {
+    conference.getFromMemberToken(req.query.token, (err, conf) => {
       if (err) {
         logger.error('Error while getting member from token %s', req.query.token, err);
         throw new errors.ServerError('Error retrieving member');
@@ -58,12 +58,13 @@ module.exports = function(dependencies) {
       }
 
       req.conference = conf;
-      next();
+
+      return next();
     });
   }
 
   function loadWithAttendees(req, res, next) {
-    conference.loadWithAttendees(req.params.id, function(err, conf) {
+    conference.loadWithAttendees(req.params.id, (err, conf) => {
       if (err) {
         throw new errors.ServerError(err);
       }
@@ -73,14 +74,15 @@ module.exports = function(dependencies) {
       }
 
       req.conference = conf;
-      next();
+
+      return next();
     });
   }
 
   function canJoin(req, res, next) {
     ensureUserAndConference(req);
 
-    conference.userCanJoinConference(req.conference, req.user, function(err, status) {
+    conference.userCanJoinConference(req.conference, req.user, (err, status) => {
       if (err) {
         throw new errors.ServerError(err);
       }
@@ -88,14 +90,15 @@ module.exports = function(dependencies) {
       if (!status) {
         throw new errors.ForbiddenError('User does not have access to conference');
       }
-      next();
+
+      return next();
     });
   }
 
   function isAdmin(req, res, next) {
     ensureUserAndConference(req);
 
-    conference.userIsConferenceCreator(req.conference, req.user, function(err, status) {
+    conference.userIsConferenceCreator(req.conference, req.user, (err, status) => {
       if (err) {
         throw new errors.ServerError(err);
       }
@@ -103,14 +106,15 @@ module.exports = function(dependencies) {
       if (!status) {
         throw new errors.ForbiddenError('User is not conference admin');
       }
-      next();
+
+      return next();
     });
   }
 
   function canAddMember(req, res, next) {
     ensureUserAndConference(req);
 
-    conference.userIsConferenceMember(req.conference, req.user, function(err, isMember) {
+    conference.userIsConferenceMember(req.conference, req.user, (err, isMember) => {
       if (err) {
         throw new errors.ServerError(err);
       }
@@ -119,14 +123,14 @@ module.exports = function(dependencies) {
         throw new errors.ForbiddenError('User cannot invite members into a conference in which he is not member himself');
       }
 
-      next();
+      return next();
     });
   }
 
   function canUpdateUser(req, res, next) {
     ensureUserAndConference(req);
 
-    conference.userIsConferenceMember(req.conference, req.user, function(err, isMember) {
+    conference.userIsConferenceMember(req.conference, req.user, (err, isMember) => {
       if (err) {
         throw new errors.ServerError(err);
       }
@@ -146,7 +150,7 @@ module.exports = function(dependencies) {
         });
       }
 
-      next();
+      return next();
     });
 
   }
@@ -156,13 +160,16 @@ module.exports = function(dependencies) {
       return next();
     }
 
-    var conf = {
+    const conf = {
       _id: req.params.id,
       history: [],
-      members: [req.user]
+      members: [req.user],
+      configuration: {
+        hosts: []
+      }
     };
 
-    conference.create(conf, function(err, created) {
+    conference.create(conf, (err, created) => {
       if (err) {
         throw new errors.ServerError(err);
       }
@@ -176,7 +183,7 @@ module.exports = function(dependencies) {
         req.user = created.members[0];
       }
 
-      next();
+      return next();
     });
   }
 
@@ -185,24 +192,25 @@ module.exports = function(dependencies) {
       return next();
     }
 
-    conference.addUser(req.conference, req.user, function(err) {
+    conference.addUser(req.conference, req.user, err => {
       if (err) {
         throw new errors.ServerError(err);
       }
-      conference.getMember(req.conference, req.user, function(err, member) {
+      conference.getMember(req.conference, req.user, (err, member) => {
         if (err) {
           throw new errors.ServerError(err);
         }
         if (member) {
           req.user = member;
         }
-        next();
+
+        return next();
       });
     });
   }
 
   function checkIdLength(req, res, next) {
-    var confId = req.params.id;
+    const confId = req.params.id;
 
     if (conferenceHelpers.isIdTooLong(confId)) {
       throw new errors.BadRequestError('Conference id is too long');
@@ -212,57 +220,56 @@ module.exports = function(dependencies) {
       throw new errors.BadRequestError('Conference id is too short');
     }
 
-    next();
+    return next();
   }
 
   function checkIdForCreation(req, res, next) {
-    var confId = req.params.id;
+    const confId = req.params.id;
 
     if (conferenceHelpers.isIdForbidden(confId)) {
       throw new errors.BadRequestError('Forbidden conference id');
     }
-    next();
+
+    return next();
   }
 
   function _lazyArchive(conf) {
     return conference.isActive(conf)
-    .then(function(active) {
-      if (active) {
-        return false;
-      }
-      return conference.archive(conf);
-    });
+    .then(active => (active ? false : conference.archive(conf)));
   }
 
   function lazyArchive(loadFirst) {
-    return function(req, res, next) {
+    return (req, res, next) => {
 
-      function respond(promise) {
+      const respond = promise => {
         promise.then(
-          function(conferenceArchive) {
+          conferenceArchive => {
             if (conferenceArchive) {
               delete req.conference;
             }
-            next();
+
+            return next();
           },
-          function onError(err) {
+          err => {
             throw new errors.ServerError(err);
           }
         )
         .done();
-      }
+      };
 
       if (loadFirst) {
-        conference.get(req.params.id, function(err, conf) {
+        conference.get(req.params.id, (err, conf) => {
           if (err || !conf) {
             return next();
           }
+
           respond(_lazyArchive(conf));
         });
       } else {
         if (!req.conference) {
           return next();
         }
+
         respond(_lazyArchive(req.conference));
       }
     };
