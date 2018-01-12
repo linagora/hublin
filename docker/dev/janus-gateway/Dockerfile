@@ -68,6 +68,9 @@ RUN cd ~ \
 
 COPY conf/*.cfg /opt/janus/etc/janus/
 
-EXPOSE 8088 8188
+RUN apt-get install nginx -y
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
-CMD ["/opt/janus/bin/janus"]
+EXPOSE 80 7088 8088 8188
+
+CMD service nginx restart && /opt/janus/bin/janus
