@@ -17,6 +17,7 @@ var angularInjections = angularInjections || [];
     'meetings.session',
     'meetings.user',
     'meetings.conference',
+    'meetings.conference.constants',
     'meetings.configuration',
     'meetings.language',
     'meetings.i18n',
