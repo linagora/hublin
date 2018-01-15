@@ -9,6 +9,7 @@ angular.module('meetingsApplication', [
   'meetings.session',
   'meetings.user',
   'meetings.conference',
+  'meetings.conference.constants',
   'meetings.language',
   'mgcrea.ngStrap'
 ]).config(function($routeProvider, RestangularProvider) {
