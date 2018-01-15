@@ -56,7 +56,8 @@
     "level": "debug",
     "roomNameRegExp": "^.{1,64}$",
     "usernameRegExp": "^(.){1,200}$",
-    "adapter": "hublin.easyrtc.connector"
+    "adapter": "hublin.easyrtc.connector",
+    "frontend": "janus"
   },
   "analytics": {
     "piwik": {
