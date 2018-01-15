@@ -2,6 +2,6 @@
   'use strict';
 
   angular.module('meetings.conference.constants', [])
-    .constant('WEBRTC_CONNECTOR', <%= getConfigurationConstant('webrtc', 'frontend', 'janus') %>);
+    .constant('WEBRTC_CONNECTOR', '<%= getConfigurationConstant('webrtc', 'frontend', 'janus') %>');
 
 })(angular);
