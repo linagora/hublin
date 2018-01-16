@@ -35,7 +35,7 @@
     "angular-route": "1.6.8",
     "angular-sanitize": "1.6.8",
     "angular-social": "git+https://github.com/linagora/angular-social.git#6c4c3cc1700183e9b4e925f61dc11561410bf707",
-    "angular-strap": "git+https://github.com/linagora/angular-strap.git",
+    "angular-strap": "2.3.12",
     "angular-ui-router": "1.0.12",
     "angular-uuid4": "0.3.0",
     "bootstrap": "3.2.0",
@@ -60,7 +60,6 @@
     "sinon-browser-only": "1.17.1"
   },
   "resolutions": {
-    "angular": "1.6.8",
-    "bootstrap": "3.2.0"
+    "angular": "1.6.8"
   }
 }
