@@ -65,11 +65,17 @@ npm install
 
 ## Starting the server
 
+All services required to make run Hublin can be launch with `docker-compose`.
+```
+$ docker-compose -f docker/dev/docker-compose.yml up
+```
 Use `npm start` to start the server
 
 ``` sh
 npm start
 ```
+Hublin is now available on `localhost:8080`.
+Janus admin / monitor is now available on `localhost/admin`.
 ## Testing
 
 You can check that everything works by launching the test suite:

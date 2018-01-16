@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM debian:jessie
 
 LABEL maintainer="Linagora Folks <lgs-openpaas-dev@linagora.com>"
 LABEL description="Provides an image with Janus Gateway"
@@ -20,6 +20,7 @@ RUN apt-get install -y \
     pkg-config \
     gengetopt \
     libtool \
+    autotools-dev \
     automake
 
 RUN apt-get install -y \
@@ -61,12 +62,15 @@ RUN cd ~ \
     && cd janus-gateway \
     && sh autogen.sh \
     && ./configure --prefix=/opt/janus --disable-rabbitmq --disable-mqtt --enable-docs \
-    && make \
+    && make CFLAGS='-std=c99' \
     && make install \
     && make configs
 
 COPY conf/*.cfg /opt/janus/etc/janus/
 
-EXPOSE 8088 8188
+RUN apt-get install nginx -y
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
-CMD ["/opt/janus/bin/janus"]
+EXPOSE 80 7088 8088 8188
+
+CMD service nginx restart && /opt/janus/bin/janus
