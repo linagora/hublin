@@ -16,7 +16,7 @@ Hubl.in allows free communication without additional plugins.
 1. clone the repository
 
 ``` sh
-git clone --recursive git@github.com:linagora/hublin.git
+git clone https://github.com/linagora/hublin.git
 ```
 
 2. Install and configure MongoDB
@@ -32,7 +32,12 @@ service mongod start
 
 3. Install node.js
 
-We are currently using Node 6. It is highly recommended that you use [nvm](https://github.com/creationix/nvm) to install a specific version of node.
+We are currently using Node 8. It is highly recommended that you use [nvm](https://github.com/creationix/nvm) to install a specific version of node.
+
+``` sh
+nvm use
+# will install and use required node version
+```
 
 4. Install Redis
 
@@ -40,23 +45,20 @@ We are currently using Node 6. It is highly recommended that you use [nvm](https
 apt-get install redis-server
 ```
 
-5. Copy the sample `db.json` configuration file and adapt it to your needs (especially the mongodb URL if you do not use default parameters from step 2)
+5. Install the Janus Gateway
+
+Check installation instructions on [Github](https://github.com/meetecho/janus-gateway).
+
+6. Copy the sample `db.json` configuration file and adapt it to your needs (especially the mongodb URL if you do not use default parameters from step 2)
 
 ``` sh
 cp config/db.json.sample config/db.json
 ```
 
-6. Install the required npm dependencies (as an administrator)
+7. Install the required npm dependencies (as an administrator)
 
 ```
 npm install -g mocha grunt-cli bower karma-cli
-```
-
-7. Go into the `modules` directory and install the easyrtc connector module dependecies
-
-``` sh
-cd modules/hublin-easyrtc-connector
-npm install
 ```
 
 8. Go into the project root directory and install project dependencies
@@ -68,21 +70,25 @@ npm install
 ## Starting the server
 
 All services required to make run Hublin can be launch with `docker-compose`.
+
 ```
 $ docker-compose -f docker/dev/docker-compose.yml up
 ```
+
 Use `npm start` to start the server
 
 ``` sh
 npm start
 ```
-Hublin is now available on `localhost:8080`.
-Janus admin / monitor is now available on `localhost/admin`.
+
+- Hublin is now available on `http://localhost:8080`.
+- Janus admin / monitor is now available on `http://localhost/admin`.
+
 ## Testing
 
 You can check that everything works by launching the test suite:
 
-```
+``` sh
 grunt
 ```
 
@@ -106,7 +112,7 @@ grunt test # launch all the testsuite
 ```
 ## Fixtures
 
-Fixtures can be configured in the fixtures folder and injected in the system using grunt:
+Fixtures can be configured in the fixtures folder and injected in the system using `grunt`:
 
 ``` sh
 grunt fixtures
@@ -185,13 +191,12 @@ The `linagora/hublin` container is configured to get the mongodb connection from
 
 `docker-compose` allows to describe and run distributed applications (cf `docker-compose.yml` file).
 
-Note: A docker-compose based image is available on the Docker Hub at `linagora/hublin-all`.
-
 #### Launch
 
 ``` sh
 docker-compose up
 ```
+
 #### Build
 
 ``` sh
@@ -200,7 +205,7 @@ docker-compose build
 
 ### docker containers
 
-You can pull all the required containers by hand (mongodb, redis), start them, and create the links when starting Hubl.in:
+You can pull all the required containers by hand (mongodb, redis, janus-gateway), start them, and create the links when starting Hubl.in:
 
 ``` sh
 # get mongo and start it as a container named 'db'
@@ -210,8 +215,11 @@ docker run -d --name db mongo
 docker pull redis
 docker run -d --name redis redis
 
+docker pull linagora/janus-gateway
+docker run -d --name janus -p 8088:8088 -p 8188:8188 linagora/janus-gateway
+
 # start hubl.in
-docker run -p 8080:8080 --link db:db --link redis:redis linagora/hublin
+docker run -p 8080:8080 --link db:db --link redis:redis --link janus:janus linagora/hublin
 ```
 
 Once started, Hubl.in is available on `http://<DOCKER_HOST>:8080`.
