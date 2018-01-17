@@ -3,6 +3,7 @@ app:
   links:
    - db:db
    - redis:redis
+   - janus-gateway:janus-gateway
   ports:
    - "8080:8080"
 db:
@@ -13,3 +14,10 @@ redis:
   image: redis
   ports:
     - "6379:6379"
+janus-gateway: 
+  image: "linagora/janus-gateway"
+  ports:
+    - "80:80"
+    - "7088:7088"
+    - "8088:8088"
+    - "8188:8188"
