@@ -3,6 +3,8 @@
 [![Join the chat at https://gitter.im/linagora/hublin](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/linagora/hublin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Code Climate](https://codeclimate.com/github/linagora/hublin/badges/gpa.svg)](https://codeclimate.com/github/linagora/hublin)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/30d5ffabcf7e49a789fa6024a33d918e)](https://www.codacy.com/app/linagora/hublin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=linagora/hublin&amp;utm_campaign=Badge_Grade)
+[![CodeFactor](https://www.codefactor.io/repository/github/linagora/hublin/badge)](https://www.codefactor.io/repository/github/linagora/hublin)
 [![Build Status](https://travis-ci.org/linagora/hublin.svg?branch=master)](https://travis-ci.org/linagora/hublin)
 
 [Hubl.in](https://hubl.in) is a free and open source video conference solution built with love and designed with ethics in mind.
