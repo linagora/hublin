@@ -1,0 +1,8 @@
+{
+    "configuration": [
+      {
+          "type": "janus",
+          "url": "http://localhost:8088"
+      }
+  ]
+}
