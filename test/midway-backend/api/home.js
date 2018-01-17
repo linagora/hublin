@@ -218,6 +218,7 @@ describe('The home API', function() {
                   'status': 'offline'
                 }
               ],
+              'roomId': 0,
               'schemaVersion': 1,
               'timestamps': {}
             });
@@ -269,6 +270,7 @@ describe('The home API', function() {
                   'status': 'offline'
                 }
               ],
+              'roomId': 0,
               'schemaVersion': 1,
               'timestamps': {}
             });
@@ -335,6 +337,7 @@ describe('The home API', function() {
                     'objectType': 'hublin:anonymous'
                   }
                 ],
+                'roomId': 0,
                 'schemaVersion': 1,
                 'timestamps': {}
               });
