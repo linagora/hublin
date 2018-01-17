@@ -11,13 +11,13 @@ module.exports = {
   redis: {
     host: 'localhost',
     port: 6379,
-    url: 'redis://redis:6379'
+    url: `redis://${process.env.HUBLIN_REDIS_HOST || 'redis'}:6379`
   },
 
   mongodb: {
     host: 'mongo',
     port: 27017,
     dbName: 'tests',
-    connectionString: 'mongodb://mongo:27017/tests'
+    connectionString: `mongodb://${process.env.HUBLIN_MONGO_HOST || 'mongo'}:27017/tests`
   }
 };
