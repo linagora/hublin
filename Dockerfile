@@ -11,9 +11,10 @@
 #    docker run -i -t openpaas/hublin /bin/bash
 #
 
-FROM node:6
+FROM node:8
 
-MAINTAINER Linagora Folks <hublin@linagora.com>
+LABEL maintainer="Linagora Folks <lgs-openpaas-dev@linagora.com>"
+LABEL description="Provides an image with Hublin"
 
 # Cache NPM install of package.json has not been changed
 # cf http://www.clock.co.uk/blog/a-guide-on-how-to-cache-npm-install-with-docker
@@ -27,8 +28,6 @@ RUN cd /src && npm install bower
 RUN cd /src && npm install --production --unsafe-perm
 
 ADD . /src
-
-RUN cd /src/modules/hublin-easyrtc-connector && npm install --production
 
 ADD config/db.json.docker /src/config/db.json
 
