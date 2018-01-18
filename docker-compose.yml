@@ -1,23 +1,37 @@
-app:
-  build: .
-  links:
-   - db:db
-   - redis:redis
-   - janus-gateway:janus-gateway
-  ports:
-   - "8080:8080"
-db:
-  image: mongo
-  ports:
-    - "27017:27017"
-redis:
-  image: redis
-  ports:
-    - "6379:6379"
-janus-gateway: 
-  image: "linagora/janus-gateway"
-  ports:
-    - "80:80"
-    - "7088:7088"
-    - "8088:8088"
-    - "8188:8188"
+version: '3'
+
+services:
+  hublin:
+    build: .
+    container_name: hublin
+    image: linagora/hublin:janus
+    links:
+    - mongo:mongo
+    - redis:redis
+    - janus-gateway:janus-gateway
+    environment:
+    - REDIS_HOST=redis
+    - REDIS_PORT=6379
+    - MONGO_HOST=mongo
+    - MONGO_PORT=27017
+    - MONGO_DBNAME=hublin
+    ports:
+    - "8080:8080"
+  mongo:
+    container_name: hublin_mongo
+    image: mongo:3.2
+    ports:
+      - "27017:27017"
+  redis:
+    container_name: hublin_redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  janus-gateway:
+    container_name: hublin_janus
+    image: "linagora/janus-gateway:latest"
+    ports:
+      - "80:80"
+      - "7088:7088"
+      - "8088:8088"
+      - "8188:8188"

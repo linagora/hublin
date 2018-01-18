@@ -8,5 +8,5 @@ services:
   - redis-server
 env:
   global:
-    - HUBLIN_MONGO_HOST=localhost
-    - HUBLIN_REDIS_HOST=localhost
+    - MONGO_HOST=localhost
+    - REDIS_HOST=localhost
