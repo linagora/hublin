@@ -70,13 +70,7 @@ npm install
 
 ## Starting the server
 
-All services required to make run Hublin can be launch with `docker-compose`.
-
-```
-$ docker-compose -f docker/dev/docker-compose.yml up
-```
-
-Use `npm start` to start the server
+Once all your services are ready, use `npm start` to start the server
 
 ``` sh
 npm start
@@ -125,7 +119,7 @@ Note that this will override all the current configuration resources with the fi
 
 Running `grunt dev` will start the server in development mode. Whenever you
 make changes to server files, the server will be restarted. Make sure you have
-started the `mongodb` and `redis` servers beforehand.
+started the `mongodb` and `redis` services beforehand.
 
 ### Updating files for distribution
 
@@ -186,7 +180,7 @@ Or you can build it from the current git repository
 docker build -t linagora/hublin .
 ```
 
-The `linagora/hublin` container is configured to get the mongodb connection from `mongodb://db:27017` URL. You can modify the `config/db.json` file and adapt to use your own instance, or continue to use Docker and use one of the solutions below.
+The `linagora/hublin` container is configured to get the mongodb connection from `mongodb://mongo:27017` URL. You can modify the `config/db.json` file and adapt to use your own instance, or continue to use Docker and use one of the solutions below.
 
 ### docker-compose
 
@@ -203,27 +197,6 @@ docker-compose up
 ``` sh
 docker-compose build
 ```
-
-### docker containers
-
-You can pull all the required containers by hand (mongodb, redis, janus-gateway), start them, and create the links when starting Hubl.in:
-
-``` sh
-# get mongo and start it as a container named 'db'
-docker pull mongo
-docker run -d --name db mongo
-
-docker pull redis
-docker run -d --name redis redis
-
-docker pull linagora/janus-gateway
-docker run -d --name janus -p 8088:8088 -p 8188:8188 linagora/janus-gateway
-
-# start hubl.in
-docker run -p 8080:8080 --link db:db --link redis:redis --link janus:janus linagora/hublin
-```
-
-Once started, Hubl.in is available on `http://<DOCKER_HOST>:8080`.
 
 ## Embedding
 
