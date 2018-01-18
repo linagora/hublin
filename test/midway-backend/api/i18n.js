@@ -9,11 +9,20 @@ describe('The i18n API', function() {
       dependencies = function() {};
 
   beforeEach(function(done) {
-    this.testEnv.initCore(function() {
-      var router = apiHelpers.getRouter('i18n', dependencies);
+    var self = this;
 
-      application = apiHelpers.getApplication(router, dependencies);
-      done();
+    this.mongoose = require('mongoose');
+    this.testEnv.initRedisConfiguration(this.mongoose, function(err) {
+      if (err) {
+        return done(err);
+      }
+
+      self.testEnv.initCore(function() {
+        var router = apiHelpers.getRouter('i18n', dependencies);
+
+        application = apiHelpers.getApplication(router, dependencies);
+        done();
+      });
     });
   });
 
