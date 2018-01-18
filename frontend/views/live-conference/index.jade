@@ -28,7 +28,6 @@ html
     script(src='/components/jquery/dist/jquery.min.js')
     script(src='/components/jquery-resize/jquery.ba-resize.min.js')
     script(src='/components/lodash/dist/lodash.min.js')
-    script(src='/js/thirdparty/modernizr.js')
     script(src='/components/bootstrap/dist/js/bootstrap.min.js')
     script(src='/components/pines-notify/pnotify.core.js')
     script(src='/components/pines-notify/pnotify.buttons.js')
@@ -68,6 +67,9 @@ html
     script(src='/js/constants.js')
 
     +injectJSAssetFromModules('connector', injections)
+
+    script(src='/js/thirdparty/adapter.js')
+    script(src='/js/thirdparty/modernizr.js')
 
     //- <!--build:js({.tmp,frontend}) live-conference.js-->
     script(src='/js/modules/socket.io/module.js')
