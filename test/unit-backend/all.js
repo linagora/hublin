@@ -1,8 +1,12 @@
 'use strict';
 
-var mockery = require('mockery'),
-    path = require('path'),
-    helpers = require('../helpers');
+const mockery = require('mockery');
+const path = require('path');
+const helpers = require('../helpers');
+const chai = require('chai');
+const sinonChai = require('sinon-chai');
+
+chai.use(sinonChai);
 
 before(function() {
   var basePath = path.resolve(__dirname + '/../..');

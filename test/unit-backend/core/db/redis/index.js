@@ -1,6 +1,7 @@
 'use strict';
 
 var mockery = require('mockery'),
+    sinon = require('sinon'),
     rewire = require('rewire'),
     chai = require('chai'),
     expect = chai.expect;
@@ -114,7 +115,7 @@ describe('The db/redis module', function() {
     it('should use default configuration if nothing is defined in esn-config', function(done) {
       mockery.registerMock('redis', {
         createClient: function(port, host, client_options) {
-          expect(port).to.equal(6379);
+          expect(port).to.match(/6379/);
           expect(host).to.equal('localhost');
           expect(client_options).to.deep.equals({});
 
@@ -153,30 +154,29 @@ describe('The db/redis module', function() {
         }, this.helpers.callbacks.noError(done));
     });
 
-    it('should publish the final configuration on the local pubsub', function(done) {
+    it('should publish the final configuration on the local pubsub', function() {
+      const subscribeSpy = sinon.spy();
+
       mockery.registerMock('redis', {
-        createClient: function(port, host, client_options) {
+        createClient: function() {
           return newDummyRedisClient();
         }
       });
 
       this.helpers.mock.pubsub('../../../core/pubsub', {});
 
-      require('../../../core/pubsub').local.topic('redis:configurationAvailable').subscribe(function(config) {
-        expect(config).to.deep.equal({
-          host: 'localhost',
-          port: 6379,
-          client_options: {}
-        });
-
-        done();
-      });
+      require('../../../core/pubsub').local.topic('redis:configurationAvailable').subscribe(subscribeSpy);
 
       this.helpers
         .requireBackend('core/db/redis')
         .createClient(null, function() {});
-    });
 
+      expect(subscribeSpy).to.have.been.calledWith({
+        host: 'localhost',
+        port: sinon.match(/6379/).or(sinon.match(6379)),
+        client_options: {}
+      });
+    });
   });
 
 });
