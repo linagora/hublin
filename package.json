@@ -83,6 +83,7 @@
     "grunt-mocha-cli": "3.0.0",
     "grunt-ng-annotate": "2.0.2",
     "grunt-nodemon": "0.4.2",
+    "grunt-puglint": "1.0.0",
     "grunt-run": "0.6.0",
     "grunt-shell": "2.1.0",
     "grunt-shell-spawn": "0.3.10",

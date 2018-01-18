@@ -129,7 +129,7 @@ You will have to follow some rules to not break the distribution generation whic
 #### Frontend
 
 Any project frontend file which is under `frontend/js` and used in a web page must be placed between generator tags.
-For example, in `frontend/views/meetings/index.jade` file:
+For example, in `frontend/views/meetings/index.pug` file:
 
 ``` html
 // <!--build:js({.tmp,frontend}) meetings.js-->
