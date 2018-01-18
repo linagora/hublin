@@ -6,6 +6,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/30d5ffabcf7e49a789fa6024a33d918e)](https://www.codacy.com/app/linagora/hublin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=linagora/hublin&amp;utm_campaign=Badge_Grade)
 [![CodeFactor](https://www.codefactor.io/repository/github/linagora/hublin/badge)](https://www.codefactor.io/repository/github/linagora/hublin)
 [![Build Status](https://travis-ci.org/linagora/hublin.svg?branch=master)](https://travis-ci.org/linagora/hublin)
+[![Docker Build Status](https://img.shields.io/docker/build/linagora/hublin.svg)](https://hub.docker.com/r/linagora/hublin)
 
 [Hubl.in](https://hubl.in) is a free and open source video conference solution built with love and designed with ethics in mind.
 It's the best way to initiate a communication anywhere with anybody and brings real time conversation to the next level.
