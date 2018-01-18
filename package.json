@@ -108,6 +108,8 @@
     "phantomjs-prebuilt": "2.1.12",
     "requirejs": "2.3.2",
     "rewire": "2.5.2",
+    "sinon": "4.1.6",
+    "sinon-chai": "2.14.0",
     "supertest": "2.0.0",
     "time-grunt": "1.4.0",
     "usemin-patterns": "0.1.4"
