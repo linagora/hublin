@@ -10,7 +10,7 @@ module.exports = function(config) {
   var singleRun = process.env.SINGLE_RUN ? process.env.SINGLE_RUN !== 'false' : true;
 
   var files = extDeps.concat(testDeps).concat(appDeps).concat([
-    'frontend/views/**/*.jade',
+    'frontend/views/**/*.pug',
     'test/unit-frontend/**/*.js'
   ]);
 
@@ -26,7 +26,7 @@ module.exports = function(config) {
     browsers: ['PhantomJS', 'Chrome', 'Chrome_Headless'],
     reporters: ['spec'],
     preprocessors: {
-      'frontend/views/**/*.jade': ['ng-jade2module']
+      'frontend/views/**/*.pug': ['ng-jade2module']
     },
     customLaunchers: {
       Chrome_with_debugging: {
@@ -52,9 +52,9 @@ module.exports = function(config) {
         var cacheId = '';
 
         if (filepath.match(/^frontend\/js*/)) {
-          cacheId = '/views' + filepath.substr(11).replace('.jade', '.html');
+          cacheId = '/views' + filepath.substr(11).replace('.pug', '.html');
         } else if (filepath.match(/^frontend*/)) {
-          cacheId = filepath.substr(8).replace('.jade', '.html');
+          cacheId = filepath.substr(8).replace('.pug', '.html');
         }
 
         return cacheId;

@@ -10,7 +10,7 @@ module.exports = function(config) {
     return 'dist/' + dep;
   }).concat(testDeps).concat([
     'dist/frontend/js/**/*.js',
-    'dist/frontend/views/**/*.jade',
+    'dist/frontend/views/**/*.pug',
     'test/unit-frontend/**/*.js'
   ]);
 
@@ -25,7 +25,7 @@ module.exports = function(config) {
     browsers: ['PhantomJS'],
     reporters: ['spec'],
     preprocessors: {
-      'dist/frontend/views/**/*.jade': ['ng-jade2module']
+      'dist/frontend/views/**/*.pug': ['ng-jade2module']
     },
 
     plugins: [

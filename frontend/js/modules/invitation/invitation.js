@@ -188,7 +188,7 @@ angular.module('meetings.invitation', [
   return {
     restrict: 'E',
     replace: true,
-    templateUrl: '/views/modules/invitation/invitation-dialog.html',
+    templateUrl: '/views/modules/invitation/invitation-dialog.pug',
     scope: {
       conference: '='
     },

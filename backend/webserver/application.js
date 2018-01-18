@@ -46,7 +46,7 @@ application.use(helmet.hsts({
 }));
 
 application.set('views', VIEW_PATH);
-application.set('view engine', 'jade');
+application.set('view engine', 'pug');
 
 application.use(require('express-domain-middleware'));
 
