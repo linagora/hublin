@@ -31,8 +31,8 @@ ADD . /src
 
 ADD config/db.json.docker /src/config/db.json
 
-ENV HUBLIN_REDIS_HOST redis
-ENV HUBLIN_REDIS_PORT 6379
+ENV REDIS_HOST redis
+ENV REDIS_PORT 6379
 
 EXPOSE  8080
 
