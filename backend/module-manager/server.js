@@ -37,8 +37,5 @@ module.exports = function setupServer(moduleManager) {
     .then(registerModuleWrapper(moduleManager, require('../wsserver').WsServer))
     .then(registerModuleWrapper(moduleManager, require('linagora.esn.mailer')))
     .then(registerModuleWrapper(moduleManager, require('linagora.esn.conference.invitation')))
-    .then(registerModuleWrapper(moduleManager, require('linagora.esn.yjs')))
-    .then(registerModuleWrapper(moduleManager, require('linagora.esn.collaborative-editor')))
-    .then(registerModuleWrapper(moduleManager, require('linagora.esn.yjs-chat')))
     .then(registerModuleWrapper(moduleManager, require('../').Meetings));
 };
