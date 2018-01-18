@@ -8,7 +8,7 @@ describe('The op.live-conference module', function() {
 
   beforeEach(function() {
     module('op.live-conference');
-    module('meetings.jade.templates');
+    module('meetings.pug.templates');
   });
 
   describe('The liveConferenceAutoReconnect directive', function() {

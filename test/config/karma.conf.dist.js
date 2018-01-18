@@ -40,7 +40,7 @@ module.exports = function(config) {
       jadeRenderLocals: {
         __: function(str) { return str; }
       },
-      moduleName: 'meetings.jade.templates'
+      moduleName: 'meetings.pug.templates'
     }
 
   });

@@ -11,7 +11,7 @@ describe('The meetings.configuration module', function() {
 
   beforeEach(function() {
     module('meetings.configuration');
-    module('meetings.jade.templates');
+    module('meetings.pug.templates');
   });
 
   beforeEach(angular.mock.module(function($provide) {

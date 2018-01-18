@@ -67,7 +67,7 @@ module.exports = function(config) {
       jadeRenderOptions: {
         basedir: require('path').resolve(__dirname, '../../frontend/views')
       },
-      moduleName: 'meetings.jade.templates'
+      moduleName: 'meetings.pug.templates'
     }
 
   });

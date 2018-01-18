@@ -9,7 +9,7 @@ describe('The meetings.invitation module', function() {
   beforeEach(function() {
     module('op.live-conference');
     module('meetings.invitation');
-    module('meetings.jade.templates');
+    module('meetings.pug.templates');
   });
 
   describe('The invitationDialogLauncher directive', function() {
