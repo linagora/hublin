@@ -65,8 +65,9 @@ describe('The meetings.invitation module', function() {
         }
       };
       $scope.$emit('localMediaReady');
+      $timeout.flush();
 
-      expect($scope.showInvitation).to.have.been.calledWith();
+      expect($scope.showInvitation).to.have.been.calledOnce;
     });
 
     it('should not show invitation modal on localMediaReadyEvent if some user is online', function() {
