@@ -268,7 +268,7 @@ angular.module('meetings.invitation', [
     }
   };
 }])
-.directive('invitationDialogLauncher', function($log, $stateParams) {
+.directive('invitationDialogLauncher', function($log, $timeout, $stateParams) {
   function link($scope) {
     if ($stateParams.noAutoInvite) {
       $log.debug('Not launching invitation dialog as requested.');
@@ -281,7 +281,9 @@ angular.module('meetings.invitation', [
         return member.status === 'online';
       });
       if (!connectedMembers) {
-        $scope.showInvitation();
+        $timeout(function() {
+          $scope.showInvitation();
+        }, 0);
       }
     });
   }
