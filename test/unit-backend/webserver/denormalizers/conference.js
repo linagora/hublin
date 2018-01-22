@@ -55,7 +55,7 @@ describe('The conference denormalizer', function() {
       const servers = ['foo', 'bar', 'baz'];
       const configSpy = sinon.spy(() => ({
         get: function(callback) {
-          callback(null, servers);
+          callback(null, { servers });
         }
       }));
 

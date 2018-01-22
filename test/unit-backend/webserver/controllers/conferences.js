@@ -61,7 +61,7 @@ describe('The conferences controller', function() {
       const iceConfiguration = ['foo', 'bar'];
       const configSpy = sinon.spy(() => ({
         get: function(callback) {
-          callback(null, iceConfiguration);
+          callback(null, { servers: iceConfiguration });
         }
       }));
 
