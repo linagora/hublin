@@ -74,7 +74,7 @@
   "Please enter an email address": "请输入您的邮箱地址",
   "Add": "添加",
   "Send Invitations": "发送邀请",
-  "You can also share this link: %s": "您也可也分享这条链接%s",
+  "You can also share this link:": "您也可也分享这条链接",
   "Sorry but something bad just happened, developers have been notified": "抱歉，某个程序部件出现问题，程序员们已被告知",
   "Next": "下一步",
   "The description is limited to %s characters.": "具体介绍限制在%s字中。",
