@@ -61,8 +61,8 @@ module.exports = dependencies => {
           logger.info('Ice servers are not configured, using default ones', err || iceServers);
         }
 
-        if (iceServers) {
-          conference.iceServers = iceServers;
+        if (iceServers && iceServers.servers) {
+          conference.iceServers = iceServers.servers;
         }
 
         resolve(conference);
