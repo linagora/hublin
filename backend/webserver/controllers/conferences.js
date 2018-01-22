@@ -47,7 +47,7 @@ module.exports = function(dependencies) {
         .then(denormalized => res.status(req.created ? 201 : 200).json(denormalized))
         .catch(err => {
           logger.error(err);
-          res.status(500).send();
+          res.status(500).send('Failed to denormalize conference');
         });
     }
 
@@ -60,7 +60,7 @@ module.exports = function(dependencies) {
         .then(conference => res.status(202).json(conference))
         .catch(err => {
           logger.error(err);
-          res.status(500).send();
+          res.status(500).send('Failed to denormalize conference');
         });
     });
   }
@@ -119,7 +119,7 @@ module.exports = function(dependencies) {
       .then(denormalized => res.status(200).json(denormalized))
       .catch(err => {
         logger.error(err);
-        res.status(500).send();
+        res.status(500).send('Failed to denormalize conference');
       });
   }
 
