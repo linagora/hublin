@@ -7,11 +7,11 @@ section.goodbye
         goodbye-page-reminders
         p
           span #{__('Did you enjoy the experience? Spread the word!')}
-          include ../../commons/socialshare.jade
+          include ../../commons/socialshare.pug
         p
           button.btn.btn-xl(type='button', ng-click='reopen()') #{__('Reopen the room')}
         p
           span #{__('or create a new one')}
           conference-create-form
       .modal-footer
-        include ../../commons/whatis.jade
+        include ../../commons/whatis.pug

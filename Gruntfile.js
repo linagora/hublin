@@ -71,6 +71,22 @@ module.exports = function(grunt) {
         src: ['<%= eslint.quick.src %>']
       }
     },
+    puglint: {
+      all: {
+        options: {
+          config: {
+            disallowAttributeInterpolation: true,
+            disallowLegacyMixinCall: true,
+            validateExtensions: true,
+            validateIndentation: 2
+          }
+        },
+        src: [
+          'frontend/**/*.pug',
+          'templates/**/*.pug'
+        ]
+      }
+    },
     nodemon: {
       dev: {
         script: 'server.js',
@@ -185,7 +201,7 @@ module.exports = function(grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      jade: ['<%= hublin.client %>/views/meetings/index.jade', '<%= hublin.client %>/views/live-conference/index.jade'],
+      jade: ['<%= hublin.client %>/views/meetings/index.pug', '<%= hublin.client %>/views/live-conference/index.pug'],
       options: {
         debug: true,
         dest: '<%= hublin.dist %>/frontend/js',
@@ -197,7 +213,7 @@ module.exports = function(grunt) {
 
     // Performs rewrites based on rev and the useminPrepare configuration
     usemin: {
-      jade: ['<%= hublin.dist %>/**/index.jade'],
+      jade: ['<%= hublin.dist %>/**/index.pug'],
       js: ['<%= hublin.dist %>/js/{,*/}*.js'],
       options: {
         assetsDirs: [
@@ -277,11 +293,12 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-eslint');
+  grunt.loadNpmTasks('grunt-puglint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-jade');
+  grunt.loadNpmTasks('grunt-contrib-pug');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-shell-spawn');
@@ -328,7 +345,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test-frontend', ['run_grunt:test_frontend']);
   grunt.registerTask('test-midway-backend', ['run_grunt:midway_backend', 'clean-environment']);
   grunt.registerTask('test', ['test-frontend', 'run_grunt:unit_backend', 'run_grunt:midway_backend', 'clean-environment']);
-  grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all']);
+  grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all', 'puglint:all']);
 
   grunt.registerTask('test-frontend-dist', 'Run the frontend distribution tests', ['karma:dist']);
   grunt.registerTask('test-dist', ['test-frontend-dist']);
@@ -345,7 +362,7 @@ module.exports = function(grunt) {
   grunt.registerTask('fixtures', 'Launch the fixtures injection', function() {
     var done = this.async();
     require('./fixtures')(function(err) {
-      done(err ? false : true);
+      done(!err);
     });
   });
 };

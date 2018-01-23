@@ -1,7 +1,7 @@
 'use strict';
 
 const i18n = require('../core/i18n');
-const jade = require('jade');
+const pug = require('pug');
 
 const i18nConfig = {
   multiDirectories: true,
@@ -22,7 +22,7 @@ i18n.init = function(req, res, next) {
    */
   res.locals.__j = function(/* phrase, ...args */) {
     const args = Array.prototype.map.call(arguments, function(v, i) {
-      return (i > 0 ? jade.compile(v)({}) : v);
+      return (i > 0 ? pug.compile(v)({}) : v);
     });
     return res.locals.__.apply(res.locals, args);
   };

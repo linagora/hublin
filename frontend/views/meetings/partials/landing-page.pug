@@ -17,7 +17,7 @@
     .supported
       conference-create-form.conference-box(bs-affix data-offset-top="200")
     .unsupported-mini.text-center
-      include ../../commons/unsupported-mini.jade
+      include ../../commons/unsupported-mini.pug
   section.quickstart#quickstart
     .container
       .row.text-center
@@ -25,19 +25,19 @@
           h2 #{__('Start with Hubl.in!')}
       .row.text-center
         .col-md-3
-          a(href='/images/landing_roomName.png', data-lightbox="quickstart", data-title="#{__('Choose a new room name or stay with the default. Fancy or random ? The choice is yours.')}")
+          a(href='/images/landing_roomName.png', data-lightbox="quickstart", data-title=__('Choose a new room name or stay with the default. Fancy or random ? The choice is yours.'))
             img(src='/images/landing_roomName_thumb.png', data-lightbox="landing_roomName_thumb")
           p #{__('Choose a new room name or stay with the default. Fancy or random ? The choice is yours.')}
         .col-md-3
-          a(href='/images/landing_allowUserMedia.png', data-lightbox="quickstart", data-title="#{__('Allow your browser to use your camera and microphone. It seems that 100% of video conferences are more efficient with sound and video.')}")
+          a(href='/images/landing_allowUserMedia.png', data-lightbox="quickstart", data-title=__('Allow your browser to use your camera and microphone. It seems that 100% of video conferences are more efficient with sound and video.'))
             img(src='/images/landing_allowUserMedia_thumb.png')
           p #{__('Allow your browser to use your camera and microphone. It seems that 100% of video conferences are more efficient with sound and video.')}
         .col-md-3
-          a(href='/images/landing_inviteContacts.png', data-lightbox="quickstart", data-title="#{__('You\'re in! Invite your contacts to join the room: your contacts can invite their own contacts, who can invite their own contacts...')}")
+          a(href='/images/landing_inviteContacts.png', data-lightbox="quickstart", data-title=__('You\'re in! Invite your contacts to join the room: your contacts can invite their own contacts, who can invite their own contacts...'))
             img(src='/images/landing_inviteContacts_thumb.png', data-lightbox="landing_inviteContacts")
           p #{__('You\'re in! Invite your contacts to join the room: your contacts can invite their own contacts, who can invite their own contacts...')}
         .col-md-3
-          a(href='/images/landing_enjoy.png', data-lightbox="quickstart", data-title="#{__('Enjoy! Use Hubl.in up to 9 attendees from your desktop, smartphone or tablet. It\'s open, free, easy to use and always available.')}")
+          a(href='/images/landing_enjoy.png', data-lightbox="quickstart", data-title=__('Enjoy! Use Hubl.in up to 9 attendees from your desktop, smartphone or tablet. It\'s open, free, easy to use and always available.'))
             img(src='/images/landing_enjoy_thumb.png', data-lightbox="landing_enjoy")
           p #{__('Enjoy! Use Hubl.in up to 9 attendees from your desktop, smartphone or tablet. It\'s open, free, easy to use and always available.')}
   section.about.bg-light-gray#about
@@ -64,7 +64,7 @@
             i.fa.fa-square.fa-stack-2x.text-primary
             i.fa.fa-code.fa-stack-1x.fa-inverse
           h4.service-heading #{__('Open Source')}
-          p.text-muted!= __j('Strongly involved in open source philosophy, Hubl.in is made available in the respect of its users. Feel free to look into, react to or contribute to the code on %s', "#[a.fa.fa-github(href='http://github.com/linagora/hublin' target='_blank') Github]")
+          p.text-muted!= __j('Strongly involved in open source philosophy, Hubl.in is made available in the respect of its users. Feel free to look into, react to or contribute to the code on %s', "a(href='http://github.com/linagora/hublin' target='_blank') Github")
   section.social#social
     .container
       .row
@@ -113,14 +113,14 @@
             .row
               .col-md-6
                 .form-group
-                  input#name.form-control(type='text', ng-model='feedbackForm.name', placeholder="#{__('Your Name')} *", required='', data-validation-required-message="#{__('Please enter your name.')}")
+                  input#name.form-control(type='text', ng-model='feedbackForm.name', placeholder=`${__('Your Name')} *`, required='', data-validation-required-message=__('Please enter your name.'))
                   p.help-block.text-danger
                 .form-group
-                  input#email.form-control(type='email', ng-model='feedbackForm.email', placeholder="#{__('Your Email')} *", required='', data-validation-required-message="#{__('Please enter your email address.')}")
+                  input#email.form-control(type='email', ng-model='feedbackForm.email', placeholder=`${__('Your Email')} *`, required='', data-validation-required-message=__('Please enter your email address.'))
                   p.help-block.text-danger
               .col-md-6
                 .form-group
-                  textarea#message.form-control(placeholder="#{__('Your Message')} *", ng-model='feedbackForm.text', required='', data-validation-required-message="#{__('Please enter a message.')}")
+                  textarea#message.form-control(placeholder=`${__('Your Message')} *`, ng-model='feedbackForm.text', required='', data-validation-required-message=__('Please enter a message.'))
                   p.help-block.text-danger
               .clearfix
               .col-lg-12.text-center

@@ -8,7 +8,7 @@ describe('The meetings.conference module', function() {
 
   beforeEach(function() {
     module('meetings.conference');
-    module('meetings.jade.templates');
+    module('meetings.pug.templates');
   });
 
   describe('The create-conference-form directive', function() {

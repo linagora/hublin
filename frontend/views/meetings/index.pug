@@ -2,10 +2,10 @@ doctype html
 html
   head
 
-    include ../commons/meta.jade
-    include ../commons/facebook-markup.jade
-    include ../commons/utils.jade
-    include ../commons/twitter-markup.jade
+    include ../commons/meta.pug
+    include ../commons/facebook-markup.pug
+    include ../commons/utils.pug
+    include ../commons/twitter-markup.pug
 
     title Hubl.in, the Awesome video conference service
 
@@ -55,7 +55,7 @@ html
 
   body.hublin-app.ng-cloak#page-top.index(ng-app='meetingsApplication')
     #wrap
-      include partials/landing-page.jade
+      include partials/landing-page.pug
 
     .unsupported.text-center
-      include ../commons/unsupported.jade
+      include ../commons/unsupported.pug
