@@ -10,6 +10,7 @@ var angularInjections = angularInjections || [];
     'op.socketio',
     'op.websocket',
     'op.live-conference',
+    'op.lodash-wrapper',
     'op.notification',
     'op.localstorage',
     'op.dynamicDirective',
