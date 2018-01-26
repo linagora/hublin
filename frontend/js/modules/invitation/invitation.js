@@ -4,7 +4,7 @@ angular.module('meetings.invitation', [
   'meetings.conference',
   'mgcrea.ngStrap.typeahead',
   'ui.router'
-]).provider('invitationService', function($provide) {
+]).provider('invitationService', function() {
   var $q;
   var contactLookups = {};
 
@@ -49,23 +49,24 @@ angular.module('meetings.invitation', [
     lookup: function(text) {
       function lookup(impls) {
         var impl = impls.shift();
+
         if (impl && impl.validate(text)) {
           // Make the lookup, either resolving with the result or recursively
           // trying the next service.
           return $q.when(impl.lookup(text)).then(function(res) {
             if (res) {
               return res;
-            } else {
-              return lookup(impls);
             }
+
+            return lookup(impls);
           });
         } else if (impl) {
           // Invalid, go to the next implementation
           return lookup(impls);
-        } else {
-          // Contact not found, resolve with null value
-          return $q.when(null);
         }
+
+        // Contact not found, resolve with null value
+        return $q.when(null);
       }
 
       return lookup(flattenLookups());
@@ -146,6 +147,7 @@ angular.module('meetings.invitation', [
    */
   this.$get = ['$q', function(_$q) {
     $q = _$q;
+
     return service;
   }];
 }).directive('invitationDialogSwitch', ['$compile', function($compile) {
@@ -160,6 +162,7 @@ angular.module('meetings.invitation', [
         return '-' + match.toLowerCase();
       });
       var dirName = 'invitation-dialog-user-' + snakeObjectType;
+
       element.attr(dirName, '');
       element.removeAttr('object-type');
       element.removeAttr('data-invitation-dialog-switch');
@@ -173,12 +176,16 @@ angular.module('meetings.invitation', [
     link: function(scope, element, attrs, ngModel) {
       ngModel.$parsers.unshift(function(value) {
         var valid = invitationService.validate(value);
+
         ngModel.$setValidity('invitations', valid);
+
         return valid ? value : undefined;
       });
       ngModel.$formatters.unshift(function(value) {
         var valid = invitationService.validate(value);
+
         ngModel.$setValidity('invitations', valid);
+
         return value;
       });
     }
@@ -192,7 +199,7 @@ angular.module('meetings.invitation', [
     scope: {
       conference: '='
     },
-    link: function($scope, element, attrs) {
+    link: function($scope, element) {
       $scope.conference.rawURI = decodeURIComponent($scope.conference.href);
       var dialogId = element.attr('id');
 
@@ -205,9 +212,10 @@ angular.module('meetings.invitation', [
         element.modal('hide');
       };
 
-      $scope.copyLink = function(event) {
+      $scope.copyLink = function() {
         var target = $('#' + dialogId + ' .conferenceLink a');
-        target.one('transitionend', function(e) {
+
+        target.one('transitionend', function() {
           target.removeAttr('copying');
         });
         target.attr('copying', 'true');
@@ -215,6 +223,7 @@ angular.module('meetings.invitation', [
 
       $scope.formHasError = function(inviteForm) {
         var inviteText = inviteForm.inviteText;
+
         return inviteText.$viewValue && inviteText.$invalid;
       };
 
@@ -245,10 +254,7 @@ angular.module('meetings.invitation', [
       });
 
       $scope.sendInvitations = function() {
-        var members = [];
-        for (var id in $scope.contacts) {
-          members.push($scope.contacts[id]);
-        }
+        var members = Object.values($scope.contacts) || [];
 
         $scope.contacts = {};
         conferenceAPI.addMembers($scope.conference._id, members).then(function() {
@@ -268,29 +274,30 @@ angular.module('meetings.invitation', [
     }
   };
 }])
-.directive('invitationDialogLauncher', function($log, $timeout, $stateParams) {
-  function link($scope) {
-    if ($stateParams.noAutoInvite) {
-      $log.debug('Not launching invitation dialog as requested.');
+  .directive('invitationDialogLauncher', function($log, $timeout, $stateParams) {
+    function link($scope) {
+      if ($stateParams.noAutoInvite) {
+        $log.debug('Not launching invitation dialog as requested.');
 
-      return;
+        return;
+      }
+
+      $scope.$on('localMediaReady', function() {
+        var connectedMembers = $scope.conferenceState.conference.members.some(function(member) {
+          return member.status === 'online';
+        });
+
+        if (!connectedMembers) {
+          $timeout(function() {
+            $scope.showInvitation();
+          }, 0);
+        }
+      });
     }
 
-    $scope.$on('localMediaReady', function() {
-      var connectedMembers = $scope.conferenceState.conference.members.some(function(member) {
-        return member.status === 'online';
-      });
-      if (!connectedMembers) {
-        $timeout(function() {
-          $scope.showInvitation();
-        }, 0);
-      }
-    });
-  }
-
-  return {
-    restrict: 'A',
-    require: 'liveConference',
-    link: link
-  };
-});
+    return {
+      restrict: 'A',
+      require: 'liveConference',
+      link: link
+    };
+  });

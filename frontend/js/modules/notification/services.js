@@ -2,8 +2,9 @@
 
 angular.module('op.notification')
   .factory('notificationFactory', ['notificationService', function(notificationService) {
-    var stack_bottomright = {'dir1': 'up', 'dir2': 'left', 'push': 'top'};
-    var stack_topright = {'dir1': 'down', 'dir2': 'left', 'push': 'top'};
+    var stack_bottomright = { dir1: 'up', dir2: 'left', push: 'top' };
+    var stack_topright = { dir1: 'down', dir2: 'left', push: 'top' };
+    var soundCache = {}; /** The cache for the playSound function */
 
     function weakOf(stack_placement, title, text, type) {
       return {
@@ -51,6 +52,7 @@ angular.module('op.notification')
      */
     function playSound(url) {
       var sound = soundCache[url];
+
       if (!sound) {
         sound = soundCache[url] = new Audio();
         sound.autoplay = true;
@@ -58,11 +60,9 @@ angular.module('op.notification')
       } else if (sound.readyState > 2) {
         sound.play();
       }
+
       return sound;
     }
-
-    /** The cache for the playSound function */
-    var soundCache = {};
 
     /**
      * Notification with confirm/cancel dialog
@@ -76,11 +76,12 @@ angular.module('op.notification')
      * @param {function} handlerCancel fn like handlerCancel(data)
      */
     function confirm(title, text, icon, buttons, data, handlerConfirm, handlerCancel) {
-      if (! handlerCancel) {
-        handlerCancel = function() {};
+      if (!handlerCancel) {
+        handlerCancel = function() { };
       }
 
-      var stack_topright = {'dir1': 'down', 'dir2': 'left', 'push': 'top'};
+      var stack_topright = { dir1: 'down', dir2: 'left', push: 'top' };
+
       icon = icon || 'fa-info';
       buttons = buttons || ['OK', 'Cancel'];
 
@@ -107,12 +108,13 @@ angular.module('op.notification')
         },
         styling: 'fontawesome'
       })).get().on('pnotify.confirm', function() {
-          handlerConfirm(data);
-        }
-      ).on('pnotify.cancel', function() {
+        handlerConfirm(data);
+      }
+        ).on('pnotify.cancel', function() {
           handlerCancel(data);
         });
     }
+
     return {
       weakInfo: weakInfo,
       weakError: weakError,

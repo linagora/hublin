@@ -7,7 +7,7 @@ angular.module('meetings.report', [])
       restrict: 'E',
       replace: true,
       templateUrl: '/views/modules/report/report-dialog.html',
-      link: function($scope, element, attrs) {
+      link: function($scope, element) {
 
         $scope.element = element;
         $scope.MAX_REPORT_DESCRIPTION_LENGTH = MAX_REPORT_DESCRIPTION_LENGTH.toString();

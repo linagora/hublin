@@ -14,7 +14,7 @@ angular.module('meetingsApplication', [
   'mgcrea.ngStrap'
 ]).config(function($routeProvider, RestangularProvider) {
 
-  $routeProvider.otherwise({redirectTo: '/'});
+  $routeProvider.otherwise({ redirectTo: '/' });
   RestangularProvider.setBaseUrl('/');
   RestangularProvider.setFullResponse(true);
 

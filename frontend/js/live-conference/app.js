@@ -1,4 +1,4 @@
-var angularInjections = angularInjections || [];
+var angularInjections = angularInjections || []; //eslint-disable-line no-use-before-define
 
 (function(angular) {
   'use strict';
