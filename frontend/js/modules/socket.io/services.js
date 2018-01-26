@@ -1,4 +1,5 @@
 /* global io */
+
 'use strict';
 
 angular.module('op.socketio')

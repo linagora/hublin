@@ -53,17 +53,19 @@ describe('The meetings.conference module', function() {
 
       it('should remove the forbidden characters from the room name', function() {
         var forbiddenChars = [',', '/', '?', ':', '@', '&', '=', '+', '$', '#', '<', '>', '[', ']',
-        '{', '}', '"', '%', ';', '\\', '^', '|', '~' , '\'', '`'];
+          '{', '}', '"', '%', ';', '\\', '^', '|', '~', '\'', '`'];
         var self = this;
+
         forbiddenChars.forEach(function(char) {
           var roomNameWithChar = 'test' + char + '  test';
-          expect(self.scope.escapeRoomName(roomNameWithChar)).to.equal('testtest');
-
           var roomNameWithSameCharMultiple = char + 'test' + char + '  test  ' + char;
+
+          expect(self.scope.escapeRoomName(roomNameWithChar)).to.equal('testtest');
           expect(self.scope.escapeRoomName(roomNameWithSameCharMultiple)).to.equal('testtest');
 
           forbiddenChars.forEach(function(otherChar) {
             var roomNameWithDifferentChars = 'test' + otherChar + char + 'test';
+
             expect(self.scope.escapeRoomName(roomNameWithDifferentChars)).to.equal('testtest');
           });
         });
@@ -85,6 +87,7 @@ describe('The meetings.conference module', function() {
           'apple-touch-icon-precomposed.png'
         ];
         var self = this;
+
         blackList.forEach(function(word) {
           expect(self.scope.escapeRoomName(word)).to.equal('');
         });
@@ -94,26 +97,27 @@ describe('The meetings.conference module', function() {
   });
 
   describe('The browserAuthorizationDialog directive', function() {
-    var element, $compile, $rootScope, gotMediaCB, $window;
+    var $compile, $rootScope, gotMediaCB;
+
     beforeEach(function() {
       var webRTCService = {
         setGotMedia: function(cb) {
           gotMediaCB = cb;
         }
       };
+
       module(function($provide) {
         $provide.value('webRTCService', webRTCService);
       });
     });
 
-    beforeEach(inject(function(_$compile_, _$rootScope_, _$window_) {
+    beforeEach(inject(function(_$compile_, _$rootScope_) {
       $compile = _$compile_;
       $rootScope = _$rootScope_;
-      $window = _$window_;
     }));
 
     function compileDirective() {
-      element = $compile('<browser-authorization-dialog />')($rootScope);
+      $compile('<browser-authorization-dialog />')($rootScope);
       $rootScope.$digest();
     }
 
@@ -130,7 +134,7 @@ describe('The meetings.conference module', function() {
   describe('The conferenceUserMediaInterceptor Service', function() {
     var conferenceUserMediaInterceptorService, oldGetUserMedia, $window;
 
-    beforeEach(inject(function(_conferenceUserMediaInterceptorService_ , _$window_) {
+    beforeEach(inject(function(_conferenceUserMediaInterceptorService_, _$window_) {
       conferenceUserMediaInterceptorService = _conferenceUserMediaInterceptorService_;
       $window = _$window_;
       oldGetUserMedia = $window.navigator.getUserMedia;

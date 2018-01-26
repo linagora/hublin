@@ -68,7 +68,7 @@ describe('The meetings.i18n module', function() {
       it('should request the given locale if specified', function(done) {
         httpBackend.expectGET('/i18n/?locale=fr').respond({
           data: {
-            'myKey': 'maTraduction'
+            myKey: 'maTraduction'
           }
         });
 

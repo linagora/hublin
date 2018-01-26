@@ -19,8 +19,8 @@ describe('The op.live-conference module', function() {
         _disconnectCallbacks: [],
 
         connect: function(conf, cb) { cb(null); },
-        leaveRoom: function(conf) {},
-        performCall: function(id) {},
+        leaveRoom: function() { },
+        performCall: function() { },
         addDisconnectCallback: function(cb) { this._disconnectCallbacks.push(cb); }
       };
 
@@ -32,11 +32,11 @@ describe('The op.live-conference module', function() {
 
     beforeEach(inject(function($rootScope, $window, _$timeout_, $compile) {
       $window.easyrtc = {
-        enableDataChannels: function() {},
-        setDisconnectListener: function() {},
-        setDataChannelCloseListener: function() {},
-        setCallCancelled: function() {},
-        setOnStreamClosed: function() {}
+        enableDataChannels: function() { },
+        setDisconnectListener: function() { },
+        setDataChannelCloseListener: function() { },
+        setCallCancelled: function() { },
+        setOnStreamClosed: function() { }
       };
       this.scope = $rootScope.$new();
       $timeout = _$timeout_;
@@ -55,17 +55,18 @@ describe('The op.live-conference module', function() {
       } catch (e) {
         return done();
       }
+
       return done(new Error('I should have thrown'));
     });
 
     it('should attempt to reconnect after being disconnected', function() {
+      var connected = 0;
+      var cberror = new Error('still putting on makeup');
+
       this.webRTCService.connect = function(conf, callback) {
         connected++;
         callback(cberror);
       };
-
-      var connected = 0;
-      var cberror = new Error('still putting on makeup');
 
       expect(this.webRTCService._disconnectCallbacks.length).to.equal(1);
       var disconnectCallback = this.webRTCService._disconnectCallbacks[0];
@@ -94,12 +95,9 @@ describe('The op.live-conference module', function() {
   });
 
   describe('The disconnect-dialog directive', function() {
-
-    var $window;
     var element, scope;
 
-    beforeEach(inject(function($compile, $rootScope, _$window_) {
-      $window = _$window_;
+    beforeEach(inject(function($compile, $rootScope) {
       scope = $rootScope.$new();
       element = $compile('<disconnect-dialog />')(scope);
 
@@ -131,43 +129,43 @@ describe('The op.live-conference module', function() {
     });
 
     it('The on function should register a new callback, when it is the first callback', function() {
-      var callback = function() {};
+      var callback = function() { };
 
       eventCallbackService.on('test', callback);
       expect(eventCallbackRegistry).to.deep.equal({
-        'test': [callback]
+        test: [callback]
       });
     });
 
     it('The on function should register a new callback, when it is not the first callback', function() {
-      var existingCallback = function() {};
-      var callback = function() {};
+      var existingCallback = function() { };
+      var callback = function() { };
 
       eventCallbackRegistry.test = [existingCallback];
       eventCallbackService.on('test', callback);
       expect(eventCallbackRegistry).to.deep.equal({
-        'test': [existingCallback, callback]
+        test: [existingCallback, callback]
       });
     });
 
     it('The off function should unregister a callback, when it is not the only callback', function() {
-      var existingCallback = function() {};
-      var callback = function() {};
+      var existingCallback = function() { };
+      var callback = function() { };
 
       eventCallbackRegistry.test = [existingCallback, callback];
       eventCallbackService.off('test', callback);
       expect(eventCallbackRegistry).to.deep.equal({
-        'test': [existingCallback]
+        test: [existingCallback]
       });
     });
 
     it('The off function should unregister a callback, when it is the only callback', function() {
-      var callback = function() {};
+      var callback = function() { };
 
       eventCallbackRegistry.test = [callback];
       eventCallbackService.off('test', callback);
       expect(eventCallbackRegistry).to.deep.equal({
-        'test': []
+        test: []
       });
     });
 
@@ -175,7 +173,7 @@ describe('The op.live-conference module', function() {
 
   describe('The conferenceController controller', function() {
 
-    var $q, $rootScope, $stateParams, session, $controller, deviceDetector = {}, eventCallbackRegistry, readyThen, initThen, goodbyeThen, stateValue, configurationService;
+    var $q, $rootScope, $stateParams, session, $controller, deviceDetector = {}, eventCallbackRegistry, readyThen, initThen, stateValue, configurationService;
 
     beforeEach(function() {
       angular.mock.module(function($provide) {
@@ -187,7 +185,7 @@ describe('The op.live-conference module', function() {
             then: function(callback) { initThen = callback; }
           },
           goodbye: {
-            then: function(callback) { goodbyeThen = callback; }
+            then: function() { }
           },
           user: {},
           conference: {},
@@ -200,7 +198,7 @@ describe('The op.live-conference module', function() {
           }
         });
         $provide.value('deviceDetector', deviceDetector);
-        $provide.constant('EVENTS', { beforeunload: 'testbeforeunload'});
+        $provide.constant('EVENTS', { beforeunload: 'testbeforeunload' });
         $provide.value('configurationService', configurationService = {
           configure: sinon.spy(function() {
             return $q.when();
@@ -291,12 +289,10 @@ describe('The op.live-conference module', function() {
 
   describe('The landingPageReminder directive', function() {
     var element, scope, remindersGenerator, reminders;
-    var eventCallbackService, eventCallbackRegistry;
+    var eventCallbackService;
 
-
-    beforeEach(inject(function(_eventCallbackService_, _eventCallbackRegistry_) {
+    beforeEach(inject(function(_eventCallbackService_) {
       eventCallbackService = _eventCallbackService_;
-      eventCallbackRegistry = _eventCallbackRegistry_;
     }));
 
     beforeEach(function() {
