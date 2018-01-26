@@ -13,9 +13,11 @@
         resolve: {
           conference: function($stateParams, $location, $log, conferenceService) {
             var id = $stateParams.conferenceId;
+
             return conferenceService.enter(id).then(
               function(response) {
                 $log.info('Successfully entered room', id, 'with response', response);
+
                 return response.data;
               },
               function(err) {
@@ -30,9 +32,11 @@
         }
       })
       .state('app.editor-mobile', {
-        templateUrl: '/views/live-conference/partials/conference-mobile-video'})
+        templateUrl: '/views/live-conference/partials/conference-mobile-video'
+      })
       .state('app.conference', {
-        templateUrl: '/views/live-conference/partials/conference-video'});
+        templateUrl: '/views/live-conference/partials/conference-video'
+      });
 
     $locationProvider.html5Mode(true);
     RestangularProvider.setBaseUrl('/api');

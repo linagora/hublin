@@ -21,7 +21,7 @@ angular.module('meetings.i18n', ['restangular'])
   }])
   .factory('i18nAPI', ['Restangular', function(Restangular) {
     function getCatalog(locale) {
-      return Restangular.oneUrl('i18n/').withHttpConfig({cache: true}).get({locale: locale}).then(function(res) {
+      return Restangular.oneUrl('i18n/').withHttpConfig({ cache: true }).get({ locale: locale }).then(function(res) {
         return res.data;
       });
     }

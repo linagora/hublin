@@ -5,6 +5,7 @@ angular.module('op.websocket')
     function getNgCallback(callback) {
       return function() {
         var args = arguments;
+
         $timeout(function() {
           callback.apply(this, args);
         }, 0);
@@ -20,6 +21,7 @@ angular.module('op.websocket')
       this.ngMessage = null;
       this.ngSubscription = null;
       options = options || {};
+
       [
         'message',
         'broadcast',
@@ -36,15 +38,15 @@ angular.module('op.websocket')
     }
 
     IoAction.prototype.isSubscription = function() {
-      return this.subscription ? true : false;
+      return !!this.subscription;
     };
     IoAction.prototype.isUnsubscribe = function() {
-      return this.removeListenerRequest ? true : false;
+      return !!this.removeListenerRequest;
     };
     IoAction.prototype.equalsSubscription = function(other) {
       return (!this.namespace && !other.namespace || this.namespace === other.namespace) &&
-             this.subscription[0] === other.subscription[0] &&
-             this.subscription[1] === other.subscription[1];
+        this.subscription[0] === other.subscription[0] &&
+        this.subscription[1] === other.subscription[1];
     };
 
     IoAction.prototype.on = function(evt, cb) {
@@ -60,6 +62,7 @@ angular.module('op.websocket')
       this.message = Array.prototype.slice.call(arguments, 0);
       this.ngMessage = Array.prototype.slice.call(arguments, 0);
       var cb = this.message[(this.message.length - 1)];
+
       if (angular.isFunction(cb)) {
         this.ngMessage.pop();
         this.ngMessage.push(getNgCallback(cb));
@@ -106,6 +109,7 @@ angular.module('op.websocket')
 
     IoAction.prototype.toString = function() {
       var str = 'IoAction, namespace = ' + this.namespace + ' ';
+
       if (this.subscription) {
         if (this.isUnsubscribe()) {
           str += 'unsubscribe from ' + this.subscription[0] + ' ';
@@ -115,6 +119,7 @@ angular.module('op.websocket')
       } else if (this.message) {
         str += 'message to ' + this.message[0];
       }
+
       return str;
     };
 
@@ -124,13 +129,28 @@ angular.module('op.websocket')
     function ioInterface(callback) {
 
       var ioAction = new IoAction();
+      var terminate = {
+        emit: emit,
+        of: of,
+        on: on,
+        removeListener: removeListener,
+        broadcast: {
+          emit: function() {
+            ioAction.broadcast = true;
+
+            return emit(arguments);
+          }
+        }
+      };
 
       function buildCallbackResponse() {
         var completeAction = ioAction;
+
         ioAction = new IoAction();
         if (completeAction.namespace) {
           ioAction.of(completeAction.namespace);
         }
+
         return completeAction;
       }
 
@@ -141,6 +161,7 @@ angular.module('op.websocket')
 
       function of(namespaceName) {
         ioAction.of(namespaceName);
+
         return terminate;
       }
 
@@ -154,18 +175,6 @@ angular.module('op.websocket')
         callback(buildCallbackResponse());
       }
 
-      var terminate = {
-        emit: emit,
-        of: of,
-        on: on,
-        removeListener: removeListener,
-        broadcast: {
-          emit: function() {
-            ioAction.broadcast = true;
-            return emit(arguments);
-          }
-        }
-      };
       return terminate;
     }
 
@@ -183,6 +192,7 @@ angular.module('op.websocket')
 
     function removeSubscription(action) {
       var index = findSubscriptionsIndex(action);
+
       while (index.length) {
         subscriptions.splice(index.pop(), 1);
       }
@@ -194,16 +204,19 @@ angular.module('op.websocket')
 
     function findSubscriptionsIndex(action) {
       var index = [];
+
       subscriptions.forEach(function(sub, idx) {
         if (action.equalsSubscription(sub)) {
           index.push(idx);
         }
       });
+
       return index;
     }
 
     function findOneSubscription(action) {
       var subs = findSubscriptionsIndex(action);
+
       if (subs.length) {
         return subscriptions[subs[0]];
       }
@@ -291,110 +304,117 @@ angular.module('op.websocket')
         if (!sio) {
           return null;
         }
+
         return io()(wsServerURI + namespace);
       }
     };
   }])
   .factory('ioSocketProxy', ['$log', 'ioSocketConnection', 'ioInterface', 'ioOfflineBuffer',
-  function($log, ioSocketConnection, ioInterface, ioOfflineBuffer) {
+    function($log, ioSocketConnection, ioInterface, ioOfflineBuffer) {
 
-    function _handleConnectedAction(action) {
-      action.applyToSocketIO(ioSocketConnection, ioOfflineBuffer);
-    }
-
-    function _handleDisconnectedAction(action) {
-      if (action.isSubscription()) { return; }
-      ioOfflineBuffer.push(action);
-    }
-
-    function onSocketAction(action) {
-      if (ioSocketConnection.isConnected()) {
-        $log.info('connected, sending to socketio', action.toString());
-        _handleConnectedAction(action);
-      } else {
-        $log.info('not connected, buffering', action.toString());
-        _handleDisconnectedAction(action);
+      function _handleConnectedAction(action) {
+        action.applyToSocketIO(ioSocketConnection, ioOfflineBuffer);
       }
-      if (action.isSubscription()) {
-        ioOfflineBuffer.handleSubscription(action);
+
+      function _handleDisconnectedAction(action) {
+        if (action.isSubscription()) { return; }
+        ioOfflineBuffer.push(action);
       }
-    }
 
-    return function() {
-      return ioInterface(onSocketAction);
-    };
-  }])
-  .factory('ioConnectionManager', ['ioSocketConnection', 'tokenAPI', '$log', 'session', '$timeout', 'ioOfflineBuffer', 'io',
-  function(ioSocketConnection, tokenAPI, $log, session, $timeout, ioOfflineBuffer, io) {
-
-    function _disconnectOld() {
-      var oldSio = ioSocketConnection.getSio();
-      if (oldSio) { oldSio.disconnect(); }
-    }
-
-    function _connect(uri) {
-      var wsServerURI = uri || '';
-
-      tokenAPI.getNewToken().then(function(response) {
-        _disconnectOld();
-
-        var sio = io()(wsServerURI + '/', {
-          query: 'token=' + response.data.token + '&user=' + session.user._id,
-          reconnection: false
-        });
-
-        ioSocketConnection.setSio(sio);
-        ioSocketConnection.setWSServerURI(wsServerURI);
-      }), function(error) {
-        $log.info('fatal: tokenAPI.getNewToken() failed');
-        if (error && error.data) {
-          $log.info('Error while getting auth token', error.data);
+      function onSocketAction(action) {
+        if (ioSocketConnection.isConnected()) {
+          $log.info('connected, sending to socketio', action.toString());
+          _handleConnectedAction(action);
+        } else {
+          $log.info('not connected, buffering', action.toString());
+          _handleDisconnectedAction(action);
         }
-      };
-    }
-
-    function _clearManagersCache() {
-      var socketIO = io();
-      Object.keys(socketIO.managers).forEach(function(k) {
-        delete socketIO.managers[k];
-      });
-    }
-
-    ioSocketConnection.addDisconnectCallback(function() {
-      var reconnect = function() {
-        $log.debug('ioConnectionManager reconnect algorithm starting');
-        if (ioSocketConnection.isConnected()) { return; }
-        _clearManagersCache();
-        _connect();
-        $timeout(reconnect, 1000);
-      };
-      reconnect();
-    });
-
-    ioSocketConnection.addConnectCallback(function() {
-      var subscriptions = ioOfflineBuffer.getSubscriptions();
-      var buffer = ioOfflineBuffer.getBuffer();
-      ioOfflineBuffer.flushBuffer();
-      $log.info('connect callback, ' + subscriptions.length + ' subscriptions, ' + buffer.length + ' buffered messages to apply');
-      $log.debug(subscriptions);
-      $log.debug(buffer);
-      subscriptions.concat(buffer).forEach(function(action) { action.applyToSocketIO(ioSocketConnection, ioOfflineBuffer); });
-    });
-
-    return {
-      connect: _connect
-    };
-  }])
-  .factory('socket', ['$log', 'ioSocketProxy', 'ioConnectionManager',
-  function($log, ioSocketProxy, ioConnectionManager) {
-    return function(namespace) {
-      var io = ioSocketProxy();
-      if (namespace) {
-        io.of(namespace);
+        if (action.isSubscription()) {
+          ioOfflineBuffer.handleSubscription(action);
+        }
       }
-      return io;
-    };
-  }])
+
+      return function() {
+        return ioInterface(onSocketAction);
+      };
+    }])
+  .factory('ioConnectionManager', ['ioSocketConnection', 'tokenAPI', '$log', 'session', '$timeout', 'ioOfflineBuffer', 'io',
+    function(ioSocketConnection, tokenAPI, $log, session, $timeout, ioOfflineBuffer, io) {
+
+      function _disconnectOld() {
+        var oldSio = ioSocketConnection.getSio();
+
+        if (oldSio) { oldSio.disconnect(); }
+      }
+
+      function _connect(uri) {
+        var wsServerURI = uri || '';
+
+        tokenAPI.getNewToken().then(function(response) {
+          _disconnectOld();
+
+          var sio = io()(wsServerURI + '/', {
+            query: 'token=' + response.data.token + '&user=' + session.user._id,
+            reconnection: false
+          });
+
+          ioSocketConnection.setSio(sio);
+          ioSocketConnection.setWSServerURI(wsServerURI);
+        }, function(error) {
+          $log.info('fatal: tokenAPI.getNewToken() failed');
+          if (error && error.data) {
+            $log.info('Error while getting auth token', error.data);
+          }
+        });
+      }
+
+      function _clearManagersCache() {
+        var socketIO = io();
+
+        Object.keys(socketIO.managers).forEach(function(k) {
+          delete socketIO.managers[k];
+        });
+      }
+
+      ioSocketConnection.addDisconnectCallback(function() {
+        var reconnect = function() {
+          $log.debug('ioConnectionManager reconnect algorithm starting');
+          if (ioSocketConnection.isConnected()) { return; }
+          _clearManagersCache();
+          _connect();
+          $timeout(reconnect, 1000);
+        };
+
+        reconnect();
+      });
+
+      ioSocketConnection.addConnectCallback(function() {
+        var subscriptions = ioOfflineBuffer.getSubscriptions();
+        var buffer = ioOfflineBuffer.getBuffer();
+
+        ioOfflineBuffer.flushBuffer();
+        $log.info('connect callback, ' + subscriptions.length + ' subscriptions, ' + buffer.length + ' buffered messages to apply');
+        $log.debug(subscriptions);
+        $log.debug(buffer);
+        subscriptions.concat(buffer).forEach(function(action) { action.applyToSocketIO(ioSocketConnection, ioOfflineBuffer); });
+      });
+
+      return {
+        connect: _connect
+      };
+    }])
+  .factory('socket', ['$log', 'ioSocketProxy',
+    function($log, ioSocketProxy) {
+      return function(namespace) {
+        var io = ioSocketProxy();
+
+        if (namespace) {
+          io.of(namespace);
+        }
+
+        return io;
+      };
+    }])
   .factory('socketIORoom', ['$log', function($log) {
 
     return function(namespace, room, client) {
@@ -405,6 +425,7 @@ angular.module('op.websocket')
         if (!subscriptions[event] || !subscriptions[event].callbacks) {
           return false;
         }
+
         return subscriptions[event].callbacks.some(function(element) {
           return element === callback;
         });
@@ -412,9 +433,10 @@ angular.module('op.websocket')
 
       return {
         on: function(event, callback) {
-          if (! room) {
+          if (!room) {
             client.on(event, callback);
             $log.debug(namespace + ' : subscribed');
+
             return this;
           }
 
@@ -442,15 +464,17 @@ angular.module('op.websocket')
               this.subscribeToRoom();
             }
           }
+
           return this;
         },
         removeListener: function(event, callback) {
-          if (! room) {
+          if (!room) {
             client.removeListener(event, callback);
             $log.debug(namespace + ' : unsubscribed');
+
             return this;
           }
-          if (! subscriptions[event]) {
+          if (!subscriptions[event]) {
             return this;
           }
           subscriptions[event].callbacks = subscriptions[event].callbacks.filter(function(element) {
@@ -475,28 +499,29 @@ angular.module('op.websocket')
     };
   }])
   .factory('livenotification', ['$log', 'socket', 'socketIORoom', 'ioSocketConnection',
-  function($log, socket, socketIORoom, ioSocketConnection) {
-    var socketCache = {};
+    function($log, socket, socketIORoom, ioSocketConnection) {
+      var socketCache = {};
 
-    ioSocketConnection.addReconnectCallback(function() {
-      Object.keys(socketCache).forEach(function(socketRoomId) {
-        socketCache[socketRoomId].subscribeToRoom();
+      ioSocketConnection.addReconnectCallback(function() {
+        Object.keys(socketCache).forEach(function(socketRoomId) {
+          socketCache[socketRoomId].subscribeToRoom();
+        });
       });
-    });
 
-    /*
-     * With room:
-     * livenotification(namespace, room).on(event, callback);
-     * livenotification(namespace, room).removeListener(event, callback);
-     *
-     * Without room:
-     * livenotification(namespace).on(event, callback);
-     * livenotification(namespace).removeListener(event, callback);
-     */
-    return function(namespace, room) {
-      if (! socketCache[namespace + '/' + room]) {
-        socketCache[namespace + '/' + room] = socketIORoom(namespace, room, socket(namespace));
-      }
-      return socketCache[namespace + '/' + room];
-    };
-}]);
+      /*
+       * With room:
+       * livenotification(namespace, room).on(event, callback);
+       * livenotification(namespace, room).removeListener(event, callback);
+       *
+       * Without room:
+       * livenotification(namespace).on(event, callback);
+       * livenotification(namespace).removeListener(event, callback);
+       */
+      return function(namespace, room) {
+        if (!socketCache[namespace + '/' + room]) {
+          socketCache[namespace + '/' + room] = socketIORoom(namespace, room, socket(namespace));
+        }
+
+        return socketCache[namespace + '/' + room];
+      };
+    }]);

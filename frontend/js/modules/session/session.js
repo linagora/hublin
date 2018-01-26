@@ -15,6 +15,7 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
     };
 
     var sessionIsBootstraped = false;
+
     function checkBootstrap() {
       if (sessionIsBootstraped) {
         return;
@@ -64,14 +65,16 @@ angular.module('meetings.session', ['ngRoute', 'ngCookies'])
       fetchUser: function(callback) {
         if ($cookies.get('user')) {
           var user = JSON.parse($cookies.get('user'));
+
           $log.debug('Got the user from cookie', user);
           session.setUser(user);
         }
+
         return callback();
       }
     };
   }])
- .controller('sessionInitLiveConferenceController', ['$scope', 'sessionFactory', function($scope, sessionFactory) {
+  .controller('sessionInitLiveConferenceController', ['$scope', 'sessionFactory', function($scope, sessionFactory) {
 
     $scope.session = {
       template: '/views/commons/loading.html'

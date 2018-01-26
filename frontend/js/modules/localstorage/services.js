@@ -8,12 +8,13 @@ angular.module('op.localstorage')
     }
 
     function getDefault() {
-      return $localForage.createInstance(getName('opApp'), {storeName: 'keyvaluepairs'});
+      return $localForage.createInstance(getName('opApp'), { storeName: 'keyvaluepairs' });
     }
 
     function createInstance(name, options) {
       options = options || {};
       options.name = getName(name);
+
       return $localForage.createInstance(options);
     }
 
@@ -30,6 +31,7 @@ angular.module('op.localstorage')
       } catch (Error) {
         instance = createInstance(name, options);
       }
+
       return instance;
     }
 
