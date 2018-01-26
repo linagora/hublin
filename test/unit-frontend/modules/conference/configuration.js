@@ -4,7 +4,6 @@
 
 var expect = chai.expect;
 
-
 describe('The meetings.configuration module', function() {
 
   var webRTCService, RTC_BITRATES, RTC_DEFAULT_BITRATE, localStorageService, instance, alertContent;
@@ -15,19 +14,20 @@ describe('The meetings.configuration module', function() {
   });
 
   beforeEach(angular.mock.module(function($provide) {
-    RTC_BITRATES = {rate1: null, rate2: null};
+    var alert = function(content) {
+      alertContent = content;
+    };
+
+    RTC_BITRATES = { rate1: null, rate2: null };
     RTC_DEFAULT_BITRATE = 'rate2';
     webRTCService = {
-      enableVideo: function() {},
-      configureBandwidth: function() {},
+      enableVideo: function() { },
+      configureBandwidth: function() { },
       isVideoEnabled: function() { return false; },
       canEnumerateDevices: true
     };
     instance = {};
     alertContent = null;
-    var alert = function(content) {
-      alertContent = content;
-    };
     localStorageService = {
       getOrCreateInstance: function(name) {
         expect(name).to.equal('roomConfiguration');
@@ -38,6 +38,7 @@ describe('The meetings.configuration module', function() {
             }
           };
         };
+
         return instance;
       }
     };
@@ -82,6 +83,7 @@ describe('The meetings.configuration module', function() {
 
       it('should do nothing if configuration.display.username is not too long', function() {
         var userName = 'aName';
+
         this.scope.configuration = {
           displayName: userName
         };
@@ -92,6 +94,7 @@ describe('The meetings.configuration module', function() {
 
       it('should set lengthError to true if configuration.display.username is not 199 chars long', function() {
         var userName = this.generateString(199);
+
         this.scope.configuration = {
           displayName: userName
         };
@@ -102,6 +105,7 @@ describe('The meetings.configuration module', function() {
 
       it('should set lengthError to true and truncate username if configuration.display.username is 200 chars long', function() {
         var userName = this.generateString(200);
+
         this.scope.configuration = {
           displayName: userName
         };
@@ -112,6 +116,7 @@ describe('The meetings.configuration module', function() {
 
       it('should set lengthError to true and truncate username if configuration.display.username is more than 200 chars long', function() {
         var userName = this.generateString(250);
+
         this.scope.configuration = {
           displayName: userName
         };
@@ -132,6 +137,7 @@ describe('The meetings.configuration module', function() {
 
     it('should select the bitrate from localStorage if it exists', function(done) {
       var testRate = 'rate1';
+
       instance.getItem = function() {
         return {
           then: function(successCallback) {
@@ -184,7 +190,7 @@ describe('The meetings.configuration module', function() {
       beforeEach(function() {
         instance.getItem = function() {
           return {
-            then: function() {}
+            then: function() { }
           };
         };
         this.compile('<bitrate-configuration />')(this.scope);
@@ -201,6 +207,7 @@ describe('The meetings.configuration module', function() {
 
       it('should store the selectBitRate and call webRTCService#configureBandwidth with the correct rate', function(done) {
         var testRate = 'rate1';
+
         webRTCService.configureBandwidth = function(rate) {
           expect(rate).to.equal(testRate);
           done();
@@ -208,6 +215,7 @@ describe('The meetings.configuration module', function() {
         instance.setItem = function(key, value) {
           expect(key).to.equal('bitRate');
           expect(value).to.equal(testRate);
+
           return {
             finally: function(callback) {
               callback();
@@ -231,7 +239,7 @@ describe('The meetings.configuration module', function() {
       beforeEach(function() {
         instance.getItem = function() {
           return {
-            then: function() {}
+            then: function() { }
           };
         };
         this.compile('<disable-video-configuration />')(this.scope);
@@ -274,7 +282,7 @@ describe('The meetings.configuration module', function() {
         $window.navigator.mediaDevices.getUserMedia = function() {
           return $q.when(true);
         };
-        $window.navigator.mediaDevices.enumerateDevices = function() {};
+        $window.navigator.mediaDevices.enumerateDevices = function() { };
         this.compile('<disable-video-configuration />')(this.scope);
         this.scope.$digest();
 
@@ -302,7 +310,5 @@ describe('The meetings.configuration module', function() {
         expect(this.scope.canEnumerateDevices).to.be.false;
       });
     });
-
   });
-
 });

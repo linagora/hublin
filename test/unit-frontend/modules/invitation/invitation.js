@@ -20,8 +20,8 @@ describe('The meetings.invitation module', function() {
         _disconnectCallbacks: [],
 
         connect: function(conf, cb) { cb(null); },
-        leaveRoom: function(conf) {},
-        performCall: function(id) {},
+        leaveRoom: function() { },
+        performCall: function() { },
         addDisconnectCallback: function(cb) { this._disconnectCallbacks.push(cb); }
       };
 
@@ -34,11 +34,11 @@ describe('The meetings.invitation module', function() {
 
     beforeEach(inject(function($window, _$rootScope_, _$timeout_, _$compile_) {
       $window.easyrtc = {
-        enableDataChannels: function() {},
-        setDisconnectListener: function() {},
-        setDataChannelCloseListener: function() {},
-        setCallCancelled: function() {},
-        setOnStreamClosed: function() {}
+        enableDataChannels: function() { },
+        setDisconnectListener: function() { },
+        setDataChannelCloseListener: function() { },
+        setCallCancelled: function() { },
+        setOnStreamClosed: function() { }
       };
 
       $rootScope = _$rootScope_;
@@ -60,7 +60,7 @@ describe('The meetings.invitation module', function() {
       $scope.conferenceState = {
         conference: {
           members: [
-            {status: 'offline'}
+            { status: 'offline' }
           ]
         }
       };

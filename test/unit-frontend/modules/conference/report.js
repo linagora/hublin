@@ -125,7 +125,6 @@ describe('The meetings.report module', function() {
 
       expect(btnSendElt.attr('disabled')).to.be.undefined;
 
-
       $rootScope.reportedText += 'A';
       $rootScope.$digest();
 
