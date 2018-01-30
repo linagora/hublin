@@ -189,8 +189,10 @@ The `linagora/hublin` container is configured to get the mongodb connection from
 #### Launch
 
 ``` sh
-docker-compose up
+DOCKER_IP=<YOUR DOCKER IP> docker-compose up
 ```
+
+Where `DOCKER_IP` is the public IP address where Docker services can be reached. This will be used by Janus to send back the right IP to Web clients (ICE candidates) so that they can communicate with Janus correctly.
 
 #### Build
 
