@@ -4,6 +4,7 @@ var angularInjections = angularInjections || []; //eslint-disable-line no-use-be
   'use strict';
 
   angular.module('liveConferenceApplication', [
+    'ngMaterial',
     'ngRoute',
     'ngSanitize',
     'ngAnimate',

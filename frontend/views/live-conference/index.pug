@@ -19,6 +19,7 @@ html
     link(rel='stylesheet', href='/components/font-awesome/css/font-awesome.min.css')
     link(rel='stylesheet', href='/components/angular-social/angular-social.css')
     link(rel='stylesheet', href='/components/angular-motion/dist/angular-motion.min.css')
+    link(rel='stylesheet', href='/components/angular-material/angular-material.min.css')
     link(rel='stylesheet', href='//fonts.googleapis.com/css?family=Merienda:700')
     link(rel='stylesheet', href='/css/hublin.css')
     link(rel='stylesheet', href='/css/live-conference.css')
@@ -38,6 +39,9 @@ html
     script(src='/components/pines-notify/pnotify.nonblock.js')
     script(src='/components/URIjs/src/URI.min.js')
     script(src='/components/angular/angular.min.js')
+    script(src='/components/angular-aria/angular-aria.min.js')
+    script(src='/components/angular-messages/angular-messages.min.js')
+    script(src='/components/angular-material/angular-material.min.js')
     script(src='/components/angular-route/angular-route.min.js')
     script(src='/components/angular-ui-router/release/angular-ui-router.min.js')
     script(src='/components/angular-cookies/angular-cookies.min.js')
@@ -88,7 +92,10 @@ html
     script(src='/js/modules/websocket/module.js')
     script(src='/js/modules/websocket/services.js')
 
+    script(src='/js/modules/live-conference/module.js')
     script(src='/js/modules/live-conference/live-conference.js')
+    script(src='/js/modules/live-conference/live-conference.directive.js')
+    script(src='/js/modules/live-conference/modal-errors.service.js')
     script(src='/components/angular-liveconference/dist/live-conference.all.js')
 
     script(src='/js/modules/localstorage/module.js')

@@ -21,6 +21,9 @@ module.exports.externalDependencies = function() {
     'frontend/components/URIjs/src/URI.min.js',
     'frontend/components/angular/angular.min.js',
     'frontend/components/angular-route/angular-route.min.js',
+    'frontend/components/angular-material/angular-material.min.js',
+    'frontend/components/angular-aria/angular-aria.min.js',
+    'frontend/components/angular-messages/angular-messages.min.js',
     'frontend/components/angular-ui-router/release/angular-ui-router.js',
     'frontend/components/angular-mocks/angular-mocks.js',
     'frontend/components/angular-cookies/angular-cookies.min.js',
@@ -50,10 +53,6 @@ module.exports.externalDependencies = function() {
 
 module.exports.applicationDependencies = function() {
   return [
-
-    'frontend/js/modules/easyrtc/module.js',
-    'frontend/js/modules/easyrtc/services.js',
-
     'frontend/js/modules/socket.io/module.js',
     'frontend/js/modules/socket.io/services.js',
 
@@ -69,7 +68,10 @@ module.exports.applicationDependencies = function() {
     'frontend/js/modules/websocket/module.js',
     'frontend/js/modules/websocket/services.js',
 
+    'frontend/js/modules/live-conference/module.js',
     'frontend/js/modules/live-conference/live-conference.js',
+    'frontend/js/modules/live-conference/live-conference.directive.js',
+    'frontend/js/modules/live-conference/modal-errors.service.js',
     'frontend/js/modules/live-conference-devmode/live-conference-devmode.js',
     'frontend/components/angular-liveconference/dist/live-conference.all.js',
 
