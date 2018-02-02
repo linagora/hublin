@@ -13,7 +13,7 @@ describe('The meetings.invitation module', function() {
   });
 
   describe('The invitationDialogLauncher directive', function() {
-    var $rootScope, $timeout, $compile, $scope, $stateParams;
+    var $rootScope, $compile, $scope, $stateParams;
 
     beforeEach(function() {
       var webRTCService = this.webRTCService = {
@@ -32,7 +32,7 @@ describe('The meetings.invitation module', function() {
       });
     });
 
-    beforeEach(inject(function($window, _$rootScope_, _$timeout_, _$compile_) {
+    beforeEach(inject(function($window, _$rootScope_, _$compile_) {
       $window.easyrtc = {
         enableDataChannels: function() { },
         setDisconnectListener: function() { },
@@ -42,7 +42,6 @@ describe('The meetings.invitation module', function() {
       };
 
       $rootScope = _$rootScope_;
-      $timeout = _$timeout_;
       $compile = _$compile_;
 
       $scope = $rootScope.$new();
@@ -65,7 +64,6 @@ describe('The meetings.invitation module', function() {
         }
       };
       $scope.$emit('localMediaReady');
-      $timeout.flush();
 
       expect($scope.showInvitation).to.have.been.calledOnce;
     });
@@ -81,7 +79,7 @@ describe('The meetings.invitation module', function() {
       };
       $scope.$emit('localMediaReady');
 
-      expect($scope.showInvitation).to.have.not.been.calledWith();
+      expect($scope.showInvitation).to.have.not.been.called;
     });
 
     it('should not show invitation modal on localMediaReadyEvent if behavior is disabled through URL', function() {
@@ -97,7 +95,7 @@ describe('The meetings.invitation module', function() {
       };
       $scope.$emit('localMediaReady');
 
-      expect($scope.showInvitation).to.have.not.been.calledWith();
+      expect($scope.showInvitation).to.have.not.been.called;
     });
   });
 });

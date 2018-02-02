@@ -12,6 +12,7 @@
     webRTCService,
     currentConferenceState,
     conferenceErrorDialogsService,
+    invitationDialogLauncherService,
     LOCAL_VIDEO_ID,
     REMOTE_VIDEO_IDS
   ) {
@@ -31,7 +32,7 @@
       });
 
       $scope.showInvitation = function() {
-        $('#invite').modal('show');
+        invitationDialogLauncherService.show();
       };
 
       $scope.showReport = function(attendee) {
