@@ -75,8 +75,7 @@ module.exports.applicationDependencies = function() {
     'frontend/js/modules/live-conference-devmode/live-conference-devmode.js',
     'frontend/components/angular-liveconference/dist/live-conference.all.js',
 
-    'frontend/js/modules/utils/uri.js',
-    'frontend/js/modules/utils/language.js',
+    'frontend/js/modules/utils/**/*.js',
     'frontend/js/modules/session/session.js',
     'frontend/js/modules/invitation/module.js',
     'frontend/js/modules/invitation/**/*.js',

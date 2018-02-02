@@ -5,23 +5,12 @@ md-dialog(aria-label="invitation")
       h2.visible-xs #{__('Invite your contacts')}
   md-dialog-content(style="max-width:800px")
     .md-dialog-content
-      .row
-        .col-xs-12
-          form(name='inviteForm')
-            div.input-group(ng-class='{ "has-error": ctrl.formHasError(inviteForm) }')
-              input.form-control(type='text', name='inviteText', ng-model='ctrl.inviteText', placeholder=__('Please enter an email address'),
-              bs-typeahead='', bs-options='item.id for item in ctrl.autocomplete($viewValue)', invitation-dialog-validate='',
-              autocomplete='off', autocorrect='off', autocapitalize='off', spellcheck='false')
-              span.input-group-btn
-                input.btn.btn-default(type='submit', ng-disabled='ctrl.inviteForm.inviteText.$invalid', ng-click='ctrl.add()', value=__('Add'))
-      .row
-        .col-xs-12
-          ul.invitation-user-list
-            li(ng-repeat='(id,contact) in ctrl.contacts')
-              div(data-invitation-dialog-switch="", object-type='contact.objectType' contact='contact' remove='ctrl.remove(who)')
-      .row
-        span.pull-right #{__('You can also share this link:')} {{ ctrl.rawURI }}
+      form(name="inviteForm")
+        md-chips(name="contacts" ng-model="ctrl.contacts" md-max-chips="8" md-transform-chip="ctrl.validateEmail($chip)")
+          md-chip-template
+            span {{$chip.id}}
+      span.pull-right #{__('You can also share this link:')} {{ ctrl.rawURI }}
   md-dialog-actions(layout="row")
     span(flex)
     md-button(ng-click="ctrl.cancel()") #{__('Cancel')}
-    md-button(ng-disabled='ctrl.contactCount < 1', ng-click='ctrl.sendInvitations()') #{__('Send')}
+    md-button(ng-disabled='!ctrl.contacts.length', ng-click='ctrl.sendInvitations()') #{__('Send')}
