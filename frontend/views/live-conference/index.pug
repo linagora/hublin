@@ -68,6 +68,8 @@ html
     script(src='/components/angular-uuid4/angular-uuid4.min.js')
     script(src='/components/re-tree/re-tree.min.js')
     script(src='/components/ng-device-detector/ng-device-detector.min.js')
+    script(src='/components/clipboard/dist/clipboard.min.js')
+    script(src='/components/ngclipboard/dist/ngclipboard.min.js')
     script(src='/js/constants.js')
 
     +injectJSAssetFromModules('connector', injections)
@@ -84,6 +86,10 @@ html
     script(src='/js/modules/configuration/configuration.js')
 
     script(src='/js/modules/authentication/authentication.js')
+
+    script(src='/js/modules/clipboard/module.js')
+    script(src='/js/modules/clipboard/clipboard-url.component.js')
+    script(src='/js/modules/clipboard/clipboard-url.controller.js')
 
     script(src='/js/modules/user/user.js')
     script(src='/js/modules/notification/module.js')

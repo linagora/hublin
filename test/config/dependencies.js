@@ -47,7 +47,9 @@ module.exports.externalDependencies = function() {
     'frontend/components/chai/chai.js',
     'frontend/components/chai-spies/chai-spies.js',
     'frontend/components/sinon-chai/lib/sinon-chai.js',
-    'frontend/components/sinon-browser-only/sinon.js'
+    'frontend/components/sinon-browser-only/sinon.js',
+    'frontend/components/clipboard/dist/clipboard.min.js',
+    'frontend/components/ngclipboard/dist/ngclipboard.min.js'
   ];
 };
 
@@ -74,6 +76,9 @@ module.exports.applicationDependencies = function() {
     'frontend/js/modules/live-conference/modal-errors.service.js',
     'frontend/js/modules/live-conference-devmode/live-conference-devmode.js',
     'frontend/components/angular-liveconference/dist/live-conference.all.js',
+
+    'frontend/js/modules/clipboard/module.js',
+    'frontend/js/modules/clipboard/**/*.js',
 
     'frontend/js/modules/utils/**/*.js',
     'frontend/js/modules/session/session.js',

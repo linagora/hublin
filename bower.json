@@ -54,6 +54,7 @@
     "localforage": "1.4.0",
     "matchmedia-ng": "~1.0.5",
     "moment": "2.20.1",
+    "ngclipboard": "1.1.3",
     "ng-device-detector": "~1.1.7",
     "pines-notify": "2.0.1",
     "URIjs": "1.14.2"
