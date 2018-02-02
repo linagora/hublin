@@ -1,9 +1,9 @@
 'use strict';
 
 var path = require('path');
-var FRONTEND_PATH = path.normalize(__dirname + '../../../frontend');
-var CSS_PATH = FRONTEND_PATH + '/css';
-var VIEW_PATHS = [`${FRONTEND_PATH}/views`, `${FRONTEND_PATH}/js`];
+var FRONTEND_PATH = path.join(__dirname, '..', '..', 'frontend');
+var CSS_PATH = path.join(FRONTEND_PATH, 'css');
+var VIEW_PATHS = [path.join(FRONTEND_PATH, 'views'), path.join(FRONTEND_PATH, 'js')];
 var config = require('../core').config('default');
 var uuid = require('node-uuid');
 var esnconfig = require('../core')['esn-config'];
