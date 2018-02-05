@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('op.notification', ['ui.notify', 'angularMoment']);
+angular.module('op.notification', ['ngMaterial', 'angularMoment']);
