@@ -16,25 +16,25 @@
       weakSuccess: weakSuccess
     };
 
-    function weakInfo(title, text) {
-      show(title, text);
+    function weakInfo(text) {
+      show(text);
     }
 
-    function weakSuccess(title, text) {
-      show(title, text);
+    function weakSuccess(text) {
+      show(text);
     }
 
-    function weakError(title, text) {
-      show(title, text);
+    function weakError(text) {
+      show(text);
     }
 
-    function strongInfo(title, text) {
-      show(title, text, topright, 0);
+    function strongInfo(text) {
+      show(text, topright, 0);
     }
 
-    function show(title, text, position, delay) {
+    function show(text, position, delay) {
       $mdToast.show($mdToast.simple()
-        .textContent(title + ' - ' + text)
+        .textContent(text)
         .position(position || bottomright)
         .hideDelay(delay || defaultDelay)
       );

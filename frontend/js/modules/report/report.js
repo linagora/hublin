@@ -40,7 +40,7 @@ angular.module('meetings.report', [])
           conferenceAPI.createReport($scope.reportedSnapshot.id, $scope.conferenceSnapshot.conference._id, getArrayOfMemberId($scope.conferenceSnapshot.attendees), description).then(
             function(response) {
               $log.info('Successfully created report with response', response);
-              notificationFactory.weakInfo('Report ' + $scope.reportedSnapshot.displayName, 'Report has been sent !');
+              notificationFactory.weakInfo($scope.reportedSnapshot.displayName + ' has been reported');
               $scope.hide();
             },
             function(err) {

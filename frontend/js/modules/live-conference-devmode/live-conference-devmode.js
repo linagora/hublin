@@ -6,8 +6,8 @@ angular.module('op.live-conference-devmode', ['op.live-conference'])
     sendDataP2P: 'devmode:sendDataP2P',
     sendDataWS: 'devmode:sendDataWS'
   })
-  .factory('devMode', ['currentConferenceState', 'webRTCService', '$interval', 'devmodeMsgType', 'notificationFactory',
-    function(conference, webRTCService, $interval, devmodeMsgType, notificationFactory) {
+  .factory('devMode', ['$log', 'currentConferenceState', 'webRTCService', '$interval', 'devmodeMsgType', 'notificationFactory',
+    function($log, conference, webRTCService, $interval, devmodeMsgType, notificationFactory) {
       var devAttendees = [],
         intervalId = null;
 
@@ -56,7 +56,8 @@ angular.module('op.live-conference-devmode', ['op.live-conference'])
       function sendTestMessage(msgType, easyrtcid) {
         webRTCService[msgType](easyrtcid, devmodeMsgType[msgType], { msg: 'Data sent using message type ' + msgType, from: webRTCService.myEasyrtcid() },
           function(ackmessage) {
-            notificationFactory.weakInfo('ACK received for ' + msgType, JSON.stringify(ackmessage));
+            $log.debug('ACK received for ' + msgType, JSON.stringify(ackmessage));
+            notificationFactory.weakInfo('ACK received for ' + msgType);
           }
         );
       }
@@ -70,7 +71,7 @@ angular.module('op.live-conference-devmode', ['op.live-conference'])
       return service;
     }
   ])
-  .directive('devmodeLauncher', ['devMode', 'notificationFactory', function(devMode, notificationFactory) {
+  .directive('devmodeLauncher', ['$log', 'devMode', 'notificationFactory', function($log, devMode, notificationFactory) {
     return {
       restrict: 'E',
       template: '',
@@ -80,7 +81,8 @@ angular.module('op.live-conference-devmode', ['op.live-conference'])
           var modalElt = $('devmode-dialog');
 
           var peerListener = function(easyrtcid, msgType, msgData) {
-            notificationFactory.weakInfo(msgType, 'Message received from ' + easyrtcid + ' : ' + JSON.parse(msgData).msg);
+            notificationFactory.weakInfo('Message received from ' + easyrtcid);
+            $log.debug(msgType, 'Message received from ' + easyrtcid, JSON.parse(msgData).msg);
           };
 
           devMode.setDevModePeerListeners(peerListener);

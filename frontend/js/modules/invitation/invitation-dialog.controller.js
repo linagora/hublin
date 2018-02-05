@@ -42,11 +42,11 @@
 
     function sendInvitations() {
       conferenceAPI.addMembers(self.conference._id, self.contacts).then(function() {
-        notificationFactory.weakInfo('Invitations sent', 'Your contacts will join shortly');
+        notificationFactory.weakInfo('Invitations have been sent');
         $mdDialog.hide();
       }, function(err) {
         $log.error(err);
-        notificationFactory.weakError('Invitations not sent', 'There was an issue while sending invitations');
+        notificationFactory.weakError('Error while sending invitations');
       });
     }
   }

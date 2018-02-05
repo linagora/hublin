@@ -188,7 +188,7 @@ angular.module('op.live-conference')
           function liveNotificationHandler(msg) {
             $log.debug('Got a live notification', msg);
             if (msg.user._id !== session.user._id) {
-              notificationFactory.weakInfo('Conference updated!', msg.message);
+              notificationFactory.weakInfo(msg.message);
             }
           }
 

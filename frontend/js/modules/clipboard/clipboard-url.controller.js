@@ -16,7 +16,7 @@
     }
 
     function onCopySuccess() {
-      notificationFactory.weakInfo('Success', 'Link copied to clipboard');
+      notificationFactory.weakInfo('Link copied to clipboard');
     }
 
     function onCopyFailure(err) {
