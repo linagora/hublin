@@ -56,7 +56,7 @@
     "level": "debug",
     "roomNameRegExp": "^.{1,64}$",
     "usernameRegExp": "^(.){1,200}$",
-    "adapter": "hublin.janus.connector"
+    "adapter": "hublin.easyrtc.connector"
   },
   "analytics": {
     "piwik": {
@@ -136,6 +136,6 @@
     "linagora.esn.yjs-chat",
     "linagora.esn.yjs",
     "linagora.esn.conference.email-invitation",
-    "hublin.janus.connector"
+    "hublin.easyrtc.connector"
   ]
 }

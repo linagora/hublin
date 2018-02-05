@@ -29,7 +29,7 @@ deploy_test:
     name: dev
     url: https://janus.hubl.in
   only:
-    - janus@linagora/lgs/openpaas/hublin
+    - master@linagora/lgs/openpaas/hublin
   script:
     - cd /srv/${CI_PROJECT_NAME}
     - git fetch --all
