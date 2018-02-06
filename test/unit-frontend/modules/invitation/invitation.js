@@ -9,19 +9,19 @@ describe('The meetings.invitation module', function() {
   beforeEach(function() {
     module('op.live-conference');
     module('meetings.invitation');
-    module('meetings.jade.templates');
+    module('meetings.pug.templates');
   });
 
   describe('The invitationDialogLauncher directive', function() {
-    var $rootScope, $timeout, $compile, $scope, $stateParams;
+    var $rootScope, $compile, $scope, $stateParams;
 
     beforeEach(function() {
       var webRTCService = this.webRTCService = {
         _disconnectCallbacks: [],
 
         connect: function(conf, cb) { cb(null); },
-        leaveRoom: function(conf) {},
-        performCall: function(id) {},
+        leaveRoom: function() { },
+        performCall: function() { },
         addDisconnectCallback: function(cb) { this._disconnectCallbacks.push(cb); }
       };
 
@@ -32,17 +32,16 @@ describe('The meetings.invitation module', function() {
       });
     });
 
-    beforeEach(inject(function($window, _$rootScope_, _$timeout_, _$compile_) {
+    beforeEach(inject(function($window, _$rootScope_, _$compile_) {
       $window.easyrtc = {
-        enableDataChannels: function() {},
-        setDisconnectListener: function() {},
-        setDataChannelCloseListener: function() {},
-        setCallCancelled: function() {},
-        setOnStreamClosed: function() {}
+        enableDataChannels: function() { },
+        setDisconnectListener: function() { },
+        setDataChannelCloseListener: function() { },
+        setCallCancelled: function() { },
+        setOnStreamClosed: function() { }
       };
 
       $rootScope = _$rootScope_;
-      $timeout = _$timeout_;
       $compile = _$compile_;
 
       $scope = $rootScope.$new();
@@ -60,13 +59,13 @@ describe('The meetings.invitation module', function() {
       $scope.conferenceState = {
         conference: {
           members: [
-            {status: 'offline'}
+            { status: 'offline' }
           ]
         }
       };
       $scope.$emit('localMediaReady');
 
-      expect($scope.showInvitation).to.have.been.calledWith();
+      expect($scope.showInvitation).to.have.been.calledOnce;
     });
 
     it('should not show invitation modal on localMediaReadyEvent if some user is online', function() {
@@ -80,7 +79,7 @@ describe('The meetings.invitation module', function() {
       };
       $scope.$emit('localMediaReady');
 
-      expect($scope.showInvitation).to.have.not.been.calledWith();
+      expect($scope.showInvitation).to.have.not.been.called;
     });
 
     it('should not show invitation modal on localMediaReadyEvent if behavior is disabled through URL', function() {
@@ -96,7 +95,7 @@ describe('The meetings.invitation module', function() {
       };
       $scope.$emit('localMediaReady');
 
-      expect($scope.showInvitation).to.have.not.been.calledWith();
+      expect($scope.showInvitation).to.have.not.been.called;
     });
   });
 });

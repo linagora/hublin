@@ -1,12 +1,13 @@
 'use strict';
 
 var path = require('path');
-var FRONTEND_PATH = path.join(__dirname, '../../frontend');
-var CSS_PATH = FRONTEND_PATH + '/css';
-var VIEW_PATH = FRONTEND_PATH + '/views';
+var FRONTEND_PATH = path.join(__dirname, '..', '..', 'frontend');
+var CSS_PATH = path.join(FRONTEND_PATH, 'css');
+var VIEW_PATHS = [path.join(FRONTEND_PATH, 'views'), path.join(FRONTEND_PATH, 'js')];
 var config = require('../core').config('default');
 var uuid = require('node-uuid');
 var esnconfig = require('../core')['esn-config'];
+const views = require('./views');
 
 var lessMiddlewareConfig = {
   production: {
@@ -45,8 +46,8 @@ application.use(helmet.hsts({
   force: true
 }));
 
-application.set('views', VIEW_PATH);
-application.set('view engine', 'jade');
+application.set('views', VIEW_PATHS);
+application.set('view engine', 'pug');
 
 application.use(require('express-domain-middleware'));
 
@@ -100,12 +101,8 @@ application.use(function(req, res, next) {
  */
 application.locals.appName = config.app && config.app.name ? config.app.name : '';
 
-function views(req, res) {
-  var templateName = req.params[0].replace(/\.html$/, '');
-  return res.render(templateName);
-}
-
 application.get('/views/*', views);
+application.get(/\/js\/.*\.html/, views);
 
 /**
  * The main express application

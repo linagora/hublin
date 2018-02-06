@@ -1,0 +1,17 @@
+section.goodbye
+  .modal-dialog.modal-lg
+    .modal-content.modal-center.modal-hublin
+      .modal-header
+        h2!=__j('Thank you for using %s', 'span.hublin-logo #[span.logo-hublin Hubl]#[span.gray-lighter .in] #[span.beta-overlay Beta]')
+      .modal-body.text-center
+        goodbye-page-reminders
+        p
+          span #{__('Did you enjoy the experience? Spread the word!')}
+          include ../../commons/socialshare.pug
+        p
+          button.btn.btn-xl(type='button', ng-click='reopen()') #{__('Reopen the room')}
+        p
+          span #{__('or create a new one')}
+          conference-create-form
+      .modal-footer
+        include ../../commons/whatis.pug

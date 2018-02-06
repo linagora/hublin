@@ -1,0 +1,18 @@
+md-dialog(aria-label="invitation")
+  md-toolbar
+    .md-toolbar-tools
+      h2.hidden-xs #{__('Invite your contacts to join the room')}
+      h2.visible-xs #{__('Invite your contacts')}
+  md-dialog-content
+    .md-dialog-content
+      form(name="inviteForm")
+        md-chips(name="contacts" ng-model="ctrl.contacts" md-max-chips="8" md-transform-chip="ctrl.validateEmail($chip)")
+          md-chip-template
+            span {{$chip.id}}
+      .share-link(layout="row" layout-align="center center")
+        span #{__('You can also share this link')}
+        clipboard-url(url="ctrl.rawURI")
+  md-dialog-actions(layout="row")
+    span(flex)
+    md-button(ng-click="ctrl.cancel()") #{__('Cancel')}
+    md-button(ng-disabled='!ctrl.contacts.length', ng-click='ctrl.sendInvitations()') #{__('Send')}

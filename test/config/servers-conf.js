@@ -8,22 +8,16 @@ var tmp = 'tmp';
 module.exports = {
   tmp: tmp,
 
-  mongodb: {
-    'cmd' : process.env.CMD_MONGODB || 'mongod',
-    'port' : process.env.PORT_MONGODB || 23456,
-    'interval_replica_set': process.env.MONGODB_INTERVAL_REPLICA_SET || 1000,
-    'tries_replica_set': process.env.MONGODB_TRIES_REPLICA_SET || 20,
-    'replicat_set_name' : 'rs',
-    'dbname': 'meetings-test',
-    'dbpath' : tmp + '/mongo/',
-    'logpath' : ''
+  redis: {
+    host: 'localhost',
+    port: 6379,
+    url: `redis://${process.env.REDIS_HOST || 'redis'}:6379`
   },
 
-  redis: {
-    'cmd' : process.env.CMD_REDIS || 'redis-server',
-    'port' : process.env.PORT_REDIS || 23457,
-    'conf_file' : '',
-    'log_path' : '',
-    'pwd' : ''
+  mongodb: {
+    host: 'mongo',
+    port: 27017,
+    dbName: 'tests',
+    connectionString: `mongodb://${process.env.MONGO_HOST || 'mongo'}:27017/tests`
   }
 };

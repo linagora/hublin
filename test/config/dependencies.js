@@ -9,18 +9,14 @@ module.exports.testDependencies = function() {
 module.exports.externalDependencies = function() {
   return [
     'frontend/components/jquery/dist/jquery.min.js',
-    'frontend/components/underscore/underscore.js',
+    'frontend/components/lodash/dist/lodash.min.js',
     'frontend/components/bootstrap/dist/js/bootstrap.min.js',
-    'frontend/components/pines-notify/pnotify.core.js',
-    'frontend/components/pines-notify/pnotify.buttons.js',
-    'frontend/components/pines-notify/pnotify.callbacks.js',
-    'frontend/components/pines-notify/pnotify.confirm.js',
-    'frontend/components/pines-notify/pnotify.desktop.js',
-    'frontend/components/pines-notify/pnotify.history.js',
-    'frontend/components/pines-notify/pnotify.nonblock.js',
     'frontend/components/URIjs/src/URI.min.js',
     'frontend/components/angular/angular.min.js',
     'frontend/components/angular-route/angular-route.min.js',
+    'frontend/components/angular-material/angular-material.min.js',
+    'frontend/components/angular-aria/angular-aria.min.js',
+    'frontend/components/angular-messages/angular-messages.min.js',
     'frontend/components/angular-ui-router/release/angular-ui-router.js',
     'frontend/components/angular-mocks/angular-mocks.js',
     'frontend/components/angular-cookies/angular-cookies.min.js',
@@ -29,8 +25,8 @@ module.exports.externalDependencies = function() {
     'frontend/components/restangular/dist/restangular.min.js',
     'frontend/components/angular-strap/dist/angular-strap.min.js',
     'frontend/components/angular-strap/dist/angular-strap.tpl.min.js',
+    'frontend/components/moment/min/moment.min.js',
     'frontend/components/angular-moment/angular-moment.min.js',
-    'frontend/components/angular-pines-notify/src/pnotify.js',
     'frontend/components/angular-social/src/scripts/00-directive.js',
     'frontend/components/angular-social/src/scripts/02-facebook.js',
     'frontend/components/angular-social/src/scripts/03-twitter.js',
@@ -40,22 +36,19 @@ module.exports.externalDependencies = function() {
     'frontend/components/matchmedia/matchMedia.js',
     'frontend/components/matchmedia-ng/matchmedia-ng.js',
     'frontend/components/angular-uuid4/angular-uuid4.min.js',
-    'node_modules/easyrtc/api/easyrtc.js',
     'frontend/components/chai/chai.js',
     'frontend/components/chai-spies/chai-spies.js',
     'frontend/components/sinon-chai/lib/sinon-chai.js',
-    'frontend/components/sinon-browser-only/sinon.js'
+    'frontend/components/sinon-browser-only/sinon.js',
+    'frontend/components/clipboard/dist/clipboard.min.js',
+    'frontend/components/ngclipboard/dist/ngclipboard.min.js'
   ];
 };
 
 module.exports.applicationDependencies = function() {
   return [
-
-    'frontend/components/opangular/src/easyrtc.js',
-    'frontend/components/opangular/src/easyrtc/services.js',
-
-    'frontend/components/opangular/src/socketio.js',
-    'frontend/components/opangular/src/socketio/services.js',
+    'frontend/js/modules/socket.io/module.js',
+    'frontend/js/modules/socket.io/services.js',
 
     'frontend/js/modules/utils/wizard.js',
     'frontend/js/modules/configuration/configuration.js',
@@ -63,21 +56,26 @@ module.exports.applicationDependencies = function() {
     'frontend/js/modules/authentication/authentication.js',
 
     'frontend/js/modules/user/user.js',
-    'frontend/components/opangular/src/notification.js',
-    'frontend/components/opangular/src/notification/services.js',
+    'frontend/js/modules/notification/module.js',
+    'frontend/js/modules/notification/services.js',
 
-    'frontend/js/modules/websocket/websocket.js',
-    'frontend/components/opangular/src/websocket/services.js',
+    'frontend/js/modules/websocket/module.js',
+    'frontend/js/modules/websocket/services.js',
 
+    'frontend/js/modules/live-conference/module.js',
     'frontend/js/modules/live-conference/live-conference.js',
+    'frontend/js/modules/live-conference/live-conference.directive.js',
+    'frontend/js/modules/live-conference/modal-errors.service.js',
     'frontend/js/modules/live-conference-devmode/live-conference-devmode.js',
     'frontend/components/angular-liveconference/dist/live-conference.all.js',
 
-    'frontend/js/modules/utils/uri.js',
-    'frontend/js/modules/utils/language.js',
+    'frontend/js/modules/clipboard/module.js',
+    'frontend/js/modules/clipboard/**/*.js',
+
+    'frontend/js/modules/utils/**/*.js',
     'frontend/js/modules/session/session.js',
-    'frontend/js/modules/invitation/invitation.js',
-    'frontend/js/modules/invitation/email.js',
+    'frontend/js/modules/invitation/module.js',
+    'frontend/js/modules/invitation/**/*.js',
     'frontend/js/modules/report/report.js',
     'frontend/js/modules/conference/conference.js',
     'frontend/js/modules/i18n/i18n.js',

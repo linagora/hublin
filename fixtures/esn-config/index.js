@@ -1,60 +1,47 @@
-'use strict';
+/*eslint no-console: 0 */
 
-var fs = require('fs');
-var mongoose = require('mongoose');
+const fs = require('fs');
+const mongoose = require('mongoose');
 
-var loadFile = function(name, done) {
-  console.log('[INFO] Loading file ', name);
-  var data;
-  try {
-    data = JSON.parse(fs.readFileSync(name));
-  } catch (err) {
-    if (done) {
-      return done(err);
-    }
-  }
-  var item = name.slice(name.lastIndexOf('/') + 1, name.lastIndexOf('.'));
-  try {
-    require('../../backend/core/index');
-    var esnconfig = require('../../backend/core/esn-config')(item);
-    mongoose.connection.on('connected', function() {
-      esnconfig.store(data, function(err) {
-        if (done) {
-          return done(err);
-        }
-      });
-    });
-  } catch (err) {
-    return done(err);
-  }
+require('../../backend/core/index');
+
+module.exports = done => {
+  console.log('[INFO] Hublin Configuration');
+  loadDirectory(__dirname + '/data', done);
 };
 
-var loadDirectory = function(name, done) {
-  fs.readdirSync(name).forEach(function(filename) {
-    var f = name + '/' + filename;
-    var stat = fs.statSync(f);
+function loadDirectory(name, done) {
+  fs.readdirSync(name).forEach(filename => {
+    const stat = fs.statSync(name + '/' + filename);
+
     if (stat.isFile()) {
-      loadFile(f, function(err) {
+      loadFile(filename, err => {
         if (err) {
-          console.log('[ERROR] ' + f + ' has not been loaded (' + err.message + ')');
+          console.log('[ERROR] ' + filename + ' has not been loaded (' + err.message + ')');
         } else {
-          console.log('[INFO] ' + f + ' has been loaded');
+          console.log('[INFO] ' + filename + ' has been loaded');
         }
-        return done();
+        done();
       });
     }
   });
-};
+}
 
-/**
- *
- * @param {function} done
- */
-module.exports = function(done) {
-  console.log('[INFO] ESN Configuration');
-  loadDirectory(__dirname + '/data', function(err) {
+function loadFile(name, done) {
+  console.log('[INFO] Loading file', name);
+  let data;
+
+  try {
+    data = require(`./data/${name}`)();
+  } catch (err) {
     done(err);
-  });
-};
+  }
 
+  try {
+    const esnconfig = require('../../backend/core/esn-config')(name.slice(0, name.lastIndexOf('.')));
 
+    mongoose.connection.on('connected', () => esnconfig.store(data, done));
+  } catch (err) {
+    done(err);
+  }
+}

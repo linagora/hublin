@@ -74,7 +74,7 @@
   "Please enter an email address": "Veuillez entrer une adresse email",
   "Add": "Ajouter",
   "Send Invitations": "Envoyer les invitations",
-  "You can also share this link: %s": "Vous pouvez aussi partager ce lien : %s",
+  "You can also share this link": "Vous pouvez aussi partager ce lien",
   "Sorry but something bad just happened, developers have been notified": "Désolé mais quelque chose d'imprévu est survenu, les développeurs ont été prévenus",
   "Next": "Suivant",
   "The description is limited to %s characters.": "La description est limitée à %s caractères.",
@@ -95,5 +95,6 @@
   "Raw text": "Texte brut",
   "Markdown": "Markdown",
   "Unknown": "Inconnu",
-  "Local media cannot be found": "Local media introuvable"
+  "Local media cannot be found": "Local media introuvable",
+  "Copy": "Copier"
 }

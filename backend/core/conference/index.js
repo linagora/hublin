@@ -1,26 +1,26 @@
 'use strict';
 
-var mongoose = require('mongoose'),
-    Conference = mongoose.model('Conference'),
-    ConferenceArchive = mongoose.model('ConferenceArchive'),
-    localpubsub = require('../pubsub').local,
-    globalpubsub = require('../pubsub').global,
-    logger = require('../logger'),
-    extend = require('extend'),
-    q = require('q'),
-    async = require('async'),
-    scale = require('./scalability');
+const extend = require('extend');
+const q = require('q');
+const async = require('async');
+const mongoose = require('mongoose');
+const Conference = mongoose.model('Conference');
+const ConferenceArchive = mongoose.model('ConferenceArchive');
+const localpubsub = require('../pubsub').local;
+const globalpubsub = require('../pubsub').global;
+const logger = require('../logger');
+const scale = require('./scalability');
 
-var TTL = 1000 * 60 * 10;
-var GARBAGE_TTL = 1000 * 60 * 60 * 24;
+const TTL = 1000 * 60 * 10;
+const GARBAGE_TTL = 1000 * 60 * 60 * 24;
 
-var MEMBER_STATUS = {
+const MEMBER_STATUS = {
   INVITED: 'invited',
   ONLINE: 'online',
   OFFLINE: 'offline'
 };
 
-var EVENTS = {
+const EVENTS = {
   join: 'conference:join',
   leave: 'conference:leave',
   invite: 'conference:invite',
@@ -38,14 +38,14 @@ function create(conference, callback) {
     return callback(new Error('Conference can not be null'));
   }
 
-  scale(conference, function(err, conference) {
+  scale(conference, (err, conference) => {
     if (err) {
-      return callback(err);
+      return callback(err, null);
     }
 
-    return new Conference(conference).save(function(err, conference) {
+    return new Conference(conference).save((err, conference) => {
       if (err) {
-        return callback(err);
+        return callback(err, null);
       }
 
       localpubsub
@@ -118,18 +118,18 @@ function addHistory(conference, user, status, callback) {
  */
 function getMember(conference, tuple, callback) {
   Conference.findOne(
-    {_id: conference._id},
-    {members: {$elemMatch: {id: tuple.id, objectType: tuple.objectType}}}
+    { _id: conference._id },
+    { members: { $elemMatch: { id: tuple.id, objectType: tuple.objectType } } }
   ).exec(function(err, conf) {
-      if (err) {
-        return callback(err);
-      }
+    if (err) {
+      return callback(err);
+    }
 
-      if (!conf || !conf.members || conf.members.length === 0) {
-        return callback(new Error('No such user'));
-      }
-      return callback(null, conf.members[0]);
-    });
+    if (!conf || !conf.members || conf.members.length === 0) {
+      return callback(new Error('No such user'));
+    }
+    return callback(null, conf.members[0]);
+  });
 }
 
 /**
@@ -223,7 +223,7 @@ function invite(conference, creator, members, baseUrl, callback) {
  * @return {*}
  */
 function get(id, callback) {
-  return Conference.findOne({_id: id}, callback);
+  return Conference.findOne({ _id: id }, callback);
 }
 
 /**
@@ -233,7 +233,7 @@ function get(id, callback) {
  * @param {Function} callback
  */
 function getFromMemberToken(token, callback) {
-  Conference.findOne({'members.token': token}).exec(callback);
+  Conference.findOne({ 'members.token': token }).exec(callback);
 }
 
 /**
@@ -267,14 +267,14 @@ function getMemberFromToken(token, callback) {
  * @return {*}
  */
 function updateMemberField(conference, member, field, value, callback) {
-  var update = {displayName: {$set: {'members.$.displayName': value}}};
+  var update = { displayName: { $set: { 'members.$.displayName': value } } };
   if (!update[field]) {
     return callback(new Error('Can not update the field', field));
   }
   Conference.update(
-    {_id: conference._id, members: {$elemMatch: {id: member.id, objectType: member.objectType}}},
+    { _id: conference._id, members: { $elemMatch: { id: member.id, objectType: member.objectType } } },
     update[field],
-    {upsert: true},
+    { upsert: true },
     callback
   );
 }
@@ -329,7 +329,7 @@ function userIsConferenceMember(conference, user, callback) {
   if (!conference) {
     return callback(new Error('Undefined conference'));
   }
-  Conference.findOne({_id: conference._id}, {members: {$elemMatch: {id: user.id, objectType: user.objectType}}}).exec(function(err, conf) {
+  Conference.findOne({ _id: conference._id }, { members: { $elemMatch: { id: user.id, objectType: user.objectType } } }).exec(function(err, conf) {
     if (err) {
       return callback(err);
     }
@@ -418,24 +418,24 @@ function join(conference, user, callback) {
     return callback(new Error('Undefined conference'));
   }
 
-   addUser(conference, user, function(err) {
+  addUser(conference, user, function(err) {
     if (err) {
       return callback(err);
     }
     Conference.update(
-      {_id: conference._id, members: {$elemMatch: {id: user.id, objectType: user.objectType}}},
-      {$set: {'members.$.status': MEMBER_STATUS.ONLINE}},
-      {upsert: true},
+      { _id: conference._id, members: { $elemMatch: { id: user.id, objectType: user.objectType } } },
+      { $set: { 'members.$.status': MEMBER_STATUS.ONLINE } },
+      { upsert: true },
       function(err, updated) {
         if (err) {
           logger.error('Error while updating the conference', err);
           return callback(err);
         }
 
-        localpubsub.topic(EVENTS.join).forward(globalpubsub, {conference: conference, user: user});
+        localpubsub.topic(EVENTS.join).forward(globalpubsub, { conference: conference, user: user });
 
         return callback(null, updated);
-    });
+      });
   });
 }
 
@@ -465,23 +465,23 @@ function leave(conference, user, callback) {
       return callback(new Error('User is not member of this conference'));
     }
     Conference.update(
-      {_id: conference._id, members: {$elemMatch: {id: user.id, objectType: user.objectType}}},
-      {$set: {'members.$.status': MEMBER_STATUS.OFFLINE}},
-      {upsert: true},
+      { _id: conference._id, members: { $elemMatch: { id: user.id, objectType: user.objectType } } },
+      { $set: { 'members.$.status': MEMBER_STATUS.OFFLINE } },
+      { upsert: true },
       function(err, updated) {
         if (err) {
           return callback(err);
         }
 
-        localpubsub.topic(EVENTS.leave).forward(globalpubsub, {conference: conference, user: user});
+        localpubsub.topic(EVENTS.leave).forward(globalpubsub, { conference: conference, user: user });
 
         return callback(null, updated);
-    });
+      });
   });
 }
 
 /**
- * Hook for room join event called from om-webrtc module
+ * Hook for room join event called from linagora.esn.webrtc module
  *
  * @param {String} roomId
  * @param {String} userId
@@ -511,7 +511,7 @@ function onRoomJoin(roomId, userId, callback) {
 }
 
 /**
- * Hook for room leave event called from om-webrtc module
+ * Hook for room leave event called from linagora.esn.webrtc module
  *
  * @param {String} roomId
  * @param {String} userId
@@ -558,7 +558,6 @@ function getTTL() {
   return q(TTL);
 }
 
-
 /**
  * tell if a conference is active.
  *
@@ -573,7 +572,7 @@ function isActive(conference) {
 
   function _isActive(ttls) {
     var ttl = ttls[0],
-        garbageTTL = ttls[1];
+      garbageTTL = ttls[1];
     function memberOnline(member) {
       return member.status === MEMBER_STATUS.ONLINE;
     }
@@ -582,7 +581,7 @@ function isActive(conference) {
       return diff < 0;
     }
     function garbageTtlNotReached(conference) {
-      if (!conference.history ||   !conference.history.length) {
+      if (!conference.history || !conference.history.length) {
         return true;
       }
       var latestActivity = conference.history[(conference.history.length - 1)];
@@ -591,12 +590,12 @@ function isActive(conference) {
     }
 
     var active = garbageTtlNotReached(conference) &&
-        (conference.members.some(memberOnline) || ttlNotExpired(conference.timestamps.created));
+      (conference.members.some(memberOnline) || ttlNotExpired(conference.timestamps.created));
     return q(active);
   }
 
   return q.all([getTTL(), getGarbageTTL()])
-  .then(_isActive);
+    .then(_isActive);
 }
 
 function _buildConferenceArchive(conference) {
@@ -627,7 +626,7 @@ function archive(conference) {
       logger.error('Unable to save conference archive %s', ca.toObject(), err);
       return deferred.reject(err);
     }
-    Conference.remove({_id: conferenceArchive.initial_id}, function(err) {
+    Conference.remove({ _id: conferenceArchive.initial_id }, function(err) {
       if (err) {
         logger.error('Unable to remove inactive conference', err);
         return deferred.reject(err);

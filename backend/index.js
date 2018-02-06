@@ -8,16 +8,17 @@ var Meetings = new AwesomeModule('linagora.io.meetings', {
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.webserver', 'webserver'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.wsserver', 'wsserver'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.core.logger', 'logger'),
-    new Dependency(Dependency.TYPE_NAME, 'linagora.io.webrtc', 'webrtc'),
-    new Dependency(Dependency.TYPE_NAME, 'linagora.io.invitation', 'invitation'),
-    new Dependency(Dependency.TYPE_NAME, 'linagora.io.mailer', 'mailer'),
-    new Dependency(Dependency.TYPE_NAME, 'om-email-invitation', 'emailInvitation'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.esn.webrtc', 'webrtc'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.esn.conference.invitation', 'invitation'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.esn.mailer', 'mailer'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.esn.conference.email-invitation', 'emailInvitation'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.io.meetings.core.config', 'config')
   ],
   states: {
     lib: function(dependencies, callback) {
       var all = require('./webserver/routes/all')(dependencies),
           meetings = require('./webserver/routes/meetings')(dependencies),
+          generated = require('./webserver/routes/generated')(dependencies),
           home = require('./webserver/routes/home')(dependencies),
           conferences = require('./webserver/routes/conferences')(dependencies),
           feedback = require('./webserver/routes/feedback')(dependencies),
@@ -26,13 +27,14 @@ var Meetings = new AwesomeModule('linagora.io.meetings', {
 
       return callback(null, {
         api: {
-          meetings: meetings,
-          all: all,
-          conferences: conferences,
-          home: home,
-          feedback: feedback,
-          i18n: i18n,
-          errors: errors
+          meetings,
+          all,
+          generated,
+          conferences,
+          home,
+          feedback,
+          i18n,
+          errors
         }
       });
     },
@@ -43,6 +45,7 @@ var Meetings = new AwesomeModule('linagora.io.meetings', {
       var webserver = dependencies('webserver');
 
       webserver.application.use('/', this.api.all);
+      webserver.application.use('/', this.api.generated);
       webserver.application.use('/', this.api.conferences);
       webserver.application.use('/', this.api.meetings);
       webserver.application.use('/', this.api.home);

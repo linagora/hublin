@@ -1,0 +1,41 @@
+image: linagora/node-test-base:8
+
+stages:
+  - test
+  - deploy_test
+test:
+  stage: test
+  except:
+    - triggers
+  variables:
+    TZ: America/New_York
+  tags:
+    - docker
+  services:
+    - mongo:2.6.5
+    - redis:3
+  script:
+    - npm i
+    - bower i --allow-root
+    - grunt --chunk=1
+deploy_test:
+  stage: deploy_test
+  except:
+    - triggers
+  tags:
+    - janus.hubl.in
+    - deployment
+  environment:
+    name: dev
+    url: https://janus.hubl.in
+  only:
+    - master@linagora/lgs/openpaas/hublin
+  script:
+    - cd /srv/${CI_PROJECT_NAME}
+    - git fetch --all
+    - git checkout ${CI_COMMIT_SHA}
+    - npm install --production
+    - npm update --production
+    - bower install --production
+    - git checkout -- .
+    - sudo /etc/init.d/hublin.test restart

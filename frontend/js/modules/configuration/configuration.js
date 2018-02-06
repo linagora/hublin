@@ -8,6 +8,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       var jobs = configurationHandlerService.getHandlers().map(function(handler) {
         return handler(configuration);
       });
+
       return $q.all(jobs);
     }
 
@@ -46,7 +47,7 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
 
       $scope.createConference = function() {
         configurationService.configure($scope.configuration)
-         .then(onSuccess, onFailure);
+          .then(onSuccess, onFailure);
       };
 
       $scope.wizard = new Wizard([
@@ -86,12 +87,12 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
       link: link
     };
   }])
-  .directive('bitrateConfiguration', ['webRTCService', 'easyRTCBitRates', 'easyRTCDefaultBitRate', 'localStorageService', function(webRTCService, easyRTCBitRates, easyRTCDefaultBitRate, localStorageService) {
+  .directive('bitrateConfiguration', ['webRTCService', 'RTC_BITRATES', 'RTC_DEFAULT_BITRATE', 'localStorageService', function(webRTCService, RTC_BITRATES, RTC_DEFAULT_BITRATE, localStorageService) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/bitrate-configuration.html',
       link: function($scope) {
-        var bitRates = Object.keys(easyRTCBitRates);
+        var bitRates = Object.keys(RTC_BITRATES);
         var storage = localStorageService.getOrCreateInstance('roomConfiguration');
 
         $scope.selectBitRate = function(rate) {
@@ -111,26 +112,34 @@ angular.module('meetings.configuration', ['meetings.session', 'meetings.wizard',
           if (config) {
             $scope.selectBitRate(config);
           } else {
-            $scope.selectBitRate(easyRTCDefaultBitRate);
+            $scope.selectBitRate(RTC_DEFAULT_BITRATE);
           }
         },
-        function() {
-          $scope.selectBitRate(easyRTCDefaultBitRate);
-        });
+          function() {
+            $scope.selectBitRate(RTC_DEFAULT_BITRATE);
+          });
 
       }
     };
   }])
-  .directive('disableVideoConfiguration', ['webRTCService', '$alert', function(webRTCService, $alert) {
+  .directive('disableVideoConfiguration', ['$alert', '$window', 'webRTCService', function($alert, $window, webRTCService) {
     return {
       restrict: 'E',
       templateUrl: '/views/modules/configuration/disable-video-configuration.html',
       link: function($scope) {
-        $scope.videoEnabled = webRTCService.isVideoEnabled();
-        $scope.canEnumerateDevices = webRTCService.canEnumerateDevices;
-
+        var navigator = $window.navigator;
         var alertElement;
-        $scope.$watch('videoEnabled', function(val) {
+
+        $scope.videoEnabled = webRTCService.isVideoEnabled();
+
+        $scope.canEnumerateDevices = false;
+        navigator.mediaDevices && navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+          .then(function() {
+            $scope.canEnumerateDevices = navigator.mediaDevices && angular.isDefined(navigator.mediaDevices.enumerateDevices);
+            $scope.$applyAsync();
+          });
+
+        $scope.$watch('videoEnabled', function() {
           webRTCService.enableVideo($scope.videoEnabled);
           if (!$scope.videoEnabled) {
             alertElement = $alert({

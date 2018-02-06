@@ -4,12 +4,10 @@ var mockery = require('mockery'),
     chai = require('chai'),
     expect = chai.expect;
 
-var defaultConfig = [
-  {
+var defaultConfig = [{
     type: 'ws',
     url: ''
-  }
-];
+  }];
 
 var expectConfiguration = function(done, config) {
   return function(err, conference) {
@@ -27,7 +25,7 @@ var expectConfiguration = function(done, config) {
 describe('The scalability module for conferences', function() {
 
   it('should read its configuration from esn-config', function(done) {
-    mockery.registerMock('../esn-config', function(setting) {
+    mockery.registerMock('../esn-config', function() {
       return {
         get: function() {
           done();
@@ -39,7 +37,13 @@ describe('The scalability module for conferences', function() {
   });
 
   it('should use default configuration if nothing is defined in esn-config', function(done) {
-    mockery.registerMock('../esn-config', function(setting) {
+    var defaultConference = {
+      configuration: {
+        hosts: []
+      }
+    };
+
+    mockery.registerMock('../esn-config', function() {
       return {
         get: function(callback) {
           return callback();
@@ -47,11 +51,17 @@ describe('The scalability module for conferences', function() {
       };
     });
 
-    this.helpers.requireBackend('core/conference/scalability.js')({}, expectConfiguration(done, defaultConfig));
+    this.helpers.requireBackend('core/conference/scalability.js')(defaultConference, expectConfiguration(done, defaultConfig));
   });
 
   it('should use default configuration if esn-config fails', function(done) {
-    mockery.registerMock('../esn-config', function(setting) {
+    var defaultConference = {
+      configuration: {
+        hosts: []
+      }
+    };
+
+    mockery.registerMock('../esn-config', function() {
       return {
         get: function(callback) {
           return callback(new Error('WTF'));
@@ -59,26 +69,34 @@ describe('The scalability module for conferences', function() {
       };
     });
 
-    this.helpers.requireBackend('core/conference/scalability.js')({}, expectConfiguration(done, defaultConfig));
+    this.helpers.requireBackend('core/conference/scalability.js')(defaultConference, expectConfiguration(done, defaultConfig));
   });
 
   it('should use specific configuration if present', function(done) {
-    var config = [
-      {
-        type: 'ws',
-        url: 'ws.hubl.in'
-      },
-      {
-        type: 'turn',
-        url: 'turn:turn01.hubl.in?transport=udp'
-      },
-      {
-        type: 'turn',
-        url: 'turn:turn02.hubl.in?transport=tcp'
+    var defaultConference = {
+      configuration: {
+        hosts: []
       }
-    ];
+    };
 
-    mockery.registerMock('../esn-config', function(setting) {
+    var config = {
+      configuration: [
+        {
+          type: 'ws',
+          url: 'ws.hubl.in'
+        },
+        {
+          type: 'turn',
+          url: 'turn:turn01.hubl.in?transport=udp'
+        },
+        {
+          type: 'turn',
+          url: 'turn:turn02.hubl.in?transport=tcp'
+        }
+      ]
+    };
+
+    mockery.registerMock('../esn-config', function() {
       return {
         get: function(callback) {
           return callback(null, config);
@@ -86,7 +104,7 @@ describe('The scalability module for conferences', function() {
       };
     });
 
-    this.helpers.requireBackend('core/conference/scalability.js')({}, expectConfiguration(done, config));
+    this.helpers.requireBackend('core/conference/scalability.js')(defaultConference, expectConfiguration(done, config.configuration));
   });
 
 });

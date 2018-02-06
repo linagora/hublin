@@ -14,5 +14,5 @@
       "poolSize": 10
     }
   },
-  "connectionString": "mongodb://db:27017/hublin"
+  "connectionString": "mongodb://mongo:27017/hublin"
 }

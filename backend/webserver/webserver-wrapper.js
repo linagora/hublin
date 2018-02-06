@@ -8,12 +8,15 @@ function WebServerWrapper(server) {
   var webserver = server;
 
   function asArray(values) {
-    var array = util.isArray(values) ? values : [values];
-    return array;
+    return util.isArray(values) ? values : [values];
   }
 
   this.injectJS = function injectJS(namespace, js, innerApps) {
     webserver.addJSInjection(namespace, asArray(js), asArray(innerApps));
+  };
+
+  this.injectJSAsset = function injectJSAsset(namespace, js, innerApps) {
+    webserver.addJSAssetInjection(namespace, asArray(js), asArray(innerApps));
   };
 
   this.injectCSS = function injectCSS(namespace, css, innerApps) {
@@ -49,6 +52,9 @@ var awesomeWebServerWrapper = new AwesomeModule('webserver.wrapper', {
     var proxyLib = {
       injectJS: function(js, innerApps) {
         return lib.injectJS(moduleName, js, innerApps);
+      },
+      injectJSAsset: function(js, innerApps) {
+        return lib.injectJSAsset(moduleName, js, innerApps);
       },
       injectCSS: function(css, innerApps) {
         return lib.injectCSS(moduleName, css, innerApps);

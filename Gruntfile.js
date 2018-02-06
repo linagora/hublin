@@ -2,7 +2,6 @@
 
 var fs = require('fs-extra');
 var path = require('path');
-
 var conf_path = './test/config/';
 var servers = require(conf_path + 'servers-conf');
 var config = require('./config/default.json');
@@ -13,8 +12,6 @@ var dist = 'dist';
  * @param {object} grunt
  */
 module.exports = function(grunt) {
-  var CI = grunt.option('ci');
-
   var testArgs = (function() {
     var opts = ['test', 'chunk'];
     var args = {};
@@ -46,13 +43,7 @@ module.exports = function(grunt) {
         separator: ';'
       }
     },
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc',
-        ignores: ['test/frontend/karma-include/*', 'frontend/js/thirdparty/*', 'frontend/js/analytics/*'],
-        reporter: CI ? CI : 'checkstyle',
-        reporterOutput: CI ? CI : 'jshint.xml'
-      },
+    eslint: {
       all: {
         src: [
           'Gruntfile.js',
@@ -64,30 +55,7 @@ module.exports = function(grunt) {
         ]
       },
       quick: {
-        // You must run the prepare-quick-lint target before jshint:quick,
-        // files are filled in dynamically.
         src: []
-      }
-    },
-    gjslint: {
-      options: {
-        flags: [
-          '--disable 0110',
-          '--nojsdoc',
-          '-e test/frontend/karma-include',
-          '-e frontend/js/analytics,frontend/js/thirdparty'
-        ],
-        reporter: {
-          name: CI ? 'gjslint_xml' : 'console',
-          dest: CI ? 'gjslint.xml' : undefined
-        },
-        pythonPath: 'python2'
-      },
-      all: {
-        src: ['<%= jshint.all.src %>']
-      },
-      quick: {
-        src: ['<%= jshint.quick.src %>']
       }
     },
     lint_pattern: {
@@ -97,52 +65,26 @@ module.exports = function(grunt) {
         ]
       },
       all: {
-        src: ['<%= jshint.all.src %>']
+        src: ['<%= eslint.all.src %>']
       },
       quick: {
-        src: ['<%= jshint.quick.src %>']
+        src: ['<%= eslint.quick.src %>']
       }
     },
-    shell: {
-      redis: {
-        command: servers.redis.cmd + ' --port ' +
-        (servers.redis.port ? servers.redis.port : '23457') +
-        (servers.redis.pwd ? ' --requirepass ' + servers.redis.pwd : '') +
-        (servers.redis.conf_file ? ' ' + servers.redis.conf_file : ''),
+    puglint: {
+      all: {
         options: {
-          async: false,
-          stdout: function(chunk) {
-            var done = grunt.task.current.async();
-            var out = '' + chunk;
-            var started = /on port/;
-            if (started.test(out)) {
-              grunt.log.write('Redis server is started.');
-              done(true);
-            }
-          },
-          stderr: function(chunk) {
-            grunt.log.error(chunk);
+          config: {
+            disallowAttributeInterpolation: true,
+            disallowLegacyMixinCall: true,
+            validateExtensions: true,
+            validateIndentation: 2
           }
-        }
-      },
-      mongo: {
-        command: servers.mongodb.cmd + ' --dbpath ' + servers.mongodb.dbpath + ' --port ' +
-        (servers.mongodb.port ? servers.mongodb.port : '23456') + ' --nojournal',
-        options: {
-          async: false,
-          stdout: function(chunk) {
-            var done = grunt.task.current.async();
-            var out = '' + chunk;
-            var started = new RegExp('connections on port ' + servers.mongodb.port);
-            if (started.test(out)) {
-              grunt.log.write('MongoDB server is started.');
-              done(true);
-            }
-          },
-          stderr: function(chunk) {
-            grunt.log.error(chunk);
-          }
-        }
+        },
+        src: [
+          'frontend/**/*.pug',
+          'templates/**/*.pug'
+        ]
       }
     },
     nodemon: {
@@ -252,24 +194,14 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint']
-    },
-    'node-inspector': {
-      dev: {
-        options: {
-          'web-host': 'localhost',
-          'web-port': config.webserver.debugPort || 8081,
-          'save-live-edit': true,
-          'no-preload': true
-        }
-      }
+      files: ['<%= eslint.files %>'],
+      tasks: ['eslint']
     },
     // Reads Jade files for usemin blocks to enable smart builds that automatically
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      jade: ['<%= hublin.client %>/views/meetings/index.jade', '<%= hublin.client %>/views/live-conference/index.jade'],
+      jade: ['<%= hublin.client %>/views/meetings/index.pug', '<%= hublin.client %>/views/live-conference/index.pug'],
       options: {
         debug: true,
         dest: '<%= hublin.dist %>/frontend/js',
@@ -281,7 +213,7 @@ module.exports = function(grunt) {
 
     // Performs rewrites based on rev and the useminPrepare configuration
     usemin: {
-      jade: ['<%= hublin.dist %>/**/index.jade'],
+      jade: ['<%= hublin.dist %>/**/index.pug'],
       js: ['<%= hublin.dist %>/js/{,*/}*.js'],
       options: {
         assetsDirs: [
@@ -360,38 +292,25 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-eslint');
+  grunt.loadNpmTasks('grunt-puglint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-jade');
-  grunt.loadNpmTasks('grunt-gjslint');
+  grunt.loadNpmTasks('grunt-contrib-pug');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-shell-spawn');
   grunt.loadNpmTasks('grunt-continue');
-  grunt.loadNpmTasks('grunt-run-grunt');
-  grunt.loadNpmTasks('grunt-node-inspector');
-  grunt.loadNpmTasks('grunt-lint-pattern');
+  grunt.loadNpmTasks('@linagora/grunt-run-grunt');
+  grunt.loadNpmTasks('@linagora/grunt-lint-pattern');
   grunt.loadNpmTasks('grunt-karma');
 
   grunt.loadTasks('tasks');
 
   grunt.registerTask('dist-files', 'Creates required files', function() {
     grunt.file.write('dist/log/application.log', '');
-  });
-
-  grunt.registerTask('spawn-servers', 'spawn servers', ['continue:on', 'shell:redis', 'shell:mongo']);
-  grunt.registerTask('kill-servers', 'kill servers', ['shell:redis:kill', 'shell:mongo:kill', 'continue:off', 'continue:fail-on-warning']);
-
-  grunt.registerTask('setup-environment', 'create temp folders and files for tests', function() {
-    try {
-      fs.mkdirsSync(servers.mongodb.dbpath);
-      fs.mkdirsSync(servers.tmp);
-    } catch (err) {
-      throw err;
-    }
   });
 
   grunt.registerTask('clean-environment', 'remove temp folder for tests', function() {
@@ -422,12 +341,11 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('dev', ['nodemon:dev']);
-  grunt.registerTask('debug', ['node-inspector:dev']);
   grunt.registerTask('test-unit-backend', ['run_grunt:unit_backend']);
   grunt.registerTask('test-frontend', ['run_grunt:test_frontend']);
-  grunt.registerTask('test-midway-backend', ['setup-environment', 'spawn-servers', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
-  grunt.registerTask('test', ['linters', 'setup-environment', 'test-frontend', 'run_grunt:unit_backend', 'spawn-servers', 'run_grunt:midway_backend', 'kill-servers', 'clean-environment']);
-  grunt.registerTask('linters', 'Check code for lint', ['jshint:all', 'gjslint:all', 'lint_pattern:all']);
+  grunt.registerTask('test-midway-backend', ['run_grunt:midway_backend', 'clean-environment']);
+  grunt.registerTask('test', ['test-frontend', 'run_grunt:unit_backend', 'run_grunt:midway_backend', 'clean-environment']);
+  grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all', 'puglint:all']);
 
   grunt.registerTask('test-frontend-dist', 'Run the frontend distribution tests', ['karma:dist']);
   grunt.registerTask('test-dist', ['test-frontend-dist']);
@@ -438,13 +356,13 @@ module.exports = function(grunt) {
    *   grunt linters-dev              # Run linters against files changed in git
    *   grunt linters-dev -r 51c1b6f   # Run linters against a specific changeset
    */
-  grunt.registerTask('linters-dev', 'Check changed files for lint', ['prepare-quick-lint', 'jshint:quick', 'gjslint:quick', 'lint_pattern:quick']);
+  grunt.registerTask('linters-dev', 'Check changed files for lint', ['prepare-quick-lint', 'eslint:quick', 'lint_pattern:quick']);
 
   grunt.registerTask('default', ['test']);
   grunt.registerTask('fixtures', 'Launch the fixtures injection', function() {
     var done = this.async();
     require('./fixtures')(function(err) {
-      done(err ? false : true);
+      done(!err);
     });
   });
 };

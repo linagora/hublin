@@ -18,7 +18,7 @@ describe('The meetings.report module', function() {
 
     angular.mock.module('meetings.report');
     angular.mock.module('meetings.conference');
-    angular.mock.module('meetings.jade.templates');
+    angular.mock.module('meetings.pug.templates');
     angular.mock.module(function($provide) {
       $provide.value('notificationFactory', notificationFactory);
       $provide.value('$alert', $alert);
@@ -124,7 +124,6 @@ describe('The meetings.report module', function() {
       $rootScope.$digest();
 
       expect(btnSendElt.attr('disabled')).to.be.undefined;
-
 
       $rootScope.reportedText += 'A';
       $rootScope.$digest();

@@ -10,7 +10,7 @@ module.exports = function(config) {
     return 'dist/' + dep;
   }).concat(testDeps).concat([
     'dist/frontend/js/**/*.js',
-    'dist/frontend/views/**/*.jade',
+    'dist/frontend/views/**/*.pug',
     'test/unit-frontend/**/*.js'
   ]);
 
@@ -25,14 +25,14 @@ module.exports = function(config) {
     browsers: ['PhantomJS'],
     reporters: ['spec'],
     preprocessors: {
-      'dist/frontend/views/**/*.jade': ['ng-jade2module']
+      'dist/frontend/views/**/*.pug': ['ng-jade2module']
     },
 
     plugins: [
       'karma-phantomjs-launcher',
       'karma-mocha',
       'karma-spec-reporter',
-      'karma-ng-jade2module-preprocessor'
+      '@linagora/karma-ng-jade2module-preprocessor'
     ],
 
     ngJade2ModulePreprocessor: {
@@ -40,7 +40,7 @@ module.exports = function(config) {
       jadeRenderLocals: {
         __: function(str) { return str; }
       },
-      moduleName: 'meetings.jade.templates'
+      moduleName: 'meetings.pug.templates'
     }
 
   });

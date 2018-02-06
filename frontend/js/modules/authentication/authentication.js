@@ -6,7 +6,9 @@ angular.module('meetings.authentication', [])
     function getNewToken() {
       var token = 123;
       var defer = $q.defer();
-      defer.resolve({data: {token: token}});
+
+      defer.resolve({ data: { token: token } });
+
       return defer.promise;
     }
 

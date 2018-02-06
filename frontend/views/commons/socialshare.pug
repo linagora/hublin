@@ -1,0 +1,8 @@
+.social-share
+  - function quoted(s) { return "'" + s.replace(/'/g, "\\'") + "'"; }
+  ul(ng-social-buttons, data-url="'https://hubl.in'", data-image="'https://hubl.in/images/hublin_256.png'")
+    li.ng-social-facebook Facebook
+    li.ng-social-twitter(data-title=quoted(__('I just had a nice video conference with #hublin by @AwesomePaaS. It\'s #free #OpenSource and really great! Try it on'))) Twitter
+    li.ng-social-google-plus Google+
+    li.ng-social-linkedin(data-title=quoted(__('Hubl.in, free and open source video conference')), data-description=quoted(__('I just had a nice video conference with Hubl.in. It\'s free, open source and really great, for professional as for personal use. Try it on https://hubl.in !'))) LinkedIn
+    li.ng-social-github(data-user="linagora" data-repository="hublin") GitHub

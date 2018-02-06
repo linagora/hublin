@@ -1,0 +1,8 @@
+.clipboard-url(layout="row" layout-align="center center")
+  md-input-container
+    input(type="text", ng-model="ctrl.url", ng-click="ctrl.onTextClick($event)", readonly)
+  md-button(
+    ngclipboard
+    data-clipboard-text="{{::ctrl.url}}"
+    ngclipboard-success="ctrl.onCopySuccess();"
+    ngclipboard-error="ctrl.onCopyError(e);") #{__('Copy')}

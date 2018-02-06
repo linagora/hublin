@@ -1,0 +1,127 @@
+doctype html
+html
+  head
+    include ../commons/meta.pug
+    include ../commons/facebook-markup.pug
+    include ../commons/utils.pug
+    include ../commons/twitter-markup.pug
+
+    base(href='/')
+
+    title Hubl.in!
+
+    link(rel='icon', type='image/png', href='images/logo-tiny.png')
+    link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/components/font-awesome/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/components/angular-social/angular-social.css')
+    link(rel='stylesheet', href='/components/angular-motion/dist/angular-motion.min.css')
+    link(rel='stylesheet', href='/components/angular-material/angular-material.min.css')
+    link(rel='stylesheet', href='//fonts.googleapis.com/css?family=Merienda:700')
+    link(rel='stylesheet', href='/css/hublin.css')
+    link(rel='stylesheet', href='/css/live-conference.css')
+    link(rel='stylesheet', href='/components/angular-resizable/angular' +
+    '-resizable.min.css')
+    +injectCSSFromModules('live-conference', injections)
+    script(src='/components/jquery/dist/jquery.min.js')
+    script(src='/components/jquery-resize/jquery.ba-resize.min.js')
+    script(src='/components/lodash/dist/lodash.min.js')
+    script(src='/components/bootstrap/dist/js/bootstrap.min.js')
+    script(src='/components/URIjs/src/URI.min.js')
+    script(src='/components/angular/angular.min.js')
+    script(src='/components/angular-aria/angular-aria.min.js')
+    script(src='/components/angular-messages/angular-messages.min.js')
+    script(src='/components/angular-material/angular-material.min.js')
+    script(src='/components/angular-route/angular-route.min.js')
+    script(src='/components/angular-ui-router/release/angular-ui-router.min.js')
+    script(src='/components/angular-cookies/angular-cookies.min.js')
+    script(src='/components/angular-animate/angular-animate.min.js')
+    script(src='/components/angular-sanitize/angular-sanitize.min.js')
+    script(src='/components/restangular/dist/restangular.min.js')
+    script(src='/components/angular-strap/dist/angular-strap.min.js')
+    script(src='/components/angular-strap/dist/angular-strap.tpl.min.js')
+    script(src='/components/moment/min/moment.min.js')
+    script(src='/components/angular-moment/angular-moment.min.js')
+    script(src="/components/angular-social/src/scripts/00-directive.js")
+    script(src="/components/angular-social/src/scripts/02-facebook.js")
+    script(src="/components/angular-social/src/scripts/03-twitter.js")
+    script(src="/components/angular-social/src/scripts/04-google-plus.js")
+    script(src="/components/angular-social/src/scripts/09-github.js")
+    script(src="/components/angular-social/src/scripts/12-linkedin.js")
+    script(src="/components/matchmedia/matchMedia.js")
+    script(src="/components/matchmedia-ng/matchmedia-ng.js")
+    script(src='/components/localforage/dist/localforage.min.js')
+    script(src='/components/angular-localforage/dist/angular-localForage.min.js')
+    script(src='/components/dynamic-directive/dist/dynamic-directive.min.js')
+    script(src='/socket.io/socket.io.js')
+    script(src='/components/angular-uuid4/angular-uuid4.min.js')
+    script(src='/components/re-tree/re-tree.min.js')
+    script(src='/components/ng-device-detector/ng-device-detector.min.js')
+    script(src='/components/clipboard/dist/clipboard.min.js')
+    script(src='/components/ngclipboard/dist/ngclipboard.min.js')
+    script(src='/js/constants.js')
+
+    +injectJSAssetFromModules('connector', injections)
+
+    script(src='/js/thirdparty/adapter.js')
+    script(src='/js/thirdparty/modernizr.js')
+
+    //- <!--build:js({.tmp,frontend}) live-conference.js-->
+    script(src='/js/modules/lodash-wrapper.js')
+    script(src='/js/modules/socket.io/module.js')
+    script(src='/js/modules/socket.io/services.js')
+
+    script(src='/js/modules/utils/wizard.js')
+    script(src='/js/modules/configuration/configuration.js')
+
+    script(src='/js/modules/authentication/authentication.js')
+
+    script(src='/js/modules/clipboard/module.js')
+    script(src='/js/modules/clipboard/clipboard-url.component.js')
+    script(src='/js/modules/clipboard/clipboard-url.controller.js')
+
+    script(src='/js/modules/user/user.js')
+    script(src='/js/modules/notification/module.js')
+    script(src='/js/modules/notification/services.js')
+
+    script(src='/js/modules/websocket/module.js')
+    script(src='/js/modules/websocket/services.js')
+
+    script(src='/js/modules/live-conference/module.js')
+    script(src='/js/modules/live-conference/live-conference.js')
+    script(src='/js/modules/live-conference/live-conference.directive.js')
+    script(src='/js/modules/live-conference/modal-errors.service.js')
+    script(src='/components/angular-liveconference/dist/live-conference.all.js')
+
+    script(src='/js/modules/localstorage/module.js')
+    script(src='/js/modules/localstorage/services.js')
+
+    script(src='/components/angular-resizable/angular-resizable.min.js')
+    script(src='/components/css-element-queries/src/ElementQueries.js')
+    script(src='/components/css-element-queries/src/ResizeSensor.js')
+    script(src='/components/email-addresses/lib/email-addresses.min.js')
+
+    +injectAngularFromModules('live-conference', injections)
+    +injectJSFromModules('live-conference', injections)
+    script(src='/js/modules/utils/uri.js')
+    script(src='/js/modules/utils/language.js')
+    script(src='/js/modules/utils/email.js')
+    script(src='/js/modules/session/session.js')
+    script(src='/js/modules/invitation/module.js')
+    script(src='/js/modules/invitation/invitation.js')
+    script(src='/js/modules/invitation/invitation-dialog-launcher.directive.js')
+    script(src='/js/modules/invitation/invitation-dialog-launcher.service.js')
+    script(src='/js/modules/invitation/invitation-dialog.controller.js')
+    script(src='/js/modules/report/report.js')
+    script(src='/js/modules/conference/conference.js')
+    script(src='/js/modules/live-conference-devmode/live-conference-devmode.js')
+    script(src='/js/modules/i18n/i18n.js')
+    script(src='/js/live-conference/app.js')
+    script(src='/js/live-conference/routes.js')
+    script(src='/js/live-conference/run.js')
+    //- <!--endbuild-->
+
+  body.hublin-live-conference-app.ng-cloak(ng-app='liveConferenceApplication' ng-controller="sessionInitLiveConferenceController")
+    #wrap(ng-include='session.template')
+    ui-view
+    .unsupported.text-center
+      include ../commons/unsupported.pug

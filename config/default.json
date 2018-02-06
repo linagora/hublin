@@ -55,7 +55,8 @@
     "enabled": true,
     "level": "debug",
     "roomNameRegExp": "^.{1,64}$",
-    "usernameRegExp": "^(.){1,200}$"
+    "usernameRegExp": "^(.){1,200}$",
+    "adapter": "hublin.easyrtc.connector"
   },
   "analytics": {
     "piwik": {
@@ -132,9 +133,9 @@
   },
   "modules": [
     "linagora.io.meetings",
-    "linagora.esn.chat",
+    "linagora.esn.yjs-chat",
     "linagora.esn.yjs",
-    "om-email-invitation",
-    "hublin-easyrtc-connector"
+    "linagora.esn.conference.email-invitation",
+    "hublin.easyrtc.connector"
   ]
 }

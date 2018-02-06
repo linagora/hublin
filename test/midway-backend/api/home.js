@@ -20,10 +20,20 @@ describe('The home API', function() {
   };
 
   beforeEach(function(done) {
-    this.testEnv.initCore(function() {
-      var router = apiHelpers.getRouter('home', dependencies);
-      application = apiHelpers.getApplication(router, dependencies);
-      done();
+    var self = this;
+
+    this.mongoose = require('mongoose');
+    this.testEnv.initRedisConfiguration(this.mongoose, function(err) {
+      if (err) {
+        return done(err);
+      }
+
+      self.testEnv.initCore(function() {
+        var router = apiHelpers.getRouter('home', dependencies);
+
+        application = apiHelpers.getApplication(router, dependencies);
+        done();
+      });
     });
   });
 
@@ -218,6 +228,7 @@ describe('The home API', function() {
                   'status': 'offline'
                 }
               ],
+              'roomId': 0,
               'schemaVersion': 1,
               'timestamps': {}
             });
@@ -269,6 +280,7 @@ describe('The home API', function() {
                   'status': 'offline'
                 }
               ],
+              'roomId': 0,
               'schemaVersion': 1,
               'timestamps': {}
             });
@@ -335,6 +347,7 @@ describe('The home API', function() {
                     'objectType': 'hublin:anonymous'
                   }
                 ],
+                'roomId': 0,
                 'schemaVersion': 1,
                 'timestamps': {}
               });

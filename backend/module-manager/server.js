@@ -32,13 +32,10 @@ module.exports = function setupServer(moduleManager) {
     .then(registerModuleWrapper(moduleManager, require('../webserver/webserver-wrapper')))
     .then(registerModuleWrapper(moduleManager, require('../core/analytics-piwik')))
     .then(registerModuleWrapper(moduleManager, require('../core/analytics-google')))
-    .then(registerModuleWrapper(moduleManager, require('om-websocket-server')))
-    .then(registerModuleWrapper(moduleManager, require('om-webrtc-backend')))
+    .then(registerModuleWrapper(moduleManager, require('linagora.esn.websocket-server')))
+    .then(registerModuleWrapper(moduleManager, require('linagora.esn.webrtc')))
     .then(registerModuleWrapper(moduleManager, require('../wsserver').WsServer))
-    .then(registerModuleWrapper(moduleManager, require('om-mailer')))
-    .then(registerModuleWrapper(moduleManager, require('om-invitation')))
-    .then(registerModuleWrapper(moduleManager, require('awesome-yjs')))
-    .then(registerModuleWrapper(moduleManager, require('awesome-collaborative-editor')))
-    .then(registerModuleWrapper(moduleManager, require('awesome-chat')))
+    .then(registerModuleWrapper(moduleManager, require('linagora.esn.mailer')))
+    .then(registerModuleWrapper(moduleManager, require('linagora.esn.conference.invitation')))
     .then(registerModuleWrapper(moduleManager, require('../').Meetings));
 };

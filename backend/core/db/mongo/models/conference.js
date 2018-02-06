@@ -1,13 +1,19 @@
 'use strict';
 
-var mongoose = require('mongoose'),
-    conferenceBaseSchema = require('./conference-base'),
-    extend = require('extend');
+const mongoose = require('mongoose');
+const autoIncrement = require('mongoose-auto-increment');
+const conferenceBaseSchema = require('./conference-base');
+const extend = require('extend');
 
-var conferenceJSON = extend(true, {}, conferenceBaseSchema);
+autoIncrement.initialize(mongoose);
+
+const conferenceJSON = extend(true, {}, conferenceBaseSchema);
+
 conferenceJSON._id = {type: String, required: true};
 
-var ConferenceSchema = new mongoose.Schema(conferenceJSON);
+const ConferenceSchema = new mongoose.Schema(conferenceJSON);
+
+ConferenceSchema.plugin(autoIncrement.plugin, { model: 'Conference', field: 'roomId' });
 
 /**
  * Conference mongoose Schema

@@ -1,0 +1,7 @@
+(function(angular) {
+  'use strict';
+
+  angular.module('meetings.conference.constants', [])
+    .constant('WEBRTC_CONNECTOR', '<%= getConfigurationConstant('webrtc', 'adapter', 'hublin.janus.connector') %>');
+
+})(angular);

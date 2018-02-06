@@ -19,6 +19,8 @@ describe('The conference API', function() {
   };
 
   beforeEach(function(done) {
+    var self = this;
+
     function checkMember(member) {
       expect(member).to.not.have.property('id');
       expect(member).to.not.have.property('token');
@@ -34,15 +36,24 @@ describe('The conference API', function() {
       conference.members.forEach(checkMember);
 
     };
-    this.testEnv.initCore(function() {
-      var router = apiHelpers.getRouter('conferences', dependencies);
-      application = apiHelpers.getApplication(router, dependencies);
-      done();
+
+    this.mongoose = require('mongoose');
+    this.testEnv.initRedisConfiguration(this.mongoose, function(err) {
+      if (err) {
+        return done(err);
+      }
+      self.testEnv.initCore(function() {
+        var router = apiHelpers.getRouter('conferences', dependencies);
+        application = apiHelpers.getApplication(router, dependencies);
+        done();
+      });
     });
   });
 
   afterEach(function() {
-    this.mongoose.connection.db.dropDatabase();
+    try {
+      this.mongoose.connection.db.dropDatabase();
+    } catch (e) {}
   });
 
   function withSession(data) {
