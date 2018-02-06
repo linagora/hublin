@@ -1,0 +1,26 @@
+#
+# Add janus support to default hublin services
+#
+# docker-compose -f docker-compose.yml -f docker-compose.janus.yml up
+#
+version: '3'
+
+services:
+  hublin:
+    image: linagora/hublin:janus
+    links:
+    - mongo:mongo
+    - redis:redis
+    - janus-gateway:janus-gateway
+  janus-gateway:
+    container_name: hublin_janus
+    image: "linagora/janus-gateway:latest"
+    ports:
+      - "80:80"
+      - "7088:7088"
+      - "8088:8088"
+      - "8089:8089"
+      - "8188:8188"
+      - "10000-10200:10000-10200/udp"
+    environment:
+      - DOCKER_IP=${DOCKER_IP}

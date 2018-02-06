@@ -185,7 +185,7 @@ The `linagora/hublin` container is configured to get the mongodb connection from
 
 `docker-compose` allows to describe and run distributed applications (cf `docker-compose.yml` file).
 
-#### Launch
+You can launch Hublin with compose from the current directory:
 
 ``` sh
 DOCKER_IP=<YOUR DOCKER IP> docker-compose up
@@ -193,10 +193,24 @@ DOCKER_IP=<YOUR DOCKER IP> docker-compose up
 
 Where `DOCKER_IP` is the public IP address where Docker services can be reached. This will be used by Janus to send back the right IP to Web clients (ICE candidates) so that they can communicate with Janus correctly.
 
-#### Build
+### Janus with docker
+
+The docker image configured for Janus is available on the Hub as `linagora/hublin:janus`.
 
 ``` sh
-docker-compose build
+docker pull linagora/hublin:janus
+```
+
+Or you can build it from the current repository
+
+``` sh
+docker build -t linagora/hublin:janus -f Dockerfile.janus .
+```
+
+You can launch Hublin with Janus and all required services with Docker compose like:
+
+``` sh
+DOCKER_IP=<YOUR DOCKER IP> docker-compose -f docker-compose.yml -f docker-compose.janus.yml up
 ```
 
 ## Embedding

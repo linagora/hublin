@@ -1,14 +1,16 @@
+#
+# DOCKER_IP=192.168.X.X docker-compose up
+#
 version: '3'
 
 services:
   hublin:
     build: .
     container_name: hublin
-    image: linagora/hublin:janus
+    image: linagora/hublin:latest
     links:
     - mongo:mongo
     - redis:redis
-    - janus-gateway:janus-gateway
     environment:
     - REDIS_HOST=redis
     - REDIS_PORT=6379
@@ -27,15 +29,4 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
-  janus-gateway:
-    container_name: hublin_janus
-    image: "linagora/janus-gateway:latest"
-    ports:
-      - "80:80"
-      - "7088:7088"
-      - "8088:8088"
-      - "8089:8089"
-      - "8188:8188"
-      - "10000-10200:10000-10200/udp"
-    environment:
-      - DOCKER_IP=${DOCKER_IP}
+
