@@ -11,7 +11,8 @@ angular.module('meetingsApplication', [
   'meetings.conference',
   'meetings.conference.constants',
   'meetings.language',
-  'mgcrea.ngStrap'
+  'mgcrea.ngStrap',
+  'pascalprecht.translate'
 ]).config(function($routeProvider, RestangularProvider) {
 
   $routeProvider.otherwise({ redirectTo: '/' });

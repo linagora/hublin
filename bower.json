@@ -38,6 +38,7 @@
     "angular-sanitize": "1.6.8",
     "angular-social": "git+https://github.com/linagora/angular-social.git#6c4c3cc1700183e9b4e925f61dc11561410bf707",
     "angular-strap": "2.3.12",
+    "angular-translate": "2.17.0",
     "angular-ui-router": "1.0.12",
     "angular-uuid4": "0.3.0",
     "bootstrap": "3.2.0",
