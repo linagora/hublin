@@ -1,0 +1,12 @@
+md-menu.attendee-settings-dropdown
+  md-button.attendee-settings-dropdown-button(md-icon-button, ng-click='$ctrl.openMenu($mdMenu, $event)')
+    md-icon.fa.fa-2x.conference-settings-button(md-menu-origin, md-font-icon='fa-cog')
+  md-menu-content(width='2')
+    md-menu-item
+      md-button(ng-click='$ctrl.toggleAttendeeMute()')
+        md-icon.fa(md-font-icon='fa-microphone{{!$ctrl.attendee.mute && !$ctrl.attendee.localmute ? "-slash" : ""}}')
+        | {{ $ctrl.attendee.localmute ? 'Unmute' : 'Mute' }}
+    md-menu-item
+      md-button(ng-click='$ctrl.showReportPopup()')
+        md-icon.fa(md-font-icon='fa-exclamation-triangle')
+        | Report

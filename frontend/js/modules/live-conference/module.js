@@ -2,7 +2,6 @@
   'use strict';
 
   angular.module('op.live-conference', [
-    'op.liveconference-templates',
     'op.websocket',
     'op.notification',
     'meetings.authentication',
