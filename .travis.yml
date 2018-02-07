@@ -10,3 +10,14 @@ env:
   global:
     - MONGO_HOST=localhost
     - REDIS_HOST=localhost
+after_success:
+  - export BUILD_ID=${TRAVIS_COMMIT::8}
+  - export HUBLIN_REPO=linagora/hublin
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_TAG ; fi`
+  - docker build -t $HUBLIN_REPO:$BUILD_ID .
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker tag $HUBLIN_REPO:$BUILD_ID $HUBLIN_REPO:$TAG
+  - docker push $HUBLIN_REPO:$TAG
+  - docker build -t $HUBLIN_REPO:${BUILD_ID}-janus -f Dockerfile.janus .
+  - docker tag $HUBLIN_REPO:${BUILD_ID}-janus $HUBLIN_REPO:janus
+  - docker push $HUBLIN_REPO:janus
