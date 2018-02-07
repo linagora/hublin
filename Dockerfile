@@ -2,13 +2,13 @@
 # Hubl.in Docker container
 #
 # Build
-#    docker build -t openpaas/hublin .
+#    docker build -t linagora/hublin .
 #
 # Run server and expose 8080
-#    docker run -p 8080:8080 openpaas/hublin
+#    docker run -p 8080:8080 linagora/hublin
 #
 # Run in interactive mode (start the container and launch the bash shell)
-#    docker run -i -t openpaas/hublin /bin/bash
+#    docker run -i -t linagora/hublin /bin/bash
 #
 
 FROM node:8
@@ -34,7 +34,7 @@ ADD config/db.json.docker /src/config/db.json
 ENV REDIS_HOST redis
 ENV REDIS_PORT 6379
 
-EXPOSE  8080
+EXPOSE 8080 8443
 
 WORKDIR /src
 CMD ["npm", "start"]

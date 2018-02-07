@@ -14,13 +14,30 @@ Hubl.in allows free communication without additional plugins.
 
 ## Installation
 
+A complete and more advanced documentation is available at [https://linagora.github.io/hublin-doc](https://linagora.github.io/hublin-doc). The following instructions assumes that you are installing Hublin on a debian distribution.
+
 1. clone the repository
 
 ``` sh
 git clone https://github.com/linagora/hublin.git
 ```
 
-2. Install and configure MongoDB
+2. Install node.js
+
+Hublin uses Node 8. It is highly recommended that you use [nvm](https://github.com/creationix/nvm) to install a specific version of node.
+
+``` sh
+nvm use
+# will install and use required node version (lts/carbon)
+```
+
+3. Go into the project root directory and install project dependencies
+
+``` sh
+npm install
+```
+
+4. Install and configure MongoDB
 
 You must install mongoDB. We suggest you to use mongoDB version 2.6.5.
 
@@ -31,55 +48,37 @@ apt-get install -y mongodb-org=2.6.5 mongodb-org-server=2.6.5 mongodb-org-shell=
 service mongod start
 ```
 
-3. Install node.js
-
-We are currently using Node 8. It is highly recommended that you use [nvm](https://github.com/creationix/nvm) to install a specific version of node.
-
-``` sh
-nvm use
-# will install and use required node version
-```
-
-4. Install Redis
-
-``` sh
-apt-get install redis-server
-```
-
-5. Install the Janus Gateway
-
-Check installation instructions on [Github](https://github.com/meetecho/janus-gateway).
-
-6. Copy the sample `db.json` configuration file and adapt it to your needs (especially the mongodb URL if you do not use default parameters from step 2)
+5. Copy the sample `db.json` configuration file and adapt it to your needs (especially the mongodb URL)
 
 ``` sh
 cp config/db.json.sample config/db.json
 ```
 
-7. Install the required npm dependencies (as an administrator)
+6. Install Redis
 
-```
-npm install -g mocha grunt-cli bower karma-cli
+``` sh
+apt-get install redis-server
 ```
 
-8. Go into the project root directory and install project dependencies
-
-```sh
-npm install
-```
+A more advanced deployment using the Janus WebRTC Gateway is possible and described in the [Hublin + Janus documentation](https://linagora.github.io/hublin-doc/getting-started/janus/).
 
 ## Starting the server
 
-Once all your services are ready, use `npm start` to start the server
+Once all your services are ready and started (Mongo, Redis and optionally Janus), use `npm start` to start the server
 
 ``` sh
 npm start
 ```
 
-- Hublin is now available on `http://localhost:8080`.
-- Janus admin / monitor is now available on `http://localhost/admin`.
+Hublin is now available on [http://localhost:8080](http://localhost:8080).
 
 ## Testing
+
+First, install the required npm dependencies (as an administrator):
+
+``` sh
+npm install -g mocha grunt-cli bower karma-cli
+```
 
 You can check that everything works by launching the test suite:
 
@@ -128,7 +127,7 @@ You will have to follow some rules to not break the distribution generation whic
 
 #### Frontend
 
-Any project frontend file which is under `frontend/js` and used in a web page must be placed between generator tags.
+Any project frontend JS file which is under `frontend/js` and used in a web page must be placed between generator tags.
 For example, in `frontend/views/meetings/index.pug` file:
 
 ``` html
@@ -149,8 +148,8 @@ All the files from backend are copied into the `dist/backend` folder without any
 
 These folders are pushed in the distribution:
 
-- config
-- templates
+- `config`
+- `templates`
 
 If you need to add more, you will have to change the `copy:dist` and `dist-files` tasks in `Gruntfile.js`
 
@@ -186,7 +185,7 @@ The `linagora/hublin` container is configured to get the mongodb connection from
 
 `docker-compose` allows to describe and run distributed applications (cf `docker-compose.yml` file).
 
-#### Launch
+You can launch Hublin with compose from the current directory:
 
 ``` sh
 DOCKER_IP=<YOUR DOCKER IP> docker-compose up
@@ -194,10 +193,24 @@ DOCKER_IP=<YOUR DOCKER IP> docker-compose up
 
 Where `DOCKER_IP` is the public IP address where Docker services can be reached. This will be used by Janus to send back the right IP to Web clients (ICE candidates) so that they can communicate with Janus correctly.
 
-#### Build
+### Janus with docker
+
+The docker image configured for Janus is available on the Hub as `linagora/hublin:janus`.
 
 ``` sh
-docker-compose build
+docker pull linagora/hublin:janus
+```
+
+Or you can build it from the current repository
+
+``` sh
+docker build -t linagora/hublin:janus -f Dockerfile.janus .
+```
+
+You can launch Hublin with Janus and all required services with Docker compose like:
+
+``` sh
+DOCKER_IP=<YOUR DOCKER IP> docker-compose -f docker-compose.yml -f docker-compose.janus.yml up
 ```
 
 ## Embedding
