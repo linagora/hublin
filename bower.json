@@ -46,6 +46,7 @@
     "email-addresses": "3.0.0",
     "font-awesome": "~4.3.0",
     "github-fork-ribbon-css": "~0.1.1",
+    "hark": "https://unpkg.com/hark@1.1.6/hark.bundle.js",
     "jquery": "2.1.1",
     "jquery-resize": "*",
     "lightbox2": "2.7.1",
