@@ -151,7 +151,9 @@ angular.module('op.live-conference')
                 reconnect();
               } else {
                 reconnectCount = 0;
-                $('#disconnectModal').modal('hide');
+                if ($('#disconnectModal') && $('#disconnectModal').modal) {
+                  $('#disconnectModal').modal('hide');
+                }
               }
             });
           }
@@ -168,7 +170,9 @@ angular.module('op.live-conference')
           }
 
           $scope.toolong = false;
-          $('#disconnectModal').modal('show');
+          if ($('#disconnectModal') && $('#disconnectModal').modal) {
+            $('#disconnectModal').modal('show');
+          }
           reconnect();
         });
       }

@@ -26,6 +26,7 @@ module.exports.externalDependencies = function() {
     'frontend/components/angular-strap/dist/angular-strap.min.js',
     'frontend/components/angular-strap/dist/angular-strap.tpl.min.js',
     'frontend/components/moment/min/moment.min.js',
+    'frontend/components/moment-timezone/builds/moment-timezone-with-data.min.js',
     'frontend/components/angular-moment/angular-moment.min.js',
     'frontend/components/angular-social/src/scripts/00-directive.js',
     'frontend/components/angular-social/src/scripts/02-facebook.js',
@@ -67,18 +68,20 @@ module.exports.applicationDependencies = function() {
     'frontend/js/modules/live-conference/live-conference.directive.js',
     'frontend/js/modules/live-conference/modal-errors.service.js',
     'frontend/js/modules/live-conference-devmode/live-conference-devmode.js',
-    'frontend/components/angular-liveconference/dist/live-conference.all.js',
 
     'frontend/js/modules/clipboard/module.js',
     'frontend/js/modules/clipboard/**/*.js',
 
+    'frontend/js/modules/attendee/**/*.js',
     'frontend/js/modules/utils/**/*.js',
     'frontend/js/modules/session/session.js',
     'frontend/js/modules/invitation/module.js',
     'frontend/js/modules/invitation/**/*.js',
     'frontend/js/modules/report/report.js',
     'frontend/js/modules/conference/conference.js',
+    'frontend/js/modules/conference/**/*.js',
     'frontend/js/modules/i18n/i18n.js',
+    'frontend/js/live-conference/constants.js',
     'frontend/js/live-conference/app.js'
   ];
 };

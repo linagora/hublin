@@ -27,6 +27,7 @@
     "express-session": "1.14.1",
     "extend": "3.0.0",
     "fs-extra": "0.30.0",
+    "hark": "1.1.6",
     "hash_file": "0.1.1",
     "helmet": "2.2.0",
     "hublin.easyrtc.connector": "github:linagora/hublin-easyrtc-connector",
