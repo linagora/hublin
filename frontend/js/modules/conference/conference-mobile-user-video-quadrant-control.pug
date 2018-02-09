@@ -1,0 +1,10 @@
+ul.list-inline.mobile-user-video-control
+  li
+    a(href="", ng-click="mute()")
+      i.fa.fa-5x.fa-fw(ng-class="{'fa-microphone': !muted, 'fa-microphone-slash': muted}")
+  li
+    a(href="", ng-click="onMobileToggleControls()")
+      i.fa.fa-5x.fa-fw.fa-times
+  li
+    a(href="" ng-click="showReportPopup()")
+      i.fa.fa-5x.fa-fw.fa-exclamation-triangle

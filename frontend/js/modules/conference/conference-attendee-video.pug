@@ -1,0 +1,7 @@
+div.attendee-video(dynamic-directive="attendee-video")
+  canvas.conference-attendee-video-multi(data-video-id="{{videoId}}", width='150', height='150', ng-click="onVideoClick(videoIndex)", ng-mouseenter="thumbhover = true", ng-mouseleave="thumbhover = false", ng-init="count=0", ng-class="{thumbhover: thumbhover, speaking: attendee.speaking && (!attendee.mute && !attendee.localmute), mirror: isMe}")
+  a.hidden-xs(href='', target='_blank', ng-show="videoId !== 'video-thumb0' && thumbhover", ng-mouseenter="thumbhover = true", ng-mouseleave="thumbhover = false", ng-class="{'hidden': !isDesktop}")
+    attendee-settings-dropdown(attendee='attendee', toggle-attendee-mute='toggleAttendeeMute', show-report-popup='showReportPopup')
+  i.fa.fa-2x.fa-microphone-slash.conference-secondary-mute-button(ng-show="attendee.mute || attendee.localmute")
+  i.fa.fa-2x.fa-eye-slash.conference-secondary-toggle-video-button(ng-show="false")
+  p.text-center.conference-attendee-name.ellipsis {{attendee.displayName}}

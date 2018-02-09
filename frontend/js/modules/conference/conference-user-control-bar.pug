@@ -1,0 +1,15 @@
+.conference-user-control-bar.text-center
+  ul.list-inline(dynamic-directive='live-conference-control-bar-items')
+    li
+      a(href="", ng-click="toggleSound()")
+        i.fa.fa-2x.conference-mute-button.conference-light-button(ng-class="{'fa-microphone': !muted, 'fa-microphone-slash': muted}")
+    li(ng-class="{'hidden': noVideo}")
+      a(href="", ng-click="toggleCamera()")
+        i.fa.fa-2x.conference-toggle-video-button.conference-light-button(ng-class="{'fa-eye': !videoMuted, 'fa-eye-slash': videoMuted}")
+    li
+      a(href="" ng-click="leaveConference()")
+        i.fa.fa-phone.fa-2x.conference-toggle-terminate-call-button.conference-light-button
+    li
+      a(href="", ng-click="showInvitationPanel()")
+        i.fa.fa-users.fa-2x.conference-toggle-invite-button.conference-light-button
+    editor-toggle-element

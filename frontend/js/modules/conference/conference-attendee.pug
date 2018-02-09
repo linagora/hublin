@@ -1,0 +1,7 @@
+div.col-xs-12.media.nopadding.conference-attendee
+  a.pull-left(href='#')
+    img.media-object.thumbnail(src='/images/user.png', ng-src='/api/users/{{user._id}}/profile/avatar')
+  .media-body
+    h6.media-heading {{user.firstname}} {{user.lastname}}
+    button.btn.btn-primary.nopadding(type='submit', ng-disabled='invited', ng-click='inviteCall(user); invited=true') Invite
+  .horiz-space
