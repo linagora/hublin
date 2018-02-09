@@ -17,10 +17,23 @@
     };
 
     function link(scope, element) {
-
       var widgets = [];
       var toggleAnim = false;
       var stopScaling = false;
+
+      $interval(function cacheWidgets() {
+        currentConferenceState.videoElements.forEach(function(vid) {
+          var canvas = element.find('canvas[data-video-id=' + vid[0].id + ']').get(0);
+
+          widgets.push({
+            video: vid[0],
+            canvas: canvas,
+            context: canvas.getContext('2d')
+          });
+        });
+      }, 250, 1, false);
+
+      onAnimationFrame();
 
       function videoToCanvas(widget) {
         var canvas = widget.canvas,
@@ -42,17 +55,6 @@
         });
       }
 
-      $interval(function cacheWidgets() {
-        currentConferenceState.videoElements.forEach(function(vid) {
-          var canvas = element.find('canvas[data-video-id=' + vid[0].id + ']').get(0);
-          widgets.push({
-            video: vid[0],
-            canvas: canvas,
-            context: canvas.getContext('2d')
-          });
-        });
-      }, 100, 1, false);
-
       function onAnimationFrame() {
         /* eslint no-cond-assign: "warn" */
         if ((toggleAnim = !toggleAnim)) {
@@ -70,8 +72,6 @@
       }
 
       scope.$on('$destroy', garbage);
-
-      onAnimationFrame();
     }
   }
 })(angular);
