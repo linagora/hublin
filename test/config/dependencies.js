@@ -81,7 +81,6 @@ module.exports.applicationDependencies = function() {
     'frontend/js/modules/report/report.js',
     'frontend/js/modules/conference/module.js',
     'frontend/js/modules/conference/**/*.js',
-    'frontend/js/modules/conference/**/*.js',
     'frontend/js/modules/i18n/i18n.module.js',
     'frontend/js/modules/i18n/i18n.constants.js',
     'frontend/js/modules/i18n/i18n.filter.js',
