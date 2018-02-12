@@ -15,8 +15,6 @@ module.exports = function(config) {
     'test/unit-frontend/**/*.js'
   ]);
 
-  console.log(files);
-
   config.set({
     basePath: '../../',
     files: files,
