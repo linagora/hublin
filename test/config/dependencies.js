@@ -78,6 +78,8 @@ module.exports.applicationDependencies = function() {
     'frontend/js/modules/session/session.js',
     'frontend/js/modules/invitation/module.js',
     'frontend/js/modules/invitation/**/*.js',
+    'frontend/js/modules/speak/module.js',
+    'frontend/js/modules/speak/**/*.js',
     'frontend/js/modules/report/report.js',
     'frontend/js/modules/conference/module.js',
     'frontend/js/modules/conference/**/*.js',
