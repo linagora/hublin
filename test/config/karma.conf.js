@@ -12,10 +12,9 @@ module.exports = function(config) {
   var files = extDeps.concat(testDeps).concat(appDeps).concat([
     'frontend/views/**/*.pug',
     'frontend/js/modules/**/*.pug',
-    'test/unit-frontend/**/*.js'
+    'test/unit-frontend/**/*.js',
+    'frontend/js/**/*.spec.js'
   ]);
-
-  console.log(files);
 
   config.set({
     basePath: '../../',

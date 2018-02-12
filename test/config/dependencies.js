@@ -42,7 +42,8 @@ module.exports.externalDependencies = function() {
     'frontend/components/sinon-chai/lib/sinon-chai.js',
     'frontend/components/sinon-browser-only/sinon.js',
     'frontend/components/clipboard/dist/clipboard.min.js',
-    'frontend/components/ngclipboard/dist/ngclipboard.min.js'
+    'frontend/components/ngclipboard/dist/ngclipboard.min.js',
+    'test/config/module-mocks.js'
   ];
 };
 
@@ -80,7 +81,14 @@ module.exports.applicationDependencies = function() {
     'frontend/js/modules/report/report.js',
     'frontend/js/modules/conference/conference.js',
     'frontend/js/modules/conference/**/*.js',
-    'frontend/js/modules/i18n/i18n.js',
+    'frontend/js/modules/i18n/i18n.module.js',
+    'frontend/js/modules/i18n/i18n.constants.js',
+    'frontend/js/modules/i18n/i18n.filter.js',
+    'frontend/js/modules/i18n/i18n.service.js',
+    'frontend/js/modules/i18n/i18n-dateformat.service.js',
+    'frontend/js/modules/i18n/i18n-interpolator.service.js',
+    'frontend/js/modules/i18n/i18n-loader.service.js',
+    'frontend/js/modules/i18n/i18n-string.service.js',
     'frontend/js/live-conference/constants.js',
     'frontend/js/live-conference/app.js'
   ];
