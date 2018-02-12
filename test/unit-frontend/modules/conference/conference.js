@@ -130,37 +130,4 @@ describe('The meetings.conference module', function() {
       gotMediaCB();
     });
   });
-
-  describe('The conferenceUserMediaInterceptor Service', function() {
-    var conferenceUserMediaInterceptorService, oldGetUserMedia, $window;
-
-    beforeEach(inject(function(_conferenceUserMediaInterceptorService_, _$window_) {
-      conferenceUserMediaInterceptorService = _conferenceUserMediaInterceptorService_;
-      $window = _$window_;
-      oldGetUserMedia = $window.navigator.getUserMedia;
-    }));
-
-    afterEach(function() {
-      $window.navigator.getUserMedia = oldGetUserMedia;
-    });
-
-    it('should override navigator.getUserMedia to use fallback constraints on constraints error', function() {
-      var callCount = 0;
-
-      $window.navigator.getUserMedia = function(constraints, onSuccess, onError) {
-        callCount++;
-        if (callCount === 1) {
-          onError();
-        } else {
-          expect(constraints).to.eql({ audio: true, video: true });
-        }
-      };
-
-      conferenceUserMediaInterceptorService();
-      $window.navigator.getUserMedia({}, angular.noop, angular.noop);
-
-      expect(callCount).to.equal(2);
-    });
-  });
-
 });

@@ -1,5 +1,9 @@
-div.conference-video.fullscreen#multiparty-conference(local-speak-emitter,
-auto-video-switcher, ng-style="paneStyle", dynamic-directive="conference-video")
+div.conference-video.fullscreen#multiparty-conference(
+  local-speak-emitter,
+  auto-video-switcher,
+  ng-style="paneStyle",
+  dynamic-directive="conference-video"
+)
   conference-user-video
   .conference-attendees-bar(ng-style="attendeesBarStyle")
     ul.content(scale-to-canvas, ng-style="attendeesBarContentStyle")
