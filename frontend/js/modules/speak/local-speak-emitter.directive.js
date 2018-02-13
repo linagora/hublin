@@ -1,24 +1,17 @@
 (function(angular) {
   'use strict';
 
-  angular.module('meetings.speak')
+  angular.module('hublin.speak')
     .directive('localSpeakEmitter', localSpeakEmitter);
 
-  function localSpeakEmitter($rootScope, session, currentConferenceState, webRTCService, speakEventEmitterService) {
+  function localSpeakEmitter($log, $rootScope, currentConferenceState, webRTCService, speakEventEmitterService) {
     return {
       restrict: 'A',
       link: link
     };
 
-    function link(scope) {
-      var unreg = $rootScope.$on('localMediaStream', function(event, stream) {
-        unreg();
-        createLocalEmitter(stream);
-      });
-
-      function createLocalEmitter(stream) {
-        var speakEventEmitter = speakEventEmitterService(stream);
-
+    function link() {
+      speakEventEmitterService.get().then(function(speakEventEmitter) {
         speakEventEmitter.on('speaking', function() {
           currentConferenceState.updateSpeaking(webRTCService.myRtcid(), true);
           webRTCService.broadcastMe();
@@ -28,12 +21,9 @@
           currentConferenceState.updateSpeaking(webRTCService.myRtcid(), false);
           webRTCService.broadcastMe();
         });
-
-        scope.$on('$destroy', function() {
-          speakEventEmitter.stop();
-          speakEventEmitter = null;
-        });
-      }
+      }, function(err) {
+        $log.debug('Can not get speak events', err);
+      });
     }
   }
 })(angular);

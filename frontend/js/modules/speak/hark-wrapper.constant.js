@@ -11,6 +11,6 @@
    *
    * don't forget to call detector.stop();
    */
-  angular.module('meetings.speak').constant('hark', window.hark);
+  angular.module('hublin.speak').constant('hark', window.hark);
 
 })(angular);

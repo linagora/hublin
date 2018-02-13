@@ -1,19 +1,40 @@
 (function(angular) {
   'use strict';
 
-  angular.module('meetings.speak')
+  angular.module('hublin.speak')
     .factory('speakEventEmitterService', speakEventEmitterService);
 
-  function speakEventEmitterService(hark) {
-    return function(stream, options) {
-      var opts = options || {};
+  function speakEventEmitterService($q, hark) {
+    var defer = $q.defer();
+    var eventEmitter;
 
-      opts.play = false;
-      var eventEmitter = hark(stream, opts);
-
-      stream = null;
-
-      return eventEmitter;
+    return {
+      get: get,
+      build: build
     };
+
+    function get() {
+      return defer.promise;
+    }
+
+    function build(stream, options) {
+      if (eventEmitter) {
+        return get();
+      }
+
+      options = options || {};
+      options.play = false;
+
+      try {
+        eventEmitter = hark(stream, options);
+        stream = null;
+
+        if (eventEmitter) {
+          defer.resolve(eventEmitter);
+        }
+      } catch (err) {
+        defer.reject(err);
+      }
+    }
   }
 })(angular);
