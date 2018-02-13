@@ -83,8 +83,14 @@
     margin-right: 15px;
     width: @user-control-bar-button;
     height: @user-control-bar-button;
+    transition: color 0.2s ease;
   }
 
+  .conference-mute-button {
+    &.unmute {
+      color: @yellow;
+    }
+  }
 }
 
 .conference-attendees-bar {
