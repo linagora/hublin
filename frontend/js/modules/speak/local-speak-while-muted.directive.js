@@ -24,6 +24,11 @@
           element.removeClass('unmute');
         });
 
+        scope.$on('$destroy', function() {
+          speakEventEmitter.off('speaking');
+          speakEventEmitter.off('stopped_speaking');
+        });
+
       }, function(err) {
         $log.debug('Can not get speak events', err);
       });
