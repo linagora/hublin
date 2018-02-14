@@ -4,7 +4,7 @@
   angular.module('hublin.speak')
     .factory('speakEventEmitterBuilderService', speakEventEmitterBuilderService);
 
-  function speakEventEmitterBuilderService($log, $window, $rootScope, speakEventEmitterService) {
+  function speakEventEmitterBuilderService($log, $window, speakEventEmitterService) {
     return function() {
       $window.navigator.mediaDevices && $window.navigator.mediaDevices.getUserMedia({ audio: true, video: false })
         .then(speakEventEmitterService.build)
