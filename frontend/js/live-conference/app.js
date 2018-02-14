@@ -22,6 +22,7 @@ var angularInjections = angularInjections || []; //eslint-disable-line no-use-be
     'meetings.conference.constants',
     'meetings.configuration',
     'meetings.language',
+    'hublin.speak',
     'hublin.i18n',
     'restangular',
     'uuid4',
