@@ -13,13 +13,17 @@
     function link() {
       speakEventEmitterService.get().then(function(speakEventEmitter) {
         speakEventEmitter.on('speaking', function() {
-          currentConferenceState.updateSpeaking(webRTCService.myRtcid(), true);
-          webRTCService.broadcastMe();
+          webRTCService.myRtcid().then(function(rtcId) {
+            currentConferenceState.updateSpeaking(rtcId, true);
+            webRTCService.broadcastMe();
+          });
         });
 
         speakEventEmitter.on('stopped_speaking', function() {
-          currentConferenceState.updateSpeaking(webRTCService.myRtcid(), false);
-          webRTCService.broadcastMe();
+          webRTCService.myRtcid().then(function(rtcId) {
+            currentConferenceState.updateSpeaking(rtcId, false);
+            webRTCService.broadcastMe();
+          });
         });
       }, function(err) {
         $log.debug('Can not get speak events', err);
