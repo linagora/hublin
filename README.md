@@ -213,6 +213,18 @@ You can launch Hublin with Janus and all required services with Docker compose l
 DOCKER_IP=<YOUR DOCKER IP> docker-compose -f docker-compose.yml -f docker-compose.janus.yml up
 ```
 
+If you want to launch required services except Hublin container to start it on your own for development purposes for example, you can do:
+
+```sh
+DOCKER_IP=<YOUR DOCKER IP> docker-compose -f docker-compose.yml -f docker-compose.janus.yml up janus-gateway mongo redis
+```
+
+And then start Hublin
+
+```sh
+NODE_ENV=dev npm start
+```
+
 ## Embedding
 
 Want to embed hubl.in on your website? Read more [here](doc/embedding.md).
