@@ -44,7 +44,7 @@
     "linagora.esn.websocket-server": "github:linagora/linagora.esn.websocket-server",
     "linagora.esn.yjs": "github:linagora/linagora.esn.yjs",
     "linagora.esn.yjs-chat": "github:linagora/linagora.esn.yjs-chat",
-    "marked": "0.3.12",
+    "marked": "0.7.0",
     "mongoconfig": "1.1.0",
     "mongodb": "2.2.19",
     "mongoose": "4.7.1",
