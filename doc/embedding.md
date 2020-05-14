@@ -47,7 +47,7 @@ For instance, if you want red text, simply use:
         </style>
       </head>
       <body>
-        <a href="https://hubl.in/my-shiny-conference" target="_blank" class="hublin-link"/></a>
+        <a href="https://hubl.in/my-shiny-conference" target="_blank" class="hublin-link"></a>
         <script type="text/javascript" src="https://hubl.in/embed/button"></script>
       </body>
     </html>
