@@ -51,7 +51,7 @@
     "mongoose-auto-increment": "5.0.1",
     "morgan": "1.7.0",
     "node-uuid": "1.4.7",
-    "open": "0.0.5",
+    "open": "7.0.0",
     "pug": "2.0.0-rc.3",
     "q": "1.4.1",
     "redis": "2.6.2",
