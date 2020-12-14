@@ -47,7 +47,7 @@
     "marked": "0.3.12",
     "mongoconfig": "1.1.0",
     "mongodb": "2.2.19",
-    "mongoose": "4.7.1",
+    "mongoose": "5.11.7",
     "mongoose-auto-increment": "5.0.1",
     "morgan": "1.7.0",
     "node-uuid": "1.4.7",
