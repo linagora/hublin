@@ -35,7 +35,7 @@
     "jade": "1.11.0",
     "jstransformer-less": "2.2.0",
     "konphyg": "1.4.0",
-    "less-middleware": "2.2.0",
+    "less-middleware": "2.3.0",
     "linagora.esn.collaborative-editor": "github:linagora/linagora.esn.collaborative-editor",
     "linagora.esn.conference.email-invitation": "github:linagora/linagora.esn.conference.email-invitation",
     "linagora.esn.conference.invitation": "github:linagora/linagora.esn.conference.invitation",
