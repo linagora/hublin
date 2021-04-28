@@ -15,7 +15,7 @@
     "awesome-node-redis-pubsub": "github:linagora/awesome-node-redis-pubsub",
     "awesome-sessionstore": "github:linagora/awesome-sessionstore",
     "body-parser": "1.15.2",
-    "bson": "0.5.5",
+    "bson": "4.0.2",
     "chokidar": "1.6.0",
     "connect-dynamic-middleware": "0.1.0",
     "cookie-parser": "1.4.3",
