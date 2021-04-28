@@ -25,7 +25,7 @@
     "express": "4.14.0",
     "express-domain-middleware": "0.1.0",
     "express-session": "1.14.1",
-    "extend": "3.0.0",
+    "extend": "3.0.2",
     "fs-extra": "0.30.0",
     "hash_file": "0.1.1",
     "helmet": "2.2.0",
