@@ -18,7 +18,7 @@ Hubl.in allows free communication without additional plugins.
 
 ## Installation
 
-A complete and more advanced documentation is available at [https://linagora.github.io/hublin-doc](https://linagora.github.io/hublin-doc). The following instructions assumes that you are installing Hublin on a debian distribution.
+A complete and more advanced documentation is available at [https://linagora.github.io/hublin-doc](https://linagora.github.io/hublin-doc). The following instructions assumes that you are installing Hublin on a [Debian GNU/Linux](https://www.debian.org/) distribution.
 
 1. clone the repository
 
